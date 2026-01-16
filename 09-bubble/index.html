@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -39,15 +39,15 @@
             <!-- 自定义图例 -->
             <div class="custom-legend">
                 <div class="legend-item">
-                    <span class="legend-icon-circle" style="background: #5B8FF9;"></span>
+                    <span class="legend-icon-circle" style="background: #0071E3;"></span>
                     <span class="legend-text">电子</span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-icon-circle" style="background: #5AD8A6;"></span>
+                    <span class="legend-icon-circle" style="background: #34C759;"></span>
                     <span class="legend-text">家电</span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-icon-circle" style="background: #F6BD16;"></span>
+                    <span class="legend-icon-circle" style="background: #FF9500;"></span>
                     <span class="legend-text">日用</span>
                 </div>
             </div>
@@ -105,28 +105,48 @@ const data = [
     { product: '产品G', price: 180, sales: 500, profit: 3500, category: '电子' },
 ];
 
-new Scatter('chart-basic', {
-    data,
-    xField: 'price',
-    yField: 'sales',
-    sizeField: 'profit',
-    size: [8, 40],
-    colorField: 'category',
-    color: ['#5B8FF9', '#5AD8A6', '#F6BD16'],
-    shape: 'circle',
-    pointStyle: { fillOpacity: 0.7 },
-    padding: 'auto',
-    appendPadding: [40, 20, 30, 20],
-    xAxis: { 
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        line: { style: { stroke: '#E5E6EB' } },
-        tickLine: null,
-    },
-    yAxis: { 
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
-        line: null,
-    },
+    new Scatter('chart-basic', {
+        data,
+        xField: 'price',
+        yField: 'sales',
+        sizeField: 'profit',
+        size: [8, 35], // 稍微减小最大值，提升整体紧凑度
+        colorField: 'category',
+        color: ['#0071E3', '#34C759', '#FF9500'], // 使用 Apple 风格配色
+        shape: 'circle',
+        pointStyle: { 
+            fillOpacity: 0.6,
+            stroke: '#fff',
+            lineWidth: 1
+        },
+        padding: 'auto',
+        // 关键：增加额外的 Padding 确保大气泡不溢出，并为轴标签预留空间
+        appendPadding: [40, 50, 40, 20], 
+        meta: {
+            price: {
+                nice: true,
+                alias: '价格',
+                tickCount: 5,
+                range: [0.05, 0.95] // 关键：缩小映射范围，让点不紧贴轴线
+            },
+            sales: {
+                nice: true,
+                alias: '销量',
+                tickCount: 5,
+                range: [0.05, 0.95] // 关键：缩小映射范围，让点不紧贴轴线
+            }
+        },
+        xAxis: { 
+            label: { style: { fontSize: 11, fill: '#86868B' } },
+            line: { style: { stroke: '#E8E8ED' } },
+            tickLine: null,
+            grid: { line: { style: { stroke: '#F5F5F7', lineDash: [4, 4] } } },
+        },
+        yAxis: { 
+            label: { style: { fontSize: 11, fill: '#86868B' } },
+            grid: { line: { style: { stroke: '#F5F5F7', lineDash: [4, 4] } } },
+            line: null,
+        },
     legend: false,
     tooltip: {
         fields: ['product', 'price', 'sales', 'profit'],
