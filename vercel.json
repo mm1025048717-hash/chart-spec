@@ -1,0 +1,7 @@
+{
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/charts/index.html" },
+    { "source": "/(.*)", "destination": "/charts/$1" }
+  ]
+}
