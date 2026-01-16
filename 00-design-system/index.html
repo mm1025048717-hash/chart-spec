@@ -3,934 +3,273 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>图表设计系统 - 通用规范</title>
+    <title>图表设计系统 - 通用规范 | Chart Spec</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
     <style>
-        .system-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #1F2329 0%, #2D3748 100%);
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-bottom: 24px;
+        :root {
+            --apple-blue: #0071E3;
+            --apple-gray-50: #FBFBFD;
+            --apple-gray-100: #F5F5F7;
+            --apple-gray-200: #E8E8ED;
+            --apple-gray-400: #86868B;
+            --apple-gray-900: #1D1D1F;
         }
-        .system-badge .icon { font-size: 20px; }
-        .system-badge .text { font-size: 14px; color: #fff; font-weight: 500; }
-        
-        .dimension-demo {
-            position: relative;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 0;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-        
-        .demo-header {
-            padding: 12px 20px;
-            background: #FAFBFC;
-            border-bottom: 1px solid var(--border);
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text);
-        }
-        
-        .demo-body {
-            position: relative;
-            height: 500px;
-            padding: 0;
-        }
-        
-        /* 标注层 */
-        .demo-annotations {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none;
-            z-index: 100;
-        }
-        
-        /* 尺寸标注线 */
-        .dim-line {
-            position: absolute;
-            background: var(--red);
-        }
-        .dim-line.horizontal { height: 1px; }
-        .dim-line.vertical { width: 1px; }
-        
-        .dim-cap {
-            position: absolute;
-            background: var(--red);
-        }
-        .dim-cap.horizontal { width: 1px; height: 8px; }
-        .dim-cap.vertical { width: 8px; height: 1px; }
-        
-        .dim-label {
-            position: absolute;
-            background: var(--red);
-            color: white;
-            font-size: 10px;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'SF Mono', monospace;
-            white-space: nowrap;
-        }
-        
-        /* 区域标注 */
-        .area-box {
-            position: absolute;
-            border: 2px dashed;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .area-box .area-label {
-            background: inherit;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        
-        .area-box.padding { border-color: var(--blue); background: rgba(91, 143, 249, 0.08); }
-        .area-box.padding .area-label { background: var(--blue); color: white; }
-        
-        .area-box.chart { border-color: var(--green); background: rgba(90, 216, 166, 0.08); }
-        .area-box.chart .area-label { background: var(--green); color: white; }
-        
-        .area-box.axis { border-color: var(--yellow); background: rgba(246, 189, 22, 0.08); }
-        .area-box.axis .area-label { background: var(--yellow); color: #333; }
-        
-        .area-box.legend { border-color: var(--purple); background: rgba(146, 112, 202, 0.08); }
-        .area-box.legend .area-label { background: var(--purple); color: white; }
-        
-        /* 颜色示例 */
-        .color-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-            margin: 16px 0;
-        }
-        .color-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background: #F7F8FA;
-            border-radius: 6px;
-        }
-        .color-swatch {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            flex-shrink: 0;
-        }
-        .color-info .color-name { font-size: 12px; font-weight: 600; color: var(--text); }
-        .color-info .color-value { font-size: 11px; color: var(--text-sub); font-family: 'SF Mono', monospace; }
-        
-        /* 尺寸示例 */
-        .size-demo {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin: 16px 0;
-        }
-        .size-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .size-visual {
-            background: var(--blue);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-            font-family: 'SF Mono', monospace;
-        }
-        .size-label {
-            font-size: 11px;
-            color: var(--text-sub);
-            text-align: center;
-        }
-        
-        /* 角度示例 */
-        .angle-demo {
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
-            margin: 16px 0;
-        }
-        .angle-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .angle-visual {
-            width: 80px;
-            height: 50px;
-            position: relative;
-            background: #F7F8FA;
-            border-radius: 4px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 8px;
-            overflow: hidden;
-        }
-        .angle-text {
-            font-size: 11px;
-            transform-origin: center bottom;
-            white-space: nowrap;
-        }
-        .angle-label {
-            font-size: 11px;
-            color: var(--text-sub);
-            text-align: center;
-        }
-        .angle-value {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--blue);
-            font-family: 'SF Mono', monospace;
-        }
-        
-        /* 间距示例 */
-        .spacing-demo {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin: 16px 0;
-        }
-        .spacing-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .spacing-visual {
-            display: flex;
-            align-items: center;
-            background: #F7F8FA;
-            border-radius: 4px;
-            padding: 8px;
-        }
-        .spacing-block {
-            width: 24px;
-            height: 24px;
-            background: var(--blue);
-            border-radius: 2px;
-        }
-        .spacing-gap {
-            background: var(--green);
-            opacity: 0.5;
-            height: 24px;
-        }
-        
-        /* 修复溢出问题 */
-        .spec-section {
-            max-width: 100%;
-            overflow-x: auto;
-        }
-        
-        .spec-table {
-            min-width: 600px;
-        }
-        
-        .code-block {
-            overflow-x: auto;
-            white-space: pre;
-            max-width: 100%;
-        }
-        /* 页面主容器 */
-        .main-content {
-            max-width: var(--content-max-width);
+
+        .ds-container {
+            max-width: 1000px;
             margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        /* Header Styling */
+        .ds-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .ds-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+            color: var(--apple-gray-900);
+        }
+
+        .ds-header p {
+            font-size: 21px;
+            color: var(--apple-gray-400);
+            font-weight: 500;
+        }
+
+        /* Section Bento Grid */
+        .ds-section {
+            margin-bottom: 60px;
+        }
+
+        .ds-section-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 32px;
+            padding-left: 12px;
+            border-left: 4px solid var(--apple-blue);
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 24px;
+        }
+
+        .bento-card {
+            background: #FFF;
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid var(--apple-gray-100);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            border-color: rgba(0, 113, 227, 0.1);
+        }
+
+        .span-3 { grid-column: span 3; }
+        .span-2 { grid-column: span 2; }
+        .span-4 { grid-column: span 4; }
+        .span-6 { grid-column: span 6; }
+
+        /* Custom Table Style */
+        .clean-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .clean-table th {
+            text-align: left;
+            padding: 12px 16px;
+            color: var(--apple-gray-400);
+            font-weight: 500;
+            border-bottom: 1px solid var(--apple-gray-100);
+        }
+
+        .clean-table td {
+            padding: 16px;
+            border-bottom: 1px solid var(--apple-gray-100);
+            color: var(--apple-gray-900);
+        }
+
+        .clean-table tr:last-child td { border-bottom: none; }
+
+        .value-badge {
+            background: var(--apple-gray-100);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: "SF Mono", monospace;
+            font-size: 12px;
+            color: var(--apple-blue);
+        }
+
+        /* Visual Previews */
+        .preview-box {
+            background: var(--apple-gray-50);
+            border-radius: 16px;
             padding: 24px;
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .size-preview {
+            background: var(--apple-blue);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF;
+            font-size: 10px;
+            font-family: "SF Mono", monospace;
+        }
+
+        .color-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.05);
+        }
+
+        .code-snippet {
+            background: var(--apple-gray-900);
+            color: #FFF;
+            padding: 24px;
+            border-radius: 16px;
+            font-family: "SF Mono", monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-top: 24px;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .span-2, .span-3, .span-4, .span-6 { grid-column: span 1; }
+            .ds-header h1 { font-size: 32px; }
         }
     </style>
 </head>
 <body>
+    <div class="ds-container">
+        <header class="ds-header">
+            <h1>设计规范总览</h1>
+            <p>基于 Apple 视觉美学，构建统一、专业的数据可视化语言。</p>
+        </header>
 
-<div class="main-content">
+        <!-- 1. 布局与尺寸 -->
+        <section class="ds-section">
+            <h2 class="ds-section-title">布局与尺寸规范</h2>
+            <div class="bento-grid">
+                <div class="bento-card span-4">
+                    <h3 style="margin-bottom: 20px;">容器高度体系</h3>
+                    <table class="clean-table">
+                        <thead>
+                            <tr><th>类型</th><th>高度</th><th>应用场景</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>迷你 (XS)</td><td><span class="value-badge">200px</span></td><td>指标卡内嵌</td></tr>
+                            <tr><td>标准 (MD)</td><td><span class="value-badge">400px</span></td><td>Dashboard 主图表</td></tr>
+                            <tr><td>巨型 (XL)</td><td><span class="value-badge">600px</span></td><td>大屏/深度分析页</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bento-card span-2">
+                    <h3 style="margin-bottom: 20px;">预览</h3>
+                    <div class="preview-box">
+                        <div style="display: flex; flex-direction: column; gap: 12px; align-items: center;">
+                            <div class="size-preview" style="width: 80px; height: 40px; opacity: 0.3;">XS</div>
+                            <div class="size-preview" style="width: 80px; height: 60px; opacity: 0.6;">MD</div>
+                            <div class="size-preview" style="width: 80px; height: 80px;">XL</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-<div class="page-header">
-    <div class="system-badge">
-        <span class="icon">📐</span>
-        <span class="text">Design System</span>
+        <!-- 2. 色彩系统 -->
+        <section class="ds-section">
+            <h2 class="ds-section-title">核心色彩系统</h2>
+            <div class="bento-grid">
+                <div class="bento-card span-2">
+                    <div class="color-circle" style="background: #0071E3; margin-bottom: 16px;"></div>
+                    <h4 style="margin-bottom: 4px;">品牌蓝</h4>
+                    <p class="value-badge" style="width: fit-content;">#0071E3</p>
+                </div>
+                <div class="bento-card span-2">
+                    <div class="color-circle" style="background: #34C759; margin-bottom: 16px;"></div>
+                    <h4 style="margin-bottom: 4px;">成功绿</h4>
+                    <p class="value-badge" style="width: fit-content;">#34C759</p>
+                </div>
+                <div class="bento-card span-2">
+                    <div class="color-circle" style="background: #FF9500; margin-bottom: 16px;"></div>
+                    <h4 style="margin-bottom: 4px;">警告橙</h4>
+                    <p class="value-badge" style="width: fit-content;">#FF9500</p>
+                </div>
+                <div class="bento-card span-6" style="background: var(--apple-gray-50);">
+                    <h3 style="margin-bottom: 16px;">扩展色板</h3>
+                    <div style="display: flex; gap: 12px;">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: #5B8FF9;"></div>
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: #5AD8A6;"></div>
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: #F6BD16;"></div>
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: #E86452;"></div>
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: #9270CA;"></div>
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: #6DC8EC;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. X轴旋转引擎 -->
+        <section class="ds-section">
+            <h2 class="ds-section-title">智能文字策略 (X-Axis)</h2>
+            <div class="bento-grid">
+                <div class="bento-card span-3">
+                    <h3 style="margin-bottom: 16px;">0° 水平</h3>
+                    <p style="color: var(--apple-gray-400); margin-bottom: 24px;">最佳阅读体验。适用于短文本与少量数据。</p>
+                    <div class="preview-box">
+                        <div style="font-size: 14px; border-bottom: 2px solid var(--apple-blue); padding: 4px 12px;">Label</div>
+                    </div>
+                </div>
+                <div class="bento-card span-3">
+                    <h3 style="margin-bottom: 16px;">-45° 倾斜</h3>
+                    <p style="color: var(--apple-gray-400); margin-bottom: 24px;">平衡空间与可读性。适用于中等长度文本。</p>
+                    <div class="preview-box">
+                        <div style="font-size: 14px; border-bottom: 2px solid var(--apple-blue); padding: 4px 12px; transform: rotate(-45deg);">LongLabel</div>
+                    </div>
+                </div>
+                <div class="bento-card span-6">
+                    <h3>通用配置代码</h3>
+                    <div class="code-snippet">
+<pre>xAxis: {
+  label: {
+    autoRotate: false,
+    rotate: -Math.PI / 4, // 倾斜 45 度
+    style: {
+      fontSize: 11,
+      fill: '#86868B',
+      textAlign: 'end'
+    }
+  }
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
-    <h1>图表设计系统 - 通用规范</h1>
-    <p class="subtitle">统一的图表尺寸、间距、颜色、坐标轴、标注规范</p>
-    <div class="tech-stack">
-        <span class="tech-tag">Ant Design Chart</span>
-        <span class="tech-tag">G2Plot</span>
-        <span class="tech-tag">React</span>
-    </div>
-</div>
 
-<!-- 图表容器尺寸 -->
-<div class="spec-section">
-    <div class="spec-title">1. 图表容器尺寸规范</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 140px;">尺寸类型</th>
-                <th style="width: 120px;">高度</th>
-                <th style="width: 150px;">适用场景</th>
-                <th>CSS Class</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>超小 (XS)</td>
-                <td><code>200px</code></td>
-                <td>迷你图表、指标卡内嵌</td>
-                <td><code>.chart-body.xs</code></td>
-            </tr>
-            <tr>
-                <td>小 (SM)</td>
-                <td><code>300px</code></td>
-                <td>卡片图表、Dashboard小组件</td>
-                <td><code>.chart-body.sm</code></td>
-            </tr>
-            <tr class="highlight">
-                <td>中 (MD) - 默认</td>
-                <td><code>400px</code></td>
-                <td>标准图表展示</td>
-                <td><code>.chart-body.md</code></td>
-            </tr>
-            <tr>
-                <td>大 (LG)</td>
-                <td><code>500px</code></td>
-                <td>详情页主图表</td>
-                <td><code>.chart-body.lg</code></td>
-            </tr>
-            <tr>
-                <td>超大 (XL)</td>
-                <td><code>600px</code></td>
-                <td>全屏展示、报表</td>
-                <td><code>.chart-body.xl</code></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- 内边距规范 -->
-<div class="spec-section">
-    <div class="spec-title">2. 内边距规范 (Padding)</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 140px;">区域</th>
-                <th style="width: 120px;">值</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>图表容器</td>
-                <td><code>20px</code></td>
-                <td>chart-body 的内边距</td>
-            </tr>
-            <tr>
-                <td>G2Plot padding</td>
-                <td><code>[40, 40, 60, 60]</code></td>
-                <td>[top, right, bottom, left] - 为轴标签留空间</td>
-            </tr>
-            <tr>
-                <td>紧凑模式</td>
-                <td><code>[30, 30, 50, 50]</code></td>
-                <td>小尺寸图表使用</td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <div class="code-block">
-<span class="comment">// G2Plot 内边距配置</span>
-<span class="keyword">const</span> config = {
-    padding: [<span class="number">40</span>, <span class="number">40</span>, <span class="number">60</span>, <span class="number">60</span>],  <span class="comment">// [上, 右, 下, 左]</span>
-    <span class="comment">// 或使用 auto</span>
-    padding: <span class="string">'auto'</span>,
-    appendPadding: [<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>],  <span class="comment">// 额外边距</span>
-};
-    </div>
-</div>
-
-<!-- 坐标轴规范 -->
-<div class="spec-section">
-    <div class="spec-title">3. 坐标轴规范 (Axis)</div>
-    
-    <h4 style="margin: 20px 0 12px; font-size: 14px; color: var(--text);">3.1 X轴配置</h4>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 180px;">参数</th>
-                <th style="width: 150px;">值</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>label.style.fontSize</code></td>
-                <td><code>11px</code></td>
-                <td>轴标签字号</td>
-            </tr>
-            <tr>
-                <td><code>label.style.fill</code></td>
-                <td><code>#646A73</code></td>
-                <td>轴标签颜色</td>
-            </tr>
-            <tr>
-                <td><code>label.style.textAlign</code></td>
-                <td><code>'center'</code></td>
-                <td>水平时居中，旋转时 'end'</td>
-            </tr>
-            <tr>
-                <td><code>label.autoRotate</code></td>
-                <td><code>false</code></td>
-                <td>禁用自动旋转，手动控制</td>
-            </tr>
-            <tr>
-                <td><code>label.rotate</code></td>
-                <td><code>0 / -π/4 / -π/2</code></td>
-                <td>0° / 45° / 90° (弧度)</td>
-            </tr>
-            <tr>
-                <td><code>line.style.stroke</code></td>
-                <td><code>#E5E6EB</code></td>
-                <td>轴线颜色</td>
-            </tr>
-            <tr>
-                <td><code>tickLine</code></td>
-                <td><code>null</code></td>
-                <td>隐藏刻度线</td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <h4 style="margin: 20px 0 12px; font-size: 14px; color: var(--text);">3.2 Y轴配置</h4>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 180px;">参数</th>
-                <th style="width: 150px;">值</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>label.style.fontSize</code></td>
-                <td><code>11px</code></td>
-                <td>轴标签字号</td>
-            </tr>
-            <tr>
-                <td><code>label.style.fill</code></td>
-                <td><code>#646A73</code></td>
-                <td>轴标签颜色</td>
-            </tr>
-            <tr>
-                <td><code>label.formatter</code></td>
-                <td>function</td>
-                <td>格式化数值（千分位、单位）</td>
-            </tr>
-            <tr>
-                <td><code>grid.line.style.stroke</code></td>
-                <td><code>#E5E6EB</code></td>
-                <td>网格线颜色</td>
-            </tr>
-            <tr>
-                <td><code>grid.line.style.lineDash</code></td>
-                <td><code>[4, 4]</code></td>
-                <td>虚线样式</td>
-            </tr>
-            <tr>
-                <td><code>line</code></td>
-                <td><code>null</code></td>
-                <td>隐藏Y轴线</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="code-block">
-<span class="comment">// 坐标轴标准配置</span>
-<span class="keyword">const</span> axisConfig = {
-    xAxis: {
-        label: {
-            autoRotate: <span class="keyword">false</span>,
-            rotate: <span class="number">0</span>,
-            style: {
-                fontSize: <span class="number">11</span>,
-                fill: <span class="string">'#646A73'</span>,
-                textAlign: <span class="string">'center'</span>,
-            },
-        },
-        line: { style: { stroke: <span class="string">'#E5E6EB'</span> } },
-        tickLine: <span class="keyword">null</span>,
-    },
-    yAxis: {
-        label: {
-            style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#646A73'</span> },
-            formatter: (v) => v.toLocaleString(),
-        },
-        grid: {
-            line: {
-                style: { stroke: <span class="string">'#E5E6EB'</span>, lineDash: [<span class="number">4</span>, <span class="number">4</span>] },
-            },
-        },
-        line: <span class="keyword">null</span>,
-    },
-};
-    </div>
-</div>
-
-<!-- X轴旋转角度 -->
-<div class="spec-section">
-    <div class="spec-title">4. X轴标签旋转角度</div>
-    <div class="angle-demo">
-        <div class="angle-item">
-            <div class="angle-visual">
-                <span class="angle-text" style="transform: rotate(0deg);">标签文字</span>
-            </div>
-            <div class="angle-label">水平</div>
-            <div class="angle-value">0° (rotate: 0)</div>
-        </div>
-        <div class="angle-item">
-            <div class="angle-visual">
-                <span class="angle-text" style="transform: rotate(-45deg); transform-origin: right bottom;">标签文字</span>
-            </div>
-            <div class="angle-label">45度倾斜</div>
-            <div class="angle-value">-45° (-Math.PI/4)</div>
-        </div>
-        <div class="angle-item">
-            <div class="angle-visual">
-                <span class="angle-text" style="transform: rotate(-90deg); transform-origin: right bottom;">标签文字</span>
-            </div>
-            <div class="angle-label">垂直</div>
-            <div class="angle-value">-90° (-Math.PI/2)</div>
-        </div>
-    </div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 100px;">角度</th>
-                <th style="width: 180px;">代码值</th>
-                <th style="width: 180px;">textAlign</th>
-                <th>适用场景</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>0°</td>
-                <td><code>rotate: 0</code></td>
-                <td><code>'center'</code></td>
-                <td>短文本 (≤4字符)，数据项少 (≤8)</td>
-            </tr>
-            <tr class="highlight">
-                <td>-45°</td>
-                <td><code>rotate: -Math.PI/4</code></td>
-                <td><code>'end'</code></td>
-                <td>中等文本 (5-8字符)，推荐默认</td>
-            </tr>
-            <tr>
-                <td>-90°</td>
-                <td><code>rotate: -Math.PI/2</code></td>
-                <td><code>'end'</code></td>
-                <td>长文本或数据项多 (≥15)</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- 色彩规范 -->
-<div class="spec-section">
-    <div class="spec-title">5. 色彩规范</div>
-    
-    <h4 style="margin: 20px 0 12px; font-size: 14px; color: var(--text);">5.1 主题色板</h4>
-    <div class="color-grid">
-        <div class="color-item">
-            <div class="color-swatch" style="background: #5B8FF9;"></div>
-            <div class="color-info">
-                <div class="color-name">蓝色 Blue</div>
-                <div class="color-value">#5B8FF9</div>
-            </div>
-        </div>
-        <div class="color-item">
-            <div class="color-swatch" style="background: #5AD8A6;"></div>
-            <div class="color-info">
-                <div class="color-name">绿色 Green</div>
-                <div class="color-value">#5AD8A6</div>
-            </div>
-        </div>
-        <div class="color-item">
-            <div class="color-swatch" style="background: #F6BD16;"></div>
-            <div class="color-info">
-                <div class="color-name">黄色 Yellow</div>
-                <div class="color-value">#F6BD16</div>
-            </div>
-        </div>
-        <div class="color-item">
-            <div class="color-swatch" style="background: #E86452;"></div>
-            <div class="color-info">
-                <div class="color-name">红色 Red</div>
-                <div class="color-value">#E86452</div>
-            </div>
-        </div>
-        <div class="color-item">
-            <div class="color-swatch" style="background: #9270CA;"></div>
-            <div class="color-info">
-                <div class="color-name">紫色 Purple</div>
-                <div class="color-value">#9270CA</div>
-            </div>
-        </div>
-        <div class="color-item">
-            <div class="color-swatch" style="background: #6DC8EC;"></div>
-            <div class="color-info">
-                <div class="color-name">青色 Cyan</div>
-                <div class="color-value">#6DC8EC</div>
-            </div>
-        </div>
-    </div>
-    
-    <h4 style="margin: 20px 0 12px; font-size: 14px; color: var(--text);">5.2 辅助色</h4>
-    <div class="color-grid">
-        <div class="color-item">
-            <div class="color-swatch" style="background: #1F2329;"></div>
-            <div class="color-info">
-                <div class="color-name">主文字</div>
-                <div class="color-value">#1F2329</div>
-            </div>
-        </div>
-        <div class="color-item">
-            <div class="color-swatch" style="background: #646A73;"></div>
-            <div class="color-info">
-                <div class="color-name">次文字/轴标签</div>
-                <div class="color-value">#646A73</div>
-            </div>
-        </div>
-        <div class="color-item">
-            <div class="color-swatch" style="background: #E5E6EB;"></div>
-            <div class="color-info">
-                <div class="color-name">边框/网格线</div>
-                <div class="color-value">#E5E6EB</div>
-            </div>
-        </div>
-        <div class="color-item">
-            <div class="color-swatch" style="background: #F7F8FA;"></div>
-            <div class="color-info">
-                <div class="color-name">背景色</div>
-                <div class="color-value">#F7F8FA</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 字号规范 -->
-<div class="spec-section">
-    <div class="spec-title">6. 字号规范</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 180px;">元素</th>
-                <th style="width: 100px;">字号</th>
-                <th style="width: 120px;">字重</th>
-                <th>颜色</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>图表标题</td>
-                <td><code>15px</code></td>
-                <td><code>600</code></td>
-                <td><code>#1F2329</code></td>
-            </tr>
-            <tr>
-                <td>图例文字</td>
-                <td><code>12px</code></td>
-                <td><code>400</code></td>
-                <td><code>#1F2329</code></td>
-            </tr>
-            <tr>
-                <td>坐标轴标签</td>
-                <td><code>11px</code></td>
-                <td><code>400</code></td>
-                <td><code>#646A73</code></td>
-            </tr>
-            <tr>
-                <td>数据标签</td>
-                <td><code>11px</code></td>
-                <td><code>400</code></td>
-                <td>与柱体同色</td>
-            </tr>
-            <tr>
-                <td>轴单位标签</td>
-                <td><code>11px</code></td>
-                <td><code>400</code></td>
-                <td><code>#646A73</code></td>
-            </tr>
-            <tr>
-                <td>Tooltip 标题</td>
-                <td><code>12px</code></td>
-                <td><code>600</code></td>
-                <td><code>#1F2329</code></td>
-            </tr>
-            <tr>
-                <td>Tooltip 内容</td>
-                <td><code>12px</code></td>
-                <td><code>400</code></td>
-                <td><code>#646A73</code></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- 柱状图规范 -->
-<div class="spec-section">
-    <div class="spec-title">7. 柱状图专属规范</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 180px;">参数</th>
-                <th style="width: 150px;">值</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>columnWidthRatio</code></td>
-                <td><code>0.5</code></td>
-                <td>柱体宽度占分类宽度的50%</td>
-            </tr>
-            <tr>
-                <td><code>columnStyle.radius</code></td>
-                <td><code>[4, 4, 0, 0]</code></td>
-                <td>仅顶部圆角4px</td>
-            </tr>
-            <tr>
-                <td><code>marginRatio</code></td>
-                <td><code>0.25</code></td>
-                <td>分组柱状图间距</td>
-            </tr>
-            <tr>
-                <td><code>label.position</code></td>
-                <td><code>'top'</code></td>
-                <td>数据标签在柱体上方</td>
-            </tr>
-            <tr>
-                <td><code>minColumnWidth</code></td>
-                <td><code>8</code></td>
-                <td>最小柱宽</td>
-            </tr>
-            <tr>
-                <td><code>maxColumnWidth</code></td>
-                <td><code>40</code></td>
-                <td>最大柱宽</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- 折线图规范 -->
-<div class="spec-section">
-    <div class="spec-title">8. 折线图专属规范</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 180px;">参数</th>
-                <th style="width: 150px;">值</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>lineStyle.lineWidth</code></td>
-                <td><code>2</code></td>
-                <td>线条宽度</td>
-            </tr>
-            <tr>
-                <td><code>point.size</code></td>
-                <td><code>4</code></td>
-                <td>数据点大小</td>
-            </tr>
-            <tr>
-                <td><code>point.shape</code></td>
-                <td><code>'circle'</code></td>
-                <td>圆形数据点</td>
-            </tr>
-            <tr>
-                <td><code>smooth</code></td>
-                <td><code>false</code></td>
-                <td>默认不平滑</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- 图例规范 -->
-<div class="spec-section">
-    <div class="spec-title">9. 图例规范 (Legend)</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 180px;">参数</th>
-                <th style="width: 150px;">值</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>position</code></td>
-                <td><code>'top-right'</code></td>
-                <td>默认右上角</td>
-            </tr>
-            <tr>
-                <td><code>itemSpacing</code></td>
-                <td><code>16</code></td>
-                <td>图例项间距</td>
-            </tr>
-            <tr>
-                <td><code>marker.style.r</code></td>
-                <td><code>5</code></td>
-                <td>图例图标半径</td>
-            </tr>
-            <tr>
-                <td><code>itemName.style.fontSize</code></td>
-                <td><code>12</code></td>
-                <td>图例文字字号</td>
-            </tr>
-        </tbody>
-    </table>
-    
-    <div class="code-block">
-<span class="keyword">const</span> legendConfig = {
-    legend: {
-        position: <span class="string">'top-right'</span>,
-        itemSpacing: <span class="number">16</span>,
-        marker: {
-            symbol: <span class="string">'square'</span>,  <span class="comment">// 柱状图用方形</span>
-            style: { r: <span class="number">5</span> },
-        },
-        itemName: {
-            style: { fontSize: <span class="number">12</span>, fill: <span class="string">'#1F2329'</span> },
-        },
-    },
-};
-    </div>
-</div>
-
-<!-- 交互规范 -->
-<div class="spec-section">
-    <div class="spec-title">10. 交互规范</div>
-    
-    <h4 style="margin: 20px 0 12px; font-size: 14px; color: var(--text);">10.1 Tooltip 配置</h4>
-    <div class="code-block">
-<span class="keyword">const</span> tooltipConfig = {
-    tooltip: {
-        showTitle: <span class="keyword">true</span>,
-        title: <span class="string">'category'</span>,
-        formatter: (datum) => ({
-            name: datum.type,
-            value: datum.value.toLocaleString() + <span class="string">' 万元'</span>,
-        }),
-        domStyles: {
-            <span class="string">'g2-tooltip'</span>: {
-                padding: <span class="string">'12px 16px'</span>,
-                fontSize: <span class="string">'12px'</span>,
-            },
-        },
-    },
-};
-    </div>
-    
-    <h4 style="margin: 20px 0 12px; font-size: 14px; color: var(--text);">10.2 状态样式</h4>
-    <div class="code-block">
-<span class="keyword">const</span> stateConfig = {
-    state: {
-        active: {
-            style: { fillOpacity: <span class="number">0.8</span> },
-        },
-        inactive: {
-            style: { fillOpacity: <span class="number">0.4</span> },
-        },
-    },
-    interactions: [
-        { type: <span class="string">'element-active'</span> },
-        { type: <span class="string">'legend-highlight'</span> },
-    ],
-};
-    </div>
-</div>
-
-<!-- 完整配置示例 -->
-<div class="spec-section">
-    <div class="spec-title">11. 完整配置模板</div>
-    <div class="code-block">
-<span class="keyword">import</span> { Column } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
-
-<span class="keyword">const</span> ChartConfig = {
-    <span class="comment">// 数据</span>
-    data,
-    xField: <span class="string">'category'</span>,
-    yField: <span class="string">'value'</span>,
-    
-    <span class="comment">// 图形样式</span>
-    color: <span class="string">'#5B8FF9'</span>,
-    columnWidthRatio: <span class="number">0.5</span>,
-    columnStyle: { radius: [<span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>] },
-    
-    <span class="comment">// 内边距</span>
-    padding: <span class="string">'auto'</span>,
-    appendPadding: [<span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>, <span class="number">10</span>],
-    
-    <span class="comment">// X轴配置</span>
-    xAxis: {
-        label: {
-            autoRotate: <span class="keyword">false</span>,
-            rotate: <span class="number">0</span>,
-            style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#646A73'</span>, textAlign: <span class="string">'center'</span> },
-        },
-        line: { style: { stroke: <span class="string">'#E5E6EB'</span> } },
-        tickLine: <span class="keyword">null</span>,
-    },
-    
-    <span class="comment">// Y轴配置</span>
-    yAxis: {
-        label: {
-            style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#646A73'</span> },
-            formatter: (v) => v >= <span class="number">10000</span> ? (v / <span class="number">10000</span>).toFixed(<span class="number">1</span>) + <span class="string">'万'</span> : v.toLocaleString(),
-        },
-        grid: {
-            line: { style: { stroke: <span class="string">'#E5E6EB'</span>, lineDash: [<span class="number">4</span>, <span class="number">4</span>] } },
-        },
-        line: <span class="keyword">null</span>,
-    },
-    
-    <span class="comment">// 数据标签</span>
-    label: {
-        position: <span class="string">'top'</span>,
-        style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#5B8FF9'</span> },
-        formatter: (datum) => datum.value.toLocaleString(),
-    },
-    
-    <span class="comment">// 图例</span>
-    legend: {
-        position: <span class="string">'top-right'</span>,
-        itemSpacing: <span class="number">16</span>,
-    },
-    
-    <span class="comment">// 交互</span>
-    interactions: [{ type: <span class="string">'element-active'</span> }],
-};
-    </div>
-</div>
-
-</div><!-- /.main-content -->
-
-<script src="../nav.js"></script>
+    <script src="../nav.js"></script>
 </body>
 </html>
