@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X轴文字智能处理 - Chart Spec</title>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+        .scenario-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+        .scenario-card:hover {
+            border-color: var(--blue);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .scenario-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+        .scenario-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+        .scenario-desc {
+            font-size: 14px;
+            color: var(--text-sub);
+            line-height: 1.6;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 500;
+            margin-bottom: 32px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <a href="../index.html" class="back-link">← 返回图表总览</a>
+        
+        <div class="page-header">
+            <h1>X轴文字智能处理</h1>
+            <p class="subtitle">根据数据量和文字长度，自动选择最优的显示策略（水平、倾斜、垂直、缩减）</p>
+        </div>
+
+        <div class="scenario-grid">
+            <a href="01-short-text/index.html" class="scenario-card">
+                <div class="scenario-icon">📏</div>
+                <div class="scenario-title">短文本场景</div>
+                <p class="scenario-desc">文字长度 ≤ 4 字符，数据量适中。策略：保持水平显示。</p>
+            </a>
+
+            <a href="02-medium-text/index.html" class="scenario-card">
+                <div class="scenario-icon">📐</div>
+                <div class="scenario-title">中等文本场景</div>
+                <p class="scenario-desc">文字长度 5-8 字符。策略：自动 45° 倾斜，避免重叠。</p>
+            </a>
+
+            <a href="03-long-text/index.html" class="scenario-card">
+                <div class="scenario-icon">📏</div>
+                <div class="scenario-title">长文本场景</div>
+                <p class="scenario-desc">文字长度 > 8 字符。策略：自动 90° 垂直显示。</p>
+            </a>
+
+            <a href="04-extra-long-text/index.html" class="scenario-card">
+                <div class="scenario-icon">✂️</div>
+                <div class="scenario-title">超长文本策略</div>
+                <p class="scenario-desc">文本极长时。策略：智能截断 (...) 并配合 Tooltip 显示全称。</p>
+            </a>
+
+            <a href="05-real-scene/index.html" class="scenario-card">
+                <div class="scenario-icon">🏢</div>
+                <div class="scenario-title">真实业务场景</div>
+                <p class="scenario-desc">模拟部门名称、项目名称等真实多变的数据环境。</p>
+            </a>
+
+            <a href="06-multi-items/index.html" class="scenario-card">
+                <div class="scenario-icon">📊</div>
+                <div class="scenario-title">海量数据项</div>
+                <p class="scenario-desc">当数据项超过 20 个时。策略：智能抽样显示标签。</p>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
