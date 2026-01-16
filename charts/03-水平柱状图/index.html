@@ -1,0 +1,540 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>水平柱状图 - 文字优化设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto 32px;
+        }
+        @media (max-width: 900px) { .scenario-grid { grid-template-columns: 1fr; } }
+        .chart-card.full-width { grid-column: span 2; }
+        @media (max-width: 900px) { .chart-card.full-width { grid-column: span 1; } }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <h1>水平柱状图 - 文字优化设计规范</h1>
+    <p class="subtitle">Y轴标签文字处理方案：固定宽度 + 智能截断 + 完整Tooltip</p>
+    <div class="tech-stack">
+        <span class="tech-tag">Ant Design Charts</span>
+        <span class="tech-tag">G2Plot Bar</span>
+        <span class="tech-tag">Y轴截断</span>
+    </div>
+</div>
+
+<!-- 规范说明 -->
+<div class="spec-section">
+    <div class="spec-title">水平柱状图特点</div>
+    
+    <div style="background: #E8F3FF; padding: 12px 16px; border-radius: 6px; font-size: 13px; color: #5B8FF9; margin-bottom: 20px;">
+        <b>💡 适用场景：</b>当分类名称较长时，水平柱状图比垂直柱状图更友好，Y轴可以显示更多文字。
+    </div>
+
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th>Y轴标签长度</th>
+                <th>处理方式</th>
+                <th>Y轴宽度</th>
+                <th>代码配置</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>≤ 6字符</b></td>
+                <td>完整显示</td>
+                <td>60px</td>
+                <td><code>无需截断</code></td>
+            </tr>
+            <tr>
+                <td><b>7-10字符</b></td>
+                <td>完整显示</td>
+                <td>80px</td>
+                <td><code>调整padding</code></td>
+            </tr>
+            <tr class="highlight">
+                <td><b>11-15字符</b></td>
+                <td>截断10字符+...</td>
+                <td>100px</td>
+                <td><code>formatter: truncate(10)</code></td>
+            </tr>
+            <tr class="highlight">
+                <td><b>> 15字符</b></td>
+                <td>截断12字符+...</td>
+                <td>120px</td>
+                <td><code>formatter: truncate(12)</code></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 图表场景 -->
+<div class="scenario-grid">
+
+    <!-- 短标签 -->
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">场景1: 短标签 (≤6字符)</span>
+            <span class="chart-tag blue">完整显示</span>
+        </div>
+        <div class="chart-body">
+            <div id="chart-short" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">✨ 悬浮查看规范</div>
+            
+            <div class="annotation-layer">
+                <div class="area-highlight yaxis-area" style="top: 20px; left: 0; width: 60px; bottom: 30px;"></div>
+                
+                <div class="ruler-annotation ruler-horizontal ruler-red" style="top: 10px; left: 0; width: 60px;">
+                    <div class="ruler-line"></div>
+                    <div class="ruler-label">Y轴 60px</div>
+                </div>
+
+                <div class="params-panel top-right">
+                    <div class="params-panel-title">短标签配置</div>
+                    <div class="params-row">
+                        <span class="label">标签长度</span>
+                        <span class="value">≤6字符</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">Y轴宽度</span>
+                        <span class="value highlight">60px</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">截断</span>
+                        <span class="value">无</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 中等标签 -->
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">场景2: 中等标签 (7-10字符)</span>
+            <span class="chart-tag green">调整宽度</span>
+        </div>
+        <div class="chart-body">
+            <div id="chart-medium" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">✨ 悬浮查看规范</div>
+            
+            <div class="annotation-layer">
+                <div class="area-highlight yaxis-area" style="top: 20px; left: 0; width: 90px; bottom: 30px;"></div>
+                
+                <div class="ruler-annotation ruler-horizontal ruler-green" style="top: 10px; left: 0; width: 90px;">
+                    <div class="ruler-line"></div>
+                    <div class="ruler-label">Y轴 90px</div>
+                </div>
+
+                <div class="params-panel top-right">
+                    <div class="params-panel-title">中等标签配置</div>
+                    <div class="params-row">
+                        <span class="label">标签长度</span>
+                        <span class="value">7-10字符</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">Y轴宽度</span>
+                        <span class="value highlight">90px</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">截断</span>
+                        <span class="value">无</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 长标签 -->
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">场景3: 长标签 (11-15字符) - 截断</span>
+            <span class="chart-tag yellow">truncate: 10</span>
+        </div>
+        <div class="chart-body">
+            <div id="chart-long" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">✨ 悬浮查看规范</div>
+            
+            <div class="annotation-layer">
+                <div class="area-highlight yaxis-area" style="top: 20px; left: 0; width: 100px; bottom: 30px;"></div>
+                
+                <div class="params-panel top-right">
+                    <div class="params-panel-title">长标签配置</div>
+                    <div class="params-row">
+                        <span class="label">标签长度</span>
+                        <span class="value">11-15字符</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">Y轴宽度</span>
+                        <span class="value highlight">100px</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">截断长度</span>
+                        <span class="value highlight">10字符</span>
+                    </div>
+                    <div class="params-divider"></div>
+                    <div class="params-section">截断示例</div>
+                    <div style="font-size: 10px; color: #999;">
+                        "iPhone 15 Pro Max" → "iPhone 15 ..."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 超长标签 -->
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">场景4: 超长标签 (>15字符) - 强制截断</span>
+            <span class="chart-tag red">truncate: 12</span>
+        </div>
+        <div class="chart-body">
+            <div id="chart-very-long" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">✨ 悬浮查看规范</div>
+            
+            <div class="annotation-layer">
+                <div class="area-highlight yaxis-area" style="top: 20px; left: 0; width: 120px; bottom: 30px;"></div>
+                
+                <div class="params-panel top-right">
+                    <div class="params-panel-title">超长标签配置</div>
+                    <div class="params-row">
+                        <span class="label">标签长度</span>
+                        <span class="value">>15字符</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">Y轴宽度</span>
+                        <span class="value highlight">120px</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">截断长度</span>
+                        <span class="value highlight">12字符</span>
+                    </div>
+                    <div class="params-divider"></div>
+                    <div class="params-section">Tooltip</div>
+                    <div class="params-row">
+                        <span class="label">显示完整名称</span>
+                        <span class="value">✓</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 真实场景 -->
+    <div class="chart-card full-width">
+        <div class="chart-card-header">
+            <span class="chart-title">真实场景: 产品销量排行榜 (长产品名)</span>
+            <span class="chart-tag blue">推荐使用水平柱状图</span>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-title">24年12月热销产品TOP10</div>
+            <div class="chart-meta-info">
+                <div class="chart-meta-item">
+                    <span class="dot"></span>
+                    <span>数据源: 销售流水表</span>
+                </div>
+            </div>
+        </div>
+        <div class="chart-body lg">
+            <div id="chart-real" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">✨ 悬浮查看完整规范</div>
+            
+            <div class="annotation-layer">
+                <div class="area-highlight yaxis-area" style="top: 20px; left: 0; width: 120px; bottom: 30px;"></div>
+
+                <div class="ruler-annotation ruler-horizontal ruler-red" style="top: 5px; left: 0; width: 120px;">
+                    <div class="ruler-line"></div>
+                    <div class="ruler-label">Y轴 120px</div>
+                </div>
+
+                <div class="params-panel top-right">
+                    <div class="params-panel-title">完整配置参数</div>
+                    
+                    <div class="params-section">容器配置</div>
+                    <div class="params-row">
+                        <span class="label">高度</span>
+                        <span class="value">500px</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">padding</span>
+                        <span class="value">[20, 40, 30, 120]</span>
+                    </div>
+                    
+                    <div class="params-divider"></div>
+                    <div class="params-section">柱状图配置</div>
+                    <div class="params-row">
+                        <span class="label">barWidthRatio</span>
+                        <span class="value highlight">0.6</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">barStyle.radius</span>
+                        <span class="value">[0, 4, 4, 0]</span>
+                    </div>
+                    
+                    <div class="params-divider"></div>
+                    <div class="params-section">Y轴标签配置</div>
+                    <div class="params-row">
+                        <span class="label">截断长度</span>
+                        <span class="value highlight">12字符</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">fontSize</span>
+                        <span class="value">11px</span>
+                    </div>
+                    <div class="params-row">
+                        <span class="label">textAlign</span>
+                        <span class="value">end</span>
+                    </div>
+                </div>
+
+                <div class="code-panel" style="bottom: 50px; left: 140px; min-width: 300px;">
+                    <div class="code-panel-title">Y轴标签配置代码</div>
+                    <div>
+                        <span style="color: #F97583;">yAxis</span>: {<br>
+                        &nbsp;&nbsp;<span style="color: #FFAB70;">label</span>: {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #B392F0;">formatter</span>: (text) => {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #F97583;">return</span> text.length > <span style="color: #79B8FF;">12</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;? text.slice(<span style="color: #79B8FF;">0</span>,<span style="color: #79B8FF;">12</span>) + <span style="color: #9ECBFF;">'...'</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: text;<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;},<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span style="color: #FFAB70;">style</span>: { fontSize: <span style="color: #79B8FF;">11</span> }<br>
+                        &nbsp;&nbsp;}<br>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">总销量:</span>
+                <span class="summary-value blue">45.4万件</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">TOP1占比:</span>
+                <span class="summary-value green">26.4%</span>
+            </span>
+        </div>
+    </div>
+
+</div>
+
+<!-- 代码示例 -->
+<div class="spec-section">
+    <div class="spec-title">完整代码实现</div>
+    <div class="code-block">
+<span class="comment">// 水平柱状图 - Y轴标签智能处理</span>
+<span class="keyword">const</span> SmartYAxis = {
+    getConfig(data, yField, options = {}) {
+        <span class="keyword">const</span> { maxWidth = <span class="number">120</span>, truncateAt = <span class="number">12</span> } = options;
+        <span class="keyword">const</span> maxLen = Math.max(...data.map(d => String(d[yField] || <span class="string">''</span>).length));
+        
+        <span class="comment">// 根据最长文字计算Y轴宽度</span>
+        <span class="keyword">let</span> axisWidth = <span class="number">60</span>;
+        <span class="keyword">if</span> (maxLen > <span class="number">6</span> && maxLen <= <span class="number">10</span>) axisWidth = <span class="number">90</span>;
+        <span class="keyword">else if</span> (maxLen > <span class="number">10</span> && maxLen <= <span class="number">15</span>) axisWidth = <span class="number">100</span>;
+        <span class="keyword">else if</span> (maxLen > <span class="number">15</span>) axisWidth = maxWidth;
+
+        <span class="keyword">return</span> {
+            label: {
+                formatter: (text) => {
+                    <span class="keyword">const</span> str = String(text || <span class="string">''</span>);
+                    <span class="keyword">if</span> (str.length > truncateAt) {
+                        <span class="keyword">return</span> str.substring(<span class="number">0</span>, truncateAt) + <span class="string">'...'</span>;
+                    }
+                    <span class="keyword">return</span> str;
+                },
+                style: {
+                    fontSize: <span class="number">11</span>,
+                    fill: <span class="string">'#646A73'</span>
+                }
+            },
+            <span class="comment">// 返回计算出的宽度供padding使用</span>
+            _axisWidth: axisWidth
+        };
+    }
+};
+
+<span class="comment">// 使用示例</span>
+<span class="keyword">const</span> yAxisConfig = SmartYAxis.getConfig(data, <span class="string">'product'</span>);
+
+<span class="keyword">new</span> Bar(<span class="string">'container'</span>, {
+    data,
+    xField: <span class="string">'value'</span>,
+    yField: <span class="string">'product'</span>,
+    
+    <span class="comment">// 根据Y轴宽度设置padding</span>
+    padding: [<span class="number">20</span>, <span class="number">40</span>, <span class="number">30</span>, yAxisConfig._axisWidth],
+    
+    <span class="comment">// 柱子配置</span>
+    barWidthRatio: <span class="number">0.6</span>,
+    barStyle: { radius: [<span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>] },  <span class="comment">// 右侧圆角</span>
+    color: <span class="string">'#5B8FF9'</span>,
+    
+    <span class="comment">// Y轴配置</span>
+    yAxis: yAxisConfig,
+    
+    <span class="comment">// 数据标签</span>
+    label: {
+        position: <span class="string">'right'</span>,
+        style: { fontSize: <span class="number">10</span>, fill: <span class="string">'#5B8FF9'</span> }
+    },
+    
+    <span class="comment">// Tooltip显示完整信息</span>
+    tooltip: {
+        formatter: (datum) => ({
+            name: datum.product,  <span class="comment">// 完整显示</span>
+            value: datum.value.toLocaleString()
+        })
+    }
+}).render();
+    </div>
+</div>
+
+<script>
+    const { Bar } = G2Plot;
+
+    // 智能Y轴配置
+    const SmartYAxis = {
+        getConfig(data, yField, truncateAt = 12) {
+            const maxLen = Math.max(...data.map(d => String(d[yField] || '').length));
+            return {
+                label: {
+                    formatter: (text) => text.length > truncateAt ? text.substring(0, truncateAt) + '...' : text,
+                    style: { fontSize: 11, fill: '#646A73' }
+                }
+            };
+        }
+    };
+
+    // 短标签
+    const shortData = [
+        { product: '华东', value: 3650 },
+        { product: '华北', value: 2808 },
+        { product: '华南', value: 2408 },
+        { product: '华中', value: 2236 },
+        { product: '西北', value: 1500 },
+    ];
+
+    new Bar('chart-short', {
+        data: shortData,
+        xField: 'value',
+        yField: 'product',
+        barWidthRatio: 0.6,
+        barStyle: { radius: [0, 4, 4, 0] },
+        color: '#5B8FF9',
+        xAxis: { title: { text: '万元', style: { fontSize: 11 } } },
+        label: { position: 'right', style: { fontSize: 10, fill: '#5B8FF9' } },
+    }).render();
+
+    // 中等标签
+    const mediumData = [
+        { product: '华东地区销售', value: 3650 },
+        { product: '华北地区销售', value: 2808 },
+        { product: '华南地区销售', value: 2408 },
+        { product: '华中地区销售', value: 2236 },
+        { product: '西北地区销售', value: 1500 },
+    ];
+
+    new Bar('chart-medium', {
+        data: mediumData,
+        xField: 'value',
+        yField: 'product',
+        barWidthRatio: 0.6,
+        barStyle: { radius: [0, 4, 4, 0] },
+        color: '#5AD8A6',
+        xAxis: { title: { text: '万元', style: { fontSize: 11 } } },
+        label: { position: 'right', style: { fontSize: 10, fill: '#5AD8A6' } },
+    }).render();
+
+    // 长标签
+    const longData = [
+        { product: 'iPhone 15 Pro Max', value: 72000 },
+        { product: 'MacBook Air M2版', value: 45000 },
+        { product: 'iPad Pro 12.9寸', value: 38000 },
+        { product: 'Apple Watch S9', value: 28000 },
+        { product: 'AirPods Pro 2代', value: 21000 },
+    ];
+
+    new Bar('chart-long', {
+        data: longData,
+        xField: 'value',
+        yField: 'product',
+        barWidthRatio: 0.6,
+        barStyle: { radius: [0, 4, 4, 0] },
+        color: '#F6BD16',
+        yAxis: SmartYAxis.getConfig(longData, 'product', 10),
+        xAxis: { title: { text: '万元', style: { fontSize: 11 } } },
+        label: { position: 'right', style: { fontSize: 10, fill: '#D48806' } },
+        tooltip: { formatter: (d) => ({ name: d.product, value: d.value.toLocaleString() + ' 万元' }) }
+    }).render();
+
+    // 超长标签
+    const veryLongData = [
+        { product: 'MacBook Pro 16英寸 M3 Max 顶配版', value: 120000 },
+        { product: 'iPhone 15 Pro Max 钛金属1TB版', value: 72000 },
+        { product: '戴尔 XPS 15 9530 开发者特别版', value: 35000 },
+        { product: 'iPad Pro 12.9英寸 第六代 2TB', value: 29000 },
+        { product: '索尼 PlayStation 5 限定珍藏版', value: 19000 },
+    ];
+
+    new Bar('chart-very-long', {
+        data: veryLongData,
+        xField: 'value',
+        yField: 'product',
+        barWidthRatio: 0.6,
+        barStyle: { radius: [0, 4, 4, 0] },
+        color: '#E86452',
+        yAxis: SmartYAxis.getConfig(veryLongData, 'product', 12),
+        xAxis: { title: { text: '万元', style: { fontSize: 11 } } },
+        label: { position: 'right', style: { fontSize: 10, fill: '#E86452' } },
+        tooltip: { formatter: (d) => ({ name: d.product, value: d.value.toLocaleString() + ' 万元' }) }
+    }).render();
+
+    // 真实场景
+    const realData = [
+        { product: 'MacBook Pro 16英寸 M3 Max', value: 120000 },
+        { product: 'iPhone 15 Pro Max 钛金属', value: 72000 },
+        { product: '戴尔 XPS 15 开发者版', value: 45000 },
+        { product: 'iPad Pro 12.9英寸', value: 38000 },
+        { product: '小米电视 65英寸 4K', value: 35000 },
+        { product: '华为 Mate 60 Pro', value: 32000 },
+        { product: '索尼 PlayStation 5', value: 28000 },
+        { product: 'AirPods Pro 第二代', value: 25000 },
+        { product: '耐克 Air Max 270', value: 22000 },
+        { product: '宜家 简约办公桌', value: 18000 },
+    ];
+
+    new Bar('chart-real', {
+        data: realData,
+        xField: 'value',
+        yField: 'product',
+        barWidthRatio: 0.6,
+        barStyle: { radius: [0, 4, 4, 0] },
+        color: '#5B8FF9',
+        yAxis: SmartYAxis.getConfig(realData, 'product', 12),
+        xAxis: {
+            title: { text: '销量 (万元)', style: { fontSize: 12 } },
+            label: { formatter: (v) => (v / 10000).toFixed(0) + '万' }
+        },
+        label: {
+            position: 'right',
+            style: { fontSize: 10, fill: '#5B8FF9' },
+            formatter: (d) => (d.value / 10000).toFixed(1) + '万'
+        },
+        tooltip: { formatter: (d) => ({ name: d.product, value: d.value.toLocaleString() + ' 元' }) }
+    }).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>指标卡 - 图表设计规范</title>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .chart-type-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #E8F3FF 0%, #D6E8FF 100%);
+            padding: 8px 16px; border-radius: 20px; margin-bottom: 24px;
+        }
+        .chart-type-badge .icon { font-size: 20px; }
+        .chart-type-badge .text { font-size: 14px; color: var(--blue); font-weight: 500; }
+        
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+        @media (max-width: 768px) { 
+            .indicator-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        
+        .indicator-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border: 1px solid #E8E8E8;
+        }
+        .indicator-card .label {
+            font-size: 13px;
+            color: #8C8C8C;
+            margin-bottom: 8px;
+        }
+        .indicator-card .value {
+            font-size: 28px;
+            font-weight: 600;
+            color: #262626;
+            line-height: 1.2;
+        }
+        .indicator-card .suffix {
+            font-size: 14px;
+            color: #8C8C8C;
+            margin-left: 4px;
+        }
+        .indicator-card .trend {
+            margin-top: 8px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .trend-up { color: #52C41A; }
+        .trend-down { color: #FF4D4F; }
+        
+        .indicator-card.blue { border-top: 3px solid #5B8FF9; }
+        .indicator-card.green { border-top: 3px solid #5AD8A6; }
+        .indicator-card.yellow { border-top: 3px solid #F6BD16; }
+        .indicator-card.red { border-top: 3px solid #E86452; }
+        
+        .variant-section { margin-top: 32px; }
+        .variant-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 16px 0;
+        }
+        @media (max-width: 768px) { 
+            .variant-row { grid-template-columns: 1fr; }
+        }
+        
+        .indicator-compact {
+            background: #F7F8FA;
+            border-radius: 6px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .indicator-compact .icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .indicator-compact .content { flex: 1; }
+        .indicator-compact .label { font-size: 12px; color: #8C8C8C; }
+        .indicator-compact .value { font-size: 20px; font-weight: 600; color: #262626; }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🎯</span>
+        <span class="text">指标组件</span>
+    </div>
+    <h1>指标卡 Indicator Card</h1>
+    <p class="subtitle">突出展示关键业务指标，支持数值、趋势、对比等多种展示形式</p>
+    <div class="tech-stack">
+        <span class="tech-tag">Ant Design</span>
+        <span class="tech-tag">Statistic</span>
+        <span class="tech-tag">关键指标</span>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">基础样式</div>
+    <div class="indicator-grid">
+        <div class="indicator-card blue">
+            <div class="label">总销售额</div>
+            <div class="value">8,846<span class="suffix">万元</span></div>
+            <div class="trend trend-up">↑ 12.5% 较上月</div>
+        </div>
+        <div class="indicator-card green">
+            <div class="label">订单数</div>
+            <div class="value">12,580<span class="suffix">单</span></div>
+            <div class="trend trend-up">↑ 8.2% 较上月</div>
+        </div>
+        <div class="indicator-card yellow">
+            <div class="label">客单价</div>
+            <div class="value">703<span class="suffix">元</span></div>
+            <div class="trend trend-down">↓ 3.1% 较上月</div>
+        </div>
+        <div class="indicator-card red">
+            <div class="label">退货率</div>
+            <div class="value">2.3<span class="suffix">%</span></div>
+            <div class="trend trend-up">↑ 0.5% 较上月</div>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section variant-section">
+    <div class="spec-title">紧凑样式</div>
+    <div class="variant-row">
+        <div class="indicator-compact">
+            <div class="icon-box" style="background: #E8F3FF;">💰</div>
+            <div class="content">
+                <div class="label">总收入</div>
+                <div class="value">¥ 12.8万</div>
+            </div>
+        </div>
+        <div class="indicator-compact">
+            <div class="icon-box" style="background: #E6F7F0;">👥</div>
+            <div class="content">
+                <div class="label">新增用户</div>
+                <div class="value">2,340</div>
+            </div>
+        </div>
+        <div class="indicator-compact">
+            <div class="icon-box" style="background: #FFF7E6;">📦</div>
+            <div class="content">
+                <div class="label">订单数</div>
+                <div class="value">1,580</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Statistic, Card, Row, Col } <span class="keyword">from</span> <span class="string">'antd'</span>;
+<span class="keyword">import</span> { ArrowUpOutlined, ArrowDownOutlined } <span class="keyword">from</span> <span class="string">'@ant-design/icons'</span>;
+
+&lt;Card&gt;
+    &lt;Statistic
+        title=<span class="string">"总销售额"</span>
+        value={<span class="number">8846</span>}
+        suffix=<span class="string">"万元"</span>
+        valueStyle={{ fontSize: <span class="number">28</span>, fontWeight: <span class="number">600</span> }}
+    /&gt;
+    &lt;div style={{ marginTop: <span class="number">8</span>, fontSize: <span class="number">12</span>, color: <span class="string">'#52C41A'</span> }}&gt;
+        &lt;ArrowUpOutlined /&gt; 12.5% 较上月
+    &lt;/div&gt;
+&lt;/Card&gt;
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">设计规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 150px;">元素</th><th style="width: 150px;">规范</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>数值字号</td><td><code>28px</code></td><td>突出显示，字重600</td></tr>
+            <tr><td>标签字号</td><td><code>13px</code></td><td>颜色 #8C8C8C</td></tr>
+            <tr><td>单位字号</td><td><code>14px</code></td><td>紧跟数值后</td></tr>
+            <tr><td>趋势字号</td><td><code>12px</code></td><td>上涨绿/下跌红</td></tr>
+            <tr><td>卡片圆角</td><td><code>8px</code></td><td>内边距 20px</td></tr>
+            <tr><td>顶部色带</td><td><code>3px</code></td><td>可选，用于区分类型</td></tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

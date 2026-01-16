@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Spec - 图表设计规范</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        :root {
+            --apple-blue: #0071E3;
+            --apple-blue-hover: #0077ED;
+            --apple-gray-50: #FBFBFD;
+            --apple-gray-100: #F5F5F7;
+            --apple-gray-200: #E8E8ED;
+            --apple-gray-300: #D2D2D7;
+            --apple-gray-400: #86868B;
+            --apple-gray-500: #6E6E73;
+            --apple-gray-600: #424245;
+            --apple-gray-900: #1D1D1F;
+            --apple-green: #30D158;
+            --apple-orange: #FF9F0A;
+            --apple-purple: #BF5AF2;
+            --apple-red: #FF453A;
+            --apple-cyan: #64D2FF;
+            --apple-yellow: #FFD60A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 
+                         "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #000;
+            color: #F5F5F7;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ===== Navigation ===== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(29, 29, 31, 0.72);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-inner {
+            width: 100%;
+            max-width: 1024px;
+            padding: 0 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #F5F5F7;
+        }
+
+        .nav-logo {
+            width: 18px;
+            height: 18px;
+        }
+
+        .nav-logo svg {
+            width: 100%;
+            height: 100%;
+            fill: #F5F5F7;
+        }
+
+        .nav-title {
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            opacity: 0.92;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-link {
+            font-size: 12px;
+            color: #F5F5F7;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .nav-link:hover {
+            opacity: 1;
+        }
+
+        /* ===== Hero Section ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 24px 80px;
+            background: linear-gradient(180deg, 
+                #000 0%, 
+                #0a0a0a 50%,
+                #111 100%
+            );
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 100px;
+            margin-bottom: 32px;
+            animation: fadeInUp 1s ease 0.2s both;
+        }
+
+        .hero-badge-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--apple-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(0.9); }
+        }
+
+        .hero-badge-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-title {
+            font-size: clamp(48px, 10vw, 96px);
+            font-weight: 700;
+            letter-spacing: -0.04em;
+            line-height: 1.05;
+            margin-bottom: 24px;
+            animation: fadeInUp 1s ease 0.4s both;
+        }
+
+        .hero-title-gradient {
+            background: linear-gradient(90deg, #F5F5F7 0%, #F5F5F7 50%, #86868B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(17px, 3vw, 21px);
+            color: var(--apple-gray-400);
+            max-width: 600px;
+            margin: 0 auto 48px;
+            line-height: 1.5;
+            font-weight: 400;
+            animation: fadeInUp 1s ease 0.6s both;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 1s ease 0.8s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 18px 32px;
+            border-radius: 980px;
+            font-size: 17px;
+            font-weight: 400;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            min-width: 180px;
+        }
+
+        .btn-primary {
+            background: var(--apple-blue);
+            color: #FFF;
+        }
+
+        .btn-primary:hover {
+            background: var(--apple-blue-hover);
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--apple-blue);
+            border: none;
+        }
+
+        .btn-secondary:hover {
+            text-decoration: underline;
+        }
+
+        .btn-secondary .arrow {
+            transition: transform 0.3s;
+        }
+
+        .btn-secondary:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* ===== Stats Section ===== */
+        .stats {
+            padding: 80px 24px;
+            background: #000;
+        }
+
+        .stats-inner {
+            max-width: 1024px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 32px 16px;
+        }
+
+        .stat-value {
+            font-size: 56px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(180deg, #F5F5F7 0%, #86868B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--apple-gray-400);
+            font-weight: 500;
+        }
+
+        /* ===== Components Section ===== */
+        .components {
+            padding: 120px 24px;
+            background: var(--apple-gray-50);
+        }
+
+        .components-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .section-eyebrow {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--apple-gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--apple-gray-900);
+            margin-bottom: 16px;
+        }
+
+        .section-subtitle {
+            font-size: 19px;
+            color: var(--apple-gray-500);
+            max-width: 560px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* ===== Category ===== */
+        .category {
+            margin-bottom: 64px;
+        }
+
+        .category:last-child {
+            margin-bottom: 0;
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--apple-gray-200);
+        }
+
+        .category-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .category-icon.gradient-blue {
+            background: linear-gradient(135deg, #5B8FF9 0%, #2563EB 100%);
+        }
+
+        .category-icon.gradient-amber {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        }
+
+        .category-icon.gradient-emerald {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+
+        .category-icon.gradient-rose {
+            background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
+        }
+
+        .category-icon.gradient-purple {
+            background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);
+        }
+
+        .category-icon.gradient-special {
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+        }
+
+        .category-info h3 {
+            font-size: 21px;
+            font-weight: 600;
+            color: var(--apple-gray-900);
+            margin-bottom: 4px;
+            letter-spacing: -0.02em;
+        }
+
+        .category-info p {
+            font-size: 15px;
+            color: var(--apple-gray-500);
+        }
+
+        /* ===== Chart Grid ===== */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        /* ===== Chart Card ===== */
+        .chart-card {
+            display: block;
+            background: #FFF;
+            border-radius: 20px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.08),
+                0 10px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .chart-card-preview {
+            height: 160px;
+            background: linear-gradient(180deg, var(--apple-gray-50) 0%, var(--apple-gray-100) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-card-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 100%, rgba(0, 113, 227, 0.06) 0%, transparent 60%);
+            transition: opacity 0.4s;
+        }
+
+        .chart-card:hover .chart-card-preview::before {
+            opacity: 0;
+        }
+
+        .chart-card-preview .icon {
+            font-size: 56px;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: saturate(1.1);
+        }
+
+        .chart-card:hover .chart-card-preview .icon {
+            transform: scale(1.15);
+        }
+
+        .chart-card-content {
+            padding: 20px 24px 24px;
+        }
+
+        .chart-card-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--apple-gray-900);
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chart-card-title .arrow {
+            font-size: 18px;
+            color: var(--apple-gray-300);
+            transition: all 0.3s;
+        }
+
+        .chart-card:hover .chart-card-title .arrow {
+            color: var(--apple-blue);
+            transform: translateX(4px);
+        }
+
+        .chart-card-subtitle {
+            font-size: 13px;
+            color: var(--apple-gray-400);
+            font-weight: 400;
+        }
+
+        /* ===== Featured Card ===== */
+        .chart-card.featured {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #1D1D1F 0%, #2D2D2F 100%);
+        }
+
+        .chart-card.featured .chart-card-preview {
+            height: 200px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.06) 100%);
+        }
+
+        .chart-card.featured .chart-card-preview::before {
+            background: radial-gradient(circle at 50% 100%, rgba(102, 126, 234, 0.2) 0%, transparent 60%);
+        }
+
+        .chart-card.featured .chart-card-preview .icon {
+            font-size: 72px;
+        }
+
+        .chart-card.featured .chart-card-title {
+            color: #F5F5F7;
+            font-size: 21px;
+        }
+
+        .chart-card.featured .chart-card-subtitle {
+            color: var(--apple-gray-400);
+            font-size: 15px;
+        }
+
+        .chart-card.featured .chart-card-title .arrow {
+            color: var(--apple-gray-500);
+        }
+
+        .chart-card.featured:hover .chart-card-title .arrow {
+            color: var(--apple-blue);
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            padding: 6px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 0.02em;
+        }
+
+        /* ===== Design System Card ===== */
+        .design-system {
+            padding: 120px 24px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .design-system::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(102, 126, 234, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .design-system-inner {
+            max-width: 980px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .design-system-card {
+            display: flex;
+            align-items: center;
+            gap: 64px;
+            padding: 64px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s;
+        }
+
+        .design-system-card:hover {
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.04) 100%);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .design-system-icon {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            flex-shrink: 0;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .design-system-content h3 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #F5F5F7;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .design-system-content p {
+            font-size: 17px;
+            color: var(--apple-gray-400);
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .design-system-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 17px;
+            color: var(--apple-blue);
+            font-weight: 500;
+        }
+
+        .design-system-link .arrow {
+            transition: transform 0.3s;
+        }
+
+        .design-system-card:hover .design-system-link .arrow {
+            transform: translateX(4px);
+        }
+
+        /* ===== Quick Start ===== */
+        .quickstart {
+            padding: 120px 24px;
+            background: #FFF;
+        }
+
+        .quickstart-inner {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .code-block {
+            background: #1D1D1F;
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 48px;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            color: #F5F5F7;
+            font-family: "SF Mono", "Fira Code", "Monaco", monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .code-block .comment { color: #6E6E73; }
+        .code-block .keyword { color: #FF7B72; }
+        .code-block .string { color: #A5D6FF; }
+        .code-block .function { color: #D2A8FF; }
+        .code-block .number { color: #79C0FF; }
+
+        /* ===== Footer ===== */
+        .footer {
+            padding: 48px 24px;
+            background: var(--apple-gray-100);
+            text-align: center;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        .footer-logo svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--apple-gray-900);
+        }
+
+        .footer-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--apple-gray-900);
+        }
+
+        .footer-text {
+            font-size: 14px;
+            color: var(--apple-gray-500);
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+        }
+
+        .footer-link {
+            font-size: 14px;
+            color: var(--apple-gray-500);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-link:hover {
+            color: var(--apple-blue);
+        }
+
+        .footer-copyright {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--apple-gray-200);
+            font-size: 12px;
+            color: var(--apple-gray-400);
+        }
+
+        /* ===== Animations ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 16px;
+            }
+
+            .nav-link {
+                display: none;
+            }
+
+            .hero {
+                padding: 100px 20px 60px;
+            }
+
+            .stats-inner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stat-value {
+                font-size: 40px;
+            }
+
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-card.featured {
+                grid-column: span 1;
+            }
+
+            .design-system-card {
+                flex-direction: column;
+                padding: 40px;
+                text-align: center;
+            }
+
+            .design-system-icon {
+                width: 88px;
+                height: 88px;
+                font-size: 40px;
+                border-radius: 22px;
+            }
+
+            .design-system-content h3 {
+                font-size: 24px;
+            }
+        }
+
+        /* ===== Smooth Scroll ===== */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ===== Selection ===== */
+        ::selection {
+            background: rgba(0, 113, 227, 0.3);
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <div class="nav-logo">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/>
+                        <rect x="10" y="6" width="4" height="15" rx="1" fill="currentColor"/>
+                        <rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/>
+                    </svg>
+                </div>
+                <span class="nav-title">Chart Spec</span>
+            </a>
+            <div class="nav-links">
+                <a href="#components" class="nav-link">组件</a>
+                <a href="00-设计系统/index.html" class="nav-link">设计规范</a>
+                <a href="#quickstart" class="nav-link">快速开始</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge">
+            <span class="hero-badge-dot"></span>
+            <span class="hero-badge-text">基于 Ant Design Chart</span>
+        </div>
+        <h1 class="hero-title">
+            <span class="hero-title-gradient">图表设计规范</span>
+        </h1>
+        <p class="hero-subtitle">
+            专业级数据可视化设计系统，涵盖 19+ 图表类型，<br>
+            统一的设计语言，开箱即用的代码示例
+        </p>
+        <div class="hero-actions">
+            <a href="#components" class="btn btn-primary">浏览组件</a>
+            <a href="00-设计系统/index.html" class="btn btn-secondary">
+                了解设计规范 <span class="arrow">→</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-inner">
+            <div class="stat-item">
+                <div class="stat-value">19+</div>
+                <div class="stat-label">图表类型</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">6</div>
+                <div class="stat-label">色彩主题</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">响应式设计</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">MIT</div>
+                <div class="stat-label">开源协议</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Components Section -->
+    <section class="components" id="components">
+        <div class="components-inner">
+            <div class="section-header">
+                <div class="section-eyebrow">Components</div>
+                <h2 class="section-title">图表组件</h2>
+                <p class="section-subtitle">每个组件都经过精心设计，附带详细的设计规范和代码示例</p>
+            </div>
+
+            <!-- 专题方案 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon gradient-special">✨</div>
+                    <div class="category-info">
+                        <h3>专题方案</h3>
+                        <p>针对特定问题的完整解决方案</p>
+                    </div>
+                </div>
+                <div class="chart-grid">
+                    <a href="X轴文本测试/index.html" class="chart-card featured">
+                        <div class="chart-card-preview">
+                            <span class="icon">📊</span>
+                            <span class="featured-badge">推荐</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">
+                                X轴文字智能处理
+                                <span class="arrow">→</span>
+                            </div>
+                            <div class="chart-card-subtitle">根据文字长度和数据量自动优化显示策略</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 基础图表 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon gradient-blue">📊</div>
+                    <div class="category-info">
+                        <h3>基础图表</h3>
+                        <p>最常用的数据可视化图表</p>
+                    </div>
+                </div>
+                <div class="chart-grid">
+                    <a href="01-column/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">📊</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">柱状图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Column Chart</div>
+                        </div>
+                    </a>
+                    <a href="02-stacked-column/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">📊</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">堆叠柱状图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Stacked Column</div>
+                        </div>
+                    </a>
+                    <a href="03-bar/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">📊</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">条形图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Bar Chart</div>
+                        </div>
+                    </a>
+                    <a href="04-line/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">📈</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">折线图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Line Chart</div>
+                        </div>
+                    </a>
+                    <a href="05-面积图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">📉</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">面积图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Area Chart</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 占比图表 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon gradient-amber">🥧</div>
+                    <div class="category-info">
+                        <h3>占比图表</h3>
+                        <p>展示部分与整体的比例关系</p>
+                    </div>
+                </div>
+                <div class="chart-grid">
+                    <a href="06-pie/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">🥧</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">饼图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Pie Chart</div>
+                        </div>
+                    </a>
+                    <a href="11-漏斗图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">🔻</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">漏斗图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Funnel Chart</div>
+                        </div>
+                    </a>
+                    <a href="14-矩形树图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">🔲</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">矩形树图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Treemap</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 统计分布 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon gradient-emerald">📐</div>
+                    <div class="category-info">
+                        <h3>统计分布</h3>
+                        <p>展示数据分布特征和相关性</p>
+                    </div>
+                </div>
+                <div class="chart-grid">
+                    <a href="07-直方图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">📊</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">直方图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Histogram</div>
+                        </div>
+                    </a>
+                    <a href="08-散点图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">⚫</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">散点图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Scatter Chart</div>
+                        </div>
+                    </a>
+                    <a href="09-气泡图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">🫧</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">气泡图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Bubble Chart</div>
+                        </div>
+                    </a>
+                    <a href="16-热力图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">🔥</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">热力图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Heatmap</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 分析图表 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon gradient-rose">📡</div>
+                    <div class="category-info">
+                        <h3>分析图表</h3>
+                        <p>多维度分析和对比展示</p>
+                    </div>
+                </div>
+                <div class="chart-grid">
+                    <a href="10-雷达图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">🕸️</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">雷达图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Radar Chart</div>
+                        </div>
+                    </a>
+                    <a href="13-帕累托图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">📊</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">帕累托图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Pareto Chart</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 其他组件 -->
+            <div class="category">
+                <div class="category-header">
+                    <div class="category-icon gradient-purple">🎯</div>
+                    <div class="category-info">
+                        <h3>其他组件</h3>
+                        <p>仪表盘、指标卡等展示组件</p>
+                    </div>
+                </div>
+                <div class="chart-grid">
+                    <a href="12-仪表盘/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">⏱️</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">仪表盘 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Gauge</div>
+                        </div>
+                    </a>
+                    <a href="19-指标卡/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">🎯</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">指标卡 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Indicator Card</div>
+                        </div>
+                    </a>
+                    <a href="15-词云图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">☁️</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">词云图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Word Cloud</div>
+                        </div>
+                    </a>
+                    <a href="17-地图/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">🗺️</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">地图 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Map</div>
+                        </div>
+                    </a>
+                    <a href="18-表格/index.html" class="chart-card">
+                        <div class="chart-card-preview">
+                            <span class="icon">📋</span>
+                        </div>
+                        <div class="chart-card-content">
+                            <div class="chart-card-title">表格 <span class="arrow">→</span></div>
+                            <div class="chart-card-subtitle">Table</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design System -->
+    <section class="design-system">
+        <div class="design-system-inner">
+            <a href="00-设计系统/index.html" class="design-system-card">
+                <div class="design-system-icon">📐</div>
+                <div class="design-system-content">
+                    <h3>设计规范文档</h3>
+                    <p>完整的视觉规范体系，包括色彩、字体、间距、坐标轴、图例等所有设计细节，确保团队设计一致性。</p>
+                    <span class="design-system-link">
+                        查看设计规范 <span class="arrow">→</span>
+                    </span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- Quick Start -->
+    <section class="quickstart" id="quickstart">
+        <div class="quickstart-inner">
+            <div class="section-header">
+                <div class="section-eyebrow">Quick Start</div>
+                <h2 class="section-title" style="color: var(--apple-gray-900);">快速开始</h2>
+                <p class="section-subtitle">只需几行代码，即可创建专业的数据可视化图表</p>
+            </div>
+            <div class="code-block">
+<pre><span class="comment">// 1. 安装依赖</span>
+npm install @ant-design/charts
+
+<span class="comment">// 2. React 组件方式使用</span>
+<span class="keyword">import</span> { Column } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> <span class="function">MyChart</span> = () =&gt; {
+  <span class="keyword">const</span> config = {
+    data: chartData,
+    xField: <span class="string">'category'</span>,
+    yField: <span class="string">'value'</span>,
+    <span class="comment">// 应用设计规范中的配置</span>
+    color: <span class="string">'#5B8FF9'</span>,
+    columnWidthRatio: <span class="number">0.5</span>,
+    columnStyle: { radius: [<span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>] },
+  };
+  
+  <span class="keyword">return</span> &lt;Column {...config} /&gt;;
+};</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-brand">
+            <div class="footer-logo">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/>
+                    <rect x="10" y="6" width="4" height="15" rx="1" fill="currentColor"/>
+                    <rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/>
+                </svg>
+            </div>
+            <span class="footer-title">Chart Spec</span>
+        </div>
+        <p class="footer-text">专业的图表设计规范，基于 Ant Design Chart</p>
+        <div class="footer-links">
+            <a href="#components" class="footer-link">组件</a>
+            <a href="00-设计系统/index.html" class="footer-link">设计规范</a>
+            <a href="#quickstart" class="footer-link">快速开始</a>
+        </div>
+        <div class="footer-copyright">
+            Copyright © 2024 Chart Spec. MIT License.
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Page transition effect
+        document.querySelectorAll('a[href]:not([href^="#"]):not([href^="http"])').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const href = this.getAttribute('href');
+                document.body.style.opacity = '0';
+                document.body.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => {
+                    window.location.href = href;
+                }, 300);
+            });
+        });
+
+        // Fade in on load
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            requestAnimationFrame(() => {
+                document.body.style.opacity = '1';
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.category, .design-system-card').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>词云图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .chart-type-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #F3E8FF 0%, #E8D5FF 100%);
+            padding: 8px 16px; border-radius: 20px; margin-bottom: 24px;
+        }
+        .chart-type-badge .icon { font-size: 20px; }
+        .chart-type-badge .text { font-size: 14px; color: var(--purple); font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">☁️</span>
+        <span class="text">文本图表</span>
+    </div>
+    <h1>词云图 Word Cloud</h1>
+    <p class="subtitle">以文字大小展示词频或权重，适合文本数据的可视化展示</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">WordCloud</span>
+        <span class="tech-tag">文本分析</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">热门关键词</span>
+            <span class="chart-tag purple">WordCloud</span>
+        </div>
+        <!-- 图表元信息 -->
+        <div class="chart-meta">
+            <div class="chart-meta-title">2024年技术热词分布</div>
+            <div class="chart-meta-info">
+                <span class="chart-meta-item"><span class="dot"></span>数据源：舆情分析系统</span>
+                <span class="chart-meta-item"><span class="dot" style="background: var(--purple);"></span>数据周期：2024年全年</span>
+            </div>
+        </div>
+        <div class="chart-body md">
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">关键词数</span><span class="summary-value blue">18个</span></span>，<span class="summary-item"><span class="summary-label">最热词</span><span class="summary-value purple">人工智能</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>wordField</code></td><td>string</td><td>文字内容字段</td></tr>
+            <tr><td><code>weightField</code></td><td>string</td><td>权重字段（决定大小）</td></tr>
+            <tr><td><code>colorField</code></td><td>string</td><td>颜色映射字段</td></tr>
+            <tr><td><code>wordStyle.fontSize</code></td><td>[min, max]</td><td>字体大小范围</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { WordCloud } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    data,
+    wordField: <span class="string">'word'</span>,
+    weightField: <span class="string">'weight'</span>,
+    colorField: <span class="string">'word'</span>,
+    wordStyle: {
+        fontSize: [<span class="number">12</span>, <span class="number">48</span>],
+        rotation: <span class="number">0</span>,
+    },
+};
+    </div>
+</div>
+
+<script>
+const { WordCloud } = G2Plot;
+
+const data = [
+    { word: '人工智能', weight: 100 },
+    { word: '机器学习', weight: 85 },
+    { word: '深度学习', weight: 80 },
+    { word: '大数据', weight: 75 },
+    { word: '云计算', weight: 70 },
+    { word: '物联网', weight: 65 },
+    { word: '区块链', weight: 60 },
+    { word: '数字化', weight: 55 },
+    { word: '智能化', weight: 50 },
+    { word: '自动化', weight: 48 },
+    { word: '数据分析', weight: 45 },
+    { word: '可视化', weight: 42 },
+    { word: '算法', weight: 40 },
+    { word: '模型', weight: 38 },
+    { word: '预测', weight: 35 },
+    { word: '优化', weight: 32 },
+    { word: '创新', weight: 30 },
+    { word: '转型', weight: 28 },
+];
+
+new WordCloud('chart-basic', {
+    data,
+    wordField: 'word',
+    weightField: 'weight',
+    colorField: 'word',
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA', '#6DC8EC'],
+    wordStyle: {
+        fontSize: [14, 48],
+        rotation: 0,
+    },
+    random: () => 0.5,
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

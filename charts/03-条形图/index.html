@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>条形图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .chart-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #E6F7F0 0%, #C8F0E0 100%);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        .chart-type-badge .icon { font-size: 20px; }
+        .chart-type-badge .text { font-size: 14px; color: #00A854; font-weight: 500; }
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .use-case-item {
+            background: #F7F8FA;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .use-case-item::before { content: '✓'; color: var(--green); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📊</span>
+        <span class="text">基础图表</span>
+    </div>
+    <h1>条形图</h1>
+    <p class="subtitle">水平方向的柱状图，特别适合展示长标签的分类数据和排行榜</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Bar</span>
+        <span class="tech-tag">长标签友好</span>
+    </div>
+</div>
+
+<!-- 适用场景 -->
+<div class="spec-section">
+    <div class="spec-title">适用场景</div>
+    <div class="use-case-grid">
+        <div class="use-case-item">排行榜展示</div>
+        <div class="use-case-item">长名称分类对比</div>
+        <div class="use-case-item">进度条展示</div>
+        <div class="use-case-item">水平比例对比</div>
+        <div class="use-case-item">问卷选项分布</div>
+        <div class="use-case-item">分类统计结果</div>
+    </div>
+    <div style="margin-top: 16px; padding: 12px; background: #E8F3FF; border-radius: 6px; font-size: 13px; color: var(--blue);">
+        💡 <b>使用建议</b>：当分类标签较长（如产品名称、部门名称）时，条形图比柱状图更易阅读。
+    </div>
+</div>
+
+<!-- 基础示例 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">基础条形图 - 销量排行</span>
+            <span class="chart-tag green">Basic Bar</span>
+        </div>
+        <div class="chart-body lg" style="position: relative;">
+            <!-- 轴单位标签 -->
+            <div class="axis-unit y-left">销量</div>
+            
+            <!-- 自定义图例 -->
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">销量</span>
+                </div>
+            </div>
+            
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">销量</span><span class="summary-value blue">33,600</span></span>，<span class="summary-item"><span class="summary-label">产品数</span><span class="summary-value">8个</span></span>
+        </div>
+    </div>
+</div>
+
+<!-- 核心配置 -->
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 180px;">参数</th>
+                <th style="width: 150px;">值</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>xField</code></td>
+                <td>string</td>
+                <td>X轴字段（数值字段，水平方向）</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td>string</td>
+                <td>Y轴字段（分类字段，垂直方向）</td>
+            </tr>
+            <tr>
+                <td><code>barWidthRatio</code></td>
+                <td><code>0.5</code></td>
+                <td>条形高度占比</td>
+            </tr>
+            <tr>
+                <td><code>barStyle.radius</code></td>
+                <td><code>[0, 4, 4, 0]</code></td>
+                <td>右侧圆角（水平方向）</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 代码示例 -->
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Bar } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> data = [
+    { product: <span class="string">'MacBook Pro 16英寸'</span>, sales: <span class="number">12000</span> },
+    { product: <span class="string">'iPhone 15 Pro Max'</span>, sales: <span class="number">7200</span> },
+    { product: <span class="string">'iPad Pro 12.9英寸'</span>, sales: <span class="number">3800</span> },
+];
+
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'sales'</span>,      <span class="comment">// 数值字段</span>
+    yField: <span class="string">'product'</span>,    <span class="comment">// 分类字段</span>
+    color: <span class="string">'#5B8FF9'</span>,
+    barWidthRatio: <span class="number">0.5</span>,
+    barStyle: {
+        radius: [<span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>],  <span class="comment">// 右侧圆角</span>
+    },
+    label: {
+        position: <span class="string">'right'</span>,
+    },
+};
+
+<span class="keyword">return</span> &lt;Bar {...config} /&gt;;
+    </div>
+</div>
+
+<!-- 对比 -->
+<div class="spec-section">
+    <div class="spec-title">柱状图 vs 条形图</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 150px;">特性</th>
+                <th>柱状图 Column</th>
+                <th>条形图 Bar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>方向</td>
+                <td>垂直</td>
+                <td>水平</td>
+            </tr>
+            <tr>
+                <td>标签空间</td>
+                <td>X轴空间有限</td>
+                <td>Y轴空间充足</td>
+            </tr>
+            <tr>
+                <td>适用标签</td>
+                <td>短标签（≤8字符）</td>
+                <td>长标签（产品名等）</td>
+            </tr>
+            <tr>
+                <td>排行榜</td>
+                <td>不常用</td>
+                <td>常用，从上到下排列</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+const { Bar } = G2Plot;
+
+const data = [
+    { product: 'MacBook Pro 16英寸 M3 Max', sales: 12000 },
+    { product: 'iPhone 15 Pro Max', sales: 7200 },
+    { product: '戴尔 XPS 15 开发者版', sales: 3500 },
+    { product: 'iPad Pro 12.9英寸', sales: 2900 },
+    { product: '华为 Mate 60 Pro', sales: 2500 },
+    { product: '小米电视 65英寸 4K', sales: 2000 },
+    { product: '索尼 PlayStation 5', sales: 1900 },
+    { product: 'AirPods Pro 第二代', sales: 1600 },
+];
+
+new Bar('chart-basic', {
+    data,
+    xField: 'sales',
+    yField: 'product',
+    color: '#5B8FF9',
+    barWidthRatio: 0.5,
+    barStyle: { radius: [0, 4, 4, 0] },
+    padding: 'auto',
+    appendPadding: [40, 20, 20, 20],
+    label: {
+        position: 'right',
+        style: { fill: '#5B8FF9', fontSize: 11 },
+        formatter: (datum) => datum.sales.toLocaleString(),
+    },
+    xAxis: {
+        label: { 
+            style: { fontSize: 11, fill: '#646A73' },
+            formatter: (v) => (v / 1000).toFixed(0) + 'k',
+        },
+        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        line: null,
+    },
+    yAxis: {
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        line: { style: { stroke: '#E5E6EB' } },
+    },
+    legend: false,
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

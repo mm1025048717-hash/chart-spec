@@ -1,0 +1,125 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>雷达图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🕸️</span>
+        <span class="text">分析图表</span>
+    </div>
+    <h1>雷达图</h1>
+    <p class="subtitle">多维度数据的对比分析，适合展示个体在多个指标上的表现</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Radar</span>
+        <span class="tech-tag">多维对比</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">员工能力评估</span>
+            <span class="chart-tag red">Radar</span>
+        </div>
+        <div class="chart-body md" style="position: relative;">
+            <!-- 自定义图例 -->
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">张三</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">李四</span>
+                </div>
+            </div>
+            
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">张三平均分</span><span class="summary-value blue">85.8</span></span>，<span class="summary-item"><span class="summary-label">李四平均分</span><span class="summary-value green">81.7</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>xField</code></td><td>string</td><td>维度字段（如技能名称）</td></tr>
+            <tr><td><code>yField</code></td><td>string</td><td>数值字段（如评分）</td></tr>
+            <tr><td><code>seriesField</code></td><td>string</td><td>分组字段（多人对比）</td></tr>
+            <tr><td><code>area</code></td><td>object</td><td>填充区域配置</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Radar } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'skill'</span>,
+    yField: <span class="string">'score'</span>,
+    seriesField: <span class="string">'name'</span>,
+    area: { style: { fillOpacity: <span class="number">0.2</span> } },
+    point: { size: <span class="number">3</span> },
+};
+    </div>
+</div>
+
+<script>
+const { Radar } = G2Plot;
+
+const data = [
+    { skill: '沟通能力', score: 85, name: '张三' },
+    { skill: '技术能力', score: 90, name: '张三' },
+    { skill: '团队协作', score: 78, name: '张三' },
+    { skill: '创新能力', score: 82, name: '张三' },
+    { skill: '执行力', score: 88, name: '张三' },
+    { skill: '学习能力', score: 92, name: '张三' },
+    { skill: '沟通能力', score: 78, name: '李四' },
+    { skill: '技术能力', score: 82, name: '李四' },
+    { skill: '团队协作', score: 90, name: '李四' },
+    { skill: '创新能力', score: 75, name: '李四' },
+    { skill: '执行力', score: 85, name: '李四' },
+    { skill: '学习能力', score: 80, name: '李四' },
+];
+
+new Radar('chart-basic', {
+    data,
+    xField: 'skill',
+    yField: 'score',
+    seriesField: 'name',
+    color: ['#5B8FF9', '#5AD8A6'],
+    area: { style: { fillOpacity: 0.2 } },
+    point: { size: 3 },
+    padding: 'auto',
+    appendPadding: [40, 20, 20, 20],
+    xAxis: { label: { style: { fontSize: 11, fill: '#646A73' } } },
+    yAxis: { min: 0, max: 100 },
+    legend: false,
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

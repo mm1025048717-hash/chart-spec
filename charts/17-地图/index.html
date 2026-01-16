@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图 - 图表设计规范</title>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .chart-type-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #E6F7F0 0%, #C8F0E0 100%);
+            padding: 8px 16px; border-radius: 20px; margin-bottom: 24px;
+        }
+        .chart-type-badge .icon { font-size: 20px; }
+        .chart-type-badge .text { font-size: 14px; color: #00A854; font-weight: 500; }
+        .map-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
+        .map-type-card {
+            background: #F7F8FA; padding: 20px; border-radius: 8px; text-align: center;
+        }
+        .map-type-card .icon { font-size: 32px; margin-bottom: 8px; }
+        .map-type-card .name { font-weight: 600; margin-bottom: 4px; }
+        .map-type-card .desc { font-size: 12px; color: #8C8C8C; }
+        @media (max-width: 768px) { .map-types { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🗺️</span>
+        <span class="text">地理图表</span>
+    </div>
+    <h1>地图 Map</h1>
+    <p class="subtitle">在地图上展示地理位置相关的数据，支持行政区划、散点、路径等多种形式</p>
+    <div class="tech-stack">
+        <span class="tech-tag">L7Plot</span>
+        <span class="tech-tag">AntV/L7</span>
+        <span class="tech-tag">地理可视化</span>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">地图类型</div>
+    <div class="map-types">
+        <div class="map-type-card">
+            <div class="icon">🗾</div>
+            <div class="name">区域地图</div>
+            <div class="desc">Choropleth 行政区划填色</div>
+        </div>
+        <div class="map-type-card">
+            <div class="icon">📍</div>
+            <div class="name">散点地图</div>
+            <div class="desc">DotMap 点位分布</div>
+        </div>
+        <div class="map-type-card">
+            <div class="icon">🔥</div>
+            <div class="name">热力地图</div>
+            <div class="desc">HeatMap 密度分布</div>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">区域地图代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Choropleth } <span class="keyword">from</span> <span class="string">'@antv/l7plot'</span>;
+
+<span class="keyword">new</span> Choropleth(<span class="string">'container'</span>, {
+    map: {
+        type: <span class="string">'mapbox'</span>,
+        style: <span class="string">'light'</span>,
+        center: [<span class="number">116.4</span>, <span class="number">39.9</span>],
+        zoom: <span class="number">3</span>,
+    },
+    source: {
+        data,
+        joinBy: {
+            sourceField: <span class="string">'name'</span>,
+            geoField: <span class="string">'name'</span>,
+        },
+    },
+    color: {
+        field: <span class="string">'value'</span>,
+        value: [<span class="string">'#E8F3FF'</span>, <span class="string">'#5B8FF9'</span>],
+    },
+});
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">散点地图代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { DotMap } <span class="keyword">from</span> <span class="string">'@antv/l7plot'</span>;
+
+<span class="keyword">new</span> DotMap(<span class="string">'container'</span>, {
+    map: { type: <span class="string">'mapbox'</span>, style: <span class="string">'light'</span> },
+    source: {
+        data,
+        parser: {
+            type: <span class="string">'json'</span>,
+            x: <span class="string">'lng'</span>,
+            y: <span class="string">'lat'</span>,
+        },
+    },
+    color: <span class="string">'#5B8FF9'</span>,
+    size: <span class="number">5</span>,
+});
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">使用场景</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 150px;">类型</th><th>适用场景</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>区域地图</td><td>各省销售额、GDP分布等按行政区划的数据</td></tr>
+            <tr><td>散点地图</td><td>门店位置、事件发生地点等精确坐标数据</td></tr>
+            <tr><td>热力地图</td><td>人口密度、订单分布等密度型数据</td></tr>
+            <tr><td>路径地图</td><td>物流路线、迁徙路径等连线数据</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top: 24px; padding: 16px; background: #FFFBE6; border-radius: 8px; border: 1px solid #FFE58F;">
+    <div style="font-weight: 600; color: #D48806; margin-bottom: 8px;">⚠️ 注意事项</div>
+    <div style="font-size: 13px; color: #8C8C8C;">
+        1. 地图可视化需要使用专门的 L7Plot 或 L7 库<br>
+        2. 需要加载对应的 GeoJSON 数据<br>
+        3. 地图底图服务需要 API Key（高德/Mapbox等）
+    </div>
+</div>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

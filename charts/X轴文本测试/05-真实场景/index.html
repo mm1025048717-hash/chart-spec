@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>真实场景 - 产品销量排行综合示例</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../../common.css">
+    <style>
+        .scenario-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #E8F3FF 0%, #D6E8FF 100%);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        .scenario-badge .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .scenario-badge .text {
+            font-size: 14px;
+            color: var(--blue);
+            font-weight: 500;
+        }
+
+        .key-point {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #E8F3FF;
+            color: var(--blue);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin: 4px;
+        }
+        .key-point::before {
+            content: '✓';
+            font-weight: bold;
+        }
+
+        .smart-logic-flow {
+            background: #FAFBFC;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 12px 0;
+            flex-wrap: wrap;
+        }
+        .flow-box {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            min-width: 140px;
+        }
+        .flow-box.active {
+            border-color: var(--blue);
+            background: #E8F3FF;
+        }
+        .flow-box.yes {
+            border-color: var(--green);
+            background: #E6F7F0;
+        }
+        .flow-box.no {
+            border-color: var(--red);
+            background: #FFF1F0;
+        }
+        .flow-box-condition {
+            font-size: 11px;
+            color: var(--text-sub);
+            margin-bottom: 4px;
+        }
+        .flow-box-result {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .flow-arrow {
+            color: var(--text-sub);
+            font-size: 16px;
+        }
+        .flow-arrow.down {
+            transform: rotate(90deg);
+        }
+
+        .config-preview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        @media (max-width: 768px) {
+            .config-preview { grid-template-columns: 1fr; }
+        }
+        .config-item {
+            background: #FAFBFC;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+        .config-item h4 {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+        }
+
+        .data-preview {
+            background: #1F2329;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'SF Mono', monospace;
+            font-size: 11px;
+            color: #E6E8EB;
+            overflow-x: auto;
+        }
+
+        .chart-meta-custom {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            background: #FAFBFC;
+        }
+        .chart-meta-title-custom {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 10px;
+        }
+        .chart-meta-info-custom {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--text-sub);
+            align-items: center;
+        }
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .filter-tag .close {
+            cursor: pointer;
+            color: var(--text-sub);
+            margin-left: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="scenario-badge">
+        <span class="icon">5</span>
+        <span class="text">场景五：真实业务场景</span>
+    </div>
+    <h1>真实场景 - 产品销量排行综合示例</h1>
+    <p class="subtitle">完整展示智能X轴处理方案在实际业务中的应用，包含元信息、图例、汇总等完整元素</p>
+    <div class="tech-stack">
+        <span class="tech-tag">Ant Design Chart</span>
+        <span class="tech-tag">G2Plot</span>
+        <span class="tech-tag">SmartXAxis 智能配置</span>
+    </div>
+</div>
+
+<!-- 智能判断流程 -->
+<div class="spec-section">
+    <div class="spec-title">SmartXAxis 智能判断流程</div>
+    
+    <div class="smart-logic-flow">
+        <div class="flow-row">
+            <div class="flow-box active">
+                <div class="flow-box-condition">输入数据</div>
+                <div class="flow-box-result">计算 maxWidth & count</div>
+            </div>
+        </div>
+        <div class="flow-row">
+            <span class="flow-arrow down">→</span>
+        </div>
+        <div class="flow-row">
+            <div class="flow-box">
+                <div class="flow-box-condition">maxWidth ≤ 4 && count ≤ 8</div>
+                <div class="flow-box-result">场景1: 水平</div>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box no">
+                <div class="flow-box-condition">不满足</div>
+                <div class="flow-box-result">继续↓</div>
+            </div>
+        </div>
+        <div class="flow-row">
+            <span class="flow-arrow down">→</span>
+        </div>
+        <div class="flow-row">
+            <div class="flow-box">
+                <div class="flow-box-condition">maxWidth ≤ 8 && count ≤ 12</div>
+                <div class="flow-box-result">场景2: 45°</div>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box no">
+                <div class="flow-box-condition">不满足</div>
+                <div class="flow-box-result">继续↓</div>
+            </div>
+        </div>
+        <div class="flow-row">
+            <span class="flow-arrow down">→</span>
+        </div>
+        <div class="flow-row">
+            <div class="flow-box">
+                <div class="flow-box-condition">maxWidth ≥ 50 || count ≥ 15</div>
+                <div class="flow-box-result">场景4/6: 90°+截断6</div>
+            </div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box no">
+                <div class="flow-box-condition">不满足</div>
+                <div class="flow-box-result">继续↓</div>
+            </div>
+        </div>
+        <div class="flow-row">
+            <span class="flow-arrow down">→</span>
+        </div>
+        <div class="flow-row">
+            <div class="flow-box yes">
+                <div class="flow-box-condition">默认</div>
+                <div class="flow-box-result">场景3: 45°+截断8 ✓</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 完整配置代码 -->
+<div class="spec-section">
+    <div class="spec-title">SmartXAxis 完整工具函数</div>
+    <div class="code-block">
+<span class="comment">/**
+ * 计算字符串的视觉宽度（中文×2，英文×1）
+ */</span>
+<span class="keyword">function</span> <span class="function">getVisualWidth</span>(str) {
+    <span class="keyword">let</span> width = <span class="number">0</span>;
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i < str.length; i++) {
+        <span class="keyword">const</span> charCode = str.charCodeAt(i);
+        <span class="keyword">if</span> (charCode >= <span class="number">0x4E00</span> && charCode <= <span class="number">0x9FFF</span> ||
+            charCode >= <span class="number">0x3000</span> && charCode <= <span class="number">0x303F</span> ||
+            charCode >= <span class="number">0xFF00</span> && charCode <= <span class="number">0xFFEF</span>) {
+            width += <span class="number">2</span>;  <span class="comment">// 中文、全角字符</span>
+        } <span class="keyword">else</span> {
+            width += <span class="number">1</span>;  <span class="comment">// 英文、数字</span>
+        }
+    }
+    <span class="keyword">return</span> width;
+}
+
+<span class="comment">/**
+ * SmartXAxis - 智能X轴配置生成器
+ */</span>
+<span class="keyword">const</span> SmartXAxis = {
+    getConfig(data, xField, options = {}) {
+        <span class="keyword">const</span> {
+            maxTruncate = <span class="number">8</span>,        <span class="comment">// 45°截断长度</span>
+            minTruncate = <span class="number">6</span>,        <span class="comment">// 90°截断长度</span>
+            manyItemThreshold = <span class="number">15</span>,  <span class="comment">// 多数据项阈值</span>
+        } = options;
+
+        <span class="keyword">const</span> maxWidth = Math.max(...data.map(d => 
+            getVisualWidth(String(d[xField] || <span class="string">''</span>))
+        ));
+        <span class="keyword">const</span> count = data.length;
+
+        <span class="keyword">let</span> rotate, truncateAt;
+
+        <span class="keyword">if</span> (maxWidth <= <span class="number">4</span> && count <= <span class="number">8</span>) {
+            rotate = <span class="number">0</span>;              <span class="comment">// 水平</span>
+            truncateAt = <span class="keyword">null</span>;
+        } <span class="keyword">else if</span> (maxWidth <= <span class="number">8</span> && count <= <span class="number">12</span>) {
+            rotate = -Math.PI / <span class="number">4</span>;  <span class="comment">// 45°不截断</span>
+            truncateAt = <span class="keyword">null</span>;
+        } <span class="keyword">else if</span> (maxWidth >= <span class="number">50</span> || count >= manyItemThreshold) {
+            rotate = -Math.PI / <span class="number">2</span>;  <span class="comment">// 90°</span>
+            truncateAt = minTruncate;
+        } <span class="keyword">else</span> {
+            rotate = -Math.PI / <span class="number">4</span>;  <span class="comment">// 45°+截断</span>
+            truncateAt = maxTruncate;
+        }
+
+        <span class="keyword">return</span> {
+            label: {
+                autoRotate: <span class="keyword">false</span>,
+                rotate,
+                formatter: (text) => {
+                    <span class="keyword">const</span> str = String(text || <span class="string">''</span>);
+                    <span class="keyword">if</span> (truncateAt && str.length > truncateAt) {
+                        <span class="keyword">return</span> str.substring(<span class="number">0</span>, truncateAt) + <span class="string">'...'</span>;
+                    }
+                    <span class="keyword">return</span> str;
+                },
+                style: {
+                    fontSize: <span class="number">11</span>,
+                    fill: <span class="string">'#646A73'</span>,
+                    textAlign: rotate === <span class="number">0</span> ? <span class="string">'center'</span> : <span class="string">'end'</span>,
+                },
+            },
+        };
+    },
+};
+    </div>
+</div>
+
+<!-- 图表展示 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">产品销量排行 - 完整业务图表示例</span>
+            <span class="chart-tag blue">SmartXAxis 自动配置</span>
+        </div>
+        
+        <!-- 图表元信息 -->
+        <div class="chart-meta-custom">
+            <div class="chart-meta-title-custom">24年12月各产品销售额、完成率、流量及进店量</div>
+            <div class="chart-meta-info-custom">
+                <span style="display: flex; align-items: center; gap: 4px;">
+                    <span style="width: 6px; height: 6px; background: var(--blue); border-radius: 50%;"></span>
+                    数据源: 销售流水, 销售指标表
+                </span>
+                <div class="filter-tag">
+                    <span>按 产品名称</span>
+                    <span class="close">×</span>
+                    <span>分组</span>
+                </div>
+                <div class="filter-tag">
+                    <span>日期: 2024.12</span>
+                    <span style="margin-left: 4px;">∨</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-body lg" style="padding: 30px 40px 60px 50px;">
+            <!-- Y轴单位 -->
+            <div class="axis-unit y-left">万元</div>
+            
+            <!-- 图例 -->
+            <div class="chart-legend">
+                <div class="chart-legend-item">
+                    <div class="chart-legend-icon" style="background: #5B8FF9;"></div>
+                    <span>销售额</span>
+                </div>
+            </div>
+            
+            <div id="chart-main" style="width: 100%; height: 100%;"></div>
+        </div>
+        
+        <!-- 底部汇总栏 -->
+        <div class="chart-summary">
+            总计：销售额 <strong id="total-sales">-</strong>，平均 <strong id="avg-sales">-</strong>，最高 <strong id="max-sales">-</strong>
+        </div>
+    </div>
+</div>
+
+<!-- 使用示例 -->
+<div class="spec-section">
+    <div class="spec-title">在项目中使用 SmartXAxis</div>
+    
+    <div class="config-preview">
+        <div class="config-item">
+            <h4>基本用法</h4>
+            <div class="data-preview">
+<span style="color:#F97583;">import</span> { Column } <span style="color:#F97583;">from</span> <span style="color:#9ECBFF;">'@ant-design/charts'</span>;
+
+<span style="color:#F97583;">const</span> config = {
+  data,
+  xField: <span style="color:#9ECBFF;">'product'</span>,
+  yField: <span style="color:#9ECBFF;">'value'</span>,
+  <span style="color:#6A737D;">// 一行代码自动配置X轴</span>
+  xAxis: SmartXAxis.getConfig(data, <span style="color:#9ECBFF;">'product'</span>),
+};
+            </div>
+        </div>
+        <div class="config-item">
+            <h4>自定义参数</h4>
+            <div class="data-preview">
+<span style="color:#6A737D;">// 自定义截断长度和阈值</span>
+xAxis: SmartXAxis.getConfig(data, <span style="color:#9ECBFF;">'product'</span>, {
+  maxTruncate: <span style="color:#79B8FF;">10</span>,       <span style="color:#6A737D;">// 45°截断10字符</span>
+  minTruncate: <span style="color:#79B8FF;">8</span>,        <span style="color:#6A737D;">// 90°截断8字符</span>
+  manyItemThreshold: <span style="color:#79B8FF;">20</span>, <span style="color:#6A737D;">// 20项触发90°</span>
+})
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 完整图表元素说明 -->
+<div class="spec-section">
+    <div class="spec-title">完整图表应包含的元素</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 150px;">元素</th>
+                <th style="width: 120px;">位置</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>标题</b></td>
+                <td>卡片头部</td>
+                <td>简洁描述图表内容</td>
+            </tr>
+            <tr>
+                <td><b>元信息</b></td>
+                <td>标题下方</td>
+                <td>数据源、筛选条件、时间范围等</td>
+            </tr>
+            <tr>
+                <td><b>Y轴单位</b></td>
+                <td>左上角</td>
+                <td>如"万元"、"%"等</td>
+            </tr>
+            <tr>
+                <td><b>图例</b></td>
+                <td>右上角</td>
+                <td>多系列时显示颜色对应</td>
+            </tr>
+            <tr>
+                <td><b>数据标签</b></td>
+                <td>柱体顶部</td>
+                <td>可选，显示具体数值</td>
+            </tr>
+            <tr>
+                <td><b>X轴标签</b></td>
+                <td>底部</td>
+                <td>智能处理旋转和截断</td>
+            </tr>
+            <tr>
+                <td><b>汇总栏</b></td>
+                <td>底部</td>
+                <td>显示总计、平均等统计数据</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+const { Column } = G2Plot;
+
+// 视觉宽度计算
+function getVisualWidth(str) {
+    let width = 0;
+    for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        if (charCode >= 0x4E00 && charCode <= 0x9FFF ||
+            charCode >= 0x3000 && charCode <= 0x303F ||
+            charCode >= 0xFF00 && charCode <= 0xFFEF) {
+            width += 2;
+        } else {
+            width += 1;
+        }
+    }
+    return width;
+}
+
+// SmartXAxis 工具
+const SmartXAxis = {
+    getConfig(data, xField, options = {}) {
+        const {
+            maxTruncate = 8,
+            minTruncate = 6,
+            manyItemThreshold = 15,
+        } = options;
+
+        const maxWidth = Math.max(...data.map(d => getVisualWidth(String(d[xField] || ''))));
+        const count = data.length;
+
+        let rotate, truncateAt, scenario;
+
+        if (maxWidth <= 4 && count <= 8) {
+            rotate = 0;
+            truncateAt = null;
+            scenario = '场景1: 水平';
+        } else if (maxWidth <= 8 && count <= 12) {
+            rotate = -Math.PI / 4;
+            truncateAt = null;
+            scenario = '场景2: 45°';
+        } else if (maxWidth >= 50 || count >= manyItemThreshold) {
+            rotate = -Math.PI / 2;
+            truncateAt = minTruncate;
+            scenario = '场景4/6: 90°';
+        } else {
+            rotate = -Math.PI / 4;
+            truncateAt = maxTruncate;
+            scenario = '场景3: 45°+截断';
+        }
+
+        // 输出配置信息（用于页面显示）
+        this._lastConfig = { maxWidth, count, rotate, truncateAt, scenario };
+
+        return {
+            label: {
+                autoRotate: false,
+                rotate,
+                formatter: (text) => {
+                    const str = String(text || '');
+                    if (truncateAt && str.length > truncateAt) {
+                        return str.substring(0, truncateAt) + '...';
+                    }
+                    return str;
+                },
+                style: {
+                    fontSize: 11,
+                    fill: '#646A73',
+                    textAlign: rotate === 0 ? 'center' : 'end',
+                },
+            },
+        };
+    },
+    _lastConfig: null,
+};
+
+// 真实场景数据
+const data = [
+    { product: 'MacBook Pro 16英寸 M3 Max', value: 120000 },
+    { product: 'iPhone 15 Pro Max 钛金属', value: 72000 },
+    { product: '戴尔 XPS 15 开发者版', value: 35000 },
+    { product: 'iPad Pro 12.9英寸', value: 29000 },
+    { product: '小米电视 65英寸 4K版', value: 28000 },
+    { product: '华为 Mate 60 Pro', value: 20000 },
+    { product: '索尼 PlayStation 5', value: 19000 },
+    { product: 'AirPods Pro 第二代', value: 16000 },
+    { product: '耐克 Air Max 270', value: 10000 },
+    { product: '宜家 简约办公桌', value: 5000 },
+];
+
+// 获取智能配置
+const xAxisConfig = SmartXAxis.getConfig(data, 'product');
+
+// 计算汇总数据
+const total = data.reduce((sum, d) => sum + d.value, 0);
+const avg = total / data.length;
+const max = Math.max(...data.map(d => d.value));
+document.getElementById('total-sales').textContent = (total / 10000).toFixed(1) + '万元';
+document.getElementById('avg-sales').textContent = (avg / 10000).toFixed(1) + '万元';
+document.getElementById('max-sales').textContent = (max / 10000).toFixed(1) + '万元';
+
+// 创建图表
+new Column('chart-main', {
+    data,
+    xField: 'product',
+    yField: 'value',
+    color: '#5B8FF9',
+    columnWidthRatio: 0.5,
+    columnStyle: {
+        radius: [4, 4, 0, 0],
+    },
+    // 智能X轴配置
+    xAxis: xAxisConfig,
+    yAxis: {
+        label: {
+            formatter: (v) => (v / 10000).toFixed(0) + '万',
+        },
+    },
+    label: {
+        position: 'top',
+        style: {
+            fill: '#5B8FF9',
+            fontSize: 10,
+        },
+        formatter: (datum) => (datum.value / 10000).toFixed(1) + '万',
+    },
+    tooltip: {
+        formatter: (datum) => ({
+            name: datum.product,
+            value: datum.value.toLocaleString() + ' 元',
+        }),
+    },
+}).render();
+
+console.log('SmartXAxis 配置结果:', config);
+</script>
+
+
+<script src="../../nav.js"></script>
+</body>
+</html>

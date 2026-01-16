@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>表格 - 图表设计规范</title>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .chart-type-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(135deg, #F7F8FA 0%, #E8E8E8 100%);
+            padding: 8px 16px; border-radius: 20px; margin-bottom: 24px;
+        }
+        .chart-type-badge .icon { font-size: 20px; }
+        .chart-type-badge .text { font-size: 14px; color: #595959; font-weight: 500; }
+        .demo-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .demo-table th, .demo-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #E8E8E8;
+        }
+        .demo-table th {
+            background: #FAFAFA;
+            font-weight: 600;
+            color: #595959;
+        }
+        .demo-table tr:hover { background: #F5F5F5; }
+        .trend-up { color: #52C41A; }
+        .trend-down { color: #FF4D4F; }
+        .progress-bar {
+            height: 6px;
+            background: #E8E8E8;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: #5B8FF9;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📋</span>
+        <span class="text">数据组件</span>
+    </div>
+    <h1>表格 Table</h1>
+    <p class="subtitle">结构化展示多维数据，支持排序、筛选、分页等交互功能</p>
+    <div class="tech-stack">
+        <span class="tech-tag">Ant Design</span>
+        <span class="tech-tag">Table</span>
+        <span class="tech-tag">数据展示</span>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">表格示例</div>
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">销售数据报表</span>
+            <span class="chart-tag">Table</span>
+        </div>
+        <!-- 图表元信息 -->
+        <div class="chart-meta">
+            <div class="chart-meta-title">2024年Q4各区域销售数据明细</div>
+            <div class="chart-meta-info">
+                <span class="chart-meta-item"><span class="dot"></span>数据源：销售系统</span>
+                <span class="chart-meta-item"><span class="dot" style="background: var(--green);"></span>数据周期：2024年Q4</span>
+            </div>
+        </div>
+        <div style="padding: 0;">
+            <table class="demo-table">
+                <thead>
+                    <tr>
+                        <th>地区</th>
+                        <th>销售额</th>
+                        <th>环比</th>
+                        <th>完成率</th>
+                        <th>进度</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>华东区</td>
+                        <td>¥ 3,650,000</td>
+                        <td class="trend-up">↑ 12.5%</td>
+                        <td>92%</td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 92%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>华北区</td>
+                        <td>¥ 2,808,000</td>
+                        <td class="trend-up">↑ 8.2%</td>
+                        <td>85%</td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 85%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>华南区</td>
+                        <td>¥ 2,408,000</td>
+                        <td class="trend-down">↓ 3.1%</td>
+                        <td>78%</td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 78%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>华中区</td>
+                        <td>¥ 2,236,000</td>
+                        <td class="trend-up">↑ 5.8%</td>
+                        <td>81%</td>
+                        <td>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 81%;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">总销售额</span><span class="summary-value blue">¥ 11,102,000</span></span>，<span class="summary-item"><span class="summary-label">平均完成率</span><span class="summary-value green">84%</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Table } <span class="keyword">from</span> <span class="string">'antd'</span>;
+
+<span class="keyword">const</span> columns = [
+    { title: <span class="string">'地区'</span>, dataIndex: <span class="string">'region'</span>, key: <span class="string">'region'</span> },
+    {
+        title: <span class="string">'销售额'</span>,
+        dataIndex: <span class="string">'sales'</span>,
+        key: <span class="string">'sales'</span>,
+        render: (val) => <span class="string">`¥ \${val.toLocaleString()}`</span>,
+        sorter: (a, b) => a.sales - b.sales,
+    },
+    {
+        title: <span class="string">'环比'</span>,
+        dataIndex: <span class="string">'change'</span>,
+        render: (val) => (
+            &lt;span style={{ color: val > <span class="number">0</span> ? <span class="string">'#52C41A'</span> : <span class="string">'#FF4D4F'</span> }}&gt;
+                {val > <span class="number">0</span> ? <span class="string">'↑'</span> : <span class="string">'↓'</span>} {Math.abs(val)}%
+            &lt;/span&gt;
+        ),
+    },
+];
+
+&lt;Table columns={columns} dataSource={data} /&gt;
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">设计规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 150px;">元素</th><th style="width: 150px;">规范</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>表头背景</td><td><code>#FAFAFA</code></td><td>浅灰背景区分</td></tr>
+            <tr><td>表头字号</td><td><code>13px</code></td><td>字重600</td></tr>
+            <tr><td>单元格内边距</td><td><code>12px 16px</code></td><td>适中的内边距</td></tr>
+            <tr><td>边框</td><td><code>#E8E8E8</code></td><td>仅底边框</td></tr>
+            <tr><td>悬停背景</td><td><code>#F5F5F5</code></td><td>行悬停效果</td></tr>
+        </tbody>
+    </table>
+</div>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

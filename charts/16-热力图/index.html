@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>热力图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🔥</span>
+        <span class="text">分布图表</span>
+    </div>
+    <h1>热力图 Heatmap</h1>
+    <p class="subtitle">用颜色深浅表示数值大小，展示二维数据的分布密度和模式</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Heatmap</span>
+        <span class="tech-tag">密度分布</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">一周访问热力分布</span>
+            <span class="chart-tag red">Heatmap</span>
+        </div>
+        <!-- 图表元信息 -->
+        <div class="chart-meta">
+            <div class="chart-meta-title">网站访问量按时间段分布</div>
+            <div class="chart-meta-info">
+                <span class="chart-meta-item"><span class="dot"></span>数据源：访问日志</span>
+                <span class="chart-meta-item"><span class="dot" style="background: var(--red);"></span>数据周期：近7天</span>
+            </div>
+        </div>
+        <div class="chart-body md" style="position: relative;">
+            <!-- 轴单位标签 -->
+            <div class="axis-unit y-left">访问量</div>
+            
+            <!-- X轴字段标签 -->
+            <div class="x-field-label">小时</div>
+            
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">数据点</span><span class="summary-value blue">168个</span></span>，<span class="summary-item"><span class="summary-label">峰值时段</span><span class="summary-value red">周二 14:00</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>xField</code></td><td>string</td><td>X轴字段</td></tr>
+            <tr><td><code>yField</code></td><td>string</td><td>Y轴字段</td></tr>
+            <tr><td><code>colorField</code></td><td>string</td><td>颜色映射字段（数值）</td></tr>
+            <tr><td><code>color</code></td><td>string[]</td><td>颜色渐变数组</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Heatmap } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'hour'</span>,
+    yField: <span class="string">'day'</span>,
+    colorField: <span class="string">'value'</span>,
+    color: [<span class="string">'#F0F0F0'</span>, <span class="string">'#5B8FF9'</span>],  <span class="comment">// 浅到深</span>
+    shape: <span class="string">'rect'</span>,
+};
+    </div>
+</div>
+
+<script>
+const { Heatmap } = G2Plot;
+
+const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
+
+const data = [];
+days.forEach(day => {
+    hours.forEach(hour => {
+        data.push({
+            day,
+            hour,
+            value: Math.floor(Math.random() * 100),
+        });
+    });
+});
+
+new Heatmap('chart-basic', {
+    data,
+    xField: 'hour',
+    yField: 'day',
+    colorField: 'value',
+    color: ['#E8F3FF', '#5B8FF9', '#1A4B8F'],
+    shape: 'rect',
+    xAxis: {
+        label: {
+            style: { fontSize: 10 },
+            formatter: (v) => v.split(':')[0],
+        },
+    },
+    yAxis: {
+        label: { style: { fontSize: 11 } },
+    },
+    legend: { position: 'bottom' },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

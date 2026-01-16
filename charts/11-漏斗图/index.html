@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>漏斗图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge" style="background: linear-gradient(135deg, #FFF7E6 0%, #FFE7BA 100%);">
+        <span class="icon">🔻</span>
+        <span class="text" style="color: #D48806;">占比图表</span>
+    </div>
+    <h1>漏斗图</h1>
+    <p class="subtitle">展示业务流程中各阶段的转化情况，分析流失环节</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Funnel</span>
+        <span class="tech-tag">转化分析</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">电商转化漏斗</span>
+            <span class="chart-tag yellow">Funnel</span>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-title">用户购买转化路径分析</div>
+            <div class="chart-meta-info">
+                <span class="chart-meta-item"><span class="dot"></span>数据源：行为埋点数据</span>
+                <span class="chart-meta-item"><span class="dot" style="background: var(--chart-yellow);"></span>数据周期：2024年12月</span>
+            </div>
+        </div>
+        <div class="chart-body md">
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">访问</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #61DDAA;"></span>
+                    <span class="legend-text">浏览</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #F6BD16;"></span>
+                    <span class="legend-text">加购</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #F6903D;"></span>
+                    <span class="legend-text">下单</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #E86452;"></span>
+                    <span class="legend-text">支付</span>
+                </div>
+            </div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">悬停查看标注</div>
+            <div class="annotation-layer">
+                <!-- 漏斗参数 - 左上 -->
+                <div class="params-panel top-left">
+                    <div class="params-panel-title">漏斗规范</div>
+                    <div class="params-row"><span class="label">xField</span><span class="value">'stage'</span></div>
+                    <div class="params-row"><span class="label">yField</span><span class="value">'value'</span></div>
+                    <div class="params-row"><span class="label">转化标签</span><span class="value highlight">true</span></div>
+                </div>
+                <!-- 样式参数 - 右下 -->
+                <div class="params-panel bottom-right">
+                    <div class="params-panel-title">样式配置</div>
+                    <div class="params-row"><span class="label">标签位置</span><span class="value">inner</span></div>
+                    <div class="params-row"><span class="label">标签字号</span><span class="value">12px</span></div>
+                    <div class="params-row"><span class="label">标签颜色</span><span class="value">#fff</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">访问量</span><span class="summary-value blue">10,000</span></span>，<span class="summary-item"><span class="summary-label">最终转化</span><span class="summary-value green">12%</span></span>，<span class="summary-item"><span class="summary-label">支付人数</span><span class="summary-value">1,200</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>xField</code></td><td>string</td><td>阶段名称字段</td></tr>
+            <tr><td><code>yField</code></td><td>string</td><td>数值字段</td></tr>
+            <tr><td><code>isTransposed</code></td><td>boolean</td><td>是否横向显示</td></tr>
+            <tr><td><code>dynamicHeight</code></td><td>boolean</td><td>是否动态高度</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Funnel } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'stage'</span>,
+    yField: <span class="string">'value'</span>,
+    legend: <span class="keyword">false</span>,
+    label: { formatter: (datum) => <span class="string">`\${datum.stage}: \${datum.value}`</span> },
+    conversionTag: <span class="keyword">true</span>,
+};
+    </div>
+</div>
+
+<script>
+const { Funnel } = G2Plot;
+
+const data = [
+    { stage: '访问', value: 10000 },
+    { stage: '浏览', value: 6500 },
+    { stage: '加购', value: 3200 },
+    { stage: '下单', value: 1800 },
+    { stage: '支付', value: 1200 },
+];
+
+new Funnel('chart-basic', {
+    data,
+    xField: 'stage',
+    yField: 'value',
+    color: ['#5B8FF9', '#61DDAA', '#F6BD16', '#F6903D', '#E86452'],
+    legend: false,
+    label: {
+        formatter: (datum) => `${datum.stage}\n${datum.value.toLocaleString()}`,
+        style: { fontSize: 11, fill: '#fff' },
+    },
+    conversionTag: {
+        formatter: (datum) => `${((datum.$$percentage$$) * 100).toFixed(1)}%`,
+    },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

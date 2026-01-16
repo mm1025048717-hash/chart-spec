@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多数据项场景 - X轴文字优化方案</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../../common.css">
+    <style>
+        .scenario-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #F3E8FF 0%, #E8D5FF 100%);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        .scenario-badge .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--purple);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .scenario-badge .text {
+            font-size: 14px;
+            color: var(--purple);
+            font-weight: 500;
+        }
+
+        .key-point {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #F3E8FF;
+            color: var(--purple);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin: 4px;
+        }
+        .key-point::before {
+            content: '✓';
+            font-weight: bold;
+        }
+
+        .count-comparison {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 20px 0;
+        }
+        @media (max-width: 768px) {
+            .count-comparison { grid-template-columns: 1fr; }
+        }
+        .count-box {
+            background: #FAFBFC;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+        .count-box.active {
+            border-color: var(--purple);
+            background: #F3E8FF;
+        }
+        .count-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+        .count-box.active .count-number {
+            color: var(--purple);
+        }
+        .count-label {
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+        .count-config {
+            margin-top: 12px;
+            font-size: 12px;
+            font-family: 'SF Mono', monospace;
+            padding: 6px 10px;
+            background: white;
+            border-radius: 4px;
+        }
+        .count-box.active .count-config {
+            background: white;
+            color: var(--purple);
+        }
+
+        .space-analysis {
+            background: #FAFBFC;
+            border-radius: 8px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+        .space-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        .space-label {
+            width: 100px;
+            font-size: 13px;
+            color: var(--text-sub);
+        }
+        .space-bar {
+            flex: 1;
+            height: 24px;
+            background: #E5E6EB;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+        .space-fill {
+            height: 100%;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 11px;
+            color: white;
+            font-weight: 500;
+        }
+        .space-fill.blue { background: var(--blue); }
+        .space-fill.green { background: var(--green); }
+        .space-fill.yellow { background: var(--yellow); color: #333; }
+        .space-fill.purple { background: var(--purple); }
+
+        .data-preview {
+            background: #1F2329;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'SF Mono', monospace;
+            font-size: 11px;
+            color: #E6E8EB;
+            overflow-x: auto;
+            max-height: 200px;
+        }
+
+        .warning-box {
+            background: #FFF7E6;
+            border: 1px solid #FFE7BA;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        .warning-box-title {
+            font-weight: 600;
+            color: #D48806;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .warning-box-content {
+            font-size: 13px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="scenario-badge">
+        <span class="icon">6</span>
+        <span class="text">场景六：多数据项场景</span>
+    </div>
+    <h1>多数据项 (≥15项) - 90°垂直+截断</h1>
+    <p class="subtitle">适用于数据项较多的情况，即使文字不长也需要使用90度垂直显示以节省空间</p>
+    <div class="tech-stack">
+        <span class="tech-tag">Ant Design Chart</span>
+        <span class="tech-tag">G2Plot</span>
+        <span class="tech-tag">count ≥ 15 → rotate: -90°</span>
+    </div>
+</div>
+
+<!-- 数据项数量对比 -->
+<div class="spec-section">
+    <div class="spec-title">数据项数量与配置关系</div>
+    
+    <div class="count-comparison">
+        <div class="count-box">
+            <div class="count-number">≤8</div>
+            <div class="count-label">少量数据</div>
+            <div class="count-config">rotate: 0° (水平)</div>
+        </div>
+        <div class="count-box">
+            <div class="count-number">9-14</div>
+            <div class="count-label">中等数据</div>
+            <div class="count-config">rotate: -45°</div>
+        </div>
+        <div class="count-box active">
+            <div class="count-number">≥15</div>
+            <div class="count-label">大量数据</div>
+            <div class="count-config">rotate: -90° ✓</div>
+        </div>
+    </div>
+
+    <div class="warning-box">
+        <div class="warning-box-title">⚠️ 为什么15项是阈值？</div>
+        <div class="warning-box-content">
+            <p>当数据项达到15项以上时：</p>
+            <ul style="margin: 8px 0 0 20px;">
+                <li>45°倾斜的标签会开始相互重叠</li>
+                <li>横向空间不足以容纳所有标签</li>
+                <li>90°垂直可以最大化利用横向空间</li>
+            </ul>
+            <p style="margin-top: 8px;"><b>即使文字很短（如"Q1"），数据项多时也应使用90°。</b></p>
+        </div>
+    </div>
+</div>
+
+<!-- 空间利用分析 -->
+<div class="spec-section">
+    <div class="spec-title">不同角度的空间利用率</div>
+    
+    <div class="space-analysis">
+        <div class="space-row">
+            <div class="space-label">0° 水平</div>
+            <div class="space-bar">
+                <div class="space-fill blue" style="width: 100%;">100% 横向</div>
+            </div>
+        </div>
+        <div class="space-row">
+            <div class="space-label">45° 倾斜</div>
+            <div class="space-bar">
+                <div class="space-fill green" style="width: 70%;">70% 横向</div>
+            </div>
+        </div>
+        <div class="space-row">
+            <div class="space-label">90° 垂直</div>
+            <div class="space-bar">
+                <div class="space-fill purple" style="width: 15%;">~15%</div>
+            </div>
+        </div>
+    </div>
+
+    <p style="font-size: 13px; color: var(--text-sub); margin-top: 12px;">
+        90°垂直时，每个标签只占用约 <code>fontSize</code> (11px) 的横向空间，可以容纳更多数据项。
+    </p>
+</div>
+
+<!-- 设计规范说明 -->
+<div class="spec-section">
+    <div class="spec-title">触发条件</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 180px;">条件</th>
+                <th style="width: 150px;">阈值</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><b>数据项数量</b></td>
+                <td><code>≥ 15</code></td>
+                <td>不管文字长度，达到15项即触发</td>
+            </tr>
+            <tr>
+                <td><b>或 最大字符数</b></td>
+                <td><code>≥ 50</code></td>
+                <td>超长文字也触发90°（见场景4）</td>
+            </tr>
+            <tr class="highlight">
+                <td><b>截断字符数</b></td>
+                <td><code>6</code></td>
+                <td>与场景4相同，90°时截断到6字符</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 16px;">
+        <span class="key-point">数量优先判断</span>
+        <span class="key-point">90度垂直显示</span>
+        <span class="key-point">截断到6字符</span>
+        <span class="key-point">更窄柱体</span>
+    </div>
+</div>
+
+<!-- 核心配置代码 -->
+<div class="spec-section">
+    <div class="spec-title">核心配置代码</div>
+    <div class="code-block">
+<span class="comment">// 多数据项场景配置</span>
+<span class="keyword">const</span> xAxisConfig = {
+    label: {
+        autoRotate: <span class="keyword">false</span>,
+        rotate: -Math.PI / <span class="number">2</span>,          <span class="comment">// -90度</span>
+        formatter: (text) => {
+            <span class="keyword">const</span> maxLength = <span class="number">6</span>;         <span class="comment">// 截断到6字符</span>
+            <span class="keyword">if</span> (text.length > maxLength) {
+                <span class="keyword">return</span> text.substring(<span class="number">0</span>, maxLength) + <span class="string">'...'</span>;
+            }
+            <span class="keyword">return</span> text;
+        },
+        style: {
+            fontSize: <span class="number">11</span>,
+            fill: <span class="string">'#646A73'</span>,
+            textAlign: <span class="string">'end'</span>,
+        },
+    },
+};
+
+<span class="comment">// 柱体宽度配置 - 数据多时使用更窄的柱体</span>
+<span class="keyword">const</span> columnConfig = {
+    columnWidthRatio: <span class="number">0.6</span>,  <span class="comment">// 比少数据时(0.5)更窄</span>
+    columnStyle: {
+        radius: [<span class="number">3</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>],   <span class="comment">// 更小的圆角</span>
+    },
+};
+
+<span class="comment">// 判断函数</span>
+<span class="keyword">function</span> <span class="function">shouldUse90DegreeByCount</span>(data) {
+    <span class="keyword">return</span> data.length >= <span class="number">15</span>;
+}
+    </div>
+</div>
+
+<!-- 图表展示 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">月度销量排行 (20项数据)</span>
+            <span class="chart-tag purple">count ≥ 15 → 90°</span>
+        </div>
+        <div class="chart-body lg">
+            <div class="axis-unit y-left">万元</div>
+            <div id="chart-main" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="chart-summary">
+            数据项：<strong>20项</strong> | 触发条件：<strong>≥15</strong> | 旋转角度：<strong>90°</strong> | 柱宽比例：<strong>0.6</strong>
+        </div>
+    </div>
+</div>
+
+<!-- 配置参数详解 -->
+<div class="spec-section">
+    <div class="spec-title">完整配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 180px;">参数</th>
+                <th style="width: 140px;">值</th>
+                <th style="width: 100px;">类型</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>rotate</code></td>
+                <td><code>-Math.PI/2</code></td>
+                <td>number</td>
+                <td>90度垂直</td>
+            </tr>
+            <tr class="highlight">
+                <td><code>truncateAt</code></td>
+                <td><code>6</code></td>
+                <td>number</td>
+                <td>截断到6字符</td>
+            </tr>
+            <tr>
+                <td><code>textAlign</code></td>
+                <td><code>'end'</code></td>
+                <td>string</td>
+                <td>垂直时末端对齐</td>
+            </tr>
+            <tr class="highlight">
+                <td><code>columnWidthRatio</code></td>
+                <td><code>0.6</code></td>
+                <td>number</td>
+                <td>更窄的柱体（标准是0.5）</td>
+            </tr>
+            <tr>
+                <td><code>columnStyle.radius</code></td>
+                <td><code>[3,3,0,0]</code></td>
+                <td>number[]</td>
+                <td>更小的圆角（标准是4）</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 与场景4的区别 -->
+<div class="spec-section">
+    <div class="spec-title">场景4 vs 场景6：同样90°的两种触发条件</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 150px;">对比项</th>
+                <th>场景4：超长文字</th>
+                <th>场景6：多数据项</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>触发条件</td>
+                <td>字符数 ≥ 50</td>
+                <td>数据项 ≥ 15</td>
+            </tr>
+            <tr>
+                <td>典型场景</td>
+                <td>产品名称非常长</td>
+                <td>月度/日度数据</td>
+            </tr>
+            <tr>
+                <td>rotate</td>
+                <td>-Math.PI/2</td>
+                <td>-Math.PI/2</td>
+            </tr>
+            <tr>
+                <td>truncateAt</td>
+                <td>6</td>
+                <td>6</td>
+            </tr>
+            <tr class="highlight">
+                <td>柱体宽度</td>
+                <td>0.5 (标准)</td>
+                <td><b>0.6 (更窄)</b></td>
+            </tr>
+            <tr>
+                <td>柱体圆角</td>
+                <td>[4,4,0,0]</td>
+                <td><b>[3,3,0,0]</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="font-size: 13px; color: var(--text-sub); margin-top: 12px;">
+        场景6因为数据项多，需要更窄的柱体和更小的圆角来优化视觉效果。
+    </p>
+</div>
+
+<!-- 边界情况 -->
+<div class="spec-section">
+    <div class="spec-title">边界情况处理</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 200px;">情况</th>
+                <th style="width: 150px;">处理方式</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>数据项 = 14</td>
+                <td>使用45°</td>
+                <td>未达到15阈值</td>
+            </tr>
+            <tr class="highlight">
+                <td>数据项 = 15</td>
+                <td>使用90°</td>
+                <td>刚好达到阈值</td>
+            </tr>
+            <tr>
+                <td>数据项 = 30+</td>
+                <td>使用90°</td>
+                <td>同样配置</td>
+            </tr>
+            <tr>
+                <td>短文字 + 多数据</td>
+                <td>使用90°</td>
+                <td>数量优先于文字长度</td>
+            </tr>
+            <tr>
+                <td>超长文字 + 少数据</td>
+                <td>使用90°</td>
+                <td>场景4触发</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+const { Column } = G2Plot;
+
+// 多数据项数据 (20项)
+const data = [
+    { product: 'MacBook Pro 16英寸', value: 120000 },
+    { product: 'iPhone 15 Pro Max', value: 72000 },
+    { product: '戴尔 XPS 15', value: 35000 },
+    { product: 'iPad Pro 12.9', value: 29000 },
+    { product: '小米电视 65英寸', value: 28000 },
+    { product: '华为 Mate 60 Pro', value: 25000 },
+    { product: '索尼 PlayStation 5', value: 22000 },
+    { product: 'AirPods Pro 2代', value: 19000 },
+    { product: '耐克 Air Max 270', value: 17000 },
+    { product: '宜家 办公桌', value: 15000 },
+    { product: '飞利浦剃须刀', value: 13000 },
+    { product: '小米手环 8', value: 11000 },
+    { product: 'Zara 羊毛大衣', value: 10000 },
+    { product: '无印良品收纳盒', value: 9000 },
+    { product: '优衣库羽绒服', value: 8500 },
+    { product: '苏泊尔电饭煲', value: 8000 },
+    { product: '蒙牛纯牛奶', value: 7500 },
+    { product: '农夫山泉矿泉水', value: 7000 },
+    { product: '青岛啤酒', value: 6500 },
+    { product: '星巴克咖啡', value: 6000 },
+];
+
+// 截断函数
+function truncate(text, maxLength = 6) {
+    const str = String(text || '');
+    if (str.length > maxLength) {
+        return str.substring(0, maxLength) + '...';
+    }
+    return str;
+}
+
+// 输出判断信息
+console.log('数据项数量:', data.length);
+console.log('触发条件:', data.length >= 15 ? '使用90度' : '使用45度');
+
+new Column('chart-main', {
+    data,
+    xField: 'product',
+    yField: 'value',
+    color: '#5B8FF9',
+    // 多数据项时使用更窄的柱体
+    columnWidthRatio: 0.6,
+    columnStyle: {
+        radius: [3, 3, 0, 0],  // 更小的圆角
+    },
+    // 90度垂直 + 截断6字符
+    xAxis: {
+        label: {
+            autoRotate: false,
+            rotate: -Math.PI / 2,
+            formatter: (text) => truncate(text, 6),
+            style: {
+                fontSize: 11,
+                fill: '#646A73',
+                textAlign: 'end',
+            },
+        },
+    },
+    yAxis: {
+        label: {
+            formatter: (v) => (v / 10000).toFixed(0) + '万',
+        },
+    },
+    // 数据项多时不显示标签，避免拥挤
+    label: false,
+    tooltip: {
+        formatter: (datum) => ({
+            name: datum.product,
+            value: datum.value.toLocaleString() + ' 元',
+        }),
+    },
+}).render();
+</script>
+
+
+<script src="../../nav.js"></script>
+</body>
+</html>

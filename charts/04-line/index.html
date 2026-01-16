@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>折线图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📈</span>
+        <span class="text">趋势图表</span>
+    </div>
+    <h1>折线图 Line Chart</h1>
+    <p class="subtitle">展示数据随时间或有序分类的变化趋势，最常用的趋势分析图表</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Line</span>
+        <span class="tech-tag">趋势分析</span>
+    </div>
+</div>
+
+<!-- 带标注的主图表 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">月度销售趋势</span>
+            <span class="chart-tag blue">Basic Line</span>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-title">2024年销售趋势分析</div>
+            <div class="chart-meta-info">
+                <div class="chart-meta-item"><span class="dot"></span>数据周期：1月-12月</div>
+            </div>
+        </div>
+        <div class="chart-body md">
+            <div class="axis-unit y-left">万元</div>
+            <div class="x-field-label">按月份</div>
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <div class="legend-icon-line-dot" style="background: #5B8FF9;"></div>
+                    <span class="legend-text">销售额</span>
+                </div>
+            </div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">悬停查看标注</div>
+            <div class="annotation-layer">
+                <!-- 折线参数面板 - 左上 -->
+                <div class="params-panel top-left">
+                    <div class="params-panel-title">折线规范</div>
+                    <div class="params-row"><span class="label">线条颜色</span><span class="value">#5B8FF9</span></div>
+                    <div class="params-row"><span class="label">线宽</span><span class="value highlight">2px</span></div>
+                    <div class="params-row"><span class="label">平滑曲线</span><span class="value">false</span></div>
+                    <div class="params-divider"></div>
+                    <div class="params-section">数据点</div>
+                    <div class="params-row"><span class="label">大小</span><span class="value">4px</span></div>
+                    <div class="params-row"><span class="label">形状</span><span class="value">circle</span></div>
+                </div>
+                <!-- 坐标轴参数 - 右下 -->
+                <div class="params-panel bottom-right">
+                    <div class="params-panel-title">坐标轴配置</div>
+                    <div class="params-row"><span class="label">标签字号</span><span class="value">11px</span></div>
+                    <div class="params-row"><span class="label">标签颜色</span><span class="value">#646A73</span></div>
+                    <div class="params-row"><span class="label">网格线</span><span class="value">[4,4]虚线</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">全年累计：</span>
+                <span class="summary-value blue">68,500 万元</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">月均：</span>
+                <span class="summary-value">5,708 万元</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">增长率：</span>
+                <span class="summary-value green">+105%</span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- 折线规范 -->
+<div class="spec-section">
+    <div class="spec-title">折线规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>color</code></td><td><code>#5B8FF9</code></td><td>主题蓝</td></tr>
+            <tr class="highlight"><td><code>lineStyle.lineWidth</code></td><td><code>2</code></td><td>线条宽度</td></tr>
+            <tr><td><code>smooth</code></td><td><code>false</code></td><td>是否平滑曲线</td></tr>
+            <tr><td><code>point.size</code></td><td><code>4</code></td><td>数据点大小</td></tr>
+            <tr><td><code>point.shape</code></td><td><code>circle</code></td><td>数据点形状</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 坐标轴配置 -->
+<div class="spec-section">
+    <div class="spec-title">坐标轴配置</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>X轴值</th><th>Y轴值</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>label.fontSize</td><td><code>11px</code></td><td><code>11px</code></td></tr>
+            <tr><td>label.fill</td><td><code>#646A73</code></td><td><code>#646A73</code></td></tr>
+            <tr><td>grid.line</td><td><code>null</code></td><td><code>#E5E6EB [4,4]</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 变体展示 -->
+<div class="spec-section">
+    <div class="spec-title">常见变体</div>
+    <div class="variant-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">平滑曲线</span>
+                <span class="chart-tag green">Smooth</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-smooth" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">多系列折线</span>
+                <span class="chart-tag yellow">Multi Line</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-multi" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 代码示例 -->
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'month'</span>,
+    yField: <span class="string">'value'</span>,
+    padding: [<span class="number">40</span>, <span class="number">20</span>, <span class="number">50</span>, <span class="number">50</span>],
+    color: <span class="string">'#5B8FF9'</span>,
+    smooth: <span class="keyword">false</span>,
+    lineStyle: { lineWidth: <span class="number">2</span> },
+    point: { size: <span class="number">4</span>, shape: <span class="string">'circle'</span> },
+};
+    </div>
+</div>
+
+<script>
+const { Line } = G2Plot;
+
+const basicData = [
+    { month: '1月', value: 3650 },
+    { month: '2月', value: 4200 },
+    { month: '3月', value: 3800 },
+    { month: '4月', value: 4600 },
+    { month: '5月', value: 5200 },
+    { month: '6月', value: 4800 },
+    { month: '7月', value: 5600 },
+    { month: '8月', value: 6200 },
+    { month: '9月', value: 5800 },
+    { month: '10月', value: 6400 },
+    { month: '11月', value: 7000 },
+    { month: '12月', value: 7500 },
+];
+
+new Line('chart-basic', {
+    data: basicData,
+    xField: 'month',
+    yField: 'value',
+    padding: [40, 20, 50, 50],
+    color: '#5B8FF9',
+    lineStyle: { lineWidth: 2 },
+    point: { size: 4, shape: 'circle', style: { fill: '#5B8FF9' } },
+    xAxis: {
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        line: { style: { stroke: '#E5E6EB' } },
+        tickLine: null,
+    },
+    yAxis: {
+        label: { style: { fontSize: 11, fill: '#646A73' }, formatter: (v) => (v / 1000).toFixed(1) + 'k' },
+        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        line: null,
+        tickLine: null,
+    },
+}).render();
+
+new Line('chart-smooth', {
+    data: basicData,
+    xField: 'month',
+    yField: 'value',
+    padding: [30, 16, 40, 40],
+    smooth: true,
+    color: '#5AD8A6',
+    lineStyle: { lineWidth: 2 },
+    point: { size: 3, shape: 'circle', style: { fill: '#5AD8A6' } },
+    xAxis: { label: { style: { fontSize: 10 } } },
+    yAxis: { grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } } },
+}).render();
+
+const multiData = [
+    ...basicData.map(d => ({ ...d, type: '2024' })),
+    { month: '1月', value: 3200, type: '2023' },
+    { month: '2月', value: 3600, type: '2023' },
+    { month: '3月', value: 3400, type: '2023' },
+    { month: '4月', value: 4000, type: '2023' },
+    { month: '5月', value: 4500, type: '2023' },
+    { month: '6月', value: 4200, type: '2023' },
+    { month: '7月', value: 4800, type: '2023' },
+    { month: '8月', value: 5400, type: '2023' },
+    { month: '9月', value: 5000, type: '2023' },
+    { month: '10月', value: 5600, type: '2023' },
+    { month: '11月', value: 6200, type: '2023' },
+    { month: '12月', value: 6800, type: '2023' },
+];
+
+new Line('chart-multi', {
+    data: multiData,
+    xField: 'month',
+    yField: 'value',
+    seriesField: 'type',
+    padding: [30, 16, 40, 40],
+    color: ['#5B8FF9', '#5AD8A6'],
+    lineStyle: { lineWidth: 2 },
+    point: { size: 3 },
+    legend: { position: 'top-right' },
+    xAxis: { label: { style: { fontSize: 10 } } },
+    yAxis: { grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } } },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

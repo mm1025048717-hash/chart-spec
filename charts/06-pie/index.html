@@ -1,0 +1,201 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>饼图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge" style="background: linear-gradient(135deg, #FFF7E6 0%, #FFE7BA 100%);">
+        <span class="icon">🥧</span>
+        <span class="text" style="color: #D48806;">占比图表</span>
+    </div>
+    <h1>饼图 Pie Chart</h1>
+    <p class="subtitle">展示各部分占整体的比例关系，适合展示不超过7个分类的占比数据</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Pie</span>
+        <span class="tech-tag">占比分析</span>
+    </div>
+</div>
+
+<!-- 带标注的主图表 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">销售渠道占比</span>
+            <span class="chart-tag yellow">Basic Pie</span>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-title">2024年Q4 渠道分布</div>
+        </div>
+        <div class="chart-body md">
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">悬停查看标注</div>
+            <div class="annotation-layer">
+                <!-- 饼图参数面板 - 左上 -->
+                <div class="params-panel top-left">
+                    <div class="params-panel-title">饼图规范</div>
+                    <div class="params-row"><span class="label">angleField</span><span class="value">'value'</span></div>
+                    <div class="params-row"><span class="label">colorField</span><span class="value">'type'</span></div>
+                    <div class="params-row"><span class="label">radius</span><span class="value highlight">0.8</span></div>
+                    <div class="params-row"><span class="label">innerRadius</span><span class="value">0</span></div>
+                </div>
+                <!-- 标签配置 - 右上 -->
+                <div class="params-panel top-right">
+                    <div class="params-panel-title">标签配置</div>
+                    <div class="params-row"><span class="label">类型</span><span class="value">outer</span></div>
+                    <div class="params-row"><span class="label">内容</span><span class="value">{name} {%}</span></div>
+                    <div class="params-row"><span class="label">字号</span><span class="value">11px</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">总计：</span>
+                <span class="summary-value blue">13,000 万元</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">最大占比：</span>
+                <span class="summary-value green">线上直销 34.6%</span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- 饼图规范 -->
+<div class="spec-section">
+    <div class="spec-title">饼图规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>angleField</code></td><td>string</td><td>扇形角度映射字段（数值）</td></tr>
+            <tr><td><code>colorField</code></td><td>string</td><td>颜色映射字段（分类）</td></tr>
+            <tr class="highlight"><td><code>radius</code></td><td><code>0.8</code></td><td>饼图外半径（0-1）</td></tr>
+            <tr><td><code>innerRadius</code></td><td><code>0</code> / <code>0.6</code></td><td>0为饼图，>0为环形图</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>分类数量</td><td>建议不超过<strong>7个</strong>，过多时考虑合并或使用其他图表</td></tr>
+            <tr><td>数据差异</td><td>各部分差异不宜过大，否则小部分难以识别</td></tr>
+            <tr><td>环形图</td><td>中心可放置关键指标，增强信息传达</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 变体展示 -->
+<div class="spec-section">
+    <div class="spec-title">常见变体</div>
+    <div class="variant-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">环形图</span>
+                <span class="chart-tag blue">Donut</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-donut" style="width: 100%; height: 100%;"></div>
+                <div class="hover-hint">悬停查看标注</div>
+                <div class="annotation-layer">
+                    <div class="params-panel top-left">
+                        <div class="params-panel-title">环形图配置</div>
+                        <div class="params-row"><span class="label">innerRadius</span><span class="value highlight">0.6</span></div>
+                        <div class="params-row"><span class="label">中心统计</span><span class="value">statistic</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">玫瑰图</span>
+                <span class="chart-tag green">Rose</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-rose" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 代码示例 -->
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">const</span> config = {
+    data,
+    angleField: <span class="string">'value'</span>,
+    colorField: <span class="string">'type'</span>,
+    radius: <span class="number">0.8</span>,
+    innerRadius: <span class="number">0</span>,  <span class="comment">// 环形图设为 0.6</span>
+    color: [<span class="string">'#5B8FF9'</span>, <span class="string">'#5AD8A6'</span>, <span class="string">'#F6BD16'</span>, <span class="string">'#E86452'</span>, <span class="string">'#9270CA'</span>],
+    label: { type: <span class="string">'outer'</span>, content: <span class="string">'{name} {percentage}'</span> },
+};
+    </div>
+</div>
+
+<script>
+const { Pie, Rose } = G2Plot;
+
+const data = [
+    { type: '线上直销', value: 4500 },
+    { type: '线下门店', value: 3200 },
+    { type: '分销渠道', value: 2800 },
+    { type: '企业采购', value: 1800 },
+    { type: '其他', value: 700 },
+];
+
+new Pie('chart-basic', {
+    data,
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.8,
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA'],
+    label: { type: 'outer', content: '{name} {percentage}', style: { fontSize: 11 } },
+    legend: { position: 'right' },
+    interactions: [{ type: 'element-active' }],
+}).render();
+
+new Pie('chart-donut', {
+    data,
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.8,
+    innerRadius: 0.6,
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA'],
+    label: { type: 'inner', offset: '-50%', content: '{percentage}', style: { fontSize: 10, textAlign: 'center', fill: '#fff' } },
+    legend: { position: 'right' },
+    statistic: {
+        title: { content: '总计', style: { fontSize: 11 } },
+        content: { content: '13,000', style: { fontSize: 16 } },
+    },
+}).render();
+
+new Rose('chart-rose', {
+    data,
+    xField: 'type',
+    yField: 'value',
+    seriesField: 'type',
+    radius: 0.9,
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA'],
+    legend: { position: 'right' },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

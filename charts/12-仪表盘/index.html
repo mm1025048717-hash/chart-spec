@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仪表盘 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+        .variant-grid { grid-template-columns: repeat(3, 1fr); }
+        @media (max-width: 768px) { .variant-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">⏱️</span>
+        <span class="text">指标组件</span>
+    </div>
+    <h1>仪表盘</h1>
+    <p class="subtitle">展示指标的完成进度或当前状态，直观展示目标达成情况</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Gauge</span>
+        <span class="tech-tag">进度展示</span>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">常见变体</div>
+    <div class="variant-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">基础仪表盘</span>
+                <span class="chart-tag purple">Basic</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-summary">
+                <span class="summary-item"><span class="summary-label">当前达成率</span><span class="summary-value blue">75%</span></span>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">多色仪表盘</span>
+                <span class="chart-tag blue">Multi Color</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-color" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-summary">
+                <span class="summary-item"><span class="summary-label">当前达成率</span><span class="summary-value yellow">65%</span></span>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">刻度仪表盘</span>
+                <span class="chart-tag green">With Ticks</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-ticks" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-summary">
+                <span class="summary-item"><span class="summary-label">当前达成率</span><span class="summary-value green">82%</span></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>percent</code></td><td>number (0-1)</td><td>当前进度百分比</td></tr>
+            <tr><td><code>range.color</code></td><td>string | string[]</td><td>进度条颜色</td></tr>
+            <tr><td><code>indicator</code></td><td>object | null</td><td>指针配置</td></tr>
+            <tr><td><code>statistic</code></td><td>object</td><td>中心统计文本</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Gauge } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    percent: <span class="number">0.75</span>,
+    range: { color: <span class="string">'#5B8FF9'</span> },
+    indicator: {
+        pointer: { style: { stroke: <span class="string">'#D0D0D0'</span> } },
+        pin: { style: { stroke: <span class="string">'#D0D0D0'</span> } },
+    },
+    statistic: {
+        content: {
+            formatter: ({ percent }) => <span class="string">`达成率: \${(percent * 100).toFixed(0)}%`</span>,
+        },
+    },
+};
+    </div>
+</div>
+
+<script>
+const { Gauge } = G2Plot;
+
+// 基础仪表盘
+new Gauge('chart-basic', {
+    percent: 0.75,
+    range: { color: '#5B8FF9' },
+    indicator: {
+        pointer: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0' } },
+    },
+    statistic: {
+        content: {
+            style: { fontSize: '24px', color: '#5B8FF9' },
+            formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        },
+    },
+}).render();
+
+// 多色仪表盘
+new Gauge('chart-color', {
+    percent: 0.65,
+    range: {
+        ticks: [0, 1/3, 2/3, 1],
+        color: ['#E86452', '#F6BD16', '#5AD8A6'],
+    },
+    indicator: {
+        pointer: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0' } },
+    },
+    statistic: {
+        content: {
+            style: { fontSize: '20px' },
+            formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        },
+    },
+}).render();
+
+// 刻度仪表盘
+new Gauge('chart-ticks', {
+    percent: 0.82,
+    range: { color: '#5AD8A6' },
+    axis: {
+        label: { formatter: (v) => (v * 100).toFixed(0) },
+        subTickLine: { count: 3 },
+    },
+    indicator: {
+        pointer: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0' } },
+    },
+    statistic: {
+        content: {
+            style: { fontSize: '20px', color: '#5AD8A6' },
+            formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        },
+    },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

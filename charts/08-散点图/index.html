@@ -1,0 +1,138 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>散点图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">⚫</span>
+        <span class="text">统计图表</span>
+    </div>
+    <h1>散点图</h1>
+    <p class="subtitle">展示两个变量之间的相关性和分布模式，用于发现数据之间的关系</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Scatter</span>
+        <span class="tech-tag">相关性分析</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">广告投入与销售额关系</span>
+            <span class="chart-tag blue">Scatter</span>
+        </div>
+        <div class="chart-body md" style="position: relative;">
+            <!-- 轴单位标签 -->
+            <div class="axis-unit y-left">销售额(万元)</div>
+            
+            <!-- 自定义图例 -->
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">线上</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">线下</span>
+                </div>
+            </div>
+            
+            <!-- X轴字段标签 -->
+            <div class="x-field-label">广告投入(万元)</div>
+            
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">数据点</span><span class="summary-value blue">50个</span></span>，<span class="summary-item"><span class="summary-label">相关系数</span><span class="summary-value green">0.85</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>xField</code></td><td>string</td><td>X轴字段</td></tr>
+            <tr><td><code>yField</code></td><td>string</td><td>Y轴字段</td></tr>
+            <tr><td><code>colorField</code></td><td>string</td><td>颜色分组字段（可选）</td></tr>
+            <tr><td><code>size</code></td><td>number</td><td>点的大小，默认4</td></tr>
+            <tr><td><code>shape</code></td><td>string</td><td>点的形状，如circle、square</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Scatter } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'advertising'</span>,
+    yField: <span class="string">'sales'</span>,
+    colorField: <span class="string">'category'</span>,
+    size: <span class="number">5</span>,
+    shape: <span class="string">'circle'</span>,
+    pointStyle: { fillOpacity: <span class="number">0.8</span> },
+};
+    </div>
+</div>
+
+<script>
+const { Scatter } = G2Plot;
+
+// 模拟数据
+const data = [];
+for (let i = 0; i < 50; i++) {
+    const ad = Math.floor(Math.random() * 100) + 10;
+    data.push({
+        advertising: ad,
+        sales: ad * (1.5 + Math.random()) + Math.random() * 20,
+        category: Math.random() > 0.5 ? '线上' : '线下',
+    });
+}
+
+new Scatter('chart-basic', {
+    data,
+    xField: 'advertising',
+    yField: 'sales',
+    colorField: 'category',
+    size: 5,
+    shape: 'circle',
+    color: ['#5B8FF9', '#5AD8A6'],
+    pointStyle: { fillOpacity: 0.8 },
+    padding: 'auto',
+    appendPadding: [40, 20, 30, 20],
+    xAxis: { 
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        line: { style: { stroke: '#E5E6EB' } },
+        tickLine: null,
+    },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        line: null,
+    },
+    legend: false,
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

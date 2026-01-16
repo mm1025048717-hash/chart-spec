@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>堆叠柱状图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📊</span>
+        <span class="text">基础图表</span>
+    </div>
+    <h1>堆叠柱状图 Stacked Column</h1>
+    <p class="subtitle">展示各部分数值的堆叠构成，同时体现总量和各组成部分的占比</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Column</span>
+        <span class="tech-tag">isStack: true</span>
+    </div>
+</div>
+
+<!-- 带标注的主图表 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">月度销售渠道构成</span>
+            <span class="chart-tag blue">Stacked Column</span>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-title">2024年销售渠道分析</div>
+            <div class="chart-meta-info">
+                <div class="chart-meta-item"><span class="dot"></span>线上渠道</div>
+                <div class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>线下渠道</div>
+            </div>
+        </div>
+        <div class="chart-body md" style="position: relative;">
+            <div class="axis-unit y-left">万元</div>
+            <div class="x-field-label">按月份</div>
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <div class="legend-icon-square" style="background: #5B8FF9;"></div>
+                    <span class="legend-text">线上</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-icon-square" style="background: #5AD8A6;"></div>
+                    <span class="legend-text">线下</span>
+                </div>
+            </div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">悬停查看标注详情</div>
+            <div class="hover-hint">悬停查看标注</div>
+            <div class="annotation-layer">
+                <!-- 堆叠参数面板 - 左上 -->
+                <div class="params-panel top-left">
+                    <div class="params-panel-title">堆叠配置</div>
+                    <div class="params-row"><span class="label">seriesField</span><span class="value">'type'</span></div>
+                    <div class="params-row"><span class="label">isStack</span><span class="value highlight">true</span></div>
+                    <div class="params-divider"></div>
+                    <div class="params-section">柱体样式</div>
+                    <div class="params-row"><span class="label">宽度比例</span><span class="value">0.5</span></div>
+                    <div class="params-row"><span class="label">圆角</span><span class="value">[4,4,0,0]</span></div>
+                </div>
+                <!-- 坐标轴参数 - 右下 -->
+                <div class="params-panel bottom-right">
+                    <div class="params-panel-title">坐标轴配置</div>
+                    <div class="params-row"><span class="label">X轴标签</span><span class="value">11px</span></div>
+                    <div class="params-row"><span class="label">Y轴网格</span><span class="value">[4,4]虚线</span></div>
+                    <div class="params-row"><span class="label">轴线颜色</span><span class="value">#E5E6EB</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">总计：</span>
+                <span class="summary-value blue">40,200 万元</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">线上占比：</span>
+                <span class="summary-value green">68%</span>
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- 尺寸规范 -->
+<div class="spec-section">
+    <div class="spec-title">尺寸规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 150px;">参数</th><th style="width: 200px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>padding</code></td>
+                <td><code>[40, 20, 50, 50]</code></td>
+                <td>图表内边距 [上, 右, 下, 左]</td>
+            </tr>
+            <tr>
+                <td><code>isStack</code></td>
+                <td><code>true</code></td>
+                <td>开启堆叠模式（关键配置）</td>
+            </tr>
+            <tr>
+                <td><code>seriesField</code></td>
+                <td><code>'type'</code></td>
+                <td>分组字段，区分不同堆叠层</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 变体展示 -->
+<div class="spec-section">
+    <div class="spec-title">常见变体</div>
+    <div class="variant-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">百分比堆叠</span>
+                <span class="chart-tag green">Percent Stack</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-percent" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">多系列堆叠</span>
+                <span class="chart-tag yellow">Multi Series</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-multi" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 代码示例 -->
+<div class="spec-section">
+    <div class="spec-title">完整代码示例</div>
+    <div class="code-block">
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'month'</span>,
+    yField: <span class="string">'value'</span>,
+    seriesField: <span class="string">'type'</span>,
+    isStack: <span class="keyword">true</span>,
+    padding: [<span class="number">40</span>, <span class="number">20</span>, <span class="number">50</span>, <span class="number">50</span>],
+    color: [<span class="string">'#5B8FF9'</span>, <span class="string">'#5AD8A6'</span>],
+    columnWidthRatio: <span class="number">0.5</span>,
+    columnStyle: { radius: [<span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>] },
+    xAxis: {
+        label: { style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#646A73'</span> } },
+        line: { style: { stroke: <span class="string">'#E5E6EB'</span> } },
+        tickLine: <span class="keyword">null</span>,
+    },
+    yAxis: {
+        label: { style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#646A73'</span> } },
+        grid: { line: { style: { stroke: <span class="string">'#E5E6EB'</span>, lineDash: [<span class="number">4</span>, <span class="number">4</span>] } } },
+    },
+    legend: { position: <span class="string">'top-right'</span>, itemSpacing: <span class="number">20</span> },
+};
+    </div>
+</div>
+
+<script>
+const { Column } = G2Plot;
+
+const stackData = [
+    { month: '1月', type: '线上', value: 2800 },
+    { month: '1月', type: '线下', value: 1200 },
+    { month: '2月', type: '线上', value: 3200 },
+    { month: '2月', type: '线下', value: 1400 },
+    { month: '3月', type: '线上', value: 3800 },
+    { month: '3月', type: '线下', value: 1600 },
+    { month: '4月', type: '线上', value: 3500 },
+    { month: '4月', type: '线下', value: 1500 },
+    { month: '5月', type: '线上', value: 4200 },
+    { month: '5月', type: '线下', value: 1800 },
+    { month: '6月', type: '线上', value: 4800 },
+    { month: '6月', type: '线下', value: 2000 },
+];
+
+new Column('chart-basic', {
+    data: stackData,
+    xField: 'month',
+    yField: 'value',
+    seriesField: 'type',
+    isStack: true,
+    padding: [40, 20, 50, 50],
+    color: ['#5B8FF9', '#5AD8A6'],
+    columnWidthRatio: 0.5,
+    columnStyle: { radius: [4, 4, 0, 0] },
+    xAxis: {
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        line: { style: { stroke: '#E5E6EB' } },
+        tickLine: null,
+    },
+    yAxis: {
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        line: null,
+        tickLine: null,
+    },
+    legend: false,
+}).render();
+
+new Column('chart-percent', {
+    data: stackData,
+    xField: 'month',
+    yField: 'value',
+    seriesField: 'type',
+    isStack: true,
+    isPercent: true,
+    padding: [30, 16, 40, 40],
+    color: ['#5B8FF9', '#5AD8A6'],
+    columnWidthRatio: 0.5,
+    columnStyle: { radius: [4, 4, 0, 0] },
+    yAxis: { label: { formatter: (v) => (v * 100).toFixed(0) + '%' } },
+    legend: { position: 'top-right' },
+}).render();
+
+const multiData = [
+    { month: '1月', type: '产品A', value: 1800 },
+    { month: '1月', type: '产品B', value: 1200 },
+    { month: '1月', type: '产品C', value: 800 },
+    { month: '2月', type: '产品A', value: 2200 },
+    { month: '2月', type: '产品B', value: 1400 },
+    { month: '2月', type: '产品C', value: 1000 },
+    { month: '3月', type: '产品A', value: 2600 },
+    { month: '3月', type: '产品B', value: 1600 },
+    { month: '3月', type: '产品C', value: 1200 },
+];
+
+new Column('chart-multi', {
+    data: multiData,
+    xField: 'month',
+    yField: 'value',
+    seriesField: 'type',
+    isStack: true,
+    padding: [30, 16, 40, 40],
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16'],
+    columnWidthRatio: 0.5,
+    columnStyle: { radius: [4, 4, 0, 0] },
+    legend: { position: 'top-right' },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

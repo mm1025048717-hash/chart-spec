@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>直方图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📊</span>
+        <span class="text">统计图表</span>
+    </div>
+    <h1>直方图</h1>
+    <p class="subtitle">展示数据的频率分布，将连续数据分组统计，了解数据分布特征</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Histogram</span>
+        <span class="tech-tag">频率分布</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">用户年龄分布</span>
+            <span class="chart-tag green">Histogram</span>
+        </div>
+        <div class="chart-body md" style="position: relative;">
+            <!-- 轴单位标签 -->
+            <div class="axis-unit y-left">人数</div>
+            
+            <!-- 自定义图例 -->
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">用户数</span>
+                </div>
+            </div>
+            
+            <!-- X轴字段标签 -->
+            <div class="x-field-label">年龄</div>
+            
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">用户数</span><span class="summary-value green">200人</span></span>，<span class="summary-item"><span class="summary-label">平均年龄</span><span class="summary-value">42岁</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>binField</code></td><td>string</td><td>分箱字段（数值型）</td></tr>
+            <tr><td><code>binWidth</code></td><td>number</td><td>分箱宽度（区间大小）</td></tr>
+            <tr><td><code>binNumber</code></td><td>number</td><td>分箱数量（与binWidth二选一）</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Histogram } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    data,
+    binField: <span class="string">'age'</span>,
+    binWidth: <span class="number">5</span>,          <span class="comment">// 每5岁一组</span>
+    color: <span class="string">'#5AD8A6'</span>,
+    columnStyle: { radius: [<span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>] },
+};
+    </div>
+</div>
+
+<script>
+const { Histogram } = G2Plot;
+
+// 模拟用户年龄数据
+const data = [];
+for (let i = 0; i < 200; i++) {
+    data.push({ age: Math.floor(Math.random() * 50) + 18 });
+}
+
+new Histogram('chart-basic', {
+    data,
+    binField: 'age',
+    binWidth: 5,
+    color: '#5AD8A6',
+    columnStyle: { radius: [4, 4, 0, 0] },
+    padding: 'auto',
+    appendPadding: [40, 20, 30, 20],
+    xAxis: { 
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        line: { style: { stroke: '#E5E6EB' } },
+        tickLine: null,
+    },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        line: null,
+    },
+    legend: false,
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

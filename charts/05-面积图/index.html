@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面积图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📉</span>
+        <span class="text">趋势图表</span>
+    </div>
+    <h1>面积图</h1>
+    <p class="subtitle">强调数值随时间变化的程度和总量，通过填充面积增强视觉效果</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Area</span>
+        <span class="tech-tag">趋势+总量</span>
+    </div>
+</div>
+
+<!-- 基础示例 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">月度访问量趋势</span>
+            <span class="chart-tag green">Basic Area</span>
+        </div>
+        <div class="chart-body md" style="position: relative;">
+            <!-- 轴单位标签 -->
+            <div class="axis-unit y-left">访问量</div>
+            
+            <!-- 自定义图例 -->
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">访问量</span>
+                </div>
+            </div>
+            
+            <!-- X轴字段标签 -->
+            <div class="x-field-label">月份</div>
+            
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">访问量</span><span class="summary-value green">38,100</span></span>，<span class="summary-item"><span class="summary-label">月均</span><span class="summary-value">4,763</span></span>
+        </div>
+    </div>
+</div>
+
+<!-- 核心配置 -->
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 180px;">参数</th>
+                <th style="width: 150px;">值</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>smooth</code></td>
+                <td><code>true</code></td>
+                <td>平滑曲线（面积图常用平滑）</td>
+            </tr>
+            <tr>
+                <td><code>areaStyle.fillOpacity</code></td>
+                <td><code>0.3</code></td>
+                <td>填充透明度</td>
+            </tr>
+            <tr>
+                <td><code>line.style.lineWidth</code></td>
+                <td><code>2</code></td>
+                <td>边界线宽度</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 代码示例 -->
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">import</span> { Area } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'date'</span>,
+    yField: <span class="string">'value'</span>,
+    smooth: <span class="keyword">true</span>,
+    color: <span class="string">'#5AD8A6'</span>,
+    areaStyle: {
+        fillOpacity: <span class="number">0.3</span>,
+    },
+    line: {
+        style: { lineWidth: <span class="number">2</span> },
+    },
+};
+    </div>
+</div>
+
+<!-- 变体展示 -->
+<div class="spec-section">
+    <div class="spec-title">常见变体</div>
+    <div class="variant-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">堆叠面积图</span>
+                <span class="chart-tag blue">Stacked</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-stacked" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <span class="chart-title">渐变面积图</span>
+                <span class="chart-tag yellow">Gradient</span>
+            </div>
+            <div class="chart-body sm">
+                <div id="chart-gradient" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const { Area } = G2Plot;
+
+const basicData = [
+    { date: '1月', value: 3650 },
+    { date: '2月', value: 4200 },
+    { date: '3月', value: 3800 },
+    { date: '4月', value: 4600 },
+    { date: '5月', value: 5200 },
+    { date: '6月', value: 4800 },
+    { date: '7月', value: 5600 },
+    { date: '8月', value: 6200 },
+];
+
+// 基础面积图
+new Area('chart-basic', {
+    data: basicData,
+    xField: 'date',
+    yField: 'value',
+    smooth: true,
+    color: '#5AD8A6',
+    areaStyle: { fillOpacity: 0.3 },
+    line: { style: { lineWidth: 2 } },
+    padding: 'auto',
+    appendPadding: [40, 20, 30, 20],
+    xAxis: { 
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        line: { style: { stroke: '#E5E6EB' } },
+        tickLine: null,
+    },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        line: null,
+    },
+    legend: false,
+}).render();
+
+// 堆叠面积图
+const stackedData = [
+    ...basicData.map(d => ({ ...d, type: '线上' })),
+    { date: '1月', value: 1800, type: '线下' },
+    { date: '2月', value: 2100, type: '线下' },
+    { date: '3月', value: 1900, type: '线下' },
+    { date: '4月', value: 2300, type: '线下' },
+    { date: '5月', value: 2600, type: '线下' },
+    { date: '6月', value: 2400, type: '线下' },
+    { date: '7月', value: 2800, type: '线下' },
+    { date: '8月', value: 3100, type: '线下' },
+];
+
+new Area('chart-stacked', {
+    data: stackedData,
+    xField: 'date',
+    yField: 'value',
+    seriesField: 'type',
+    isStack: true,
+    smooth: true,
+    color: ['#5B8FF9', '#5AD8A6'],
+    areaStyle: { fillOpacity: 0.4 },
+    legend: { position: 'top-right' },
+    xAxis: { label: { style: { fontSize: 10 } } },
+}).render();
+
+// 渐变面积图
+new Area('chart-gradient', {
+    data: basicData,
+    xField: 'date',
+    yField: 'value',
+    smooth: true,
+    areaStyle: () => ({
+        fill: 'l(270) 0:#ffffff 0.5:#F6BD16 1:#F6BD16',
+        fillOpacity: 0.6,
+    }),
+    line: { style: { stroke: '#F6BD16', lineWidth: 2 } },
+    xAxis: { label: { style: { fontSize: 10 } } },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短文字水平显示 - X轴文字优化方案</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../../common.css">
+    <style>
+        /* 页面特定样式 */
+        .scenario-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #E8F3FF 0%, #D6E8FF 100%);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-bottom: 24px;
+        }
+        .scenario-badge .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .scenario-badge .text {
+            font-size: 14px;
+            color: var(--blue);
+            font-weight: 500;
+        }
+
+        .key-point {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #E6F7F0;
+            color: #00A854;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin: 4px;
+        }
+        .key-point::before {
+            content: '✓';
+            font-weight: bold;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+        }
+        @media (max-width: 768px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+        .comparison-item {
+            background: #FAFBFC;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+        .comparison-item h4 {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .comparison-item h4 .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        .comparison-item.good h4 .dot { background: var(--green); }
+        .comparison-item.bad h4 .dot { background: var(--red); }
+
+        .data-preview {
+            background: #1F2329;
+            border-radius: 6px;
+            padding: 12px;
+            font-family: 'SF Mono', monospace;
+            font-size: 11px;
+            color: #E6E8EB;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="scenario-badge">
+        <span class="icon">1</span>
+        <span class="text">场景一：短文字水平显示</span>
+    </div>
+    <h1>短文字 (≤4视觉宽度) - 水平显示</h1>
+    <p class="subtitle">适用于简短标签如：华东、Q1、1月、A组 等</p>
+    <div class="tech-stack">
+        <span class="tech-tag">Ant Design Chart</span>
+        <span class="tech-tag">G2Plot</span>
+        <span class="tech-tag">rotate: 0°</span>
+    </div>
+</div>
+
+<!-- 设计规范说明 -->
+<div class="spec-section">
+    <div class="spec-title">适用场景与判断条件</div>
+    
+    <div class="comparison-grid">
+        <div class="comparison-item good">
+            <h4><span class="dot"></span>适用数据示例</h4>
+            <div class="data-preview">
+[
+  { region: '华东', value: 3650 },  <span style="color:#6A737D;">// 2中文 = 4视觉宽度</span>
+  { region: '华北', value: 2808 },
+  { region: 'Q1', value: 2408 },    <span style="color:#6A737D;">// 2英文 = 2视觉宽度</span>
+  { region: '1月', value: 2236 },   <span style="color:#6A737D;">// 1数字+1中文 = 3视觉宽度</span>
+]
+            </div>
+        </div>
+        <div class="comparison-item bad">
+            <h4><span class="dot"></span>不适用数据示例</h4>
+            <div class="data-preview">
+[
+  { region: '华东地区', value: 3650 },  <span style="color:#6A737D;">// 4中文 = 8视觉宽度 ❌</span>
+  { region: 'January', value: 2808 },   <span style="color:#6A737D;">// 7英文 = 7视觉宽度 ❌</span>
+  { region: '2024年第一季度', value: 2408 }, <span style="color:#6A737D;">// 太长 ❌</span>
+]
+            </div>
+        </div>
+    </div>
+
+    <div class="spec-title">触发条件</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 180px;">条件</th>
+                <th style="width: 150px;">阈值</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>最大视觉宽度</b></td>
+                <td><code>≤ 4</code></td>
+                <td>中文字符算2个单位，英文/数字算1个单位</td>
+            </tr>
+            <tr>
+                <td><b>数据项数量</b></td>
+                <td><code>≤ 8</code></td>
+                <td>超过8项时即使文字短也可能重叠</td>
+            </tr>
+            <tr class="highlight">
+                <td><b>同时满足</b></td>
+                <td><code>AND</code></td>
+                <td>两个条件必须同时满足才使用水平显示</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 16px;">
+        <span class="key-point">无旋转，保持水平</span>
+        <span class="key-point">无截断，完整显示</span>
+        <span class="key-point">文字居中对齐</span>
+        <span class="key-point">阅读体验最佳</span>
+    </div>
+</div>
+
+<!-- 核心配置代码 -->
+<div class="spec-section">
+    <div class="spec-title">核心配置代码</div>
+    <div class="code-block">
+<span class="comment">// 短文字场景配置</span>
+<span class="keyword">const</span> xAxisConfig = {
+    label: {
+        autoRotate: <span class="keyword">false</span>,      <span class="comment">// 禁用自动旋转</span>
+        rotate: <span class="number">0</span>,               <span class="comment">// 水平显示 (0弧度)</span>
+        formatter: (text) => text,  <span class="comment">// 不截断，原样返回</span>
+        style: {
+            fontSize: <span class="number">11</span>,
+            fill: <span class="string">'#646A73'</span>,
+            textAlign: <span class="string">'center'</span>,  <span class="comment">// 居中对齐</span>
+        },
+    },
+};
+
+<span class="comment">// 判断函数</span>
+<span class="keyword">function</span> <span class="function">shouldUseHorizontal</span>(data, xField) {
+    <span class="keyword">const</span> maxWidth = Math.max(...data.map(d => getVisualWidth(String(d[xField]))));
+    <span class="keyword">const</span> count = data.length;
+    <span class="keyword">return</span> maxWidth <= <span class="number">4</span> && count <= <span class="number">8</span>;
+}
+    </div>
+</div>
+
+<!-- 图表展示 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">各大区销售额对比</span>
+            <span class="chart-tag blue">rotate: 0° 水平</span>
+        </div>
+        <div class="chart-body md">
+            <div class="axis-unit y-left">万元</div>
+            <div id="chart-main" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="chart-summary">
+            数据项：<strong>5项</strong> | 最大视觉宽度：<strong>4</strong> | 判定结果：<strong style="color: #00A854;">水平显示 ✓</strong>
+        </div>
+    </div>
+</div>
+
+<!-- 配置参数详解 -->
+<div class="spec-section">
+    <div class="spec-title">完整配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 160px;">参数</th>
+                <th style="width: 120px;">值</th>
+                <th style="width: 150px;">类型</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>xAxis.label.rotate</code></td>
+                <td><code>0</code></td>
+                <td>number (弧度)</td>
+                <td>0表示水平显示，无旋转</td>
+            </tr>
+            <tr>
+                <td><code>xAxis.label.autoRotate</code></td>
+                <td><code>false</code></td>
+                <td>boolean</td>
+                <td>禁用G2Plot的自动旋转功能</td>
+            </tr>
+            <tr>
+                <td><code>xAxis.label.style.textAlign</code></td>
+                <td><code>'center'</code></td>
+                <td>string</td>
+                <td>水平显示时居中对齐</td>
+            </tr>
+            <tr>
+                <td><code>xAxis.label.style.fontSize</code></td>
+                <td><code>11</code></td>
+                <td>number (px)</td>
+                <td>轴标签字体大小</td>
+            </tr>
+            <tr>
+                <td><code>xAxis.label.style.fill</code></td>
+                <td><code>'#646A73'</code></td>
+                <td>string (color)</td>
+                <td>轴标签文字颜色</td>
+            </tr>
+            <tr>
+                <td><code>columnWidthRatio</code></td>
+                <td><code>0.5</code></td>
+                <td>number (0-1)</td>
+                <td>柱体宽度占比</td>
+            </tr>
+            <tr>
+                <td><code>columnStyle.radius</code></td>
+                <td><code>[4,4,0,0]</code></td>
+                <td>number[]</td>
+                <td>柱体圆角，仅顶部</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 边界情况 -->
+<div class="spec-section">
+    <div class="spec-title">边界情况处理</div>
+    <table class="spec-table">
+        <thead>
+            <tr>
+                <th style="width: 200px;">情况</th>
+                <th style="width: 150px;">处理方式</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>数据项刚好8项</td>
+                <td>仍使用水平</td>
+                <td>8项是临界值，包含在内</td>
+            </tr>
+            <tr>
+                <td>混合中英文（如"Q1"）</td>
+                <td>按视觉宽度计算</td>
+                <td>Q1 = 1+1 = 2视觉宽度</td>
+            </tr>
+            <tr>
+                <td>数字标签（如"1"、"12"）</td>
+                <td>每个数字算1</td>
+                <td>"12" = 2视觉宽度</td>
+            </tr>
+            <tr>
+                <td>空字符串</td>
+                <td>宽度为0</td>
+                <td>空值不影响判断</td>
+            </tr>
+            <tr class="highlight">
+                <td>9项但文字很短</td>
+                <td><b>切换到45°</b></td>
+                <td>数量超限，即使文字短也要旋转</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<script>
+const { Column } = G2Plot;
+
+// 视觉宽度计算函数
+function getVisualWidth(str) {
+    let width = 0;
+    for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        if (charCode >= 0x4E00 && charCode <= 0x9FFF ||
+            charCode >= 0x3000 && charCode <= 0x303F ||
+            charCode >= 0xFF00 && charCode <= 0xFFEF) {
+            width += 2;
+        } else {
+            width += 1;
+        }
+    }
+    return width;
+}
+
+// 短文字数据
+const data = [
+    { region: '华东', value: 3650 },
+    { region: '华北', value: 2808 },
+    { region: '华南', value: 2408 },
+    { region: '华中', value: 2236 },
+    { region: '西北', value: 1500 },
+];
+
+// 计算并输出判断信息
+const maxWidth = Math.max(...data.map(d => getVisualWidth(d.region)));
+console.log('最大视觉宽度:', maxWidth, '数据项数:', data.length);
+console.log('判定:', maxWidth <= 4 && data.length <= 8 ? '水平显示' : '需要旋转');
+
+new Column('chart-main', {
+    data,
+    xField: 'region',
+    yField: 'value',
+    color: '#5B8FF9',
+    columnWidthRatio: 0.5,
+    columnStyle: {
+        radius: [4, 4, 0, 0],
+    },
+    // 核心：短文字X轴配置
+    xAxis: {
+        label: {
+            autoRotate: false,
+            rotate: 0,  // 水平显示
+            style: {
+                fontSize: 11,
+                fill: '#646A73',
+                textAlign: 'center',
+            },
+        },
+    },
+    yAxis: {
+        label: {
+            formatter: (v) => v.toLocaleString(),
+        },
+    },
+    label: {
+        position: 'top',
+        style: {
+            fill: '#5B8FF9',
+            fontSize: 11,
+        },
+        formatter: (datum) => datum.value.toLocaleString(),
+    },
+    tooltip: {
+        formatter: (datum) => ({
+            name: datum.region,
+            value: datum.value.toLocaleString() + ' 万元',
+        }),
+    },
+}).render();
+</script>
+
+
+<script src="../../nav.js"></script>
+</body>
+</html>

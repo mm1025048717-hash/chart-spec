@@ -1,0 +1,33 @@
+{
+  "name": "chart-spec",
+  "version": "2.0.0",
+  "description": "专业级图表设计规范与组件库 - Professional Chart Design Specification based on Ant Design Chart",
+  "keywords": [
+    "chart",
+    "visualization",
+    "data-visualization",
+    "design-system",
+    "ant-design-charts",
+    "g2plot",
+    "antv",
+    "react"
+  ],
+  "homepage": "https://github.com/your-username/chart-spec",
+  "bugs": {
+    "url": "https://github.com/your-username/chart-spec/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-username/chart-spec.git"
+  },
+  "license": "MIT",
+  "author": "Chart Spec Contributors",
+  "scripts": {
+    "serve": "npx serve .",
+    "start": "npx serve ."
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "@ant-design/charts": ">=1.0.0"
+  }
+}

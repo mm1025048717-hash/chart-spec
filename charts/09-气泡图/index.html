@@ -1,0 +1,140 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>气泡图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🫧</span>
+        <span class="text">统计图表</span>
+    </div>
+    <h1>气泡图</h1>
+    <p class="subtitle">在散点图基础上增加第三维度（气泡大小），展示三个变量之间的关系</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Scatter + sizeField</span>
+        <span class="tech-tag">三维分析</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">产品分析：价格 × 销量 × 利润</span>
+            <span class="chart-tag purple">Bubble</span>
+        </div>
+        <div class="chart-body md" style="position: relative;">
+            <!-- 轴单位标签 -->
+            <div class="axis-unit y-left">销量</div>
+            
+            <!-- 自定义图例 -->
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">电子</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">家电</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #F6BD16;"></span>
+                    <span class="legend-text">日用</span>
+                </div>
+            </div>
+            
+            <!-- X轴字段标签 -->
+            <div class="x-field-label">价格(元)</div>
+            
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">产品数</span><span class="summary-value blue">7个</span></span>，<span class="summary-item"><span class="summary-label">总利润</span><span class="summary-value green">15,900元</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>sizeField</code></td><td>string</td><td>气泡大小映射字段（关键）</td></tr>
+            <tr><td><code>size</code></td><td>[min, max]</td><td>气泡大小范围</td></tr>
+            <tr><td><code>colorField</code></td><td>string</td><td>颜色分组字段</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例</div>
+    <div class="code-block">
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'price'</span>,
+    yField: <span class="string">'sales'</span>,
+    sizeField: <span class="string">'profit'</span>,    <span class="comment">// 第三维度</span>
+    size: [<span class="number">4</span>, <span class="number">30</span>],              <span class="comment">// 气泡大小范围</span>
+    colorField: <span class="string">'category'</span>,
+};
+    </div>
+</div>
+
+<script>
+const { Scatter } = G2Plot;
+
+const data = [
+    { product: '产品A', price: 120, sales: 850, profit: 2500, category: '电子' },
+    { product: '产品B', price: 80, sales: 1200, profit: 1800, category: '电子' },
+    { product: '产品C', price: 200, sales: 400, profit: 3200, category: '家电' },
+    { product: '产品D', price: 50, sales: 2000, profit: 1200, category: '日用' },
+    { product: '产品E', price: 150, sales: 600, profit: 2800, category: '家电' },
+    { product: '产品F', price: 30, sales: 3000, profit: 900, category: '日用' },
+    { product: '产品G', price: 180, sales: 500, profit: 3500, category: '电子' },
+];
+
+new Scatter('chart-basic', {
+    data,
+    xField: 'price',
+    yField: 'sales',
+    sizeField: 'profit',
+    size: [8, 40],
+    colorField: 'category',
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16'],
+    shape: 'circle',
+    pointStyle: { fillOpacity: 0.7 },
+    padding: 'auto',
+    appendPadding: [40, 20, 30, 20],
+    xAxis: { 
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        line: { style: { stroke: '#E5E6EB' } },
+        tickLine: null,
+    },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        line: null,
+    },
+    legend: false,
+    tooltip: {
+        fields: ['product', 'price', 'sales', 'profit'],
+    },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

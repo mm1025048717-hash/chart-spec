@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帕累托图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge" style="background: linear-gradient(135deg, #FFE8E8 0%, #FFD4D4 100%);">
+        <span class="icon">📊</span>
+        <span class="text" style="color: var(--chart-red);">分析图表</span>
+    </div>
+    <h1>帕累托图</h1>
+    <p class="subtitle">柱状图与折线图的组合，展示各因素的影响程度及累计占比（80/20法则）</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">DualAxes</span>
+        <span class="tech-tag">80/20分析</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">缺陷类型分析</span>
+            <span class="chart-tag blue">Pareto</span>
+        </div>
+        <div class="chart-body md">
+            <div class="axis-unit y-left">缺陷数</div>
+            <div class="axis-unit y-right">%</div>
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">缺陷数</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-line-dot" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">累计占比</span>
+                </div>
+            </div>
+            <div class="x-field-label">缺陷类型</div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">悬停查看标注</div>
+            <div class="annotation-layer">
+                <!-- 柱图参数 - 左上 -->
+                <div class="params-panel top-left">
+                    <div class="params-panel-title">柱图规范</div>
+                    <div class="params-row"><span class="label">颜色</span><span class="value">#5B8FF9</span></div>
+                    <div class="params-row"><span class="label">宽度比例</span><span class="value highlight">0.5</span></div>
+                    <div class="params-row"><span class="label">圆角</span><span class="value">[4,4,0,0]</span></div>
+                </div>
+                <!-- 折线参数 - 右下 -->
+                <div class="params-panel bottom-right">
+                    <div class="params-panel-title">折线规范</div>
+                    <div class="params-row"><span class="label">颜色</span><span class="value">#5AD8A6</span></div>
+                    <div class="params-row"><span class="label">线宽</span><span class="value">2px</span></div>
+                    <div class="params-row"><span class="label">80%参考线</span><span class="value highlight">红色虚线</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">缺陷数</span><span class="summary-value blue">300</span></span>，<span class="summary-item"><span class="summary-label">80%覆盖</span><span class="summary-value green">前3项</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心概念</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>元素</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>柱状图</td><td>各因素的绝对数值，按降序排列</td></tr>
+            <tr><td>折线图</td><td>累计百分比，用于识别关键少数</td></tr>
+            <tr><td>80%线</td><td>参考线，体现80/20法则</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">代码示例（DualAxes实现）</div>
+    <div class="code-block">
+<span class="keyword">import</span> { DualAxes } <span class="keyword">from</span> <span class="string">'@ant-design/charts'</span>;
+
+<span class="keyword">const</span> config = {
+    data: [columnData, lineData],
+    xField: <span class="string">'type'</span>,
+    yField: [<span class="string">'value'</span>, <span class="string">'percent'</span>],
+    geometryOptions: [
+        { geometry: <span class="string">'column'</span>, color: <span class="string">'#5B8FF9'</span> },
+        { geometry: <span class="string">'line'</span>, color: <span class="string">'#5AD8A6'</span> },
+    ],
+};
+    </div>
+</div>
+
+<script>
+const { DualAxes } = G2Plot;
+
+const rawData = [
+    { type: '界面缺陷', value: 120 },
+    { type: '功能异常', value: 85 },
+    { type: '性能问题', value: 45 },
+    { type: '兼容性', value: 30 },
+    { type: '安全漏洞', value: 15 },
+    { type: '其他', value: 5 },
+];
+
+const total = rawData.reduce((sum, d) => sum + d.value, 0);
+let cumulative = 0;
+const lineData = rawData.map(d => {
+    cumulative += d.value;
+    return { type: d.type, percent: cumulative / total };
+});
+
+new DualAxes('chart-basic', {
+    data: [rawData, lineData],
+    xField: 'type',
+    yField: ['value', 'percent'],
+    geometryOptions: [
+        {
+            geometry: 'column',
+            color: '#5B8FF9',
+            columnWidthRatio: 0.5,
+            columnStyle: { radius: [4, 4, 0, 0] },
+        },
+        {
+            geometry: 'line',
+            color: '#5AD8A6',
+            lineStyle: { lineWidth: 2 },
+            point: { size: 4 },
+        },
+    ],
+    yAxis: {
+        value: { title: { text: '缺陷数', style: { fontSize: 11 } } },
+        percent: {
+            title: { text: '累计占比', style: { fontSize: 11 } },
+            label: { formatter: (v) => (v * 100).toFixed(0) + '%' },
+        },
+    },
+    annotations: {
+        percent: [
+            {
+                type: 'line',
+                start: ['min', 0.8],
+                end: ['max', 0.8],
+                style: { stroke: '#E86452', lineDash: [4, 4] },
+            },
+        ],
+    },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

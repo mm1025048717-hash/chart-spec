@@ -1,0 +1,160 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>矩形树图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🔲</span>
+        <span class="text">层级图表</span>
+    </div>
+    <h1>矩形树图 Treemap</h1>
+    <p class="subtitle">以嵌套矩形展示层级数据的构成占比，面积代表数值大小</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Treemap</span>
+        <span class="tech-tag">层级占比</span>
+    </div>
+</div>
+
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">部门预算分布</span>
+            <span class="chart-tag green">Treemap</span>
+        </div>
+        <!-- 图表元信息 -->
+        <div class="chart-meta">
+            <div class="chart-meta-title">2024年各部门预算分配情况</div>
+            <div class="chart-meta-info">
+                <span class="chart-meta-item"><span class="dot"></span>数据源：财务系统</span>
+                <span class="chart-meta-item"><span class="dot" style="background: var(--green);"></span>数据周期：2024年度</span>
+            </div>
+        </div>
+        <div class="chart-body lg" style="position: relative;">
+            <!-- 自定义图例 -->
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">研发部</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">市场部</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #F6BD16;"></span>
+                    <span class="legend-text">销售部</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #E86452;"></span>
+                    <span class="legend-text">行政部</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #9270CA;"></span>
+                    <span class="legend-text">财务部</span>
+                </div>
+            </div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <!-- 汇总栏 -->
+        <div class="chart-summary">
+            总计：<span class="summary-item"><span class="summary-label">总预算</span><span class="summary-value blue">17,400万元</span></span>，<span class="summary-item"><span class="summary-label">部门数</span><span class="summary-value">5个</span></span>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">核心配置参数</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>colorField</code></td><td>string</td><td>颜色映射字段</td></tr>
+            <tr><td><code>hierarchyConfig</code></td><td>object</td><td>层级配置</td></tr>
+            <tr><td><code>rectStyle</code></td><td>object</td><td>矩形样式</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="spec-section">
+    <div class="spec-title">数据结构</div>
+    <div class="code-block">
+<span class="keyword">const</span> data = {
+    name: <span class="string">'root'</span>,
+    children: [
+        {
+            name: <span class="string">'研发部'</span>,
+            value: <span class="number">5000</span>,
+            children: [
+                { name: <span class="string">'前端'</span>, value: <span class="number">2000</span> },
+                { name: <span class="string">'后端'</span>, value: <span class="number">3000</span> },
+            ],
+        },
+        { name: <span class="string">'市场部'</span>, value: <span class="number">3000</span> },
+    ],
+};
+    </div>
+</div>
+
+<script>
+const { Treemap } = G2Plot;
+
+const data = {
+    name: 'root',
+    children: [
+        {
+            name: '研发部',
+            children: [
+                { name: '前端组', value: 2000 },
+                { name: '后端组', value: 3000 },
+                { name: '测试组', value: 1200 },
+            ],
+        },
+        {
+            name: '市场部',
+            children: [
+                { name: '品牌', value: 1800 },
+                { name: '渠道', value: 2200 },
+            ],
+        },
+        {
+            name: '销售部',
+            children: [
+                { name: '华东区', value: 2500 },
+                { name: '华北区', value: 1800 },
+                { name: '华南区', value: 1500 },
+            ],
+        },
+        { name: '行政部', value: 800 },
+        { name: '财务部', value: 600 },
+    ],
+};
+
+new Treemap('chart-basic', {
+    data,
+    colorField: 'name',
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA', '#6DC8EC', '#FF99C3'],
+    label: {
+        style: { fontSize: 12, fill: '#fff' },
+        formatter: (v) => v.name,
+    },
+    rectStyle: { stroke: '#fff', lineWidth: 2 },
+    interactions: [{ type: 'treemap-drill-down' }],
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>

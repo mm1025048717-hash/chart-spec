@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>条形图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        /* 使用 common.css 中的统一样式 */
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📊</span>
+        <span class="text">基础图表</span>
+    </div>
+    <h1>条形图 Bar Chart</h1>
+    <p class="subtitle">水平方向的柱状图，特别适合展示长标签的分类数据和排行榜</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@ant-design/charts</span>
+        <span class="tech-tag">Bar</span>
+        <span class="tech-tag">长标签友好</span>
+    </div>
+</div>
+
+<!-- 带标注的主图表 -->
+<div class="chart-container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-title">产品销量排行 TOP8</span>
+            <span class="chart-tag green">Basic Bar</span>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-title">2024年度产品销量统计</div>
+        </div>
+        <div class="chart-body lg" style="position: relative;">
+            <div class="axis-unit y-left">单位：台</div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+            <div class="hover-hint">悬停查看标注详情</div>
+            <div class="hover-hint">悬停查看标注</div>
+            <div class="annotation-layer">
+                <!-- 条形参数面板 - 右上 -->
+                <div class="params-panel top-right">
+                    <div class="params-panel-title">条形规范</div>
+                    <div class="params-row"><span class="label">xField</span><span class="value">'sales'</span></div>
+                    <div class="params-row"><span class="label">yField</span><span class="value">'product'</span></div>
+                    <div class="params-divider"></div>
+                    <div class="params-row"><span class="label">颜色</span><span class="value">#5B8FF9</span></div>
+                    <div class="params-row"><span class="label">高度比例</span><span class="value highlight">0.5</span></div>
+                    <div class="params-row"><span class="label">圆角</span><span class="value">[0,4,4,0]</span></div>
+                </div>
+                <!-- 坐标轴说明 - 左下 -->
+                <div class="params-panel bottom-left">
+                    <div class="params-panel-title">坐标轴特点</div>
+                    <div class="params-row"><span class="label">Y轴</span><span class="value">分类标签</span></div>
+                    <div class="params-row"><span class="label">X轴</span><span class="value">数值刻度</span></div>
+                    <div class="params-row"><span class="label">适用</span><span class="value highlight">长标签场景</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 尺寸规范 -->
+<div class="spec-section">
+    <div class="spec-title">尺寸规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 150px;">参数</th><th style="width: 200px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>padding</code></td>
+                <td><code>[30, 20, 40, 150]</code></td>
+                <td>左侧留出更多空间放置长标签</td>
+            </tr>
+            <tr>
+                <td>容器高度</td>
+                <td><code>500px</code></td>
+                <td>条形图通常需要更高的容器</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 条形规范 -->
+<div class="spec-section">
+    <div class="spec-title">条形规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>xField</code></td>
+                <td>string</td>
+                <td>数值字段（水平方向）</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td>string</td>
+                <td>分类字段（垂直方向）</td>
+            </tr>
+            <tr>
+                <td><code>barWidthRatio</code></td>
+                <td><code>0.5</code></td>
+                <td>条形高度占比</td>
+            </tr>
+            <tr class="highlight">
+                <td><code>barStyle.radius</code></td>
+                <td><code>[0, 4, 4, 0]</code></td>
+                <td>右侧圆角（与柱状图不同）</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 对比说明 -->
+<div class="spec-section">
+    <div class="spec-title">柱状图 vs 条形图</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th style="width: 150px;">特性</th><th>柱状图 Column</th><th>条形图 Bar</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>方向</td>
+                <td>垂直</td>
+                <td>水平</td>
+            </tr>
+            <tr>
+                <td>标签空间</td>
+                <td>X轴空间有限</td>
+                <td>Y轴空间充足</td>
+            </tr>
+            <tr>
+                <td>适用标签</td>
+                <td>短标签（≤8字符）</td>
+                <td>长标签（产品名等）</td>
+            </tr>
+            <tr>
+                <td>圆角方向</td>
+                <td><code>[4,4,0,0]</code> 顶部</td>
+                <td><code>[0,4,4,0]</code> 右侧</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 代码示例 -->
+<div class="spec-section">
+    <div class="spec-title">完整代码示例</div>
+    <div class="code-block">
+<span class="keyword">const</span> config = {
+    data,
+    xField: <span class="string">'sales'</span>,      <span class="comment">// 数值字段（水平）</span>
+    yField: <span class="string">'product'</span>,    <span class="comment">// 分类字段（垂直）</span>
+    padding: [<span class="number">30</span>, <span class="number">20</span>, <span class="number">40</span>, <span class="number">150</span>],
+    color: <span class="string">'#5B8FF9'</span>,
+    barWidthRatio: <span class="number">0.5</span>,
+    barStyle: {
+        radius: [<span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>],  <span class="comment">// 右侧圆角</span>
+    },
+    label: {
+        position: <span class="string">'right'</span>,
+        offset: <span class="number">8</span>,
+        style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#5B8FF9'</span> },
+    },
+    xAxis: {
+        label: { formatter: (v) => (v / <span class="number">1000</span>).toFixed(<span class="number">0</span>) + <span class="string">'k'</span> },
+        grid: { line: { style: { stroke: <span class="string">'#E5E6EB'</span>, lineDash: [<span class="number">4</span>, <span class="number">4</span>] } } },
+    },
+    yAxis: {
+        label: { style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#646A73'</span> } },
+    },
+};
+    </div>
+</div>
+
+<script>
+const { Bar } = G2Plot;
+
+const data = [
+    { product: 'MacBook Pro 16英寸 M3 Max', sales: 12000 },
+    { product: 'iPhone 15 Pro Max 256GB', sales: 9200 },
+    { product: '戴尔 XPS 15 开发者版', sales: 5500 },
+    { product: 'iPad Pro 12.9英寸 M2', sales: 4900 },
+    { product: '华为 Mate 60 Pro 512GB', sales: 4500 },
+    { product: '小米电视 S85 Mini LED', sales: 3800 },
+    { product: '索尼 PlayStation 5 光驱版', sales: 3200 },
+    { product: 'AirPods Pro 第二代 USB-C', sales: 2600 },
+];
+
+new Bar('chart-basic', {
+    data,
+    xField: 'sales',
+    yField: 'product',
+    padding: [30, 50, 40, 200],
+    color: '#5B8FF9',
+    barWidthRatio: 0.5,
+    barStyle: { radius: [0, 4, 4, 0] },
+    label: {
+        position: 'right',
+        offset: 8,
+        style: { fill: '#5B8FF9', fontSize: 11 },
+        formatter: (datum) => datum.sales.toLocaleString(),
+    },
+    xAxis: {
+        label: { formatter: (v) => (v / 1000).toFixed(0) + 'k' },
+        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        line: null,
+    },
+    yAxis: {
+        label: { style: { fontSize: 11, fill: '#646A73' } },
+        line: null,
+        tickLine: null,
+    },
+}).render();
+</script>
+
+
+<script src="../nav.js"></script>
+</body>
+</html>
