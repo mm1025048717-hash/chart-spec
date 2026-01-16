@@ -1,9 +1,11 @@
 # 🍎 Chart Spec - 专业级图表设计系统
 
 <p align="center">
+  <a href="https://chart-spec.vercel.app" target="_blank">
+    <img src="https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel" alt="Live Demo" />
+  </a>
   <img src="https://img.shields.io/badge/Design-Apple%20Style-black?style=for-the-badge&logo=apple" alt="Apple Style" />
   <img src="https://img.shields.io/badge/Powered%20by-Ant%20Design%20Charts-blue?style=for-the-badge&logo=ant-design" alt="Ant Design" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="MIT License" />
 </p>
 
 ## 🌟 简介
