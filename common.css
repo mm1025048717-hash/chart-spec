@@ -103,6 +103,12 @@ body {
     line-height: 1.5;
     min-height: 100vh;
     overflow-x: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+body.nav-ready {
+    opacity: 1;
 }
 
 /* ==================== Typography ==================== */
@@ -136,6 +142,7 @@ a:hover {
 .app-layout {
     display: flex;
     min-height: 100vh;
+    background: var(--bg-secondary);
 }
 
 .app-sidebar {
@@ -144,26 +151,90 @@ a:hover {
     left: 0;
     width: var(--sidebar-width);
     height: 100vh;
-    background: var(--bg-glass);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: saturate(180%) blur(20px);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     border-right: 1px solid var(--border-light);
-    z-index: 100;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    transition: transform var(--transition-normal);
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+    .app-sidebar {
+        transform: translateX(-100%);
+    }
+    .app-sidebar.open {
+        transform: translateX(0);
+    }
+    .app-main {
+        margin-left: 0 !important;
+    }
 }
 
 .app-main {
     flex: 1;
     margin-left: var(--sidebar-width);
     min-height: 100vh;
+    padding-bottom: 80px;
 }
 
 .app-content {
     max-width: var(--content-max-width);
     margin: 0 auto;
-    padding: 24px;
+    padding: 40px 24px;
+}
+
+/* Sidebar Styling */
+.sidebar-nav {
+    padding: 24px 12px;
+}
+
+.nav-group {
+    margin-bottom: 24px;
+}
+
+.nav-group-title {
+    padding: 0 16px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    border-radius: 10px;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    margin-bottom: 2px;
+}
+
+.nav-item:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.nav-item.active {
+    background: var(--primary);
+    color: white;
+}
+
+.nav-item-icon {
+    font-size: 16px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* ==================== Sidebar ==================== */
