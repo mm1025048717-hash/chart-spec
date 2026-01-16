@@ -107,7 +107,6 @@
                 link.className = 'nav-item';
                 link.href = item.path;
                 link.innerHTML = `
-                    <span class="nav-item-icon">${item.icon}</span>
                     <span class="nav-item-text">${item.name}</span>
                 `;
 
@@ -130,8 +129,7 @@
         footer.style.padding = '20px 24px';
         footer.style.marginTop = 'auto';
         footer.innerHTML = `
-            <a href="/index.html" class="nav-item" style="background: rgba(0,0,0,0.03);">
-                <span class="nav-item-icon">🏠</span>
+            <a href="/index.html" class="nav-item" style="background: rgba(0,0,0,0.03); justify-content: center;">
                 <span class="nav-item-text">返回首页</span>
             </a>
         `;
