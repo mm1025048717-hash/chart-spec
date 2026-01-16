@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>短文字水平显示 - Chart Spec</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../../common.css">
     <style>
         :root {
             --apple-blue: #0071E3;
@@ -16,17 +17,16 @@
             --apple-green: #30D158;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
-            background: var(--apple-gray-50);
+            background: #FFF;
             color: var(--apple-gray-900);
-            line-height: 1.5;
-            padding: 40px 24px;
         }
 
-        .container { max-width: 1000px; margin: 0 auto; }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
 
         .back-link {
             display: inline-flex;
@@ -35,23 +35,31 @@
             color: var(--apple-blue);
             text-decoration: none;
             font-size: 15px;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
+            font-weight: 500;
         }
 
-        .header { margin-bottom: 48px; }
-        .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
-        .header p { font-size: 17px; color: var(--apple-gray-400); }
+        .header { margin-bottom: 60px; }
+        .header h1 { font-size: 40px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
+        .header p { font-size: 21px; color: var(--apple-gray-400); font-weight: 400; max-width: 600px; }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
 
         .spec-card {
             background: #FFF;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 32px;
-            border: 1px solid var(--apple-gray-200);
-            margin-bottom: 32px;
+            border: 1px solid var(--apple-gray-100);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.02);
         }
 
         .spec-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             margin-bottom: 24px;
             display: flex;
@@ -59,68 +67,131 @@
             gap: 12px;
         }
 
-        .spec-title::before {
-            content: '';
-            width: 4px;
-            height: 18px;
+        .spec-title .dot {
+            width: 8px;
+            height: 8px;
             background: var(--apple-blue);
-            border-radius: 2px;
+            border-radius: 50%;
         }
 
         .chart-container {
-            height: 300px;
-            margin: 24px 0;
+            height: 340px;
+            margin: 20px 0;
         }
+
+        /* Dimension Table */
+        .dim-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .dim-table tr { border-bottom: 1px solid var(--apple-gray-100); }
+        .dim-table tr:last-child { border-bottom: none; }
+        .dim-table td { padding: 16px 0; }
+        .dim-table td:first-child { color: var(--apple-gray-400); font-size: 14px; }
+        .dim-table td:last-child { text-align: right; font-weight: 600; font-family: "SF Mono", monospace; font-size: 13px; color: var(--apple-blue); }
 
         .code-block {
             background: var(--apple-gray-900);
             color: #FFF;
             padding: 24px;
-            border-radius: 12px;
+            border-radius: 16px;
             font-family: "SF Mono", monospace;
             font-size: 13px;
-            overflow-x: auto;
+            line-height: 1.6;
+            margin-top: 16px;
         }
 
         .badge {
-            display: inline-block;
-            padding: 4px 12px;
+            display: inline-flex;
+            padding: 6px 14px;
             background: rgba(48, 209, 88, 0.1);
             color: var(--apple-green);
             border-radius: 100px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        .rule-item .icon { color: var(--apple-green); flex-shrink: 0; }
+
+        @media (max-width: 900px) {
+            .spec-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="/x-axis-test/index.html" class="back-link">← 返回智能处理总览</a>
+        <a href="/x-axis-test/index.html" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            返回智能处理总览
+        </a>
         
         <header class="header">
-            <span class="badge">方案 01</span>
+            <span class="badge">方案 01 · 极简策略</span>
             <h1>短文字水平显示</h1>
-            <p>适用场景：文字长度 ≤ 4 字符（如“华东”、“Q1”），数据项 ≤ 8 项。</p>
+            <p>当文本内容极为精炼时，保持水平显示能提供最直观、自然的阅读动线。</p>
         </header>
 
-        <div class="spec-card">
-            <div class="spec-title">图表预览</div>
-            <div id="chart-container" class="chart-container"></div>
+        <div class="spec-grid">
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>图表预览</div>
+                <div id="chart-container" class="chart-container"></div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>设计尺寸规范</div>
+                <table class="dim-table">
+                    <tr><td>文字长度 (Limit)</td><td>≤ 4 字符</td></tr>
+                    <tr><td>数据项 (Count)</td><td>≤ 8 项</td></tr>
+                    <tr><td>轴标签字号 (Size)</td><td>12px</td></tr>
+                    <tr><td>轴标签颜色 (Color)</td><td>#86868B</td></tr>
+                    <tr><td>文字旋转 (Rotate)</td><td>0°</td></tr>
+                    <tr><td>文字对齐 (Align)</td><td>Center</td></tr>
+                    <tr><td>柱体宽度 (Ratio)</td><td>0.5</td></tr>
+                    <tr><td>顶部圆角 (Radius)</td><td>4px</td></tr>
+                </table>
+            </div>
         </div>
 
-        <div class="spec-card">
-            <div class="spec-title">核心配置</div>
-            <div class="code-block">
-<pre>xAxis: {
+        <div class="spec-grid">
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>应用准则</div>
+                <div class="rule-item">
+                    <span class="icon">✓</span>
+                    <div><strong>视觉平衡</strong>：确保柱体间的空隙（Gaps）与柱体本身宽度成正比，避免显得稀疏或拥挤。</div>
+                </div>
+                <div class="rule-item">
+                    <span class="icon">✓</span>
+                    <div><strong>对齐方式</strong>：文字必须与柱体中心严格对齐，形成垂直向上的视觉引导。</div>
+                </div>
+                <div class="rule-item">
+                    <span class="icon">✓</span>
+                    <div><strong>负空间</strong>：保持图表上方至少有 20px 的留白，用于显示数据标签。</div>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>核心配置代码</div>
+                <div class="code-block">
+<pre style="margin:0">xAxis: {
   label: {
     autoRotate: false,
-    rotate: 0, // 保持水平
+    rotate: 0,
     style: {
+      fontSize: 12,
       textAlign: 'center'
     }
   }
 }</pre>
+                </div>
             </div>
         </div>
     </div>
@@ -141,18 +212,25 @@
             color: '#0071E3',
             columnWidthRatio: 0.5,
             columnStyle: { radius: [4, 4, 0, 0] },
+            appendPadding: [20, 0, 0, 0],
             xAxis: {
                 label: {
                     autoRotate: false,
                     rotate: 0,
                     style: { fontSize: 12, fill: '#86868B' }
-                }
+                },
+                line: { style: { stroke: '#E8E8ED' } }
+            },
+            yAxis: {
+                grid: { line: { style: { stroke: '#F5F5F7' } } }
             },
             label: {
                 position: 'top',
-                style: { fill: '#0071E3', fontSize: 12 }
+                offset: 10,
+                style: { fill: '#0071E3', fontSize: 12, fontWeight: 600 }
             }
         }).render();
     </script>
+    <script src="../../nav.js"></script>
 </body>
 </html>

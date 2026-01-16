@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>长文字垂直显示 - Chart Spec</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../../common.css">
     <style>
         :root {
             --apple-blue: #0071E3;
@@ -16,17 +17,16 @@
             --apple-orange: #FF9500;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
-            background: var(--apple-gray-50);
+            background: #FFF;
             color: var(--apple-gray-900);
-            line-height: 1.5;
-            padding: 40px 24px;
         }
 
-        .container { max-width: 1000px; margin: 0 auto; }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
 
         .back-link {
             display: inline-flex;
@@ -35,23 +35,33 @@
             color: var(--apple-blue);
             text-decoration: none;
             font-size: 15px;
-            margin-bottom: 32px;
+            margin-bottom: 40px;
+            font-weight: 500;
         }
 
-        .header { margin-bottom: 48px; }
-        .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
-        .header p { font-size: 17px; color: var(--apple-gray-400); }
+        .header { margin-bottom: 60px; }
+        .header h1 { font-size: 40px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
+        .header p { font-size: 21px; color: var(--apple-gray-400); font-weight: 400; max-width: 600px; }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
 
         .spec-card {
             background: #FFF;
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 32px;
-            border: 1px solid var(--apple-gray-200);
-            margin-bottom: 32px;
+            border: 1px solid var(--apple-gray-100);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
         }
 
         .spec-title {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 600;
             margin-bottom: 24px;
             display: flex;
@@ -59,69 +69,132 @@
             gap: 12px;
         }
 
-        .spec-title::before {
-            content: '';
-            width: 4px;
-            height: 18px;
+        .spec-title .dot {
+            width: 8px;
+            height: 8px;
             background: var(--apple-orange);
-            border-radius: 2px;
+            border-radius: 50%;
         }
 
         .chart-container {
-            height: 350px;
-            margin: 24px 0;
+            height: 400px;
+            margin: 20px 0;
         }
+
+        /* Dimension Table */
+        .dim-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .dim-table tr { border-bottom: 1px solid var(--apple-gray-100); }
+        .dim-table tr:last-child { border-bottom: none; }
+        .dim-table td { padding: 16px 0; }
+        .dim-table td:first-child { color: var(--apple-gray-400); font-size: 14px; }
+        .dim-table td:last-child { text-align: right; font-weight: 600; font-family: "SF Mono", monospace; font-size: 13px; color: var(--apple-orange); }
 
         .code-block {
             background: var(--apple-gray-900);
             color: #FFF;
             padding: 24px;
-            border-radius: 12px;
+            border-radius: 16px;
             font-family: "SF Mono", monospace;
             font-size: 13px;
-            overflow-x: auto;
+            line-height: 1.6;
+            margin-top: 16px;
         }
 
         .badge {
-            display: inline-block;
-            padding: 4px 12px;
+            display: inline-flex;
+            padding: 6px 14px;
             background: rgba(255, 149, 0, 0.1);
             color: var(--apple-orange);
             border-radius: 100px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        .rule-item .icon { color: var(--apple-orange); flex-shrink: 0; }
+
+        @media (max-width: 900px) {
+            .spec-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <a href="/x-axis-test/index.html" class="back-link">← 返回智能处理总览</a>
+        <a href="/x-axis-test/index.html" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            返回智能处理总览
+        </a>
         
         <header class="header">
-            <span class="badge">方案 03</span>
+            <span class="badge">方案 03 · 紧凑策略</span>
             <h1>长文字垂直显示</h1>
-            <p>适用场景：文字长度 > 8 字符。策略：自动 90° 垂直显示，节省水平空间。</p>
+            <p>面对超长文本，垂直排布是唯一的解法，它能在保证文字完整性的同时，最大化利用垂直空间。</p>
         </header>
 
-        <div class="spec-card">
-            <div class="spec-title">图表预览</div>
-            <div id="chart-container" class="chart-container"></div>
+        <div class="spec-grid">
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>图表预览</div>
+                <div id="chart-container" class="chart-container"></div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>设计尺寸规范</div>
+                <table class="dim-table">
+                    <tr><td>文字长度 (Limit)</td><td>> 8 字符</td></tr>
+                    <tr><td>数据项 (Count)</td><td>可支持 ≥ 10 项</td></tr>
+                    <tr><td>轴标签字号 (Size)</td><td>11px</td></tr>
+                    <tr><td>文字颜色 (Color)</td><td>#86868B</td></tr>
+                    <tr><td>旋转角度 (Rotate)</td><td>-90°</td></tr>
+                    <tr><td>对齐方式 (Align)</td><td>Right</td></tr>
+                    <tr><td>基准线 (Baseline)</td><td>Middle</td></tr>
+                    <tr><td>柱体宽度 (Ratio)</td><td>0.4</td></tr>
+                </table>
+            </div>
         </div>
 
-        <div class="spec-card">
-            <div class="spec-title">核心配置</div>
-            <div class="code-block">
-<pre>xAxis: {
+        <div class="spec-grid">
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>应用准则</div>
+                <div class="rule-item">
+                    <span class="icon">!</span>
+                    <div><strong>空间预留</strong>：由于文字垂直显示，图表底部需要预留较大的 Margin（通常 ≥ 120px），以防文字被截断。</div>
+                </div>
+                <div class="rule-item">
+                    <span class="icon">!</span>
+                    <div><strong>对齐关键</strong>：`textAlign` 必须设为 `right`，使长短不一的文字末端均对齐坐标轴线，视觉整齐。</div>
+                </div>
+                <div class="rule-item">
+                    <span class="icon">!</span>
+                    <div><strong>阅读效率</strong>：仅在必要时使用，因为垂直阅读效率低于水平或倾斜阅读。</div>
+                </div>
+            </div>
+
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>核心配置代码</div>
+                <div class="code-block">
+<pre style="margin:0">xAxis: {
   label: {
     autoRotate: false,
-    rotate: -Math.PI / 2, // -90度垂直
+    rotate: -Math.PI / 2,
     style: {
-      textAlign: 'right', // 垂直时右对齐即对齐轴线
+      fontSize: 11,
+      textAlign: 'right',
       textBaseline: 'middle'
     }
   }
 }</pre>
+                </div>
             </div>
         </div>
     </div>
@@ -142,19 +215,25 @@
             color: '#FF9500',
             columnWidthRatio: 0.4,
             columnStyle: { radius: [4, 4, 0, 0] },
+            appendPadding: [20, 0, 0, 0],
             xAxis: {
                 label: {
                     autoRotate: false,
                     rotate: -Math.PI / 2,
                     style: { fontSize: 11, fill: '#86868B', textAlign: 'right', textBaseline: 'middle' }
-                }
+                },
+                line: { style: { stroke: '#E8E8ED' } }
             },
-            yAxis: { grid: { line: { style: { lineDash: [4, 4] } } } },
+            yAxis: {
+                grid: { line: { style: { stroke: '#F5F5F7', lineDash: [4, 4] } } }
+            },
             label: {
                 position: 'top',
-                style: { fill: '#FF9500', fontSize: 11 }
+                offset: 10,
+                style: { fill: '#FF9500', fontSize: 11, fontWeight: 600 }
             }
         }).render();
     </script>
+    <script src="../../nav.js"></script>
 </body>
 </html>

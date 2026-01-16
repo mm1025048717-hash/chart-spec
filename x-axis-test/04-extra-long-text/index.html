@@ -3,554 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>超长文字90度+截断 - X轴文字优化方案</title>
+    <title>超长文字截断处理 - Chart Spec</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../../common.css">
     <style>
-        .scenario-badge {
+        :root {
+            --apple-blue: #0071E3;
+            --apple-gray-50: #FBFBFD;
+            --apple-gray-100: #F5F5F7;
+            --apple-gray-200: #E8E8ED;
+            --apple-gray-400: #86868B;
+            --apple-gray-900: #1D1D1F;
+            --apple-red: #FF3B30;
+        }
+
+        body {
+            background: #FFF;
+            color: var(--apple-gray-900);
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+
+        .back-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: linear-gradient(135deg, #FFF1F0 0%, #FFCCC7 100%);
-            padding: 8px 16px;
-            border-radius: 20px;
-            margin-bottom: 24px;
-        }
-        .scenario-badge .icon {
-            width: 24px;
-            height: 24px;
-            background: var(--red);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .scenario-badge .text {
-            font-size: 14px;
-            color: var(--red);
+            color: var(--apple-blue);
+            text-decoration: none;
+            font-size: 15px;
+            margin-bottom: 40px;
             font-weight: 500;
         }
 
-        .key-point {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #FFF1F0;
-            color: var(--red);
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 13px;
-            margin: 4px;
-        }
-        .key-point::before {
-            content: '✓';
-            font-weight: bold;
-        }
+        .header { margin-bottom: 60px; }
+        .header h1 { font-size: 40px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.02em; }
+        .header p { font-size: 21px; color: var(--apple-gray-400); font-weight: 400; max-width: 600px; }
 
-        .angle-comparison {
+        .spec-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            margin: 20px 0;
-        }
-        @media (max-width: 768px) {
-            .angle-comparison { grid-template-columns: 1fr; }
-        }
-        .angle-box {
-            background: #FAFBFC;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            border: 1px solid var(--border);
-        }
-        .angle-box.active {
-            border-color: var(--red);
-            background: #FFF1F0;
-        }
-        .angle-visual {
-            height: 80px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            margin-bottom: 12px;
-        }
-        .angle-text-45 {
-            transform: rotate(-45deg);
-            transform-origin: bottom right;
-            font-size: 12px;
-            color: var(--text-sub);
-            white-space: nowrap;
-        }
-        .angle-text-90 {
-            writing-mode: vertical-lr;
-            transform: rotate(180deg);
-            font-size: 12px;
-            color: var(--red);
-            font-weight: 500;
-        }
-        .angle-label {
-            font-size: 14px;
-            color: var(--text);
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-        .angle-value {
-            font-size: 12px;
-            color: var(--text-sub);
-            font-family: 'SF Mono', monospace;
+            grid-template-columns: 1fr 320px;
+            gap: 32px;
+            margin-bottom: 40px;
         }
 
-        .truncate-demo {
-            background: #FAFBFC;
-            border-radius: 8px;
-            padding: 24px;
-            margin: 20px 0;
+        .spec-card {
+            background: #FFF;
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid var(--apple-gray-100);
+            box-shadow: 0 4px 24px rgba(0,0,0,0.02);
         }
-        .truncate-example {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin: 12px 0;
-            padding: 12px;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-        }
-        .truncate-original {
-            flex: 1;
-            font-family: 'SF Mono', monospace;
-            font-size: 12px;
-            color: var(--text);
-            word-break: break-all;
-        }
-        .truncate-arrow {
-            color: var(--red);
+
+        .spec-title {
             font-size: 20px;
-            flex-shrink: 0;
-        }
-        .truncate-result {
-            width: 100px;
-            font-family: 'SF Mono', monospace;
-            font-size: 12px;
-            color: var(--red);
             font-weight: 600;
-            flex-shrink: 0;
-        }
-        .truncate-length {
-            background: #FFF1F0;
-            color: var(--red);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            flex-shrink: 0;
-        }
-
-        .data-preview {
-            background: #1F2329;
-            border-radius: 6px;
-            padding: 12px;
-            font-family: 'SF Mono', monospace;
-            font-size: 11px;
-            color: #E6E8EB;
-            overflow-x: auto;
-        }
-
-        .warning-box {
-            background: #FFF7E6;
-            border: 1px solid #FFE7BA;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px 0;
-        }
-        .warning-box-title {
-            font-weight: 600;
-            color: #D48806;
-            margin-bottom: 8px;
+            margin-bottom: 24px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
-        .warning-box-content {
+
+        .spec-title .dot {
+            width: 8px;
+            height: 8px;
+            background: var(--apple-red);
+            border-radius: 50%;
+        }
+
+        .chart-container {
+            height: 400px;
+            margin: 20px 0;
+        }
+
+        /* Dimension Table */
+        .dim-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .dim-table tr { border-bottom: 1px solid var(--apple-gray-100); }
+        .dim-table tr:last-child { border-bottom: none; }
+        .dim-table td { padding: 16px 0; }
+        .dim-table td:first-child { color: var(--apple-gray-400); font-size: 14px; }
+        .dim-table td:last-child { text-align: right; font-weight: 600; font-family: "SF Mono", monospace; font-size: 13px; color: var(--apple-red); }
+
+        .code-block {
+            background: var(--apple-gray-900);
+            color: #FFF;
+            padding: 24px;
+            border-radius: 16px;
+            font-family: "SF Mono", monospace;
             font-size: 13px;
-            color: var(--text);
             line-height: 1.6;
+            margin-top: 16px;
+        }
+
+        .badge {
+            display: inline-flex;
+            padding: 6px 14px;
+            background: rgba(255, 59, 48, 0.1);
+            color: var(--apple-red);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .rule-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        .rule-item .icon { color: var(--apple-red); flex-shrink: 0; font-weight: bold; }
+
+        @media (max-width: 900px) {
+            .spec-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <a href="/x-axis-test/index.html" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            返回智能处理总览
+        </a>
+        
+        <header class="header">
+            <span class="badge">方案 04 · 兜底策略</span>
+            <h1>超长文本截断策略</h1>
+            <p>当文本长度失控时，通过智能截断并辅以 Tooltip，在保持图表整洁的同时确保信息完整。</p>
+        </header>
 
-<div class="page-header">
-    <div class="scenario-badge">
-        <span class="icon">4</span>
-        <span class="text">场景四：超长文字垂直显示</span>
-    </div>
-    <h1>超长文字 (≥50字符) - 90°垂直+截断</h1>
-    <p class="subtitle">适用于超长标签如：MacBook Pro 16英寸 M3 Max 顶配版（定制版 96GB 内存 + 8TB SSD）</p>
-    <div class="tech-stack">
-        <span class="tech-tag">Ant Design Chart</span>
-        <span class="tech-tag">G2Plot</span>
-        <span class="tech-tag">rotate: -90° + truncate: 6</span>
-    </div>
-</div>
+        <div class="spec-grid">
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>图表预览</div>
+                <div id="chart-container" class="chart-container"></div>
+            </div>
 
-<!-- 角度对比 -->
-<div class="spec-section">
-    <div class="spec-title">45° vs 90° 角度对比</div>
-    
-    <div class="angle-comparison">
-        <div class="angle-box">
-            <div class="angle-visual">
-                <div class="angle-text-45">MacBook Pro 16...</div>
-            </div>
-            <div class="angle-label">45° 倾斜</div>
-            <div class="angle-value">rotate: -Math.PI/4</div>
-            <div style="margin-top: 8px; font-size: 12px; color: var(--text-sub);">
-                适用于一般长文字 (9-50字符)
-            </div>
-        </div>
-        <div class="angle-box active">
-            <div class="angle-visual">
-                <div class="angle-text-90">MacBo...</div>
-            </div>
-            <div class="angle-label">90° 垂直</div>
-            <div class="angle-value">rotate: -Math.PI/2</div>
-            <div style="margin-top: 8px; font-size: 12px; color: var(--red);">
-                适用于超长文字 (≥50字符)
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>设计尺寸规范</div>
+                <table class="dim-table">
+                    <tr><td>截断阈值 (Limit)</td><td>> 8 字符</td></tr>
+                    <tr><td>保留长度 (Keep)</td><td>前 6 字符 + ...</td></tr>
+                    <tr><td>轴标签字号 (Size)</td><td>11px</td></tr>
+                    <tr><td>旋转角度 (Rotate)</td><td>-45° / -90°</td></tr>
+                    <tr><td>交互反馈 (Hover)</td><td>Show Full Text</td></tr>
+                    <tr><td>柱体宽度 (Ratio)</td><td>0.5</td></tr>
+                    <tr><td>顶部圆角 (Radius)</td><td>4px</td></tr>
+                </table>
             </div>
         </div>
-    </div>
 
-    <div class="warning-box">
-        <div class="warning-box-title">⚠️ 何时使用90度垂直？</div>
-        <div class="warning-box-content">
-            <p>当满足以下任一条件时：</p>
-            <ul style="margin: 8px 0 0 20px;">
-                <li>最长文字 <b>≥ 50 字符</b></li>
-                <li>数据项数量 <b>≥ 15 项</b>（见场景6）</li>
-            </ul>
-            <p style="margin-top: 8px;">90度垂直可以最大限度节省横向空间，但可读性略差于45度。</p>
-        </div>
-    </div>
-</div>
+        <div class="spec-grid">
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>应用准则</div>
+                <div class="rule-item">
+                    <span class="icon">!</span>
+                    <div><strong>信息兜底</strong>：截断必须配合 Tooltip，否则会导致严重的信息丢失，影响用户决策。</div>
+                </div>
+                <div class="rule-item">
+                    <span class="icon">!</span>
+                    <div><strong>视觉一致</strong>：无论原始文本多长，截断后的长度应保持一致（如均为 6 个字符），确保轴标签整齐。</div>
+                </div>
+                <div class="rule-item">
+                    <span class="icon">!</span>
+                    <div><strong>关键信息</strong>：如果前 6 个字符不足以区分项目，应考虑从中间截断或使用智能缩写。</div>
+                </div>
+            </div>
 
-<!-- 截断演示 -->
-<div class="spec-section">
-    <div class="spec-title">截断效果演示（截断到6字符）</div>
-    
-    <div class="truncate-demo">
-        <div class="truncate-example">
-            <div class="truncate-original">MacBook Pro 16英寸 M3 Max 顶配版（定制版 96GB 内存 + 8TB SSD）</div>
-            <div class="truncate-length">50+字符</div>
-            <div class="truncate-arrow">→</div>
-            <div class="truncate-result">MacBoo...</div>
-        </div>
-        <div class="truncate-example">
-            <div class="truncate-original">iPhone 15 Pro Max 钛金属 1TB 蓝色（首发限量定制版）</div>
-            <div class="truncate-length">38字符</div>
-            <div class="truncate-arrow">→</div>
-            <div class="truncate-result">iPhone...</div>
-        </div>
-        <div class="truncate-example">
-            <div class="truncate-original">索尼 PlayStation 5 最终幻想16 联名限定珍藏版主机套装</div>
-            <div class="truncate-length">36字符</div>
-            <div class="truncate-arrow">→</div>
-            <div class="truncate-result">索尼 Pl...</div>
+            <div class="spec-card">
+                <div class="spec-title"><span class="dot"></span>核心配置代码</div>
+                <div class="code-block">
+<pre style="margin:0">formatter: (text) => {
+  return text.length > 8 
+    ? text.substring(0, 6) + '...' 
+    : text;
+}</pre>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div style="background: #E6F7F0; padding: 12px 16px; border-radius: 6px; font-size: 13px; color: #00A854;">
-        💡 <b>90度场景截断到6字符</b>：比45度场景少2个字符，因为垂直文字需要更紧凑的显示。
-    </div>
-</div>
+    <script>
+        const data = [
+            { name: 'MacBook Pro 16-inch M3 Max', value: 3650 },
+            { name: 'iPhone 15 Pro Max Titanium', value: 2808 },
+            { name: 'Apple Watch Ultra 2 Ocean', value: 2408 },
+            { name: 'iPad Pro 12.9-inch M2 Chip', value: 2236 },
+            { name: 'AirPods Max Silver Original', value: 1500 },
+        ];
 
-<!-- 设计规范说明 -->
-<div class="spec-section">
-    <div class="spec-title">触发条件</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 180px;">条件</th>
-                <th style="width: 150px;">阈值</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="highlight">
-                <td><b>最大文字长度</b></td>
-                <td><code>≥ 50</code></td>
-                <td>字符数达到50即触发90度</td>
-            </tr>
-            <tr>
-                <td><b>或 数据项数量</b></td>
-                <td><code>≥ 15</code></td>
-                <td>数据项多也触发90度（见场景6）</td>
-            </tr>
-            <tr class="highlight">
-                <td><b>截断字符数</b></td>
-                <td><code>6</code></td>
-                <td>比45度场景少2个字符</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div style="margin-top: 16px;">
-        <span class="key-point">90度垂直显示</span>
-        <span class="key-point">截断到6字符</span>
-        <span class="key-point">最大空间节省</span>
-        <span class="key-point">Tooltip完整显示</span>
-    </div>
-</div>
-
-<!-- 核心配置代码 -->
-<div class="spec-section">
-    <div class="spec-title">核心配置代码</div>
-    <div class="code-block">
-<span class="comment">// 超长文字场景配置（90° + 截断6字符）</span>
-<span class="keyword">const</span> xAxisConfig = {
-    label: {
-        autoRotate: <span class="keyword">false</span>,
-        rotate: -Math.PI / <span class="number">2</span>,          <span class="comment">// -90度（垂直）</span>
-        formatter: (text) => {
-            <span class="keyword">const</span> maxLength = <span class="number">6</span>;         <span class="comment">// 截断到6字符</span>
-            <span class="keyword">if</span> (text.length > maxLength) {
-                <span class="keyword">return</span> text.substring(<span class="number">0</span>, maxLength) + <span class="string">'...'</span>;
-            }
-            <span class="keyword">return</span> text;
-        },
-        style: {
-            fontSize: <span class="number">11</span>,
-            fill: <span class="string">'#646A73'</span>,
-            textAlign: <span class="string">'end'</span>,         <span class="comment">// 垂直时也用end</span>
-        },
-    },
-};
-
-<span class="comment">// 判断函数</span>
-<span class="keyword">function</span> <span class="function">shouldUse90Degree</span>(data, xField) {
-    <span class="keyword">const</span> maxLen = Math.max(...data.map(d => String(d[xField]).length));
-    <span class="keyword">return</span> maxLen >= <span class="number">50</span>;  <span class="comment">// 字符数 ≥ 50</span>
-}
-    </div>
-</div>
-
-<!-- 图表展示 -->
-<div class="chart-container">
-    <div class="chart-card">
-        <div class="chart-card-header">
-            <span class="chart-title">产品销量排行（超长产品名称）</span>
-            <span class="chart-tag red">rotate: -90° | truncate: 6</span>
-        </div>
-        <div class="chart-body lg">
-            <div class="axis-unit y-left">万元</div>
-            <div id="chart-main" style="width: 100%; height: 100%;"></div>
-        </div>
-        <div class="chart-summary">
-            数据项：<strong>5项</strong> | 最长文字：<strong>50+字符</strong> | 截断长度：<strong>6字符</strong> | 旋转角度：<strong>90°</strong>
-        </div>
-    </div>
-</div>
-
-<!-- 配置参数详解 -->
-<div class="spec-section">
-    <div class="spec-title">完整配置参数</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 160px;">参数</th>
-                <th style="width: 140px;">值</th>
-                <th style="width: 100px;">类型</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="highlight">
-                <td><code>rotate</code></td>
-                <td><code>-Math.PI/2</code></td>
-                <td>number</td>
-                <td>-90度垂直旋转</td>
-            </tr>
-            <tr class="highlight">
-                <td><code>formatter</code></td>
-                <td><code>truncate(6)</code></td>
-                <td>function</td>
-                <td>截断到6字符（比45°少2个）</td>
-            </tr>
-            <tr>
-                <td><code>textAlign</code></td>
-                <td><code>'end'</code></td>
-                <td>string</td>
-                <td>垂直时也用end对齐</td>
-            </tr>
-            <tr>
-                <td><code>fontSize</code></td>
-                <td><code>11</code></td>
-                <td>number</td>
-                <td>字体大小</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- 45° vs 90° 对比 -->
-<div class="spec-section">
-    <div class="spec-title">45° vs 90° 详细对比</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 150px;">对比项</th>
-                <th>45° 倾斜</th>
-                <th>90° 垂直</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>rotate值</td>
-                <td><code>-Math.PI/4 ≈ -0.785</code></td>
-                <td><code>-Math.PI/2 ≈ -1.571</code></td>
-            </tr>
-            <tr>
-                <td>截断长度</td>
-                <td>8 字符</td>
-                <td>6 字符</td>
-            </tr>
-            <tr>
-                <td>可读性</td>
-                <td>⭐⭐⭐⭐ 较好</td>
-                <td>⭐⭐⭐ 一般</td>
-            </tr>
-            <tr>
-                <td>空间效率</td>
-                <td>⭐⭐⭐ 中等</td>
-                <td>⭐⭐⭐⭐⭐ 最高</td>
-            </tr>
-            <tr>
-                <td>适用场景</td>
-                <td>一般长文字 (9-50字符)</td>
-                <td>超长文字 (≥50字符) 或多数据项 (≥15)</td>
-            </tr>
-            <tr class="highlight">
-                <td>X轴高度需求</td>
-                <td>~65px</td>
-                <td>~90px</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<!-- 边界情况 -->
-<div class="spec-section">
-    <div class="spec-title">边界情况处理</div>
-    <table class="spec-table">
-        <thead>
-            <tr>
-                <th style="width: 200px;">情况</th>
-                <th style="width: 150px;">处理方式</th>
-                <th>说明</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>字符数 = 49</td>
-                <td>使用45° + 截断8</td>
-                <td>未达到50阈值</td>
-            </tr>
-            <tr class="highlight">
-                <td>字符数 = 50</td>
-                <td>使用90° + 截断6</td>
-                <td>刚好达到阈值</td>
-            </tr>
-            <tr>
-                <td>字符数 = 100+</td>
-                <td>使用90° + 截断6</td>
-                <td>无论多长都截断到6</td>
-            </tr>
-            <tr>
-                <td>数据项 ≥ 15</td>
-                <td>也使用90°</td>
-                <td>数量多时也需要垂直显示</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<script>
-const { Column } = G2Plot;
-
-// 超长文字数据
-const data = [
-    { product: 'MacBook Pro 16英寸 M3 Max 顶配版（定制版 96GB 内存 + 8TB SSD）', value: 120000 },
-    { product: 'iPhone 15 Pro Max 钛金属 1TB 蓝色（首发限量定制版）', value: 72000 },
-    { product: '戴尔 XPS 15 9530 开发者特别版（预装 Ubuntu Linux 系统）', value: 35000 },
-    { product: 'iPad Pro 12.9英寸 第六代 2TB 深空灰色（教育优惠套装版）', value: 29000 },
-    { product: '索尼 PlayStation 5 最终幻想16 联名限定珍藏版主机套装', value: 19000 },
-];
-
-// 截断函数
-function truncate(text, maxLength = 6) {
-    const str = String(text || '');
-    if (str.length > maxLength) {
-        return str.substring(0, maxLength) + '...';
-    }
-    return str;
-}
-
-// 输出信息
-const maxLen = Math.max(...data.map(d => d.product.length));
-console.log('最长文字字符数:', maxLen);
-console.log('触发条件:', maxLen >= 50 ? '使用90度' : '使用45度');
-data.forEach(d => {
-    console.log(`"${d.product.substring(0, 20)}..." (${d.product.length}字符) → "${truncate(d.product, 6)}"`);
-});
-
-new Column('chart-main', {
-    data,
-    xField: 'product',
-    yField: 'value',
-    color: '#E86452',
-    columnWidthRatio: 0.5,
-    columnStyle: {
-        radius: [4, 4, 0, 0],
-    },
-    // 核心：超长文字X轴配置
-    xAxis: {
-        label: {
-            autoRotate: false,
-            rotate: -Math.PI / 2,  // 90度垂直
-            formatter: (text) => truncate(text, 6),  // 截断到6字符
-            style: {
-                fontSize: 11,
-                fill: '#646A73',
-                textAlign: 'end',
+        new G2Plot.Column('chart-container', {
+            data,
+            xField: 'name',
+            yField: 'value',
+            color: '#FF3B30',
+            columnWidthRatio: 0.5,
+            columnStyle: { radius: [4, 4, 0, 0] },
+            appendPadding: [20, 0, 0, 0],
+            xAxis: {
+                label: {
+                    autoRotate: false,
+                    rotate: -Math.PI / 4,
+                    formatter: (v) => v.length > 8 ? v.substring(0, 6) + '...' : v,
+                    style: { fontSize: 11, fill: '#86868B', textAlign: 'end' }
+                },
+                line: { style: { stroke: '#E8E8ED' } }
             },
-        },
-    },
-    yAxis: {
-        label: {
-            formatter: (v) => (v / 10000).toFixed(0) + '万',
-        },
-    },
-    label: {
-        position: 'top',
-        style: {
-            fill: '#E86452',
-            fontSize: 11,
-        },
-        formatter: (datum) => (datum.value / 10000).toFixed(1) + '万',
-    },
-    // Tooltip显示完整文字
-    tooltip: {
-        formatter: (datum) => ({
-            name: datum.product,  // 完整产品名
-            value: datum.value.toLocaleString() + ' 万元',
-        }),
-    },
-}).render();
-</script>
-
-
-<script src="../../nav.js"></script>
+            yAxis: {
+                grid: { line: { style: { stroke: '#F5F5F7' } } }
+            },
+            label: {
+                position: 'top',
+                offset: 10,
+                style: { fill: '#FF3B30', fontSize: 11, fontWeight: 600 }
+            },
+            tooltip: {
+                formatter: (datum) => ({ name: datum.name, value: datum.value })
+            }
+        }).render();
+    </script>
+    <script src="../../nav.js"></script>
 </body>
 </html>
