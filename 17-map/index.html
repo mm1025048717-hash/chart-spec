@@ -1,9 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>地图 - 图表设计规范</title>
+    <!-- L7Plot 依赖 -->
+    <script src="https://unpkg.com/@antv/l7plot@latest/dist/l7plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
     <style>
         .chart-type-badge {
@@ -13,14 +15,76 @@
         }
         .chart-type-badge .icon { font-size: 20px; }
         .chart-type-badge .text { font-size: 14px; color: #00A854; font-weight: 500; }
-        .map-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 20px 0; }
-        .map-type-card {
-            background: #F7F8FA; padding: 20px; border-radius: 8px; text-align: center;
+        
+        .map-demo-container {
+            background: #FFF;
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            margin-bottom: 32px;
         }
-        .map-type-card .icon { font-size: 32px; margin-bottom: 8px; }
-        .map-type-card .name { font-weight: 600; margin-bottom: 4px; }
-        .map-type-card .desc { font-size: 12px; color: #8C8C8C; }
-        @media (max-width: 768px) { .map-types { grid-template-columns: 1fr; } }
+        
+        .map-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .map-canvas {
+            height: 500px;
+            width: 100%;
+            background: #f0f2f5;
+            position: relative;
+        }
+
+        .api-key-mask {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(4px);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .api-key-input {
+            margin-top: 20px;
+            padding: 12px 20px;
+            border: 1px solid #d9d9d9;
+            border-radius: 8px;
+            width: 300px;
+            font-size: 14px;
+        }
+
+        .btn-run {
+            margin-top: 16px;
+            padding: 10px 24px;
+            background: #0071E3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .map-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 24px 0; }
+        .map-type-card {
+            background: #FFF; padding: 24px; border-radius: 16px; text-align: center;
+            border: 1px solid var(--border-light); transition: all 0.3s ease;
+        }
+        .map-type-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); }
+        .map-type-card .icon { font-size: 32px; margin-bottom: 12px; }
+        .map-type-card .name { font-weight: 600; margin-bottom: 4px; font-size: 16px; }
+        .map-type-card .desc { font-size: 13px; color: var(--text-secondary); }
     </style>
 </head>
 <body>
@@ -30,108 +94,173 @@
         <span class="icon">🗺️</span>
         <span class="text">地理图表</span>
     </div>
-    <h1>地图 Map</h1>
-    <p class="subtitle">在地图上展示地理位置相关的数据，支持行政区划、散点、路径等多种形式</p>
-    <div class="tech-stack">
-        <span class="tech-tag">L7Plot</span>
-        <span class="tech-tag">AntV/L7</span>
-        <span class="tech-tag">地理可视化</span>
+    <h1>地图可视化 Map</h1>
+    <p class="subtitle">基于 AntV L7Plot 构建的专业地理数据分析组件</p>
+</div>
+
+<!-- 交互式示例 -->
+<div class="spec-section">
+    <div class="spec-title">交互式演示：中国区域地图</div>
+    <div class="map-demo-container">
+        <div class="map-header">
+            <div>
+                <h3 style="margin:0; font-size: 17px;">全国各省份模拟数据分布</h3>
+                <p style="margin:4px 0 0; font-size: 13px; color: #86868b;">展示行政区划着色与交互</p>
+            </div>
+            <div id="map-status" style="font-size: 12px; color: #0071E3;">需配置 API Key</div>
+        </div>
+        <div class="map-canvas" id="map-container">
+            <div class="api-key-mask" id="api-mask">
+                <div style="font-size: 24px; margin-bottom: 12px;">🗺️</div>
+                <h4 style="margin:0;">初始化地理服务</h4>
+                <p style="color: #86868b; margin: 8px 0;">由于地图底图服务需要 API Key，请输入您的高德地图 Key 预览</p>
+                <input type="text" id="gaode-key" class="api-key-input" placeholder="请输入高德地图 Key (amap key)" value="">
+                <button class="btn-run" onclick="initMap()">启动地图预览</button>
+                <div style="margin-top: 16px; font-size: 12px; color: #86868b;">
+                    <a href="https://lbs.amap.com/dev/key/app" target="_blank" style="color: #0071E3;">如何获取 Key?</a> | 
+                    <button onclick="useDefault()" style="background:none; border:none; color:#0071E3; cursor:pointer; text-decoration:underline;">使用 MapLibre 默认底图(无需Key)</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 <div class="spec-section">
-    <div class="spec-title">地图类型</div>
+    <div class="spec-title">地图核心能力</div>
     <div class="map-types">
         <div class="map-type-card">
             <div class="icon">🗾</div>
-            <div class="name">区域地图</div>
-            <div class="desc">Choropleth 行政区划填色</div>
+            <div class="name">区域地图 (Choropleth)</div>
+            <div class="desc">行政区划填色，展示分区域的统计指标</div>
         </div>
         <div class="map-type-card">
             <div class="icon">📍</div>
-            <div class="name">散点地图</div>
-            <div class="desc">DotMap 点位分布</div>
+            <div class="name">气泡/散点 (DotMap)</div>
+            <div class="desc">精准坐标点位，展示位置分布与强度</div>
         </div>
         <div class="map-type-card">
             <div class="icon">🔥</div>
-            <div class="name">热力地图</div>
-            <div class="desc">HeatMap 密度分布</div>
+            <div class="name">热力图 (HeatMap)</div>
+            <div class="desc">网格或蜂窝聚合，展示高密度数据</div>
         </div>
     </div>
 </div>
 
 <div class="spec-section">
-    <div class="spec-title">区域地图代码示例</div>
+    <div class="spec-title">代码实现参考</div>
     <div class="code-block">
-<span class="keyword">import</span> { Choropleth } <span class="keyword">from</span> <span class="string">'@antv/l7plot'</span>;
+<pre><span class="keyword">import</span> { Choropleth } <span class="keyword">from</span> <span class="string">'@antv/l7plot'</span>;
 
+<span class="comment">// 1. 准备 GeoJSON 数据</span>
+<span class="keyword">const</span> response = <span class="keyword">await</span> fetch(<span class="string">'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json'</span>);
+<span class="keyword">const</span> chinaGeo = <span class="keyword">await</span> response.json();
+
+<span class="comment">// 2. 初始化地图</span>
 <span class="keyword">new</span> Choropleth(<span class="string">'container'</span>, {
-    map: {
-        type: <span class="string">'mapbox'</span>,
-        style: <span class="string">'light'</span>,
-        center: [<span class="number">116.4</span>, <span class="number">39.9</span>],
-        zoom: <span class="number">3</span>,
-    },
-    source: {
-        data,
-        joinBy: {
-            sourceField: <span class="string">'name'</span>,
-            geoField: <span class="string">'name'</span>,
-        },
-    },
-    color: {
-        field: <span class="string">'value'</span>,
-        value: [<span class="string">'#E8F3FF'</span>, <span class="string">'#5B8FF9'</span>],
-    },
-});
+  map: {
+    type: <span class="string">'mapbox'</span>, <span class="comment">// 或 'amap'</span>
+    style: <span class="string">'light'</span>,
+    center: [<span class="number">105</span>, <span class="number">31.5</span>],
+    zoom: <span class="number">3</span>,
+  },
+  source: {
+    data: chinaGeo,
+    joinBy: { sourceField: <span class="string">'adcode'</span>, geoField: <span class="string">'adcode'</span> },
+  },
+  viewLevel: { level: <span class="string">'country'</span>, adcode: <span class="number">100000</span> },
+  color: {
+    field: <span class="string">'value'</span>,
+    value: [<span class="string">'#B8E1FF'</span>, <span class="string">'#0071E3'</span>],
+  },
+  label: { visible: <span class="keyword">true</span> },
+  tooltip: { items: [<span class="string">'name'</span>, <span class="string">'value'</span>] },
+});</pre>
     </div>
 </div>
 
-<div class="spec-section">
-    <div class="spec-title">散点地图代码示例</div>
-    <div class="code-block">
-<span class="keyword">import</span> { DotMap } <span class="keyword">from</span> <span class="string">'@antv/l7plot'</span>;
-
-<span class="keyword">new</span> DotMap(<span class="string">'container'</span>, {
-    map: { type: <span class="string">'mapbox'</span>, style: <span class="string">'light'</span> },
-    source: {
-        data,
-        parser: {
-            type: <span class="string">'json'</span>,
-            x: <span class="string">'lng'</span>,
-            y: <span class="string">'lat'</span>,
-        },
-    },
-    color: <span class="string">'#5B8FF9'</span>,
-    size: <span class="number">5</span>,
-});
-    </div>
+<div style="margin-top: 24px; padding: 20px; background: #F5F5F7; border-radius: 16px;">
+    <div style="font-weight: 600; color: var(--apple-gray-900); margin-bottom: 8px;">💡 开发指南</div>
+    <ul style="font-size: 14px; color: #86868b; padding-left: 20px; line-height: 1.8;">
+        <li><b>数据来源</b>：推荐使用阿里云 DataV.GeoAtlas 获取最新的行政区划数据。</li>
+        <li><b>底图选择</b>：国内业务推荐使用高德 (AMap)，国际业务推荐使用 Mapbox。</li>
+        <li><b>性能优化</b>：对于大规模散点数据（10万+），请使用 L7 原生图层而非 L7Plot 简化版。</li>
+    </ul>
 </div>
 
-<div class="spec-section">
-    <div class="spec-title">使用场景</div>
-    <table class="spec-table">
-        <thead>
-            <tr><th style="width: 150px;">类型</th><th>适用场景</th></tr>
-        </thead>
-        <tbody>
-            <tr><td>区域地图</td><td>各省销售额、GDP分布等按行政区划的数据</td></tr>
-            <tr><td>散点地图</td><td>门店位置、事件发生地点等精确坐标数据</td></tr>
-            <tr><td>热力地图</td><td>人口密度、订单分布等密度型数据</td></tr>
-            <tr><td>路径地图</td><td>物流路线、迁徙路径等连线数据</td></tr>
-        </tbody>
-    </table>
-</div>
+<script>
+    let mapInstance = null;
 
-<div style="margin-top: 24px; padding: 16px; background: #FFFBE6; border-radius: 8px; border: 1px solid #FFE58F;">
-    <div style="font-weight: 600; color: #D48806; margin-bottom: 8px;">⚠️ 注意事项</div>
-    <div style="font-size: 13px; color: #8C8C8C;">
-        1. 地图可视化需要使用专门的 L7Plot 或 L7 库<br>
-        2. 需要加载对应的 GeoJSON 数据<br>
-        3. 地图底图服务需要 API Key（高德/Mapbox等）
-    </div>
-</div>
+    async function initMap(type = 'amap', key = '') {
+        const gaodeKey = key || document.getElementById('gaode-key').value;
+        
+        if (type === 'amap' && !gaodeKey) {
+            alert('请先输入高德地图 API Key');
+            return;
+        }
 
+        document.getElementById('api-mask').style.display = 'none';
+        document.getElementById('map-status').innerText = '正在加载地理数据...';
+
+        try {
+            // 加载模拟数据和 GeoJSON
+            const res = await fetch('https://gw.alipayobjects.com/os/alisis/geo-data-v2/china.json');
+            const data = await res.json();
+            
+            // 构造模拟数值
+            const plotData = data.features.map(f => ({
+                name: f.properties.name,
+                adcode: f.properties.adcode,
+                value: Math.round(Math.random() * 1000)
+            }));
+
+            const config = {
+                map: {
+                    type: type,
+                    style: 'light',
+                    center: [105, 31.5],
+                    zoom: 3,
+                    token: type === 'amap' ? gaodeKey : undefined
+                },
+                source: {
+                    data: data,
+                    joinBy: {
+                        sourceField: 'adcode',
+                        geoField: 'adcode',
+                    },
+                },
+                color: {
+                    field: 'value',
+                    value: ['#E8F3FF', '#5B8FF9', '#0071E3'],
+                },
+                label: {
+                    visible: true,
+                    field: 'name',
+                    style: { fill: '#000', opacity: 0.6, fontSize: 10 }
+                },
+                tooltip: {
+                    items: ['name', 'value']
+                },
+                state: {
+                    active: { stroke: '#FFF', strokeWeight: 2 }
+                }
+            };
+
+            if (mapInstance) mapInstance.destroy();
+            mapInstance = new L7Plot.Choropleth('map-container', config);
+            
+            document.getElementById('map-status').innerText = '地图加载成功 ✓';
+        } catch (err) {
+            console.error(err);
+            document.getElementById('map-status').innerText = '加载失败: ' + err.message;
+            document.getElementById('api-mask').style.display = 'flex';
+        }
+    }
+
+    function useDefault() {
+        initMap('maplibre'); // MapLibre usually doesn't need a token for basic styles in some contexts, 
+                             // but L7Plot might still want one. Using 'mapbox' with a public token is another option.
+    }
+</script>
 
 <script src="../nav.js"></script>
 </body>
