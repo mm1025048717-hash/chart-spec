@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chart Spec - 重新定义专业图表设计</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <style>
         :root {
             --apple-blue: #0071E3;
-            --apple-blue-hover: #0077ED;
+            --apple-blue-rgb: 0, 113, 227;
             --apple-gray-50: #FBFBFD;
             --apple-gray-100: #F5F5F7;
             --apple-gray-200: #E8E8ED;
@@ -17,8 +15,7 @@
             --apple-gray-900: #1D1D1F;
             --text-main: #1D1D1F;
             --text-sub: #86868B;
-            --card-shadow: 0 4px 24px rgba(0,0,0,0.04);
-            --card-shadow-hover: 0 12px 48px rgba(0,0,0,0.08);
+            --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,14 +33,42 @@
             overflow-x: hidden;
         }
 
-        /* ===== Global Background Elements ===== */
-        .bg-gradient {
+        /* ===== Animated Background ===== */
+        .bg-mesh {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: -1;
-            background: 
-                radial-gradient(circle at 80% 20%, rgba(0, 113, 227, 0.03) 0%, transparent 40%),
-                radial-gradient(circle at 20% 80%, rgba(0, 113, 227, 0.03) 0%, transparent 40%);
+            background-color: #fff;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(var(--apple-blue-rgb), 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 0%, rgba(var(--apple-blue-rgb), 0.03) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(var(--apple-blue-rgb), 0.05) 0px, transparent 50%),
+                radial-gradient(at 0% 100%, rgba(var(--apple-blue-rgb), 0.03) 0px, transparent 50%);
+            animation: meshMove 20s ease-in-out infinite alternate;
+        }
+
+        @keyframes meshMove {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        /* ===== Mouse Spotlight ===== */
+        .spotlight {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            pointer-events: none;
+            background: radial-gradient(circle 400px at var(--mouse-x) var(--mouse-y), rgba(var(--apple-blue-rgb), 0.04), transparent 80%);
+            z-index: 1;
         }
 
         /* ===== Navigation ===== */
@@ -51,21 +76,23 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             height: 52px;
-            background: rgba(255, 255, 255, 0.72);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
             z-index: 10000;
             border-bottom: 0.5px solid rgba(0,0,0,0.08);
+            transform: translateY(0);
+            transition: transform 0.4s var(--ease-apple);
         }
 
         .nav-inner {
-            max-width: 1024px;
+            max-width: 1200px;
             margin: 0 auto;
             height: 100%;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 22px;
+            padding: 0 40px;
         }
 
         .nav-brand {
@@ -75,359 +102,423 @@
             color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 10px;
-            transition: opacity 0.2s;
+            gap: 12px;
         }
-        .nav-brand:hover { opacity: 0.7; }
+        
+        .logo-mark {
+            width: 28px; height: 28px;
+            background: var(--apple-blue);
+            border-radius: 7px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 800; font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+        }
 
-        .nav-links { display: flex; gap: 32px; }
+        .nav-links { display: flex; gap: 40px; }
         .nav-link {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-main);
             text-decoration: none;
-            opacity: 0.8;
-            font-weight: 400;
-            transition: opacity 0.2s;
+            opacity: 0.7;
+            transition: all 0.2s;
         }
         .nav-link:hover { opacity: 1; color: var(--apple-blue); }
 
         /* ===== Hero Section ===== */
         .hero {
-            padding: 160px 22px 100px;
+            padding: 180px 40px 120px;
             text-align: center;
             position: relative;
+            z-index: 2;
         }
 
         .hero-title {
-            font-size: clamp(48px, 10vw, 100px);
+            font-size: clamp(64px, 12vw, 120px);
             font-weight: 700;
-            letter-spacing: -0.04em;
-            line-height: 1.05;
-            margin-bottom: 24px;
-            background: linear-gradient(180deg, #1D1D1F 0%, #434345 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: titleReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: -0.05em;
+            line-height: 1.0;
+            margin-bottom: 32px;
+            color: var(--apple-gray-900);
+            perspective: 1000px;
         }
 
-        @keyframes titleReveal {
-            from { transform: translateY(40px); opacity: 0; filter: blur(10px); }
-            to { transform: translateY(0); opacity: 1; filter: blur(0); }
+        .hero-title span {
+            display: inline-block;
+            background: linear-gradient(180deg, #1D1D1F 30%, #434345 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textReveal 1.2s var(--ease-apple) backwards;
+        }
+
+        .hero-title .blue-text {
+            background: linear-gradient(180deg, var(--apple-blue) 0%, #004F9E 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes textReveal {
+            from { transform: translateY(60px) rotateX(-20deg); opacity: 0; filter: blur(20px); }
+            to { transform: translateY(0) rotateX(0); opacity: 1; filter: blur(0); }
         }
 
         .hero-subtitle {
-            font-size: clamp(20px, 3vw, 28px);
-            color: var(--text-sub);
-            max-width: 700px;
-            margin: 0 auto 48px;
-            font-weight: 500;
-            line-height: 1.3;
-            animation: subtitleReveal 1.4s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-            animation-delay: 0.2s;
+            font-size: clamp(20px, 4vw, 26px);
+            color: var(--apple-gray-400);
+            max-width: 800px;
+            margin: 0 auto 56px;
+            font-weight: 400;
+            line-height: 1.4;
+            animation: fadeIn 1.5s var(--ease-apple) 0.3s backwards;
         }
 
-        @keyframes subtitleReveal {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .hero-cta {
             display: flex;
             justify-content: center;
-            gap: 24px;
-            animation: subtitleReveal 1.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
-            animation-delay: 0.4s;
+            align-items: center;
+            gap: 32px;
+            animation: fadeIn 1.5s var(--ease-apple) 0.5s backwards;
         }
 
         .btn {
-            padding: 18px 36px;
+            padding: 20px 44px;
             border-radius: 980px;
-            font-size: 19px;
-            font-weight: 500;
+            font-size: 20px;
+            font-weight: 600;
             text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.5s var(--ease-apple);
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn-primary { background: var(--apple-blue); color: #FFF; }
-        .btn-primary:hover { background: var(--apple-blue-hover); transform: scale(1.03); box-shadow: 0 8px 32px rgba(0, 113, 227, 0.2); }
-        
-        .btn-secondary { color: var(--apple-blue); display: flex; align-items: center; gap: 6px; }
-        .btn-secondary:hover { transform: translateX(4px); }
+        .btn-primary {
+            background: var(--apple-blue);
+            color: #FFF;
+            box-shadow: 0 10px 30px rgba(0, 113, 227, 0.2);
+        }
+        .btn-primary:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 113, 227, 0.3);
+            background: var(--apple-blue-hover);
+        }
 
-        /* ===== Main Sections ===== */
+        .btn-secondary {
+            color: var(--apple-blue);
+            display: flex; align-items: center; gap: 8px;
+        }
+        .btn-secondary:hover { transform: translateX(6px); }
+
+        /* ===== Bento Grid ===== */
         .section {
-            max-width: 1024px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 100px 22px;
+            padding: 120px 40px;
+            z-index: 2;
+            position: relative;
         }
 
         .section-header {
-            margin-bottom: 60px;
-            text-align: center;
+            margin-bottom: 80px;
+            text-align: left;
         }
 
-        .section-eyebrow {
-            font-size: 14px;
+        .eyebrow {
+            font-size: 16px;
             font-weight: 600;
             color: var(--apple-blue);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             display: block;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
 
         .section-title {
-            font-size: clamp(32px, 5vw, 48px);
+            font-size: 56px;
             font-weight: 700;
-            letter-spacing: -0.02em;
-            color: var(--text-main);
+            letter-spacing: -0.03em;
+            color: var(--apple-gray-900);
         }
 
-        /* ===== Bento Grid Layout ===== */
         .bento-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            grid-auto-rows: minmax(200px, auto);
-            gap: 24px;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 32px;
         }
 
         .bento-item {
-            background: #FFF;
-            border-radius: 28px;
-            padding: 32px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 40px;
+            padding: 48px;
             text-decoration: none;
             color: inherit;
-            border: 1px solid var(--apple-gray-100);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.6s var(--ease-apple);
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.02);
+        }
+
+        .bento-item::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at var(--item-x) var(--item-y), rgba(var(--apple-blue-rgb), 0.08), transparent 80%);
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
         }
 
         .bento-item:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: var(--card-shadow-hover);
-            border-color: rgba(0, 113, 227, 0.1);
+            transform: translateY(-12px);
+            border-color: rgba(var(--apple-blue-rgb), 0.2);
+            box-shadow: 0 32px 64px rgba(0,0,0,0.06);
         }
+        
+        .bento-item:hover::after { opacity: 1; }
 
-        /* Sizes */
-        .bento-3 { grid-column: span 3; }
-        .bento-2 { grid-column: span 2; }
-        .bento-4 { grid-column: span 4; }
         .bento-6 { grid-column: span 6; }
-
-        /* Special Items */
-        .bento-featured {
-            background: var(--apple-blue);
-            color: #FFF;
-            border: none;
-        }
-        .bento-featured .bento-desc { color: rgba(255,255,255,0.8); }
+        .bento-4 { grid-column: span 4; }
+        .bento-8 { grid-column: span 8; }
+        .bento-12 { grid-column: span 12; }
 
         .bento-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            letter-spacing: -0.01em;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            z-index: 2;
         }
 
         .bento-desc {
-            font-size: 16px;
-            color: var(--text-sub);
-            line-height: 1.4;
+            font-size: 18px;
+            color: var(--apple-gray-400);
+            line-height: 1.5;
+            z-index: 2;
+            max-width: 400px;
         }
 
-        .bento-icon-box {
-            margin-top: auto;
-            align-self: flex-end;
-            font-size: 64px;
-            opacity: 0.9;
-            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .bento-item:hover .bento-icon-box {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        /* Glassmorphism Details */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        /* Design System Section */
-        .ds-section {
-            background: var(--apple-gray-900);
-            border-radius: 40px;
-            padding: 80px 60px;
-            color: #FFF;
-            text-align: left;
+        .bento-visual {
+            margin-top: 40px;
+            flex: 1;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 100px;
-            position: relative;
-            overflow: hidden;
+            justify-content: center;
+            z-index: 2;
         }
 
-        .ds-section::before {
-            content: '';
-            position: absolute;
-            top: 0; right: 0;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, transparent 70%);
-            z-index: 0;
+        .bento-featured {
+            background: linear-gradient(135deg, #0071E3 0%, #004F9E 100%);
+            color: white;
+            border: none;
         }
+        .bento-featured .bento-desc { color: rgba(255,255,255,0.7); }
 
-        .ds-content { position: relative; z-index: 1; max-width: 600px; }
-        .ds-content h2 { font-size: 40px; font-weight: 700; margin-bottom: 16px; }
-        .ds-content p { font-size: 20px; opacity: 0.7; margin-bottom: 32px; }
+        /* ===== Showcase Animations ===== */
+        .chart-mock {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            padding: 20px;
+        }
+        .bar-mock {
+            flex: 1;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px 8px 0 0;
+            height: var(--h);
+            transition: all 1s var(--ease-apple);
+        }
+        .bento-item:hover .bar-mock { height: var(--h-hover); }
 
-        /* Footer */
+        /* ===== Footer ===== */
         .footer {
-            padding: 80px 22px;
-            border-top: 0.5px solid var(--apple-gray-200);
+            padding: 120px 40px 60px;
+            background: var(--apple-gray-100);
             text-align: center;
         }
 
-        .footer-logo { font-size: 24px; font-weight: 700; margin-bottom: 24px; display: block; text-decoration: none; color: inherit; }
-        .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; }
-        .footer-link { font-size: 14px; color: var(--text-sub); text-decoration: none; transition: color 0.2s; }
+        .footer-logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--apple-gray-900);
+            text-decoration: none;
+            margin-bottom: 48px;
+            display: block;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 64px;
+            margin-bottom: 64px;
+        }
+
+        .footer-link {
+            color: var(--apple-gray-400);
+            text-decoration: none;
+            font-size: 15px;
+            transition: color 0.3s;
+        }
         .footer-link:hover { color: var(--apple-blue); }
 
-        /* Mobile */
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .bento-grid { grid-template-columns: 1fr; }
-            .bento-2, .bento-3, .bento-4, .bento-6 { grid-column: span 1; }
-            .hero { padding-top: 120px; }
-            .ds-section { flex-direction: column; text-align: center; padding: 40px 24px; }
+            .bento-4, .bento-6, .bento-8, .bento-12 { grid-column: span 1; }
+            .hero-title { font-size: 48px; }
+            .section-title { font-size: 40px; }
         }
     </style>
 </head>
 <body>
-    <div class="bg-gradient"></div>
+    <div class="grain"></div>
+    <div class="bg-mesh"></div>
+    <div class="spotlight"></div>
 
     <nav class="nav">
         <div class="nav-inner">
-            <a href="#" class="nav-brand">Chart Spec</a>
+            <a href="#" class="nav-brand">
+                <div class="logo-mark">C</div>
+                Chart Spec
+            </a>
             <div class="nav-links">
-                <a href="#featured" class="nav-link">专题</a>
-                <a href="#basic" class="nav-link">基础</a>
-                <a href="#advanced" class="nav-link">高级</a>
+                <a href="#featured" class="nav-link">方案</a>
+                <a href="#library" class="nav-link">组件库</a>
+                <a href="00-design-system/index.html" class="nav-link">规范</a>
                 <a href="https://github.com/mm1025048717-hash/chart-spec" class="nav-link">GitHub</a>
             </div>
         </div>
     </nav>
 
     <header class="hero">
-        <h1 class="hero-title">重新定义图表</h1>
-        <p class="hero-subtitle">专业级数据可视化规范，基于 Ant Design Charts，打造极致的视觉与交互体验。</p>
+        <h1 class="hero-title">
+            <span>重新定义</span><br>
+            <span class="blue-text">专业图表设计</span>
+        </h1>
+        <p class="hero-subtitle">
+            不仅仅是图表，而是将数据转化为艺术。基于 Ant Design Charts 的顶级可视化规范。
+        </p>
         <div class="hero-cta">
-            <a href="#featured" class="btn btn-primary">立即开始</a>
-            <a href="00-design-system/index.html" class="btn btn-secondary">探索设计哲学 <span style="font-size: 20px;">→</span></a>
+            <a href="#featured" class="btn btn-primary">立即体验</a>
+            <a href="00-design-system/index.html" class="btn btn-secondary">
+                探索设计哲学
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+            </a>
         </div>
     </header>
 
-    <main class="section" style="padding-top: 0;">
-        <!-- Featured Bento -->
-        <section id="featured">
+    <main>
+        <section id="featured" class="section">
             <div class="section-header">
-                <span class="section-eyebrow">Featured</span>
-                <h2 class="section-title">专题智能方案</h2>
+                <span class="eyebrow">Intelligence</span>
+                <h2 class="section-title">智能专题方案</h2>
             </div>
             <div class="bento-grid">
-                <a href="x-axis-test/index.html" class="bento-item bento-6 bento-featured">
-                    <div class="ds-content">
-                        <h3 class="bento-title">X轴文字智能处理</h3>
-                        <p class="bento-desc">针对各种极端文本长度设计的自动化布局引擎。涵盖 6 种智能策略，确保在任何屏幕尺寸下都能完美呈现。</p>
+                <a href="x-axis-test/index.html" class="bento-item bento-12 bento-featured">
+                    <div style="max-width: 600px;">
+                        <h3 class="bento-title">X轴文字智能重构</h3>
+                        <p class="bento-desc">根据文本长度、空间与数据量，自动在 6 种布局策略间平滑切换。完美解决长文本重叠、截断等可视化顽疾。</p>
                     </div>
-                    <div class="bento-icon-box">📏</div>
+                    <div class="bento-visual">
+                        <div class="chart-mock">
+                            <div class="bar-mock" style="--h: 40%; --h-hover: 80%;"></div>
+                            <div class="bar-mock" style="--h: 60%; --h-hover: 40%;"></div>
+                            <div class="bar-mock" style="--h: 30%; --h-hover: 90%;"></div>
+                            <div class="bar-mock" style="--h: 80%; --h-hover: 50%;"></div>
+                            <div class="bar-mock" style="--h: 50%; --h-hover: 70%;"></div>
+                        </div>
+                    </div>
                 </a>
             </div>
         </section>
 
-        <!-- Basic Bento -->
-        <section id="basic" style="margin-top: 100px;">
+        <section id="library" class="section">
             <div class="section-header">
-                <span class="section-eyebrow">Essentials</span>
-                <h2 class="section-title">基础图表库</h2>
+                <span class="eyebrow">Library</span>
+                <h2 class="section-title">基础组件库</h2>
             </div>
             <div class="bento-grid">
-                <a href="01-column/index.html" class="bento-item bento-3 glass-card">
+                <a href="01-column/index.html" class="bento-item bento-4">
                     <h3 class="bento-title">柱状图</h3>
-                    <p class="bento-desc">极致比例，细腻圆角。</p>
-                    <div class="bento-icon-box" style="font-size: 48px;">📊</div>
+                    <p class="bento-desc">极致比例，细腻圆角设计。</p>
+                    <div class="bento-visual" style="font-size: 80px;">📊</div>
                 </a>
-                <a href="04-line/index.html" class="bento-item bento-3 glass-card">
+                <a href="04-line/index.html" class="bento-item bento-8">
                     <h3 class="bento-title">折线图</h3>
-                    <p class="bento-desc">平滑曲线，动感交互。</p>
-                    <div class="bento-icon-box" style="font-size: 48px;">📈</div>
+                    <p class="bento-desc">平滑的贝塞尔曲线与灵动的交互反馈。</p>
+                    <div class="bento-visual" style="font-size: 80px;">📈</div>
                 </a>
-                <a href="06-pie-zh/index.html" class="bento-item bento-2 glass-card">
-                    <h3 class="bento-title">饼图</h3>
-                    <p class="bento-desc">占比清晰可见。</p>
-                    <div class="bento-icon-box" style="font-size: 48px;">🥧</div>
+                <a href="06-pie-zh/index.html" class="bento-item bento-6">
+                    <h3 class="bento-title">占比分析</h3>
+                    <p class="bento-desc">支持嵌套、多级联动与语义化标注。</p>
+                    <div class="bento-visual" style="font-size: 80px;">🥧</div>
                 </a>
-                <a href="03-bar/index.html" class="bento-item bento-2 glass-card">
-                    <h3 class="bento-title">条形图</h3>
-                    <p class="bento-desc">横向对比专家。</p>
-                    <div class="bento-icon-box" style="font-size: 48px;">➖</div>
-                </a>
-                <a href="05-area/index.html" class="bento-item bento-2 glass-card">
-                    <h3 class="bento-title">面积图</h3>
-                    <p class="bento-desc">总量趋势呈现。</p>
-                    <div class="bento-icon-box" style="font-size: 48px;">📉</div>
+                <a href="17-map/index.html" class="bento-item bento-6">
+                    <h3 class="bento-title">地理空间</h3>
+                    <p class="bento-desc">基于 L7 的专业级地图可视化引擎。</p>
+                    <div class="bento-visual" style="font-size: 80px;">🗺️</div>
                 </a>
             </div>
         </section>
 
-        <!-- Advanced Bento -->
-        <section id="advanced" style="margin-top: 100px;">
-            <div class="section-header">
-                <span class="section-eyebrow">Advanced</span>
-                <h2 class="section-title">高级可视化</h2>
-            </div>
-            <div class="bento-grid">
-                <a href="17-map/index.html" class="bento-item bento-4" style="background: #F5F5F7;">
-                    <h3 class="bento-title">地理图表</h3>
-                    <p class="bento-desc">基于 L7 的专业空间数据分析，支持省市区三级穿透与底图切换。</p>
-                    <div class="bento-icon-box">🗺️</div>
-                </a>
-                <a href="10-radar/index.html" class="bento-item bento-2" style="background: #F5F5F7;">
-                    <h3 class="bento-title">雷达图</h3>
-                    <p class="bento-desc">多维评估系统。</p>
-                    <div class="bento-icon-box">🕸️</div>
-                </a>
-            </div>
-        </section>
-
-        <!-- DS Link -->
-        <div style="margin-top: 100px;">
-            <a href="00-design-system/index.html" class="ds-section">
-                <div class="ds-content">
-                    <h2>Chart Spec 设计系统</h2>
-                    <p>从色彩心理学到交互反馈，探索我们如何重新定义企业级数据可视化标准。</p>
-                    <div class="btn btn-primary" style="display: inline-block;">阅读规范全文</div>
+        <section class="section">
+            <a href="00-design-system/index.html" class="bento-item bento-12" style="background: #1D1D1F; color: white;">
+                <div style="text-align: center; margin: 40px auto; max-width: 800px;">
+                    <span class="eyebrow" style="color: #434345;">Philosophy</span>
+                    <h2 style="font-size: 48px; margin-bottom: 24px;">探索 Chart Spec 设计之魂</h2>
+                    <p style="font-size: 20px; opacity: 0.6; margin-bottom: 40px;">
+                        我们花费了数千小时研究人类视觉感知的每一个像素，只为打造最符合直觉的数据表现形式。
+                    </p>
+                    <div class="btn btn-primary">深入了解设计系统</div>
                 </div>
-                <div style="font-size: 120px; opacity: 0.1; position: absolute; right: -20px; bottom: -20px;">📐</div>
             </a>
-        </div>
+        </section>
     </main>
 
     <footer class="footer">
         <a href="#" class="footer-logo">Chart Spec</a>
         <div class="footer-links">
-            <a href="#" class="footer-link">关于项目</a>
-            <a href="https://github.com/mm1025048717-hash/chart-spec" class="footer-link">GitHub</a>
-            <a href="https://chart-spec.vercel.app" class="footer-link">在线预览</a>
+            <a href="#" class="footer-link">设计体系</a>
+            <a href="https://github.com/mm1025048717-hash/chart-spec" class="footer-link">GitHub 仓库</a>
+            <a href="#" class="footer-link">更新日志</a>
+            <a href="#" class="footer-link">许可协议</a>
         </div>
-        <p style="font-size: 12px; color: #D2D2D7;">Copyright © 2024 Chart Spec. All rights reserved.</p>
+        <p style="font-size: 14px; color: var(--apple-gray-400);">Copyright © 2026 Chart Spec. Crafted with Precision.</p>
     </footer>
 
     <script>
-        // Reveal animation on scroll
+        // Mouse Spotlight Effect
+        document.addEventListener('mousemove', e => {
+            document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+            document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+            
+            // Item-specific spotlight
+            document.querySelectorAll('.bento-item').forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                item.style.setProperty('--item-x', `${x}px`);
+                item.style.setProperty('--item-y', `${y}px`);
+            });
+        });
+
+        // Scroll Reveal
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
+        };
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -436,14 +527,35 @@
                     entry.target.style.filter = 'blur(0)';
                 }
             });
-        }, { threshold: 0.1 });
+        }, observerOptions);
 
-        document.querySelectorAll('.bento-item, .section-header, .ds-section').forEach(el => {
+        document.querySelectorAll('.section-header, .bento-item').forEach(el => {
             el.style.opacity = '0';
-            el.style.transform = 'translateY(30px)';
-            el.style.filter = 'blur(5px)';
-            el.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+            el.style.transform = 'translateY(40px)';
+            el.style.filter = 'blur(10px)';
+            el.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
             observer.observe(el);
+        });
+
+        // Sticky Nav Effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            const nav = document.querySelector('.nav');
+            
+            if (currentScroll <= 0) {
+                nav.style.transform = 'translateY(0)';
+                nav.style.boxShadow = 'none';
+                return;
+            }
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                nav.style.transform = 'translateY(-100%)';
+            } else {
+                nav.style.transform = 'translateY(0)';
+                nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.03)';
+            }
+            lastScroll = currentScroll;
         });
     </script>
 </body>
