@@ -4,101 +4,193 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>X轴文字智能处理 - Chart Spec</title>
-    <link rel="stylesheet" href="../common.css">
     <style>
-        .scenario-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 24px;
-            margin-top: 32px;
+        :root {
+            --apple-blue: #0071E3;
+            --apple-gray-50: #FBFBFD;
+            --apple-gray-100: #F5F5F7;
+            --apple-gray-200: #E8E8ED;
+            --apple-gray-400: #86868B;
+            --apple-gray-900: #1D1D1F;
         }
-        .scenario-card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.3s ease;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .scenario-card:hover {
-            border-color: var(--blue);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 
+                         "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--apple-gray-50);
+            color: var(--apple-gray-900);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
-        .scenario-icon {
-            font-size: 32px;
-            margin-bottom: 16px;
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 24px;
         }
-        .scenario-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text);
-        }
-        .scenario-desc {
-            font-size: 14px;
-            color: var(--text-sub);
-            line-height: 1.6;
-        }
+
         .back-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--blue);
+            color: var(--apple-blue);
             text-decoration: none;
-            font-weight: 500;
-            margin-bottom: 32px;
+            font-size: 17px;
+            margin-bottom: 40px;
+            transition: opacity 0.3s;
         }
+
         .back-link:hover {
-            text-decoration: underline;
+            opacity: 0.7;
+        }
+
+        .header {
+            margin-bottom: 64px;
+        }
+
+        .header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            margin-bottom: 16px;
+        }
+
+        .header p {
+            font-size: 21px;
+            color: var(--apple-gray-400);
+            max-width: 600px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .card {
+            background: #FFF;
+            border-radius: 24px;
+            padding: 32px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--apple-gray-200);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.04);
+            border-color: var(--apple-blue);
+        }
+
+        .card-icon {
+            font-size: 40px;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 21px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-title .arrow {
+            color: var(--apple-gray-200);
+            transition: transform 0.3s;
+        }
+
+        .card:hover .card-title .arrow {
+            color: var(--apple-blue);
+            transform: translateX(4px);
+        }
+
+        .card-desc {
+            font-size: 15px;
+            color: var(--apple-gray-400);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 32px; }
+            .header p { font-size: 17px; }
+            .grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="main-content">
-        <a href="../index.html" class="back-link">← 返回图表总览</a>
+    <div class="container">
+        <!-- Use absolute path for back link -->
+        <a href="/index.html" class="back-link">← 返回图表总览</a>
         
-        <div class="page-header">
+        <header class="header">
             <h1>X轴文字智能处理</h1>
-            <p class="subtitle">根据数据量和文字长度，自动选择最优的显示策略（水平、倾斜、垂直、缩减）</p>
-        </div>
+            <p>根据数据量和文字长度，自动选择最优的显示策略（水平、倾斜、垂直、缩减）</p>
+        </header>
 
-        <div class="scenario-grid">
-            <a href="01-short-text/index.html" class="scenario-card">
-                <div class="scenario-icon">📏</div>
-                <div class="scenario-title">短文本场景</div>
-                <p class="scenario-desc">文字长度 ≤ 4 字符，数据量适中。策略：保持水平显示。</p>
+        <div class="grid">
+            <!-- Use absolute paths to avoid 404 on Vercel -->
+            <a href="/x-axis-test/01-short-text/index.html" class="card">
+                <span class="card-icon">📏</span>
+                <div class="card-title">
+                    短文本场景
+                    <span class="arrow">→</span>
+                </div>
+                <p class="card-desc">文字长度 ≤ 4 字符，数据量适中。策略：保持水平显示。</p>
             </a>
 
-            <a href="02-medium-text/index.html" class="scenario-card">
-                <div class="scenario-icon">📐</div>
-                <div class="scenario-title">中等文本场景</div>
-                <p class="scenario-desc">文字长度 5-8 字符。策略：自动 45° 倾斜，避免重叠。</p>
+            <a href="/x-axis-test/02-medium-text/index.html" class="card">
+                <span class="card-icon">📐</span>
+                <div class="card-title">
+                    中等文本场景
+                    <span class="arrow">→</span>
+                </div>
+                <p class="card-desc">文字长度 5-8 字符。策略：自动 45° 倾斜，避免重叠。</p>
             </a>
 
-            <a href="03-long-text/index.html" class="scenario-card">
-                <div class="scenario-icon">📏</div>
-                <div class="scenario-title">长文本场景</div>
-                <p class="scenario-desc">文字长度 > 8 字符。策略：自动 90° 垂直显示。</p>
+            <a href="/x-axis-test/03-long-text/index.html" class="card">
+                <span class="card-icon">📏</span>
+                <div class="card-title">
+                    长文本场景
+                    <span class="arrow">→</span>
+                </div>
+                <p class="card-desc">文字长度 > 8 字符。策略：自动 90° 垂直显示。</p>
             </a>
 
-            <a href="04-extra-long-text/index.html" class="scenario-card">
-                <div class="scenario-icon">✂️</div>
-                <div class="scenario-title">超长文本策略</div>
-                <p class="scenario-desc">文本极长时。策略：智能截断 (...) 并配合 Tooltip 显示全称。</p>
+            <a href="/x-axis-test/04-extra-long-text/index.html" class="card">
+                <span class="card-icon">✂️</span>
+                <div class="card-title">
+                    超长文本策略
+                    <span class="arrow">→</span>
+                </div>
+                <p class="card-desc">文本极长时。策略：智能截断 (...) 并配合 Tooltip 显示全称。</p>
             </a>
 
-            <a href="05-real-scene/index.html" class="scenario-card">
-                <div class="scenario-icon">🏢</div>
-                <div class="scenario-title">真实业务场景</div>
-                <p class="scenario-desc">模拟部门名称、项目名称等真实多变的数据环境。</p>
+            <a href="/x-axis-test/05-real-scene/index.html" class="card">
+                <span class="card-icon">🏢</span>
+                <div class="card-title">
+                    真实业务场景
+                    <span class="arrow">→</span>
+                </div>
+                <p class="card-desc">模拟部门名称、项目名称等真实多变的数据环境。</p>
             </a>
 
-            <a href="06-multi-items/index.html" class="scenario-card">
-                <div class="scenario-icon">📊</div>
-                <div class="scenario-title">海量数据项</div>
-                <p class="scenario-desc">当数据项超过 20 个时。策略：智能抽样显示标签。</p>
+            <a href="/x-axis-test/06-multi-items/index.html" class="card">
+                <span class="card-icon">📊</span>
+                <div class="card-title">
+                    海量数据项
+                    <span class="arrow">→</span>
+                </div>
+                <p class="card-desc">当数据项超过 20 个时。策略：智能抽样显示标签。</p>
             </a>
         </div>
     </div>
