@@ -469,14 +469,6 @@ chart.setOption(option);</pre>
                 '新疆维吾尔自治区', '台湾省', '香港特别行政区', '澳门特别行政区'
             ];
             
-            // 生成数据（同时包含简化名称和完整名称，确保能匹配）
-            const data = [];
-            for (let i = 0; i < provinces.length; i++) {
-                const value = Math.round(Math.random() * 8000 + 500);
-                // 添加两个版本，确保能匹配
-                data.push({ name: provinces[i], value: value });
-                data.push({ name: provincesFull[i], value: value });
-            }
             
             // 计算统计数据
             const total = data.reduce((sum, item) => sum + item.value, 0);
