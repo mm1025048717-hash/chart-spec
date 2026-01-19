@@ -370,9 +370,12 @@ chart.setOption(option);</pre>
         const container = document.getElementById('map-container');
         const loading = document.getElementById('loading');
         
-        // 声明变量在外部作用域，确保在所有代码路径中都可访问
+        // 声明变量在函数作用域的最顶部，确保在所有代码路径中都可访问
         let chinaGeoJson = null;
         let useBuiltInMap = false;
+        
+        // 添加调试日志
+        console.log('开始加载地图数据...');
         
         try {
             // 优先尝试使用 ECharts 内置的中国地图（包含所有省份）
@@ -452,9 +455,13 @@ chart.setOption(option);</pre>
             
             // 双重检查：确保 chinaGeoJson 已定义且格式正确（防御性编程）
             // 使用 typeof 检查，避免 ReferenceError
+            console.log('检查 chinaGeoJson:', typeof chinaGeoJson, chinaGeoJson);
             if (typeof chinaGeoJson === 'undefined' || chinaGeoJson === null) {
+                console.error('chinaGeoJson 未定义或为 null');
                 throw new Error('无法加载地图数据：chinaGeoJson 未定义或为 null');
             }
+            
+            console.log('chinaGeoJson 已定义，包含', chinaGeoJson.features?.length || 0, '个 features');
             
             if (!chinaGeoJson.features || !Array.isArray(chinaGeoJson.features)) {
                 throw new Error('GeoJSON 格式不正确：缺少 features 数组');
