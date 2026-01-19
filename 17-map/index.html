@@ -446,16 +446,15 @@ chart.setOption(option);</pre>
             if (!chinaGeoJson) {
                 throw new Error(`所有数据源加载失败。最后错误: ${lastError?.message || '未知错误'}`);
             }
-        } catch (loadError) {
-            // 如果加载失败，直接抛出错误，不继续执行
-            console.error('地图数据加载失败:', loadError);
-            // 重新抛出错误，让外层的 catch 处理
-            throw loadError;
         }
         
-        // 双重检查：确保 chinaGeoJson 已定义（防御性编程）
-        if (!chinaGeoJson || !chinaGeoJson.features) {
-            throw new Error('无法加载地图数据：chinaGeoJson 未定义或格式不正确');
+        // 双重检查：确保 chinaGeoJson 已定义且格式正确（防御性编程）
+        if (!chinaGeoJson) {
+            throw new Error('无法加载地图数据：chinaGeoJson 未定义');
+        }
+        
+        if (!chinaGeoJson.features || !Array.isArray(chinaGeoJson.features)) {
+            throw new Error('GeoJSON 格式不正确：缺少 features 数组');
         }
         
         try {
