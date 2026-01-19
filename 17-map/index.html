@@ -370,43 +370,73 @@ chart.setOption(option);</pre>
         const container = document.getElementById('map-container');
         const loading = document.getElementById('loading');
         
-        // 备用数据源列表
+        // 备用数据源列表（按优先级排序）
         const geoJsonSources = [
-            'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json',
-            'https://cdn.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json',
-            'https://raw.githubusercontent.com/apache/echarts/master/map/json/china.json'
+            // 方案1: 使用 ECharts 官方 CDN（最可靠）
+            'https://echarts.apache.org/examples/data/asset/geo/China.json',
+            // 方案2: 使用 unpkg CDN
+            'https://unpkg.com/echarts@5.4.3/map/json/china.json',
+            // 方案3: 使用 jsDelivr（不同路径）
+            'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/asset/geo/China.json',
+            // 方案4: 使用阿里云 DataV（可能需要处理 CORS）
+            'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json'
         ];
         
         let chinaGeoJson = null;
         let lastError = null;
         
         // 尝试从多个数据源加载
-        for (const url of geoJsonSources) {
+        for (let i = 0; i < geoJsonSources.length; i++) {
+            const url = geoJsonSources[i];
             try {
+                console.log(`尝试加载数据源 ${i + 1}/${geoJsonSources.length}: ${url}`);
+                
                 const response = await fetch(url, {
                     method: 'GET',
                     mode: 'cors',
-                    cache: 'default'
+                    cache: 'no-cache',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
                 });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
-                chinaGeoJson = await response.json();
-                
-                // 验证数据格式
-                if (!chinaGeoJson || !chinaGeoJson.features) {
-                    throw new Error('无效的 GeoJSON 格式');
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    console.warn('响应不是 JSON 格式，尝试解析...');
                 }
                 
-                console.log('成功从以下源加载 GeoJSON:', url);
+                chinaGeoJson = await response.json();
+                
+                // 验证数据格式（支持多种 GeoJSON 格式）
+                if (!chinaGeoJson) {
+                    throw new Error('返回数据为空');
+                }
+                
+                // 检查是否是有效的 GeoJSON（可能是 FeatureCollection 或直接是 features）
+                const isValidGeoJson = 
+                    (chinaGeoJson.type === 'FeatureCollection' && Array.isArray(chinaGeoJson.features)) ||
+                    (Array.isArray(chinaGeoJson.features)) ||
+                    (chinaGeoJson.features && Array.isArray(chinaGeoJson.features));
+                
+                if (!isValidGeoJson) {
+                    throw new Error('无效的 GeoJSON 格式：缺少 features 数组');
+                }
+                
+                console.log('✅ 成功从以下源加载 GeoJSON:', url);
                 break; // 成功加载，退出循环
                 
             } catch (error) {
-                console.warn(`从 ${url} 加载失败:`, error.message);
+                console.warn(`❌ 从 ${url} 加载失败:`, error.message);
                 lastError = error;
-                continue; // 尝试下一个数据源
+                
+                // 如果是最后一个数据源，不再继续
+                if (i === geoJsonSources.length - 1) {
+                    break;
+                }
             }
         }
         
@@ -533,16 +563,22 @@ chart.setOption(option);</pre>
             
         } catch (error) {
             console.error('地图加载失败:', error);
+            const errorMsg = error.message || '网络错误或数据源不可用';
             loading.innerHTML = `
-                <div style="color: #FF3B30; font-size: 16px; margin-bottom: 8px; font-weight: 600;">⚠️ 地图加载失败</div>
-                <div style="font-size: 13px; color: #86868B; margin-bottom: 4px;">GeoJSON 加载失败</div>
-                <div style="font-size: 12px; color: #86868B; margin-bottom: 16px;">${error.message || '网络错误或数据源不可用'}</div>
-                <div style="margin-top: 12px;">
-                    <button onclick="renderMap()" style="padding: 10px 20px; background: #5B8FF9; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.background='#0051D4'" onmouseout="this.style.background='#5B8FF9'">重试</button>
+                <div style="color: #FF3B30; font-size: 18px; margin-bottom: 12px; font-weight: 600;">⚠️ 地图加载失败</div>
+                <div style="font-size: 14px; color: #86868B; margin-bottom: 8px; font-weight: 500;">GeoJSON 加载失败</div>
+                <div style="font-size: 13px; color: #86868B; margin-bottom: 20px; padding: 0 20px;">${errorMsg}</div>
+                <div style="margin-top: 16px;">
+                    <button onclick="renderMap()" style="padding: 12px 24px; background: #5B8FF9; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; box-shadow: 0 2px 8px rgba(91, 143, 249, 0.3);" onmouseover="this.style.background='#0051D4'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(91, 143, 249, 0.4)'" onmouseout="this.style.background='#5B8FF9'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(91, 143, 249, 0.3)'">🔄 重试加载</button>
                 </div>
-                <div style="margin-top: 16px; padding: 12px; background: #F5F5F7; border-radius: 8px; font-size: 12px; color: #86868B; text-align: left; max-width: 400px; margin-left: auto; margin-right: auto;">
-                    <div style="font-weight: 600; margin-bottom: 6px; color: #1D1D1F;">💡 提示：</div>
-                    <div>如果多次重试仍失败，可能是网络问题或数据源暂时不可用。请稍后再试，或检查网络连接。</div>
+                <div style="margin-top: 24px; padding: 16px; background: #F5F5F7; border-radius: 12px; font-size: 12px; color: #86868B; text-align: left; max-width: 450px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                    <div style="font-weight: 600; margin-bottom: 8px; color: #1D1D1F; font-size: 13px;">💡 故障排除建议：</div>
+                    <ul style="margin: 0; padding-left: 20px; list-style: disc;">
+                        <li style="margin-bottom: 6px;">检查网络连接是否正常</li>
+                        <li style="margin-bottom: 6px;">尝试刷新页面或清除浏览器缓存</li>
+                        <li style="margin-bottom: 6px;">如果使用 VPN 或代理，请检查是否被拦截</li>
+                        <li>所有数据源都失败时，可能是临时网络问题，请稍后再试</li>
+                    </ul>
                 </div>
             `;
         }
