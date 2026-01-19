@@ -444,41 +444,32 @@ chart.setOption(option);</pre>
         }
         
         try {
+            // 检查 GeoJSON 是否包含省份数据
+            const features = chinaGeoJson?.features || [];
+            const provinceFeatures = features.filter(f => {
+                const name = f.properties?.name || '';
+                return name && name !== '中华人民共和国';
+            });
             
-            // 生成模拟数据
-            // 注意：省份名称需要与 GeoJSON 中的名称完全匹配
-            // ECharts 内置地图使用简化的省份名称（如"北京"而不是"北京市"）
-            const provinces = [
-                '北京', '天津', '河北', '山西', '内蒙古', 
-                '辽宁', '吉林', '黑龙江', '上海', '江苏', 
-                '浙江', '安徽', '福建', '江西', '山东', 
-                '河南', '湖北', '湖南', '广东', '广西', 
-                '海南', '重庆', '四川', '贵州', '云南', 
-                '西藏', '陕西', '甘肃', '青海', '宁夏', 
-                '新疆', '台湾', '香港', '澳门'
-            ];
-            
-            // 也准备完整名称的版本（以防 GeoJSON 使用完整名称）
-            const provincesFull = [
-                '北京市', '天津市', '河北省', '山西省', '内蒙古自治区', 
-                '辽宁省', '吉林省', '黑龙江省', '上海市', '江苏省', 
-                '浙江省', '安徽省', '福建省', '江西省', '山东省', 
-                '河南省', '湖北省', '湖南省', '广东省', '广西壮族自治区', 
-                '海南省', '重庆市', '四川省', '贵州省', '云南省', 
-                '西藏自治区', '陕西省', '甘肃省', '青海省', '宁夏回族自治区', 
-                '新疆维吾尔自治区', '台湾省', '香港特别行政区', '澳门特别行政区'
-            ];
-            
-            
-            // 计算统计数据（去重，因为可能包含重复的省份名称）
-            const uniqueData = [];
-            const seen = new Set();
-            for (const item of data) {
-                if (!seen.has(item.name)) {
-                    seen.add(item.name);
-                    uniqueData.push(item);
-                }
+            if (provinceFeatures.length === 0) {
+                console.warn('⚠️ GeoJSON 只包含国家边界，不包含省份数据');
+                throw new Error('GeoJSON 文件不包含省份边界数据，无法显示省份地图。请使用包含省份的 GeoJSON 文件。');
             }
+            
+            console.log(`✅ GeoJSON 包含 ${provinceFeatures.length} 个省份/地区`);
+            
+            // 从 GeoJSON 中提取实际的省份名称
+            const actualProvinceNames = provinceFeatures.map(f => f.properties.name);
+            console.log('实际省份名称示例:', actualProvinceNames.slice(0, 5));
+            
+            // 生成模拟数据（使用 GeoJSON 中的实际名称）
+            const data = actualProvinceNames.map(name => ({
+                name: name,
+                value: Math.round(Math.random() * 8000 + 500)
+            }));
+            
+            // 计算统计数据
+            const uniqueData = data; // 已经是从 GeoJSON 提取的，不需要去重
             
             const total = uniqueData.reduce((sum, item) => sum + item.value, 0);
             const maxItem = uniqueData.reduce((max, item) => item.value > max.value ? item : max, uniqueData[0]);
