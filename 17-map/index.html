@@ -389,11 +389,14 @@ chart.setOption(option);</pre>
         } catch (e) {
             console.log('内置地图不可用，尝试加载外部 GeoJSON...');
             
-            // 使用支持 CORS 的 CDN
+            // 优先使用本地文件（避免 CORS 问题）
+            // 如果本地文件不存在，尝试使用支持 CORS 的 CDN
             const geoJsonSources = [
+                // 方案1: 本地文件（最可靠，无 CORS 问题）
+                'china.json',
+                // 方案2: 使用支持 CORS 的 CDN
                 'https://cdn.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json',
-                'https://unpkg.com/echarts@5.4.3/map/json/china.json',
-                'https://fastly.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json'
+                'https://unpkg.com/echarts@5.4.3/map/json/china.json'
             ];
             
             let chinaGeoJson = null;
