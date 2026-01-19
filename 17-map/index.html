@@ -370,16 +370,15 @@ chart.setOption(option);</pre>
         const container = document.getElementById('map-container');
         const loading = document.getElementById('loading');
         
-        // 备用数据源列表（按优先级排序）
+        // 优先使用本地 GeoJSON 文件（避免 CORS 问题）
+        // 如果本地文件不存在，尝试使用支持 CORS 的 CDN
         const geoJsonSources = [
-            // 方案1: 使用 ECharts 官方 CDN（最可靠）
-            'https://echarts.apache.org/examples/data/asset/geo/China.json',
-            // 方案2: 使用 unpkg CDN
-            'https://unpkg.com/echarts@5.4.3/map/json/china.json',
-            // 方案3: 使用 jsDelivr（不同路径）
-            'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data/asset/geo/China.json',
-            // 方案4: 使用阿里云 DataV（可能需要处理 CORS）
-            'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json'
+            // 方案1: 本地文件（最可靠，无 CORS 问题）
+            'china.json',
+            // 方案2: 使用 GitHub Raw（通常支持 CORS）
+            'https://raw.githubusercontent.com/echarts-maps/echarts-china-provinces-js/master/geoJson/100000_full.json',
+            // 方案3: 使用 jsDelivr（通过 GitHub 镜像）
+            'https://cdn.jsdelivr.net/gh/echarts-maps/echarts-china-provinces-js@master/geoJson/100000_full.json'
         ];
         
         let chinaGeoJson = null;

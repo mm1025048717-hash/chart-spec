@@ -1,0 +1,413 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "北京",
+        "cp": [116.46, 39.92],
+        "childNum": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[116.0, 40.0], [117.0, 40.0], [117.0, 39.5], [116.0, 39.5], [116.0, 40.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "天津",
+        "cp": [117.2, 39.13],
+        "childNum": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[116.8, 39.5], [117.8, 39.5], [117.8, 38.8], [116.8, 38.8], [116.8, 39.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "河北",
+        "cp": [114.48, 38.03],
+        "childNum": 11
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[113.0, 42.0], [120.0, 42.0], [120.0, 36.0], [113.0, 36.0], [113.0, 42.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "山西",
+        "cp": [112.53, 37.87],
+        "childNum": 11
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[110.0, 40.8], [114.5, 40.8], [114.5, 34.5], [110.0, 34.5], [110.0, 40.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "内蒙古",
+        "cp": [111.65, 40.82],
+        "childNum": 12
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[97.0, 53.0], [126.0, 53.0], [126.0, 37.0], [97.0, 37.0], [97.0, 53.0]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "辽宁",
+        "cp": [123.38, 41.8],
+        "childNum": 14
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[118.8, 43.5], [125.8, 43.5], [125.8, 38.7], [118.8, 38.7], [118.8, 43.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "吉林",
+        "cp": [125.35, 43.88],
+        "childNum": 9
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[121.0, 46.3], [131.2, 46.3], [131.2, 40.8], [121.0, 40.8], [121.0, 46.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "黑龙江",
+        "cp": [126.63, 45.75],
+        "childNum": 13
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[121.0, 53.5], [135.0, 53.5], [135.0, 43.4], [121.0, 43.4], [121.0, 53.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "上海",
+        "cp": [121.48, 31.22],
+        "childNum": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[120.8, 31.6], [122.0, 31.6], [122.0, 30.7], [120.8, 30.7], [120.8, 31.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "江苏",
+        "cp": [118.78, 32.04],
+        "childNum": 13
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[116.3, 35.1], [121.9, 35.1], [121.9, 30.7], [116.3, 30.7], [116.3, 35.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "浙江",
+        "cp": [120.19, 30.26],
+        "childNum": 11
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[118.0, 31.5], [123.0, 31.5], [123.0, 27.0], [118.0, 27.0], [118.0, 31.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "安徽",
+        "cp": [117.27, 31.86],
+        "childNum": 17
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.9, 34.7], [119.3, 34.7], [119.3, 29.4], [114.9, 29.4], [114.9, 34.7]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "福建",
+        "cp": [119.3, 26.08],
+        "childNum": 9
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[115.8, 28.3], [120.7, 28.3], [120.7, 23.5], [115.8, 23.5], [115.8, 28.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "江西",
+        "cp": [115.89, 28.68],
+        "childNum": 11
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[113.5, 30.1], [118.5, 30.1], [118.5, 24.5], [113.5, 24.5], [113.5, 30.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "山东",
+        "cp": [117.0, 36.65],
+        "childNum": 17
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[114.3, 38.5], [122.7, 38.5], [122.7, 34.4], [114.3, 34.4], [114.3, 38.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "河南",
+        "cp": [113.65, 34.76],
+        "childNum": 18
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[110.3, 36.4], [116.6, 36.4], [116.6, 31.2], [110.3, 31.2], [110.3, 36.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "湖北",
+        "cp": [114.31, 30.52],
+        "childNum": 17
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[108.2, 33.3], [116.1, 33.3], [116.1, 29.0], [108.2, 29.0], [108.2, 33.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "湖南",
+        "cp": [113.0, 28.21],
+        "childNum": 14
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[108.7, 30.1], [114.3, 30.1], [114.3, 24.6], [108.7, 24.6], [108.7, 30.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "广东",
+        "cp": [113.23, 23.16],
+        "childNum": 21
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[109.6, 25.5], [117.2, 25.5], [117.2, 20.2], [109.6, 20.2], [109.6, 25.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "广西",
+        "cp": [108.33, 22.84],
+        "childNum": 14
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.3, 26.2], [112.0, 26.2], [112.0, 20.9], [104.3, 20.9], [104.3, 26.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "海南",
+        "cp": [110.35, 20.02],
+        "childNum": 3
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[108.6, 20.1], [111.0, 20.1], [111.0, 18.1], [108.6, 18.1], [108.6, 20.1]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "重庆",
+        "cp": [106.54, 29.59],
+        "childNum": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.2, 32.2], [110.2, 32.2], [110.2, 28.2], [105.2, 28.2], [105.2, 32.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "四川",
+        "cp": [104.06, 30.67],
+        "childNum": 21
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[97.3, 34.3], [110.1, 34.3], [110.1, 26.0], [97.3, 26.0], [97.3, 34.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "贵州",
+        "cp": [106.71, 26.57],
+        "childNum": 9
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[103.6, 29.2], [109.6, 29.2], [109.6, 24.6], [103.6, 24.6], [103.6, 29.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "云南",
+        "cp": [102.73, 25.04],
+        "childNum": 16
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[97.5, 29.2], [106.2, 29.2], [106.2, 21.1], [97.5, 21.1], [97.5, 29.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "西藏",
+        "cp": [91.11, 29.97],
+        "childNum": 7
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[78.4, 36.5], [99.1, 36.5], [99.1, 26.8], [78.4, 26.8], [78.4, 36.5]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "陕西",
+        "cp": [108.95, 34.27],
+        "childNum": 10
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[105.5, 39.6], [111.3, 39.6], [111.3, 31.4], [105.5, 31.4], [105.5, 39.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "甘肃",
+        "cp": [103.73, 36.03],
+        "childNum": 14
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[92.3, 42.8], [108.7, 42.8], [108.7, 32.1], [92.3, 32.1], [92.3, 42.8]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "青海",
+        "cp": [101.74, 36.56],
+        "childNum": 8
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[89.4, 39.2], [103.0, 39.2], [103.0, 31.6], [89.4, 31.6], [89.4, 39.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "宁夏",
+        "cp": [106.27, 38.47],
+        "childNum": 5
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[104.2, 39.4], [107.6, 39.4], [107.6, 35.2], [104.2, 35.2], [104.2, 39.4]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "新疆",
+        "cp": [87.68, 43.77],
+        "childNum": 14
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[73.4, 49.2], [96.4, 49.2], [96.4, 34.3], [73.4, 34.3], [73.4, 49.2]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "台湾",
+        "cp": [121.30, 25.03],
+        "childNum": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[119.3, 25.3], [122.0, 25.3], [122.0, 21.9], [119.3, 21.9], [119.3, 25.3]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "香港",
+        "cp": [114.17, 22.28],
+        "childNum": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[113.8, 22.6], [114.5, 22.6], [114.5, 22.1], [113.8, 22.1], [113.8, 22.6]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "澳门",
+        "cp": [113.54, 22.19],
+        "childNum": 1
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[113.5, 22.2], [113.6, 22.2], [113.6, 22.1], [113.5, 22.1], [113.5, 22.2]]]
+      }
+    }
+  ]
+}
