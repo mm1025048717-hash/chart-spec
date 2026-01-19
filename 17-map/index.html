@@ -451,8 +451,9 @@ chart.setOption(option);</pre>
             }
             
             // 双重检查：确保 chinaGeoJson 已定义且格式正确（防御性编程）
-            if (!chinaGeoJson) {
-                throw new Error('无法加载地图数据：chinaGeoJson 未定义');
+            // 使用 typeof 检查，避免 ReferenceError
+            if (typeof chinaGeoJson === 'undefined' || chinaGeoJson === null) {
+                throw new Error('无法加载地图数据：chinaGeoJson 未定义或为 null');
             }
             
             if (!chinaGeoJson.features || !Array.isArray(chinaGeoJson.features)) {
@@ -460,8 +461,7 @@ chart.setOption(option);</pre>
             }
             
             // 检查 GeoJSON 是否包含省份数据
-            // 检查 GeoJSON 是否包含省份数据
-            const features = chinaGeoJson.features || [];
+            const features = chinaGeoJson.features;
             const provinceFeatures = features.filter(f => {
                 const name = f.properties?.name || '';
                 return name && name !== '中华人民共和国';
