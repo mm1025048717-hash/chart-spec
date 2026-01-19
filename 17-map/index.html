@@ -365,120 +365,87 @@ chart.setOption(option);</pre>
 </div>
 
 <script>
+    // 加载 GeoJSON 数据的独立函数
+    async function loadChinaGeoJson() {
+        // 方案1: 尝试使用 ECharts 内置地图
+        try {
+            const existingMap = echarts.getMap('china');
+            if (existingMap && existingMap.geoJson && existingMap.geoJson.features && existingMap.geoJson.features.length > 1) {
+                console.log('✅ 使用 ECharts 内置中国地图');
+                return existingMap.geoJson;
+            }
+        } catch (e) {
+            console.log('内置地图不可用');
+        }
+        
+        // 方案2: 尝试从多个数据源加载
+        const geoJsonSources = [
+            'china.json',  // 本地文件（最可靠）
+            'https://cdn.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json',
+            'https://unpkg.com/echarts@5.4.3/map/json/china.json'
+        ];
+        
+        let lastError = null;
+        
+        for (let i = 0; i < geoJsonSources.length; i++) {
+            const url = geoJsonSources[i];
+            try {
+                console.log(`尝试加载数据源 ${i + 1}/${geoJsonSources.length}: ${url}`);
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const geoJson = await response.json();
+                
+                if (!geoJson || !geoJson.features || !Array.isArray(geoJson.features)) {
+                    throw new Error('无效的 GeoJSON 格式');
+                }
+                
+                // 注册地图
+                echarts.registerMap('china', geoJson);
+                console.log('✅ 成功加载并注册 GeoJSON:', url);
+                return geoJson;
+                
+            } catch (error) {
+                console.warn(`❌ 从 ${url} 加载失败:`, error.message);
+                lastError = error;
+            }
+        }
+        
+        // 所有数据源都失败
+        throw new Error(`所有数据源加载失败。最后错误: ${lastError?.message || '未知错误'}`);
+    }
+    
     // 使用 ECharts 渲染中国地图
     async function renderMap() {
         const container = document.getElementById('map-container');
         const loading = document.getElementById('loading');
         
-        // 声明变量在函数作用域的最顶部，确保在所有代码路径中都可访问
-        // 使用 var 而不是 let，确保变量提升到函数作用域顶部（兼容性更好）
-        var chinaGeoJson = null;
-        var useBuiltInMap = false;
-        
-        // 添加调试日志
-        console.log('开始加载地图数据...');
-        console.log('chinaGeoJson 初始值:', typeof chinaGeoJson, chinaGeoJson);
-        
         try {
-            // 优先尝试使用 ECharts 内置的中国地图（包含所有省份）
-            // 如果内置地图不可用，再尝试加载外部 GeoJSON
-            try {
-                // ECharts 5.x 内置了中国地图，可以直接使用
-                // 检查是否已经有注册的地图
-                const existingMap = echarts.getMap('china');
-                if (existingMap && existingMap.geoJson && existingMap.geoJson.features && existingMap.geoJson.features.length > 1) {
-                    console.log('✅ 使用 ECharts 内置中国地图');
-                    chinaGeoJson = existingMap.geoJson;
-                    useBuiltInMap = true;
-                } else {
-                    // 尝试注册内置地图
-                    // 注意：ECharts 5.x 需要手动注册，但可以通过 CDN 加载
-                    throw new Error('内置地图未注册');
-                }
-            } catch (e) {
-                console.log('内置地图不可用，尝试加载外部 GeoJSON...');
-                
-                // 优先使用本地文件（避免 CORS 问题）
-                // 如果本地文件不存在，尝试使用支持 CORS 的 CDN
-                const geoJsonSources = [
-                    // 方案1: 本地文件（最可靠，无 CORS 问题）
-                    'china.json',
-                    // 方案2: 使用支持 CORS 的 CDN
-                    'https://cdn.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json',
-                    'https://unpkg.com/echarts@5.4.3/map/json/china.json'
-                ];
-                
-                let lastError = null;
-                
-                // 尝试从多个数据源加载
-                for (let i = 0; i < geoJsonSources.length; i++) {
-                    const url = geoJsonSources[i];
-                    try {
-                        console.log(`尝试加载数据源 ${i + 1}/${geoJsonSources.length}: ${url}`);
-                        
-                        const response = await fetch(url, {
-                            method: 'GET',
-                            mode: 'cors',
-                            cache: 'no-cache'
-                        });
-                        
-                        if (!response.ok) {
-                            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                        }
-                        
-                        chinaGeoJson = await response.json();
-                        
-                        if (!chinaGeoJson || !chinaGeoJson.features) {
-                            throw new Error('无效的 GeoJSON 格式');
-                        }
-                        
-                        // 检查是否包含省份数据（features 数量应该 > 1）
-                        if (chinaGeoJson.features.length <= 1) {
-                            console.warn('GeoJSON 可能只包含国家边界，不包含省份');
-                        }
-                        
-                        // 注册地图
-                        echarts.registerMap('china', chinaGeoJson);
-                        console.log('✅ 成功加载并注册 GeoJSON:', url);
-                        break;
-                        
-                    } catch (error) {
-                        console.warn(`❌ 从 ${url} 加载失败:`, error.message);
-                        lastError = error;
-                        if (i === geoJsonSources.length - 1) break;
-                    }
-                }
-                
-                // 如果所有数据源都失败，抛出错误
-                // 使用 typeof 检查，避免 ReferenceError（即使变量未定义也能安全检查）
-                if (typeof chinaGeoJson === 'undefined' || chinaGeoJson === null) {
-                    throw new Error(`所有数据源加载失败。最后错误: ${lastError?.message || '未知错误'}`);
-                }
-            }
+            // 加载 GeoJSON 数据
+            const chinaGeoJson = await loadChinaGeoJson();
             
-            // 双重检查：确保 chinaGeoJson 已定义且格式正确（防御性编程）
-            // 使用 typeof 检查，避免 ReferenceError
-            console.log('检查 chinaGeoJson:', typeof chinaGeoJson, chinaGeoJson);
-            if (typeof chinaGeoJson === 'undefined' || chinaGeoJson === null) {
-                console.error('chinaGeoJson 未定义或为 null');
-                throw new Error('无法加载地图数据：chinaGeoJson 未定义或为 null');
-            }
-            
-            console.log('chinaGeoJson 已定义，包含', chinaGeoJson.features?.length || 0, '个 features');
-            
-            if (!chinaGeoJson.features || !Array.isArray(chinaGeoJson.features)) {
+            // 验证数据格式
+            if (!chinaGeoJson || !chinaGeoJson.features || !Array.isArray(chinaGeoJson.features)) {
                 throw new Error('GeoJSON 格式不正确：缺少 features 数组');
             }
             
-            // 检查 GeoJSON 是否包含省份数据
-            const features = chinaGeoJson.features;
-            const provinceFeatures = features.filter(f => {
+            console.log('✅ GeoJSON 加载成功，包含', chinaGeoJson.features.length, '个 features');
+            
+            // 提取省份数据
+            const provinceFeatures = chinaGeoJson.features.filter(f => {
                 const name = f.properties?.name || '';
                 return name && name !== '中华人民共和国';
             });
             
             if (provinceFeatures.length === 0) {
-                console.warn('⚠️ GeoJSON 只包含国家边界，不包含省份数据');
                 throw new Error('GeoJSON 文件不包含省份边界数据，无法显示省份地图。请使用包含省份的 GeoJSON 文件。');
             }
             
