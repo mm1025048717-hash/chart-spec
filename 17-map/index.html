@@ -371,11 +371,13 @@ chart.setOption(option);</pre>
         const loading = document.getElementById('loading');
         
         // 声明变量在函数作用域的最顶部，确保在所有代码路径中都可访问
-        let chinaGeoJson = null;
-        let useBuiltInMap = false;
+        // 使用 var 而不是 let，确保变量提升到函数作用域顶部（兼容性更好）
+        var chinaGeoJson = null;
+        var useBuiltInMap = false;
         
         // 添加调试日志
         console.log('开始加载地图数据...');
+        console.log('chinaGeoJson 初始值:', typeof chinaGeoJson, chinaGeoJson);
         
         try {
             // 优先尝试使用 ECharts 内置的中国地图（包含所有省份）
@@ -448,7 +450,8 @@ chart.setOption(option);</pre>
                 }
                 
                 // 如果所有数据源都失败，抛出错误
-                if (!chinaGeoJson) {
+                // 使用 typeof 检查，避免 ReferenceError（即使变量未定义也能安全检查）
+                if (typeof chinaGeoJson === 'undefined' || chinaGeoJson === null) {
                     throw new Error(`所有数据源加载失败。最后错误: ${lastError?.message || '未知错误'}`);
                 }
             }
