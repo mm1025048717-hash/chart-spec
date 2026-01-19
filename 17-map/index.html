@@ -446,9 +446,13 @@ chart.setOption(option);</pre>
             if (!chinaGeoJson) {
                 throw new Error(`所有数据源加载失败。最后错误: ${lastError?.message || '未知错误'}`);
             }
+        } catch (loadError) {
+            // 如果加载失败，直接抛出错误，不继续执行
+            console.error('地图数据加载失败:', loadError);
+            throw loadError;
         }
         
-        // 确保 chinaGeoJson 已定义
+        // 确保 chinaGeoJson 已定义（双重检查）
         if (!chinaGeoJson) {
             throw new Error('无法加载地图数据：chinaGeoJson 未定义');
         }
