@@ -470,12 +470,21 @@ chart.setOption(option);</pre>
             ];
             
             
-            // 计算统计数据
-            const total = data.reduce((sum, item) => sum + item.value, 0);
-            const maxItem = data.reduce((max, item) => item.value > max.value ? item : max, data[0]);
+            // 计算统计数据（去重，因为可能包含重复的省份名称）
+            const uniqueData = [];
+            const seen = new Set();
+            for (const item of data) {
+                if (!seen.has(item.name)) {
+                    seen.add(item.name);
+                    uniqueData.push(item);
+                }
+            }
+            
+            const total = uniqueData.reduce((sum, item) => sum + item.value, 0);
+            const maxItem = uniqueData.reduce((max, item) => item.value > max.value ? item : max, uniqueData[0]);
             
             // 更新统计显示
-            document.getElementById('province-count').textContent = data.length;
+            document.getElementById('province-count').textContent = uniqueData.length;
             document.getElementById('total-sales').textContent = total.toLocaleString() + ' 万元';
             document.getElementById('max-province').textContent = maxItem.name.replace(/省|市|自治区|特别行政区|壮族|回族|维吾尔/g, '') + ' ' + maxItem.value.toLocaleString() + ' 万元';
             
@@ -560,7 +569,7 @@ chart.setOption(option);</pre>
                         label: { show: true, color: '#fff' },
                         itemStyle: { areaColor: '#0051D4' }
                     },
-                    data: data
+                    data: uniqueData
                 }]
             };
             
