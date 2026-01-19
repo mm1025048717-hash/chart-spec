@@ -30,14 +30,42 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">月度销售渠道构成</span>
-            <span class="chart-tag blue">Stacked Column</span>
+            <div class="header-left">
+                <span class="chart-title">2024年月度销售渠道构成</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Stacked Column</span>
+                <button class="btn-view-code" onclick="toggleCode('code-stacked', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
         </div>
         <div class="chart-meta">
-            <div class="chart-meta-title">2024年销售渠道分析</div>
-            <div class="chart-meta-info">
-                <div class="chart-meta-item"><span class="dot"></span>线上渠道</div>
-                <div class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>线下渠道</div>
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 销售流水, 渠道指标表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年Q4</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>月份</option>
+                        <option>季度</option>
+                        <option>产品</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.Q4</option>
+                        <option>2024.Q3</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="chart-body md" style="position: relative;">
@@ -65,14 +93,14 @@
                     <div class="params-divider"></div>
                     <div class="params-section">柱体样式</div>
                     <div class="params-row"><span class="label">宽度比例</span><span class="value">0.5</span></div>
-                    <div class="params-row"><span class="label">圆角</span><span class="value">[4,4,0,0]</span></div>
+                    <div class="params-row"><span class="label">圆角</span><span class="value">仅顶部</span></div>
                 </div>
                 <!-- 坐标轴参数 - 右下 -->
                 <div class="params-panel bottom-right">
                     <div class="params-panel-title">坐标轴配置</div>
                     <div class="params-row"><span class="label">X轴标签</span><span class="value">11px</span></div>
                     <div class="params-row"><span class="label">Y轴网格</span><span class="value">[4,4]虚线</span></div>
-                    <div class="params-row"><span class="label">轴线颜色</span><span class="value">#E5E6EB</span></div>
+                    <div class="params-row"><span class="label">轴线颜色</span><span class="value">#E8E8ED</span></div>
                 </div>
             </div>
         </div>
@@ -85,6 +113,39 @@
                 <span class="summary-label">线上占比：</span>
                 <span class="summary-value green">68%</span>
             </span>
+        </div>
+        <div class="chart-code-panel" id="code-stacked">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-stacked-content')">复制代码</button>
+            </div>
+            <pre id="code-stacked-content">const config = {
+    data: stackData,
+    xField: 'month',
+    yField: 'value',
+    seriesField: 'type',
+    isStack: true,
+    padding: [40, 20, 50, 50],
+    color: ['#5B8FF9', '#5AD8A6'],
+    columnWidthRatio: 0.5,
+    // 堆叠图：仅顶部系列有圆角
+    columnStyle: (datum) => {
+        if (datum.type === '线上') {
+            return { radius: [4, 4, 0, 0] };
+        }
+        return { radius: 0 };
+    },
+    xAxis: {
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: {
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+    },
+    legend: false,
+};</pre>
         </div>
     </div>
 </div>
@@ -122,20 +183,62 @@
     <div class="variant-grid">
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">百分比堆叠</span>
-                <span class="chart-tag green">Percent Stack</span>
+                <div class="header-left"><span class="chart-title">百分比堆叠</span></div>
+                <div class="header-right">
+                    <span class="chart-tag green">Percent Stack</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-percent', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-percent" style="width: 100%; height: 100%;"></div>
             </div>
+            <div class="chart-code-panel" id="code-percent">
+                <div class="code-header"><span>Percent Stack</span><button class="btn-copy-code" onclick="copyCode('code-percent-content')">复制代码</button></div>
+                <pre id="code-percent-content">new Column('chart-percent', {
+    data,
+    xField: 'month',
+    yField: 'value',
+    seriesField: 'type',
+    isStack: true,
+    isPercent: true, // 百分比堆叠关键配置
+    color: ['#5B8FF9', '#5AD8A6'],
+}).render();</pre>
+            </div>
         </div>
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">多系列堆叠</span>
-                <span class="chart-tag yellow">Multi Series</span>
+                <div class="header-left"><span class="chart-title">多系列堆叠</span></div>
+                <div class="header-right">
+                    <span class="chart-tag yellow">Multi Series</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-multi-stack', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-multi" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-multi-stack">
+                <div class="code-header"><span>Multi Series Stack</span><button class="btn-copy-code" onclick="copyCode('code-multi-stack-content')">复制代码</button></div>
+                <pre id="code-multi-stack-content">new Column('chart-multi', {
+    data: multiData,
+    xField: 'month',
+    yField: 'value',
+    seriesField: 'type',
+    isStack: true,
+    color: ['#5B8FF9', '#5AD8A6', '#FF9500'],
+    // 只有顶部系列有圆角，底部系列无圆角
+    columnStyle: (datum) => {
+        if (datum.type === '产品A') {
+            return { radius: [4, 4, 0, 0] };
+        }
+        return { radius: 0 };
+    },
+}).render();</pre>
             </div>
         </div>
     </div>
@@ -154,15 +257,21 @@
     padding: [<span class="number">40</span>, <span class="number">20</span>, <span class="number">50</span>, <span class="number">50</span>],
     color: [<span class="string">'#5B8FF9'</span>, <span class="string">'#5AD8A6'</span>],
     columnWidthRatio: <span class="number">0.5</span>,
-    columnStyle: { radius: [<span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>] },
+    <span class="comment">// 堆叠图：仅顶部系列有圆角</span>
+    columnStyle: (datum) => {
+        <span class="keyword">if</span> (datum.type === <span class="string">'线上'</span>) {
+            <span class="keyword">return</span> { radius: [<span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>] };
+        }
+        <span class="keyword">return</span> { radius: <span class="number">0</span> };
+    },
     xAxis: {
-        label: { style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#646A73'</span> } },
-        line: { style: { stroke: <span class="string">'#E5E6EB'</span> } },
+        label: { style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#86868B'</span> } },
+        line: { style: { stroke: <span class="string">'#E8E8ED'</span> } },
         tickLine: <span class="keyword">null</span>,
     },
     yAxis: {
-        label: { style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#646A73'</span> } },
-        grid: { line: { style: { stroke: <span class="string">'#E5E6EB'</span>, lineDash: [<span class="number">4</span>, <span class="number">4</span>] } } },
+        label: { style: { fontSize: <span class="number">11</span>, fill: <span class="string">'#86868B'</span> } },
+        grid: { line: { style: { stroke: <span class="string">'#E8E8ED'</span>, lineDash: [<span class="number">4</span>, <span class="number">4</span>] } } },
     },
     legend: { position: <span class="string">'top-right'</span>, itemSpacing: <span class="number">20</span> },
 };
@@ -196,15 +305,22 @@ new Column('chart-basic', {
     padding: [40, 20, 50, 50],
     color: ['#5B8FF9', '#5AD8A6'],
     columnWidthRatio: 0.5,
-    columnStyle: { radius: [4, 4, 0, 0] },
+    // 堆叠图：底部柱子无圆角，只有顶部柱子有圆角
+    columnStyle: (datum) => {
+        // 线上是堆叠在顶部的，所以只有线上有圆角
+        if (datum.type === '线上') {
+            return { radius: [4, 4, 0, 0] };
+        }
+        return { radius: 0 };
+    },
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        line: { style: { stroke: '#E5E6EB' } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
         tickLine: null,
     },
@@ -218,10 +334,15 @@ new Column('chart-percent', {
     seriesField: 'type',
     isStack: true,
     isPercent: true,
-    padding: [30, 16, 40, 40],
+    padding: [40, 20, 50, 50],
     color: ['#5B8FF9', '#5AD8A6'],
     columnWidthRatio: 0.5,
-    columnStyle: { radius: [4, 4, 0, 0] },
+    columnStyle: (datum) => {
+        if (datum.type === '线上') {
+            return { radius: [4, 4, 0, 0] };
+        }
+        return { radius: 0 };
+    },
     yAxis: { label: { formatter: (v) => (v * 100).toFixed(0) + '%' } },
     legend: { position: 'top-right' },
 }).render();
@@ -244,10 +365,18 @@ new Column('chart-multi', {
     yField: 'value',
     seriesField: 'type',
     isStack: true,
-    padding: [30, 16, 40, 40],
-    color: ['#5B8FF9', '#5AD8A6', '#F6BD16'],
+    padding: [40, 20, 50, 50],
+    color: ['#5B8FF9', '#5AD8A6', '#FF9500'],
     columnWidthRatio: 0.5,
-    columnStyle: { radius: [4, 4, 0, 0] },
+    // 多系列堆叠：只有顶部系列（产品A）有圆角，底部系列（产品C）无圆角
+    columnStyle: (datum) => {
+        // 产品A在顶部，应该有圆角
+        if (datum.type === '产品A') {
+            return { radius: [4, 4, 0, 0] };
+        }
+        // 底部和中间系列都没有圆角
+        return { radius: 0 };
+    },
     legend: { position: 'top-right' },
 }).render();
 </script>

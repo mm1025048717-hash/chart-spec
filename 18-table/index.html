@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -64,15 +64,42 @@
     <div class="spec-title">表格示例</div>
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">销售数据报表</span>
-            <span class="chart-tag">Table</span>
+            <div class="header-left">
+                <span class="chart-title">2024年Q4各区域销售数据明细</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag">Table</span>
+                <button class="btn-view-code" onclick="toggleCode('code-table', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
         </div>
-        <!-- 图表元信息 -->
         <div class="chart-meta">
-            <div class="chart-meta-title">2024年Q4各区域销售数据明细</div>
-            <div class="chart-meta-info">
-                <span class="chart-meta-item"><span class="dot"></span>数据源：销售系统</span>
-                <span class="chart-meta-item"><span class="dot" style="background: var(--green);"></span>数据周期：2024年Q4</span>
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 销售系统, 销售明细表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年Q4</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>地区</option>
+                        <option>产品</option>
+                        <option>销售员</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.Q4</option>
+                        <option>2024.Q3</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div style="padding: 0;">
@@ -138,6 +165,36 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">总销售额</span><span class="summary-value blue">¥ 11,102,000</span></span>，<span class="summary-item"><span class="summary-label">平均完成率</span><span class="summary-value green">84%</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-table">
+            <div class="code-header">
+                <span>Table Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-table-content')">复制代码</button>
+            </div>
+            <pre id="code-table-content">import { Table } from 'antd';
+
+const columns = [
+    { title: '地区', dataIndex: 'region', key: 'region' },
+    {
+        title: '销售额',
+        dataIndex: 'sales',
+        key: 'sales',
+        render: (val) => `¥ ${val.toLocaleString()}`,
+        sorter: (a, b) => a.sales - b.sales,
+    },
+    {
+        title: '环比',
+        dataIndex: 'change',
+        render: (val) => (
+            &lt;span style={{ color: val > 0 ? '#52C41A' : '#FF4D4F' }}&gt;
+                {val > 0 ? '↑' : '↓'} {Math.abs(val)}%
+            &lt;/span&gt;
+        ),
+    },
+];
+
+&lt;Table columns={columns} dataSource={data} /&gt;</pre>
+        </div>
     </div>
 </div>
 
@@ -170,18 +227,65 @@
     </div>
 </div>
 
+<!-- 表格规范 -->
 <div class="spec-section">
-    <div class="spec-title">设计规范</div>
+    <div class="spec-title">表格规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 150px;">元素</th><th style="width: 150px;">规范</th><th>说明</th></tr>
+            <tr><th>元素</th><th>规范</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td>表头背景</td><td><code>#FAFAFA</code></td><td>浅灰背景区分</td></tr>
-            <tr><td>表头字号</td><td><code>13px</code></td><td>字重600</td></tr>
-            <tr><td>单元格内边距</td><td><code>12px 16px</code></td><td>适中的内边距</td></tr>
-            <tr><td>边框</td><td><code>#E8E8E8</code></td><td>仅底边框</td></tr>
-            <tr><td>悬停背景</td><td><code>#F5F5F5</code></td><td>行悬停效果</td></tr>
+            <tr class="highlight">
+                <td>表头背景</td>
+                <td><code>#FAFAFA</code></td>
+                <td>浅灰背景区分表头</td>
+            </tr>
+            <tr>
+                <td>表头字号</td>
+                <td><code>13px</code></td>
+                <td>字重600，颜色 #1D1D1F</td>
+            </tr>
+            <tr>
+                <td>单元格内边距</td>
+                <td><code>12px 16px</code></td>
+                <td>适中的内边距，确保可读性</td>
+            </tr>
+            <tr>
+                <td>单元格字号</td>
+                <td><code>13px</code></td>
+                <td>字重400，颜色 #1D1D1F</td>
+            </tr>
+            <tr>
+                <td>边框</td>
+                <td><code>#E8E8E8</code></td>
+                <td>仅底边框，1px</td>
+            </tr>
+            <tr>
+                <td>悬停背景</td>
+                <td><code>#F5F5F5</code></td>
+                <td>行悬停效果</td>
+            </tr>
+            <tr>
+                <td>斑马纹</td>
+                <td>可选</td>
+                <td>偶数行背景 #FAFAFA，增强可读性</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>列数控制</td><td>建议不超过 8 列，过多会影响横向阅读</td></tr>
+            <tr><td>排序功能</td><td>数值列建议支持排序，提升数据探索能力</td></tr>
+            <tr><td>分页显示</td><td>数据量超过 20 条建议使用分页，提升性能</td></tr>
+            <tr><td>适用场景</td><td>适合展示结构化数据，如销售明细、用户列表、统计数据等</td></tr>
         </tbody>
     </table>
 </div>

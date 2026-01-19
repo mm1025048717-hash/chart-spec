@@ -20,7 +20,7 @@ padding: [40, 20, 50, 50]  // [上, 右, 下, 左]
 
 | 参数 | 值 | 说明 |
 |-----|---|-----|
-| color | `#5B8FF9` | 主题蓝 |
+| color | `#0071E3` | 主题蓝 |
 | lineStyle.lineWidth | `2` | 线宽 |
 | smooth | `false` | 是否平滑 |
 
@@ -32,7 +32,7 @@ padding: [40, 20, 50, 50]  // [上, 右, 下, 左]
 |-----|---|-----|
 | point.size | `4` | 数据点大小 |
 | point.shape | `circle` | 数据点形状 |
-| point.style.fill | `#5B8FF9` | 填充色 |
+| point.style.fill | `#0071E3` | 填充色 |
 
 ---
 
@@ -41,8 +41,8 @@ padding: [40, 20, 50, 50]  // [上, 右, 下, 左]
 ### X轴
 ```javascript
 xAxis: {
-    label: { style: { fontSize: 11, fill: '#646A73' } },
-    line: { style: { stroke: '#E5E6EB' } },
+    label: { style: { fontSize: 11, fill: '#86868B' } },
+    line: { style: { stroke: '#E8E8ED' } },
     tickLine: null,
 }
 ```
@@ -50,8 +50,8 @@ xAxis: {
 ### Y轴
 ```javascript
 yAxis: {
-    label: { style: { fontSize: 11, fill: '#646A73' } },
-    grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+    label: { style: { fontSize: 11, fill: '#86868B' } },
+    grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
     line: null,
     tickLine: null,
 }
@@ -64,7 +64,7 @@ yAxis: {
 ```javascript
 {
     seriesField: 'type',
-    color: ['#5B8FF9', '#5AD8A6'],
+    color: ['#0071E3', '#34C759'],
 }
 ```
 

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -26,8 +26,43 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">缺陷类型分析</span>
-            <span class="chart-tag blue">Pareto</span>
+            <div class="header-left">
+                <span class="chart-title">缺陷类型分析</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Pareto</span>
+                <button class="btn-view-code" onclick="toggleCode('code-pareto', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 质量管理系统, 缺陷统计表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5B8FF9"></span>数据周期: 2024年Q4</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>缺陷类型</option>
+                        <option>产品线</option>
+                        <option>工序</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.Q4</option>
+                        <option>2024.Q3</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="chart-body md">
             <div class="axis-unit y-left">缺陷数</div>
@@ -65,9 +100,86 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">缺陷数</span><span class="summary-value blue">300</span></span>，<span class="summary-item"><span class="summary-label">80%覆盖</span><span class="summary-value green">前3项</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-pareto">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-pareto-content')">复制代码</button>
+            </div>
+            <pre id="code-pareto-content">new DualAxes('chart-basic', {
+    data: [rawData, lineData],
+    xField: 'type',
+    yField: ['value', 'percent'],
+    geometryOptions: [
+        {
+            geometry: 'column',
+            color: '#5B8FF9',
+            columnWidthRatio: 0.5,
+            columnStyle: { radius: [4, 4, 0, 0] },
+        },
+        {
+            geometry: 'line',
+            color: '#5AD8A6',
+            lineStyle: { lineWidth: 2 },
+            point: { size: 4 },
+        },
+    ],
+    annotations: {
+        percent: [{
+            type: 'line',
+            start: ['min', 0.8],
+            end: ['max', 0.8],
+            style: { stroke: '#E86452', lineDash: [4, 4] },
+        }],
+    },
+}).render();</pre>
+        </div>
     </div>
 </div>
 
+<!-- 帕累托图规范 -->
+<div class="spec-section">
+    <div class="spec-title">帕累托图规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>geometryOptions[0]</code></td>
+                <td>column</td>
+                <td>柱状图配置（绝对数值）</td>
+            </tr>
+            <tr>
+                <td><code>geometryOptions[1]</code></td>
+                <td>line</td>
+                <td>折线图配置（累计百分比）</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td><code>['value', 'percent']</code></td>
+                <td>双Y轴字段配置</td>
+            </tr>
+            <tr>
+                <td><code>annotations</code></td>
+                <td>object</td>
+                <td>80%参考线配置</td>
+            </tr>
+            <tr>
+                <td><code>columnStyle.radius</code></td>
+                <td><code>[4,4,0,0]</code></td>
+                <td>柱体圆角（顶部）</td>
+            </tr>
+            <tr>
+                <td><code>lineStyle.lineWidth</code></td>
+                <td><code>2</code></td>
+                <td>折线宽度</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 核心概念 -->
 <div class="spec-section">
     <div class="spec-title">核心概念</div>
     <table class="spec-table">
@@ -78,6 +190,21 @@
             <tr><td>柱状图</td><td>各因素的绝对数值，按降序排列</td></tr>
             <tr><td>折线图</td><td>累计百分比，用于识别关键少数</td></tr>
             <tr><td>80%线</td><td>参考线，体现80/20法则</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>数据排序</td><td>必须按数值降序排列，确保帕累托效果</td></tr>
+            <tr><td>80%法则</td><td>通常前20%的因素贡献80%的价值，通过参考线识别</td></tr>
+            <tr><td>适用场景</td><td>适合问题分析、质量改进、优先级排序等场景</td></tr>
         </tbody>
     </table>
 </div>

@@ -91,16 +91,16 @@ yAxis: {
 ### 主题色
 | 名称 | 色值 | 用途 |
 |-----|------|-----|
-| Blue | `#5B8FF9` | 主色、销售额 |
-| Green | `#5AD8A6` | 达成率、增长 |
-| Yellow | `#F6BD16` | 警告、流量 |
-| Red | `#E86452` | 危险、下降 |
-| Purple | `#9270CA` | 辅助 |
-| Cyan | `#6DC8EC` | 辅助 |
+| Blue | `#0071E3` | 主色、销售额 |
+| Green | `#34C759` | 达成率、增长 |
+| Yellow | `#FF9500` | 警告、流量 |
+| Red | `#FF3B30` | 危险、下降 |
+| Purple | `#5856D6` | 辅助 |
+| Cyan | `#32ADE6` | 辅助 |
 
 ### 多系列颜色数组
 ```javascript
-const colors = ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA', '#6DC8EC'];
+const colors = ['#0071E3', '#34C759', '#FF9500', '#FF3B30', '#5856D6', '#32ADE6'];
 ```
 
 ### 辅助色
@@ -137,7 +137,7 @@ const colors = ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA', '#6DC8EC'
     maxColumnWidth: 40,
     label: {
         position: 'top',
-        style: { fontSize: 11, fill: '#5B8FF9' },
+        style: { fontSize: 11, fill: '#0071E3' },
     },
 }
 ```

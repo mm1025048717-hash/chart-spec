@@ -20,9 +20,17 @@
             title: '占比图表',
             items: [
                 { id: 'pie', name: '饼图', path: '/06-pie/index.html', icon: '🥧' },
-                { id: 'pie-zh', name: '饼图 (中文)', path: '/06-pie-zh/index.html', icon: '🥧' },
-                { id: 'funnel', name: '漏斗图', path: '/11-funnel/index.html', icon: '🔻' },
+                { id: 'ring', name: '环图', path: '/20-ring/index.html', icon: '🍩' },
+                { id: 'rose', name: '玫瑰图', path: '/23-rose/index.html', icon: '🌹' },
+                { id: 'sunburst', name: '旭日图', path: '/24-sunburst/index.html', icon: '☀️' },
                 { id: 'treemap', name: '矩形树图', path: '/14-treemap/index.html', icon: '🔲' }
+            ]
+        },
+        {
+            title: '流程图表',
+            items: [
+                { id: 'funnel', name: '漏斗图', path: '/11-funnel/index.html', icon: '🔻' },
+                { id: 'sankey', name: '桑基图', path: '/25-sankey/index.html', icon: '🌊' }
             ]
         },
         {
@@ -38,14 +46,22 @@
             title: '分析图表',
             items: [
                 { id: 'radar', name: '雷达图', path: '/10-radar/index.html', icon: '🕸️' },
-                { id: 'pareto', name: '帕累托图', path: '/13-pareto/index.html', icon: '📊' }
+                { id: 'pareto', name: '帕累托图', path: '/13-pareto/index.html', icon: '📊' },
+                { id: 'waterfall', name: '瀑布图', path: '/21-waterfall/index.html', icon: '📊' },
+                { id: 'dual-axes', name: '双轴图', path: '/22-dual-axes/index.html', icon: '📈' }
+            ]
+        },
+        {
+            title: '指标组件',
+            items: [
+                { id: 'gauge', name: '仪表盘', path: '/12-gauge/index.html', icon: '⏱️' },
+                { id: 'indicator', name: '指标卡', path: '/19-indicator/index.html', icon: '🎯' },
+                { id: 'progress', name: '进度条', path: '/26-progress/index.html', icon: '📊' }
             ]
         },
         {
             title: '其他组件',
             items: [
-                { id: 'gauge', name: '仪表盘', path: '/12-gauge/index.html', icon: '⏱️' },
-                { id: 'indicator', name: '指标卡', path: '/19-indicator/index.html', icon: '🎯' },
                 { id: 'wordcloud', name: '词云图', path: '/15-wordcloud/index.html', icon: '☁️' },
                 { id: 'map', name: '地图', path: '/17-map/index.html', icon: '🗺️' },
                 { id: 'table', name: '表格', path: '/18-table/index.html', icon: '📋' }
@@ -84,7 +100,7 @@
         header.style.padding = '32px 24px 16px';
         header.innerHTML = `
             <a href="/index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px; margin-bottom: 24px;">
-                <div style="width: 32px; height: 32px; background: #0071E3; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">C</div>
+                <div style="width: 32px; height: 32px; background: #5B8FF9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">C</div>
                 <span style="font-weight: 600; font-size: 17px; letter-spacing: -0.02em;">Chart Spec</span>
             </a>
         `;
@@ -149,3 +165,59 @@
         }
     }
 })();
+
+// ========== 代码展示功能 ==========
+// 切换代码面板显示
+function toggleCode(panelId, btn) {
+    const panel = document.getElementById(panelId);
+    if (!panel) return;
+    
+    const isShow = panel.classList.contains('show');
+    
+    // 关闭所有其他面板
+    document.querySelectorAll('.chart-code-panel.show').forEach(p => {
+        p.classList.remove('show');
+    });
+    document.querySelectorAll('.btn-view-code.active').forEach(b => {
+        b.classList.remove('active');
+    });
+    
+    // 切换当前面板
+    if (!isShow) {
+        panel.classList.add('show');
+        btn.classList.add('active');
+    }
+}
+
+// 复制代码到剪贴板
+function copyCode(contentId) {
+    const content = document.getElementById(contentId);
+    if (!content) return;
+    
+    navigator.clipboard.writeText(content.textContent).then(() => {
+        const btn = event.target;
+        const originalText = btn.textContent;
+        btn.textContent = '已复制 ✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = originalText;
+            btn.classList.remove('copied');
+        }, 2000);
+    }).catch(() => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = content.textContent;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        
+        const btn = event.target;
+        btn.textContent = '已复制 ✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.textContent = '复制代码';
+            btn.classList.remove('copied');
+        }, 2000);
+    });
+}

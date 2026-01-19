@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -35,15 +35,42 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">热门关键词</span>
-            <span class="chart-tag purple">WordCloud</span>
+            <div class="header-left">
+                <span class="chart-title">2024年技术热词分布</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag purple">WordCloud</span>
+                <button class="btn-view-code" onclick="toggleCode('code-wordcloud', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
         </div>
-        <!-- 图表元信息 -->
         <div class="chart-meta">
-            <div class="chart-meta-title">2024年技术热词分布</div>
-            <div class="chart-meta-info">
-                <span class="chart-meta-item"><span class="dot"></span>数据源：舆情分析系统</span>
-                <span class="chart-meta-item"><span class="dot" style="background: var(--purple);"></span>数据周期：2024年全年</span>
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 舆情分析系统, 关键词统计表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#945FB9"></span>数据周期: 2024年全年</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>关键词类型</option>
+                        <option>渠道</option>
+                        <option>情感</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024年度</option>
+                        <option>2024.Q4</option>
+                        <option>2024.12</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="chart-body md">
@@ -53,20 +80,82 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">关键词数</span><span class="summary-value blue">18个</span></span>，<span class="summary-item"><span class="summary-label">最热词</span><span class="summary-value purple">人工智能</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-wordcloud">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-wordcloud-content')">复制代码</button>
+            </div>
+            <pre id="code-wordcloud-content">new WordCloud('chart-basic', {
+    data,
+    wordField: 'word',
+    weightField: 'weight',
+    colorField: 'word',
+    color: ['#5B8FF9', '#5AD8A6', '#FF9500', '#FF3B30', '#5856D6', '#32ADE6'],
+    wordStyle: {
+        fontSize: [14, 48],
+        rotation: 0,
+    },
+    random: () => 0.5,
+}).render();</pre>
+        </div>
     </div>
 </div>
 
+<!-- 词云图规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">词云图规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>wordField</code></td><td>string</td><td>文字内容字段</td></tr>
-            <tr><td><code>weightField</code></td><td>string</td><td>权重字段（决定大小）</td></tr>
-            <tr><td><code>colorField</code></td><td>string</td><td>颜色映射字段</td></tr>
-            <tr><td><code>wordStyle.fontSize</code></td><td>[min, max]</td><td>字体大小范围</td></tr>
+            <tr class="highlight">
+                <td><code>wordField</code></td>
+                <td>string</td>
+                <td>文字内容字段</td>
+            </tr>
+            <tr>
+                <td><code>weightField</code></td>
+                <td>string</td>
+                <td>权重字段（决定大小）</td>
+            </tr>
+            <tr>
+                <td><code>colorField</code></td>
+                <td>string</td>
+                <td>颜色映射字段</td>
+            </tr>
+            <tr>
+                <td><code>wordStyle.fontSize</code></td>
+                <td><code>[14, 48]</code></td>
+                <td>字体大小范围 [最小, 最大]</td>
+            </tr>
+            <tr>
+                <td><code>wordStyle.rotation</code></td>
+                <td><code>0</code></td>
+                <td>文字旋转角度（0为不旋转）</td>
+            </tr>
+            <tr>
+                <td><code>color</code></td>
+                <td>array</td>
+                <td>颜色数组，支持多色映射</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>词数量</td><td>建议 20-100 个词，过少效果不明显，过多难以阅读</td></tr>
+            <tr><td>字体大小</td><td>建议范围 [12, 48]，确保重要词汇突出</td></tr>
+            <tr><td>旋转角度</td><td>建议 0 或 [-90, 90]，避免过度旋转影响阅读</td></tr>
+            <tr><td>适用场景</td><td>适合展示文本数据的关键词频率，如用户评论、搜索热词等</td></tr>
         </tbody>
     </table>
 </div>
@@ -118,7 +207,7 @@ new WordCloud('chart-basic', {
     wordField: 'word',
     weightField: 'weight',
     colorField: 'word',
-    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA', '#6DC8EC'],
+    color: ['#5B8FF9', '#5AD8A6', '#FF9500', '#FF3B30', '#5856D6', '#32ADE6'],
     wordStyle: {
         fontSize: [14, 48],
         rotation: 0,

@@ -7,24 +7,27 @@
 /* ==================== CSS Variables ==================== */
 :root {
     /* 主色调 */
-    --primary: #007AFF;
+    --primary: #5B8FF9;
     --primary-light: #409CFF;
     --primary-dark: #0051D4;
     
-    /* 功能色 */
-    --success: #34C759;
-    --warning: #FF9500;
-    --danger: #FF3B30;
-    --info: #5856D6;
+    /* 功能色 - AntV 语义色 */
+    --success: #5AD8A6;
+    --warning: #F6BD16;
+    --danger: #E86452;
+    --info: #6DC8EC;
     
-    /* 图表色板 */
-    --chart-blue: #5B8FF9;
-    --chart-green: #5AD8A6;
-    --chart-yellow: #F6BD16;
-    --chart-red: #E86452;
-    --chart-purple: #9270CA;
-    --chart-cyan: #6DC8EC;
-    --chart-orange: #FF9845;
+    /* 图表色板 - AntV 官方分类色板 */
+    --chart-blue: #5B8FF9;      /* 分类1 - 蓝 */
+    --chart-green: #5AD8A6;     /* 分类2 - 绿 */
+    --chart-gray: #5D7092;      /* 分类3 - 灰蓝 */
+    --chart-yellow: #F6BD16;    /* 分类4 - 黄 */
+    --chart-red: #E86452;       /* 分类5 - 红 */
+    --chart-cyan: #6DC8EC;      /* 分类6 - 青 */
+    --chart-purple: #945FB9;    /* 分类7 - 紫 */
+    --chart-orange: #FF9845;    /* 分类8 - 橙 */
+    --chart-teal: #1E9493;      /* 分类9 - 青绿 */
+    --chart-pink: #FF99C3;      /* 分类10 - 粉 */
     
     /* 灰度 */
     --gray-50: #F9FAFB;
@@ -475,6 +478,7 @@ a:hover {
     text-decoration: none;
     color: inherit;
     display: block;
+    box-sizing: border-box;
 }
 
 .chart-card:hover {
@@ -544,7 +548,7 @@ a:hover {
 /* Featured Card */
 .chart-card.featured {
     grid-column: span 2;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0071E3 0%, #0051D4 100%);
 }
 
 .chart-card.featured .chart-card-preview {
@@ -602,11 +606,11 @@ a:hover {
 }
 
 .category-icon.special { 
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0071E3 0%, #0051D4 100%);
     box-shadow: 0 2px 8px rgba(118, 75, 162, 0.25);
 }
 .category-icon.basic { 
-    background: linear-gradient(135deg, #5B8FF9 0%, #3D6DD8 100%);
+    background: linear-gradient(135deg, #0071E3 0%, #0051D4 100%);
     box-shadow: 0 2px 8px rgba(91, 143, 249, 0.25);
 }
 .category-icon.proportion { 
@@ -772,12 +776,31 @@ a:hover {
     justify-content: space-between;
     align-items: center;
     background: var(--gray-50);
+    gap: 12px;
+}
+
+.chart-card-header .header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+}
+
+.chart-card-header .header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 .chart-title {
     font-size: 13px;
     font-weight: 600;
     color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .chart-tag {
@@ -787,31 +810,145 @@ a:hover {
     font-weight: 500;
 }
 
-.chart-tag.blue { background: rgba(91, 143, 249, 0.15); color: var(--chart-blue); }
-.chart-tag.green { background: rgba(90, 216, 166, 0.15); color: var(--chart-green); }
-.chart-tag.yellow { background: rgba(246, 189, 22, 0.15); color: #D48806; }
-.chart-tag.red { background: rgba(232, 100, 82, 0.15); color: var(--chart-red); }
-.chart-tag.purple { background: rgba(146, 112, 202, 0.15); color: var(--chart-purple); }
+.chart-tag.blue { background: rgba(0, 113, 227, 0.1); color: var(--chart-blue); }
+.chart-tag.green { background: rgba(52, 199, 89, 0.1); color: var(--chart-green); }
+.chart-tag.yellow { background: rgba(255, 149, 0, 0.1); color: var(--chart-yellow); }
+.chart-tag.red { background: rgba(255, 59, 48, 0.1); color: var(--chart-red); }
+.chart-tag.purple { background: rgba(88, 86, 214, 0.1); color: var(--chart-purple); }
+
+/* 查看代码按钮 */
+.btn-view-code {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--gray-100);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-view-code:hover {
+    background: var(--gray-200);
+    color: var(--text-primary);
+}
+
+.btn-view-code.active {
+    background: var(--chart-blue);
+    color: white;
+    border-color: var(--chart-blue);
+}
+
+.btn-view-code svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* 代码展示区 */
+.chart-code-panel {
+    display: none;
+    background: var(--gray-900);
+    border-top: 1px solid var(--border-light);
+    max-height: 300px;
+    overflow: auto;
+}
+
+.chart-code-panel.show {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; max-height: 0; }
+    to { opacity: 1; max-height: 300px; }
+}
+
+.chart-code-panel pre {
+    margin: 0;
+    padding: 16px;
+    font-family: "SF Mono", "Fira Code", "Monaco", monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #E6E8EB;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+.chart-code-panel .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.chart-code-panel .code-header span {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 500;
+}
+
+.btn-copy-code {
+    padding: 4px 8px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-copy-code:hover {
+    background: rgba(255,255,255,0.2);
+    color: white;
+}
+
+.btn-copy-code.copied {
+    background: var(--chart-green);
+    color: white;
+}
 
 /* Chart Meta */
 .chart-meta {
-    padding: 8px 14px;
+    padding: 10px 14px;
     border-bottom: 1px solid var(--border-light);
     background: var(--gray-50);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.chart-meta:empty {
+    display: none;
 }
 
 .chart-meta-title {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text-primary);
-    margin-bottom: 4px;
+    margin-bottom: 0;
+}
+
+.chart-meta-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
 }
 
 .chart-meta-info {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--text-secondary);
     align-items: center;
 }
@@ -819,7 +956,70 @@ a:hover {
 .chart-meta-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
+}
+
+/* 筛选控件区域 */
+.chart-filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.filter-label {
+    color: var(--text-tertiary);
+}
+
+.filter-select {
+    padding: 4px 24px 4px 8px;
+    font-size: 11px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2386868B' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E") no-repeat right 6px center;
+    appearance: none;
+    cursor: pointer;
+    color: var(--text-primary);
+    min-width: 80px;
+}
+
+.filter-select:hover {
+    border-color: var(--primary);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.1);
+}
+
+.filter-date {
+    padding: 4px 8px;
+    font-size: 11px;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    background: #fff;
+    cursor: pointer;
+    color: var(--text-primary);
+    min-width: 90px;
+}
+
+.filter-date:hover {
+    border-color: var(--primary);
+}
+
+.filter-date:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.1);
 }
 
 .chart-meta-item .dot {
@@ -972,19 +1172,28 @@ a:hover {
 
 /* ==================== Chart Summary ==================== */
 .chart-summary {
-    padding: 8px 14px;
+    padding: 12px 20px;
     border-top: 1px solid var(--border-light);
     background: var(--gray-50);
     text-align: center;
     font-size: 11px;
+    line-height: 1.5;
     color: var(--text-secondary);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .chart-summary .summary-item {
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    margin: 0 8px;
+    margin: 0 6px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .chart-summary .summary-label {
@@ -1133,6 +1342,90 @@ a:hover {
 
 @media (max-width: 768px) {
     .variant-grid { grid-template-columns: 1fr; }
+}
+
+/* ==================== 使用场景卡片 ==================== */
+.usage-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin: 16px 0;
+}
+
+@media (max-width: 768px) {
+    .usage-grid { grid-template-columns: 1fr; }
+}
+
+.usage-card {
+    background: #FBFBFD;
+    border-radius: 16px;
+    padding: 24px;
+    border: 1px solid #E8E8ED;
+}
+
+.usage-card.do {
+    background: linear-gradient(135deg, rgba(52, 199, 89, 0.05) 0%, rgba(52, 199, 89, 0.02) 100%);
+    border-color: rgba(52, 199, 89, 0.2);
+}
+
+.usage-card.dont {
+    background: linear-gradient(135deg, rgba(255, 59, 48, 0.05) 0%, rgba(255, 59, 48, 0.02) 100%);
+    border-color: rgba(255, 59, 48, 0.2);
+}
+
+.usage-header {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.usage-card.do .usage-header {
+    color: #34C759;
+}
+
+.usage-card.dont .usage-header {
+    color: #FF3B30;
+}
+
+.usage-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.usage-card li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #1D1D1F;
+    line-height: 1.5;
+}
+
+.usage-card li:last-child {
+    margin-bottom: 0;
+}
+
+.usage-card li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #86868B;
+}
+
+.usage-card.do li::before {
+    background: #34C759;
+}
+
+.usage-card.dont li::before {
+    background: #FF3B30;
 }
 
 /* ==================== Responsive ==================== */

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>双轴图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .variant-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 768px) { .variant-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📈</span>
+        <span class="text">时间类/比较类</span>
+    </div>
+    <h1>双轴图 Dual Axes Chart</h1>
+    <p class="subtitle">在同一图表中展示两种不同度量的数据，便于对比分析相关指标</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@antv/g2plot</span>
+        <span class="tech-tag">DualAxes</span>
+        <span class="tech-tag">多指标分析</span>
+    </div>
+</div>
+
+<!-- 主图表示例 -->
+<div class="spec-section">
+    <div class="spec-title">基础用法</div>
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="header-left">
+                <span class="chart-title">2024年月度销售额与增长率趋势</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">DualAxes</span>
+                <button class="btn-view-code" onclick="toggleCode('code-basic', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 销售系统, 月度报表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年1-12月</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>月份</option>
+                        <option>季度</option>
+                        <option>周</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024年度</option>
+                        <option>2023年度</option>
+                        <option>近12月</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="chart-body lg" style="position: relative;">
+            <div class="axis-unit y-left">万元</div>
+            <div class="axis-unit y-right">%</div>
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">销售额</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-line-dot" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">增长率</span>
+                </div>
+            </div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">年销售额：</span>
+                <span class="summary-value blue">8,846 万元</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">平均增长率：</span>
+                <span class="summary-value green">+12.5%</span>
+            </span>
+        </div>
+        <div class="chart-code-panel" id="code-basic">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-basic-content')">复制代码</button>
+            </div>
+            <pre id="code-basic-content">const config = {
+    data: [columnData, lineData],
+    xField: 'month',
+    yField: ['value', 'rate'],
+    padding: [40, 50, 60, 60],
+    
+    geometryOptions: [
+        {
+            geometry: 'column',
+            color: '#5B8FF9',
+            columnWidthRatio: 0.4,
+            columnStyle: { radius: [4, 4, 0, 0] },
+        },
+        {
+            geometry: 'line',
+            color: '#5AD8A6',
+            lineStyle: { lineWidth: 2 },
+            point: { size: 4, style: { fill: '#fff', stroke: '#5AD8A6', lineWidth: 2 } },
+        },
+    ],
+    
+    yAxis: {
+        value: {
+            label: { formatter: (v) => v.toLocaleString() },
+            grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+        },
+        rate: {
+            label: { formatter: (v) => `${v}%` },
+        },
+    },
+    
+    legend: false,
+};</pre>
+        </div>
+    </div>
+</div>
+
+<!-- 双轴图规范 -->
+<div class="spec-section">
+    <div class="spec-title">双轴图规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>yField</code></td>
+                <td><code>['value', 'rate']</code></td>
+                <td>双Y轴字段数组</td>
+            </tr>
+            <tr>
+                <td><code>geometryOptions[0]</code></td>
+                <td>column</td>
+                <td>第一个几何图形（柱状图）</td>
+            </tr>
+            <tr>
+                <td><code>geometryOptions[1]</code></td>
+                <td>line</td>
+                <td>第二个几何图形（折线图）</td>
+            </tr>
+            <tr>
+                <td><code>padding</code></td>
+                <td><code>[40,50,60,60]</code></td>
+                <td>右侧留出空间给第二个Y轴</td>
+            </tr>
+            <tr>
+                <td><code>yAxis.value</code></td>
+                <td>object</td>
+                <td>左侧Y轴配置（柱状图）</td>
+            </tr>
+            <tr>
+                <td><code>yAxis.rate</code></td>
+                <td>object</td>
+                <td>右侧Y轴配置（折线图）</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>数据单位</td><td>两个Y轴应有不同的单位或量级，避免混淆</td></tr>
+            <tr><td>颜色区分</td><td>建议使用不同颜色区分两个系列，增强可读性</td></tr>
+            <tr><td>图例配置</td><td>建议显示图例，帮助用户理解两个系列的含义</td></tr>
+            <tr><td>适用场景</td><td>适合展示销售额与转化率、数量与百分比等关联指标</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 变体展示 -->
+<div class="spec-section">
+    <div class="spec-title">常见变体</div>
+    <div class="variant-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="header-left">
+                    <span class="chart-title">堆叠柱 + 折线</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag green">Stacked + Line</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-stacked', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
+            </div>
+            <div class="chart-body md">
+                <div id="chart-stacked" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-stacked">
+                <div class="code-header"><span>Configuration</span><button class="btn-copy-code" onclick="copyCode('code-stacked-content')">复制代码</button></div>
+                <pre id="code-stacked-content">geometryOptions: [
+    {
+        geometry: 'column',
+        isStack: true,
+        seriesField: 'type',
+        color: ['#5B8FF9', '#5AD8A6'],
+    },
+    {
+        geometry: 'line',
+        color: '#F6BD16',
+    },
+],</pre>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="header-left">
+                    <span class="chart-title">双折线图</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag yellow">Dual Line</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-dual-line', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
+            </div>
+            <div class="chart-body md">
+                <div id="chart-dual-line" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-dual-line">
+                <div class="code-header"><span>Configuration</span><button class="btn-copy-code" onclick="copyCode('code-dual-line-content')">复制代码</button></div>
+                <pre id="code-dual-line-content">geometryOptions: [
+    {
+        geometry: 'line',
+        color: '#5B8FF9',
+        smooth: true,
+    },
+    {
+        geometry: 'line',
+        color: '#E86452',
+        smooth: true,
+    },
+],</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../nav.js"></script>
+<script>
+// 销售额数据
+const columnData = [
+    { month: '1月', value: 580 },
+    { month: '2月', value: 520 },
+    { month: '3月', value: 680 },
+    { month: '4月', value: 720 },
+    { month: '5月', value: 760 },
+    { month: '6月', value: 850 },
+    { month: '7月', value: 780 },
+    { month: '8月', value: 820 },
+    { month: '9月', value: 890 },
+    { month: '10月', value: 920 },
+    { month: '11月', value: 980 },
+    { month: '12月', value: 1046 },
+];
+
+// 增长率数据
+const lineData = [
+    { month: '1月', rate: 5.2 },
+    { month: '2月', rate: -10.3 },
+    { month: '3月', rate: 30.8 },
+    { month: '4月', rate: 5.9 },
+    { month: '5月', rate: 5.6 },
+    { month: '6月', rate: 11.8 },
+    { month: '7月', rate: -8.2 },
+    { month: '8月', rate: 5.1 },
+    { month: '9月', rate: 8.5 },
+    { month: '10月', rate: 3.4 },
+    { month: '11月', rate: 6.5 },
+    { month: '12月', rate: 6.7 },
+];
+
+// 基础双轴图
+new G2Plot.DualAxes('chart-basic', {
+    data: [columnData, lineData],
+    xField: 'month',
+    yField: ['value', 'rate'],
+    padding: [40, 50, 60, 60],
+    geometryOptions: [
+        {
+            geometry: 'column',
+            color: '#5B8FF9',
+            columnWidthRatio: 0.4,
+            columnStyle: { radius: [4, 4, 0, 0] },
+        },
+        {
+            geometry: 'line',
+            color: '#5AD8A6',
+            lineStyle: { lineWidth: 2 },
+            point: { size: 4, style: { fill: '#fff', stroke: '#5AD8A6', lineWidth: 2 } },
+        },
+    ],
+    xAxis: {
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: {
+        value: {
+            label: { style: { fontSize: 11, fill: '#86868B' }, formatter: (v) => v.toLocaleString() },
+            grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+            line: null,
+            tickLine: null,
+        },
+        rate: {
+            label: { style: { fontSize: 11, fill: '#86868B' }, formatter: (v) => `${v}%` },
+            line: null,
+            tickLine: null,
+            grid: null,
+        },
+    },
+    legend: false,
+}).render();
+
+// 堆叠柱+折线
+const stackedColumnData = [
+    { month: '1月', type: '线上', value: 320 },
+    { month: '1月', type: '线下', value: 260 },
+    { month: '2月', type: '线上', value: 280 },
+    { month: '2月', type: '线下', value: 240 },
+    { month: '3月', type: '线上', value: 380 },
+    { month: '3月', type: '线下', value: 300 },
+    { month: '4月', type: '线上', value: 420 },
+    { month: '4月', type: '线下', value: 300 },
+];
+
+const stackedLineData = [
+    { month: '1月', total: 580 },
+    { month: '2月', total: 520 },
+    { month: '3月', total: 680 },
+    { month: '4月', total: 720 },
+];
+
+new G2Plot.DualAxes('chart-stacked', {
+    data: [stackedColumnData, stackedLineData],
+    xField: 'month',
+    yField: ['value', 'total'],
+    padding: [40, 50, 50, 50],  // 双Y轴：右侧留出空间
+    geometryOptions: [
+        {
+            geometry: 'column',
+            isStack: true,
+            seriesField: 'type',
+            color: ['#5B8FF9', '#5AD8A6'],
+            columnWidthRatio: 0.4,
+            columnStyle: (datum) => {
+                if (datum.type === '线上') return { radius: [4, 4, 0, 0] };
+                return { radius: 0 };
+            },
+        },
+        {
+            geometry: 'line',
+            color: '#F6BD16',
+            lineStyle: { lineWidth: 2 },
+            point: { size: 3, style: { fill: '#fff', stroke: '#F6BD16', lineWidth: 2 } },
+        },
+    ],
+    xAxis: {
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: {
+        value: {
+            label: { style: { fontSize: 11, fill: '#86868B' } },
+            grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+            line: null,
+            tickLine: null,
+        },
+        total: {
+            label: false,
+            line: null,
+            tickLine: null,
+            grid: null,
+        },
+    },
+    legend: false,
+}).render();
+
+// 双折线图
+const salesData = columnData.map(d => ({ ...d, type: '销售额' }));
+const targetData = columnData.map(d => ({ month: d.month, value: d.value * 1.1, type: '目标' }));
+
+new G2Plot.DualAxes('chart-dual-line', {
+    data: [salesData, targetData],
+    xField: 'month',
+    yField: ['value', 'value'],
+    padding: [40, 50, 50, 50],  // 双Y轴：右侧留出空间
+    geometryOptions: [
+        {
+            geometry: 'line',
+            color: '#5B8FF9',
+            smooth: true,
+            lineStyle: { lineWidth: 2 },
+        },
+        {
+            geometry: 'line',
+            color: '#E86452',
+            smooth: true,
+            lineStyle: { lineWidth: 2, lineDash: [4, 4] },
+        },
+    ],
+    xAxis: {
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: {
+        value: {
+            label: { style: { fontSize: 11, fill: '#86868B' } },
+            grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+            line: null,
+            tickLine: null,
+        },
+    },
+    legend: false,
+}).render();
+</script>
+
+</body>
+</html>

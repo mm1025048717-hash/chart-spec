@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -29,8 +29,43 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">用户年龄分布</span>
-            <span class="chart-tag green">Histogram</span>
+            <div class="header-left">
+                <span class="chart-title">用户年龄分布</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag green">Histogram</span>
+                <button class="btn-view-code" onclick="toggleCode('code-histogram', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 用户系统, 行为分析表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年12月</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>年龄段</option>
+                        <option>性别</option>
+                        <option>地区</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.12</option>
+                        <option>2024.11</option>
+                        <option>2024.Q4</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="chart-body md" style="position: relative;">
             <!-- 轴单位标签 -->
@@ -53,19 +88,89 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">用户数</span><span class="summary-value green">200人</span></span>，<span class="summary-item"><span class="summary-label">平均年龄</span><span class="summary-value">42岁</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-histogram">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-histogram-content')">复制代码</button>
+            </div>
+            <pre id="code-histogram-content">new Histogram('chart-basic', {
+    data,
+    binField: 'age',
+    binWidth: 5,
+    color: '#5AD8A6',
+    columnStyle: { radius: [4, 4, 0, 0] },
+    padding: 'auto',
+    appendPadding: [40, 20, 30, 20],
+    xAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+        line: null,
+    },
+    legend: false,
+}).render();</pre>
+        </div>
     </div>
 </div>
 
+<!-- 直方图规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">直方图规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>binField</code></td><td>string</td><td>分箱字段（数值型）</td></tr>
-            <tr><td><code>binWidth</code></td><td>number</td><td>分箱宽度（区间大小）</td></tr>
-            <tr><td><code>binNumber</code></td><td>number</td><td>分箱数量（与binWidth二选一）</td></tr>
+            <tr class="highlight">
+                <td><code>binField</code></td>
+                <td>string</td>
+                <td>分箱字段（数值型）</td>
+            </tr>
+            <tr>
+                <td><code>binWidth</code></td>
+                <td>number</td>
+                <td>分箱宽度（区间大小）</td>
+            </tr>
+            <tr>
+                <td><code>binNumber</code></td>
+                <td>number</td>
+                <td>分箱数量（与binWidth二选一）</td>
+            </tr>
+            <tr>
+                <td><code>columnWidthRatio</code></td>
+                <td><code>0.5</code></td>
+                <td>柱体宽度占比</td>
+            </tr>
+            <tr>
+                <td><code>columnStyle.radius</code></td>
+                <td><code>[4,4,0,0]</code></td>
+                <td>柱体圆角（顶部圆角）</td>
+            </tr>
+            <tr>
+                <td><code>color</code></td>
+                <td><code>#5AD8A6</code></td>
+                <td>柱体颜色</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>分箱宽度</td><td>建议根据数据范围选择合适的分箱宽度，确保分布清晰可见</td></tr>
+            <tr><td>分箱数量</td><td>建议 10-20 个分箱，过少或过多都影响分布识别</td></tr>
+            <tr><td>适用场景</td><td>适合展示连续数据的分布情况，如年龄分布、收入分布等</td></tr>
         </tbody>
     </table>
 </div>
@@ -103,13 +208,13 @@ new Histogram('chart-basic', {
     padding: 'auto',
     appendPadding: [40, 20, 30, 20],
     xAxis: { 
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        line: { style: { stroke: '#E5E6EB' } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: { 
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
     },
     legend: false,

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -29,8 +29,43 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">广告投入与销售额关系</span>
-            <span class="chart-tag blue">Scatter</span>
+            <div class="header-left">
+                <span class="chart-title">广告投入与销售额关系</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Scatter</span>
+                <button class="btn-view-code" onclick="toggleCode('code-scatter', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 营销系统, 投放效果表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5B8FF9"></span>数据周期: 2024年度</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>渠道</option>
+                        <option>产品</option>
+                        <option>地区</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024年度</option>
+                        <option>2024.Q4</option>
+                        <option>2023年度</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="chart-body md" style="position: relative;">
             <!-- 轴单位标签 -->
@@ -57,21 +92,108 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">数据点</span><span class="summary-value blue">50个</span></span>，<span class="summary-item"><span class="summary-label">相关系数</span><span class="summary-value green">0.85</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-scatter">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-scatter-content')">复制代码</button>
+            </div>
+            <pre id="code-scatter-content">new Scatter('chart-basic', {
+    data,
+    xField: 'advertising',
+    yField: 'sales',
+    colorField: 'category',
+    size: 5,
+    shape: 'circle',
+    color: ['#5B8FF9', '#5AD8A6'],
+    pointStyle: { fillOpacity: 0.8 },
+    padding: 'auto',
+    appendPadding: [40, 20, 30, 20],
+    xAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+        line: null,
+    },
+    legend: false,
+}).render();</pre>
+        </div>
     </div>
 </div>
 
+<!-- 散点图规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">散点图规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>xField</code></td><td>string</td><td>X轴字段</td></tr>
-            <tr><td><code>yField</code></td><td>string</td><td>Y轴字段</td></tr>
-            <tr><td><code>colorField</code></td><td>string</td><td>颜色分组字段（可选）</td></tr>
-            <tr><td><code>size</code></td><td>number</td><td>点的大小，默认4</td></tr>
-            <tr><td><code>shape</code></td><td>string</td><td>点的形状，如circle、square</td></tr>
+            <tr class="highlight">
+                <td><code>xField</code></td>
+                <td>string</td>
+                <td>X轴字段（数值型）</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td>string</td>
+                <td>Y轴字段（数值型）</td>
+            </tr>
+            <tr>
+                <td><code>colorField</code></td>
+                <td>string</td>
+                <td>颜色分组字段（可选）</td>
+            </tr>
+            <tr>
+                <td><code>size</code></td>
+                <td><code>5</code></td>
+                <td>点的大小（固定大小）</td>
+            </tr>
+            <tr>
+                <td><code>shape</code></td>
+                <td><code>circle</code></td>
+                <td>点的形状（circle、square等）</td>
+            </tr>
+            <tr>
+                <td><code>pointStyle.fillOpacity</code></td>
+                <td><code>0.8</code></td>
+                <td>点的填充透明度</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 坐标轴配置 -->
+<div class="spec-section">
+    <div class="spec-title">坐标轴配置</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>X轴值</th><th>Y轴值</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>label.fontSize</td><td><code>11px</code></td><td><code>11px</code></td></tr>
+            <tr><td>label.fill</td><td><code>#86868B</code></td><td><code>#86868B</code></td></tr>
+            <tr><td>grid.line</td><td><code>#E8E8ED [4,4]</code></td><td><code>#E8E8ED [4,4]</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>数据量</td><td>适合展示 50-500 个数据点，过多会重叠难以识别</td></tr>
+            <tr><td>点的大小</td><td>建议 4-6px，确保不重叠且清晰可见</td></tr>
+            <tr><td>颜色分组</td><td>建议使用 colorField 区分不同类别，增强可读性</td></tr>
+            <tr><td>适用场景</td><td>适合展示两个连续变量之间的关系，如相关性分析</td></tr>
         </tbody>
     </table>
 </div>
@@ -119,13 +241,13 @@ new Scatter('chart-basic', {
     padding: 'auto',
     appendPadding: [40, 20, 30, 20],
     xAxis: { 
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        line: { style: { stroke: '#E5E6EB' } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: { 
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
     },
     legend: false,

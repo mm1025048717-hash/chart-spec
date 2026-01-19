@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>瀑布图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📊</span>
+        <span class="text">比较类</span>
+    </div>
+    <h1>瀑布图 Waterfall Chart</h1>
+    <p class="subtitle">展示数据的累计变化过程，常用于财务分析、利润分解等场景</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@antv/g2plot</span>
+        <span class="tech-tag">Waterfall</span>
+        <span class="tech-tag">财务分析</span>
+    </div>
+</div>
+
+<!-- 主图表示例 -->
+<div class="spec-section">
+    <div class="spec-title">基础用法</div>
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="header-left">
+                <span class="chart-title">2024年Q4利润构成分析</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Waterfall</span>
+                <button class="btn-view-code" onclick="toggleCode('code-basic', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 财务系统, 损益表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年Q4</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>科目</option>
+                        <option>部门</option>
+                        <option>项目</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.Q4</option>
+                        <option>2024.Q3</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="chart-body lg" style="position: relative;">
+            <div class="axis-unit y-left">万元</div>
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">增加</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #E86452;"></span>
+                    <span class="legend-text">减少</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #86868B;"></span>
+                    <span class="legend-text">合计</span>
+                </div>
+            </div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">营业收入：</span>
+                <span class="summary-value blue">5,200 万元</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">净利润：</span>
+                <span class="summary-value green">1,850 万元</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">利润率：</span>
+                <span class="summary-value">35.6%</span>
+            </span>
+        </div>
+        <div class="chart-code-panel" id="code-basic">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-basic-content')">复制代码</button>
+            </div>
+            <pre id="code-basic-content">const config = {
+    data,
+    xField: 'type',
+    yField: 'value',
+    padding: [40, 24, 60, 60],
+    
+    // 瀑布图特有配置
+    risingFill: '#5B8FF9',   // 上升柱子颜色
+    fallingFill: '#E86452',  // 下降柱子颜色
+    total: {
+        label: '净利润',
+        style: { fill: '#86868B' },
+    },
+    
+    label: {
+        position: 'middle',
+        style: { fill: '#fff', fontSize: 11 },
+        formatter: (v) => v.value > 0 ? `+${v.value}` : v.value,
+    },
+    
+    columnWidthRatio: 0.5,
+    columnStyle: { radius: [4, 4, 0, 0] },
+    
+    xAxis: {
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+    },
+    yAxis: {
+        label: { 
+            style: { fontSize: 11, fill: '#86868B' },
+            formatter: (v) => v.toLocaleString(),
+        },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+    },
+    legend: false,
+};</pre>
+        </div>
+    </div>
+</div>
+
+<!-- 瀑布图规范 -->
+<div class="spec-section">
+    <div class="spec-title">瀑布图规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>xField</code></td>
+                <td>string</td>
+                <td>分类字段</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td>string</td>
+                <td>数值字段（正负值）</td>
+            </tr>
+            <tr>
+                <td><code>risingFill</code></td>
+                <td><code>#5B8FF9</code></td>
+                <td>上升柱子颜色（正值）</td>
+            </tr>
+            <tr>
+                <td><code>fallingFill</code></td>
+                <td><code>#E86452</code></td>
+                <td>下降柱子颜色（负值）</td>
+            </tr>
+            <tr>
+                <td><code>total</code></td>
+                <td>object</td>
+                <td>合计项配置（value为null时自动计算）</td>
+            </tr>
+            <tr>
+                <td><code>columnWidthRatio</code></td>
+                <td><code>0.5</code></td>
+                <td>柱体宽度占比</td>
+            </tr>
+            <tr>
+                <td><code>columnStyle.radius</code></td>
+                <td><code>[4,4,0,0]</code></td>
+                <td>柱体圆角（顶部）</td>
+            </tr>
+            <tr>
+                <td><code>label.position</code></td>
+                <td><code>middle</code></td>
+                <td>标签位置（柱体中间）</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用场景 -->
+<div class="spec-section">
+    <div class="spec-title">适用场景</div>
+    <div class="usage-grid">
+        <div class="usage-card do">
+            <div class="usage-header">✓ 适合</div>
+            <ul>
+                <li>财务利润分解分析</li>
+                <li>成本构成展示</li>
+                <li>预算差异分析</li>
+                <li>数据增减变化追踪</li>
+            </ul>
+        </div>
+        <div class="usage-card dont">
+            <div class="usage-header">✗ 不适合</div>
+            <ul>
+                <li>时间序列趋势展示</li>
+                <li>简单数值对比</li>
+                <li>占比类数据</li>
+                <li>无累计关系的数据</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="../nav.js"></script>
+<script>
+const data = [
+    { type: '营业收入', value: 5200 },
+    { type: '营业成本', value: -2100 },
+    { type: '销售费用', value: -650 },
+    { type: '管理费用', value: -380 },
+    { type: '研发费用', value: -220 },
+    { type: '净利润', value: null },  // null 表示自动计算合计
+];
+
+new G2Plot.Waterfall('chart-basic', {
+    data,
+    xField: 'type',
+    yField: 'value',
+    padding: [40, 24, 60, 60],
+    risingFill: '#5B8FF9',
+    fallingFill: '#E86452',
+    total: {
+        label: '净利润',
+        style: { fill: '#86868B' },
+    },
+    label: {
+        position: 'middle',
+        style: { fill: '#fff', fontSize: 11 },
+        formatter: (datum) => {
+            if (datum.value === null) return '';
+            return datum.value > 0 ? `+${datum.value}` : datum.value;
+        },
+    },
+    columnWidthRatio: 0.5,
+    waterfallStyle: { radius: [4, 4, 0, 0] },
+    xAxis: {
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: {
+        label: { 
+            style: { fontSize: 11, fill: '#86868B' },
+            formatter: (v) => v.toLocaleString(),
+        },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+        line: null,
+        tickLine: null,
+    },
+    legend: false,
+    tooltip: {
+        formatter: (datum) => ({
+            name: datum.type,
+            value: datum.value ? `${datum.value > 0 ? '+' : ''}${datum.value.toLocaleString()} 万元` : '合计',
+        }),
+    },
+}).render();
+</script>
+
+</body>
+</html>

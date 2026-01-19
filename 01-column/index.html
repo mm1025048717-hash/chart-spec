@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -40,14 +40,46 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">各地区销售额对比</span>
-            <span class="chart-tag blue">Basic Column</span>
+            <div class="header-left">
+                <span class="chart-title">2024年Q4 各地区销售额对比</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Basic Column</span>
+                <button class="btn-view-code" onclick="toggleCode('code-basic', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                    Code
+                </button>
+            </div>
         </div>
         <div class="chart-meta">
-            <div class="chart-meta-title">2024年Q4 销售报表</div>
-            <div class="chart-meta-info">
-                <div class="chart-meta-item"><span class="dot"></span>数据更新：2024-12-31</div>
-                <div class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据来源：ERP系统</div>
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: ERP系统, 销售指标表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年12月</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>地区</option>
+                        <option>产品</option>
+                        <option>渠道</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.12</option>
+                        <option>2024.11</option>
+                        <option>2024.10</option>
+                        <option>2024年Q4</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="chart-body md">
@@ -97,6 +129,46 @@
                 <span class="summary-value green">华东 3,650 万元</span>
             </span>
         </div>
+        <!-- 代码展示区 -->
+        <div class="chart-code-panel" id="code-basic">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-basic-content')">复制代码</button>
+            </div>
+            <pre id="code-basic-content">const config = {
+    data: basicData,
+    xField: 'region',
+    yField: 'value',
+    padding: [40, 20, 50, 50],
+    color: '#5B8FF9',
+    columnWidthRatio: 0.5,
+    columnStyle: { radius: [4, 4, 0, 0] },
+    xAxis: {
+        label: {
+            autoRotate: false,
+            rotate: 0,
+            style: { fontSize: 11, fill: '#86868B', textAlign: 'center' },
+        },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: {
+        label: { 
+            style: { fontSize: 11, fill: '#86868B' }, 
+            formatter: (v) => v.toLocaleString() 
+        },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+        line: null,
+        tickLine: null,
+    },
+    label: { 
+        position: 'top', 
+        offset: 8, 
+        style: { fill: '#5B8FF9', fontSize: 11 } 
+    },
+    legend: false,
+};</pre>
+        </div>
     </div>
 </div>
 
@@ -124,9 +196,9 @@
         </thead>
         <tbody>
             <tr><td>label.fontSize</td><td><code>11px</code></td><td><code>11px</code></td></tr>
-            <tr><td>label.fill</td><td><code>#646A73</code></td><td><code>#646A73</code></td></tr>
-            <tr><td>line.stroke</td><td><code>#E5E6EB</code></td><td><code>null</code></td></tr>
-            <tr><td>grid.line</td><td><code>null</code></td><td><code>#E5E6EB [4,4]</code></td></tr>
+            <tr><td>label.fill</td><td><code>#86868B</code></td><td><code>#86868B</code></td></tr>
+            <tr><td>line.stroke</td><td><code>#E8E8ED</code></td><td><code>null</code></td></tr>
+            <tr><td>grid.line</td><td><code>null</code></td><td><code>#E8E8ED [4,4]</code></td></tr>
         </tbody>
     </table>
 </div>
@@ -154,20 +226,88 @@
     <div class="variant-grid">
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">带数据标签</span>
-                <span class="chart-tag green">With Label</span>
+                <div class="header-left">
+                    <span class="chart-title">带数据标签</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag green">With Label</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-label', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-label" style="width: 100%; height: 100%;"></div>
             </div>
+            <div class="chart-code-panel" id="code-label">
+                <div class="code-header"><span>Chart Configuration</span><button class="btn-copy-code" onclick="copyCode('code-label-content')">复制代码</button></div>
+                <pre id="code-label-content">const config = {
+    data: basicData,
+    xField: 'region',
+    yField: 'value',
+    padding: [40, 20, 50, 50],
+    color: '#5AD8A6',
+    columnWidthRatio: 0.5,
+    columnStyle: { radius: [4, 4, 0, 0] },
+    label: { 
+        position: 'top', 
+        offset: 6, 
+        style: { fill: '#5AD8A6', fontSize: 11 } 
+    },
+    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } }, 
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } 
+    },
+};</pre>
+            </div>
         </div>
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">分组柱状图</span>
-                <span class="chart-tag yellow">Grouped</span>
+                <div class="header-left">
+                    <span class="chart-title">分组柱状图</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag yellow">Grouped</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-grouped', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-grouped" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-grouped">
+                <div class="code-header"><span>Chart Configuration</span><button class="btn-copy-code" onclick="copyCode('code-grouped-content')">复制代码</button></div>
+                <pre id="code-grouped-content">const config = {
+    data: groupedData,
+    xField: 'region',
+    yField: 'value',
+    seriesField: 'type',
+    isGroup: true,
+    padding: [40, 20, 50, 50],
+    color: ['#5B8FF9', '#5AD8A6'],
+    columnWidthRatio: 0.6,
+    columnStyle: { radius: [3, 3, 0, 0] },
+    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } }, 
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } 
+    },
+    legend: {
+        position: 'top-right',
+        itemSpacing: 20,
+        itemName: {
+            style: { fontSize: 12, fill: '#1D1D1F' },
+        },
+        marker: {
+            symbol: 'square',
+            style: { r: 5 },
+        },
+    },
+};</pre>
             </div>
         </div>
     </div>
@@ -185,6 +325,9 @@ const basicData = [
     { region: '西南', value: 1648 },
 ];
 
+// AntV 官方分类色板
+const ANTV_COLORS = ['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E86452', '#6DC8EC', '#945FB9', '#FF9845'];
+
 new Column('chart-basic', {
     data: basicData,
     xField: 'region',
@@ -194,31 +337,54 @@ new Column('chart-basic', {
     columnWidthRatio: 0.5,
     columnStyle: { radius: [4, 4, 0, 0] },
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        line: { style: { stroke: '#E5E6EB' } },
+        label: {
+            autoRotate: false,
+            rotate: 0,
+            style: { fontSize: 11, fill: '#86868B', textAlign: 'center' },
+        },
+        line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
-        label: { style: { fontSize: 11, fill: '#646A73' }, formatter: (v) => v.toLocaleString() },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        label: { style: { fontSize: 11, fill: '#86868B' }, formatter: (v) => v.toLocaleString() },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
         tickLine: null,
     },
     label: { position: 'top', offset: 8, style: { fill: '#5B8FF9', fontSize: 11 } },
     legend: false,
+    tooltip: {
+        showTitle: true,
+        formatter: (datum) => ({
+            name: datum.region || '数值',
+            value: datum.value.toLocaleString() + ' 万元',
+        }),
+        domStyles: {
+            'g2-tooltip': {
+                padding: '12px 16px',
+                borderRadius: '6px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            },
+            'g2-tooltip-title': {
+                fontSize: '13px',
+                fontWeight: '600',
+                marginBottom: '8px',
+            },
+        },
+    },
 }).render();
 
 new Column('chart-label', {
     data: basicData,
     xField: 'region',
     yField: 'value',
-    padding: [30, 16, 40, 40],
+    padding: [40, 20, 50, 50],
     color: '#5AD8A6',
     columnWidthRatio: 0.5,
     columnStyle: { radius: [4, 4, 0, 0] },
-    label: { position: 'top', offset: 6, style: { fill: '#5AD8A6', fontSize: 10 } },
-    xAxis: { label: { style: { fontSize: 10, fill: '#646A73' } } },
-    yAxis: { label: { style: { fontSize: 10, fill: '#646A73' } }, grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } } },
+    label: { position: 'top', offset: 8, style: { fill: '#5AD8A6', fontSize: 11 } },
+    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    yAxis: { label: { style: { fontSize: 11, fill: '#86868B' } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
 }).render();
 
 const groupedData = [
@@ -236,13 +402,23 @@ new Column('chart-grouped', {
     yField: 'value',
     seriesField: 'type',
     isGroup: true,
-    padding: [30, 16, 40, 40],
+    padding: [40, 20, 50, 50],
     color: ['#5B8FF9', '#5AD8A6'],
     columnWidthRatio: 0.6,
-    columnStyle: { radius: [3, 3, 0, 0] },
-    xAxis: { label: { style: { fontSize: 10, fill: '#646A73' } } },
-    yAxis: { label: { style: { fontSize: 10, fill: '#646A73' } }, grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } } },
-    legend: { position: 'top-right' },
+    columnStyle: { radius: [4, 4, 0, 0] },
+    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    yAxis: { label: { style: { fontSize: 11, fill: '#86868B' } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+    legend: {
+        position: 'top-right',
+        itemSpacing: 20,
+        itemName: {
+            style: { fontSize: 12, fill: '#1D1D1F' },
+        },
+        marker: {
+            symbol: 'square',
+            style: { r: 5 },
+        },
+    },
 }).render();
 </script>
 

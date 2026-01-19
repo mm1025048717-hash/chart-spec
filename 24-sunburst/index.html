@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旭日图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">☀️</span>
+        <span class="text">占比类</span>
+    </div>
+    <h1>旭日图 Sunburst Chart</h1>
+    <p class="subtitle">展示层级数据的占比关系，从内到外表示数据层级，适合展示组织架构、分类结构等</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@antv/g2plot</span>
+        <span class="tech-tag">Sunburst</span>
+        <span class="tech-tag">层级数据</span>
+    </div>
+</div>
+
+<!-- 主图表示例 -->
+<div class="spec-section">
+    <div class="spec-title">基础用法</div>
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="header-left">
+                <span class="chart-title">公司组织架构人员分布</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Sunburst</span>
+                <button class="btn-view-code" onclick="toggleCode('code-basic', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: HR系统, 组织架构表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5B8FF9"></span>数据周期: 2024年12月</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>部门</option>
+                        <option>职级</option>
+                        <option>地区</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.12</option>
+                        <option>2024.Q4</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="chart-body lg" style="position: relative;">
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">总人数：</span>
+                <span class="summary-value blue">586人</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">最大部门：</span>
+                <span class="summary-value green">研发中心 42%</span>
+            </span>
+        </div>
+        <div class="chart-code-panel" id="code-basic">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-basic-content')">复制代码</button>
+            </div>
+            <pre id="code-basic-content">const config = {
+    data: hierarchyData,
+    innerRadius: 0.3,
+    
+    // 层级字段配置
+    hierarchyConfig: {
+        field: 'value',
+    },
+    
+    // 颜色映射
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452'],
+    
+    // 交互配置
+    interactions: [{ type: 'element-active' }],
+    
+    // 标签配置
+    label: {
+        layout: [{ type: 'limit-in-shape' }],
+    },
+    
+    sunburstStyle: {
+        stroke: '#fff',
+        lineWidth: 1,
+    },
+};</pre>
+        </div>
+    </div>
+</div>
+
+<!-- 旭日图规范 -->
+<div class="spec-section">
+    <div class="spec-title">旭日图规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>innerRadius</code></td>
+                <td><code>0.25 - 0.3</code></td>
+                <td>内径比例，控制中心圆大小</td>
+            </tr>
+            <tr>
+                <td><code>hierarchyConfig.field</code></td>
+                <td>string</td>
+                <td>层级数据值字段</td>
+            </tr>
+            <tr>
+                <td><code>color</code></td>
+                <td>array</td>
+                <td>颜色数组，支持多层级颜色映射</td>
+            </tr>
+            <tr>
+                <td><code>sunburstStyle.stroke</code></td>
+                <td><code>#fff</code></td>
+                <td>扇形边框颜色</td>
+            </tr>
+            <tr>
+                <td><code>sunburstStyle.lineWidth</code></td>
+                <td><code>1</code></td>
+                <td>扇形边框宽度</td>
+            </tr>
+            <tr>
+                <td><code>label.layout</code></td>
+                <td><code>[{ type: 'limit-in-shape' }]</code></td>
+                <td>标签布局，防止溢出</td>
+            </tr>
+            <tr>
+                <td><code>label.style.fontSize</code></td>
+                <td><code>10px</code></td>
+                <td>标签字号</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 尺寸规范 -->
+<div class="spec-section">
+    <div class="spec-title">尺寸规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td>容器高度</td>
+                <td><code>400px</code></td>
+                <td>推荐使用大型图表高度</td>
+            </tr>
+            <tr>
+                <td>层级深度</td>
+                <td><code>2-4层</code></td>
+                <td>建议不超过4层，否则难以阅读</td>
+            </tr>
+            <tr>
+                <td>扇形最小角度</td>
+                <td><code>≥5°</code></td>
+                <td>确保标签可读性</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用场景 -->
+<div class="spec-section">
+    <div class="spec-title">适用场景</div>
+    <div class="usage-grid">
+        <div class="usage-card do">
+            <div class="usage-header">✓ 适合</div>
+            <ul>
+                <li>组织架构展示</li>
+                <li>产品分类层级</li>
+                <li>文件目录结构</li>
+                <li>地理区域层级（国家-省-市）</li>
+            </ul>
+        </div>
+        <div class="usage-card dont">
+            <div class="usage-header">✗ 不适合</div>
+            <ul>
+                <li>时间序列数据</li>
+                <li>非层级关系数据</li>
+                <li>简单占比展示</li>
+                <li>层级过深（>4层）的数据</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- 代码示例 -->
+<div class="spec-section">
+    <div class="spec-title">完整代码示例</div>
+    <div class="code-block">
+<span class="keyword">const</span> config = {
+    data: hierarchyData,
+    innerRadius: <span class="number">0.25</span>,
+    hierarchyConfig: {
+        field: <span class="string">'value'</span>,
+    },
+    color: [<span class="string">'#5B8FF9'</span>, <span class="string">'#5AD8A6'</span>, <span class="string">'#F6BD16'</span>, <span class="string">'#945FB9'</span>],
+    label: {
+        layout: [{ type: <span class="string">'limit-in-shape'</span> }],
+        style: { fontSize: <span class="number">10</span>, fill: <span class="string">'#fff'</span> },
+    },
+    sunburstStyle: {
+        stroke: <span class="string">'#fff'</span>,
+        lineWidth: <span class="number">1</span>,
+    },
+    interactions: [{ type: <span class="string">'element-active'</span> }],
+};
+    </div>
+</div>
+
+<script src="../nav.js"></script>
+<script>
+const data = {
+    name: '公司',
+    children: [
+        {
+            name: '研发中心',
+            children: [
+                { name: '前端组', value: 68 },
+                { name: '后端组', value: 85 },
+                { name: '移动组', value: 42 },
+                { name: '测试组', value: 35 },
+                { name: '运维组', value: 18 },
+            ],
+        },
+        {
+            name: '产品部',
+            children: [
+                { name: '产品经理', value: 24 },
+                { name: 'UI设计', value: 18 },
+                { name: '交互设计', value: 12 },
+            ],
+        },
+        {
+            name: '销售部',
+            children: [
+                { name: '华东区', value: 45 },
+                { name: '华南区', value: 38 },
+                { name: '华北区', value: 32 },
+                { name: '西部区', value: 22 },
+            ],
+        },
+        {
+            name: '运营部',
+            children: [
+                { name: '市场运营', value: 28 },
+                { name: '用户运营', value: 22 },
+                { name: '内容运营', value: 18 },
+            ],
+        },
+        {
+            name: '职能部门',
+            children: [
+                { name: '人力资源', value: 25 },
+                { name: '财务部', value: 18 },
+                { name: '行政部', value: 16 },
+            ],
+        },
+    ],
+};
+
+new G2Plot.Sunburst('chart-basic', {
+    data,
+    innerRadius: 0.25,
+    hierarchyConfig: {
+        field: 'value',
+    },
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452', '#00C7BE', '#FF9845'],
+    interactions: [{ type: 'element-active' }],
+    label: {
+        layout: [{ type: 'limit-in-shape' }],
+        style: { fontSize: 11, fill: '#fff' },
+    },
+    sunburstStyle: {
+        stroke: '#fff',
+        lineWidth: 1,
+    },
+    tooltip: {
+        formatter: (datum) => ({
+            name: datum.name,
+            value: datum.value ? `${datum.value}人` : '',
+        }),
+    },
+}).render();
+</script>
+
+</body>
+</html>

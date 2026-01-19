@@ -83,5 +83,13 @@ yAxis: {
 ## 6. 颜色规范
 
 ```javascript
-color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA']
+color: ['#0071E3', '#34C759', '#FF9500', '#FF3B30', '#5856D6']
+
+// 堆叠图圆角：仅顶部系列有圆角
+columnStyle: (datum) => {
+    if (datum.type === '顶部系列名') {
+        return { radius: [4, 4, 0, 0] };
+    }
+    return { radius: 0 };
+}
 ```

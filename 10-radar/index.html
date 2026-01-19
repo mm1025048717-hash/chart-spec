@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -29,8 +29,43 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">员工能力评估</span>
-            <span class="chart-tag red">Radar</span>
+            <div class="header-left">
+                <span class="chart-title">员工能力评估</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag red">Radar</span>
+                <button class="btn-view-code" onclick="toggleCode('code-radar', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: HR系统, 能力评估表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#FF3B30"></span>数据周期: 2024年度评估</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>员工</option>
+                        <option>部门</option>
+                        <option>职级</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024年度</option>
+                        <option>2024.H2</option>
+                        <option>2023年度</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="chart-body md" style="position: relative;">
             <!-- 自定义图例 -->
@@ -51,20 +86,89 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">张三平均分</span><span class="summary-value blue">85.8</span></span>，<span class="summary-item"><span class="summary-label">李四平均分</span><span class="summary-value green">81.7</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-radar">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-radar-content')">复制代码</button>
+            </div>
+            <pre id="code-radar-content">new Radar('chart-basic', {
+    data,
+    xField: 'skill',
+    yField: 'score',
+    seriesField: 'name',
+    color: ['#5B8FF9', '#5AD8A6'],
+    area: { style: { fillOpacity: 0.2 } },
+    point: { size: 3 },
+    padding: 'auto',
+    appendPadding: [40, 20, 20, 20],
+    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    yAxis: { min: 0, max: 100 },
+    legend: false,
+}).render();</pre>
+        </div>
     </div>
 </div>
 
+<!-- 雷达图规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">雷达图规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>xField</code></td><td>string</td><td>维度字段（如技能名称）</td></tr>
-            <tr><td><code>yField</code></td><td>string</td><td>数值字段（如评分）</td></tr>
-            <tr><td><code>seriesField</code></td><td>string</td><td>分组字段（多人对比）</td></tr>
-            <tr><td><code>area</code></td><td>object</td><td>填充区域配置</td></tr>
+            <tr class="highlight">
+                <td><code>xField</code></td>
+                <td>string</td>
+                <td>维度字段（如技能名称）</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td>string</td>
+                <td>数值字段（如评分）</td>
+            </tr>
+            <tr>
+                <td><code>seriesField</code></td>
+                <td>string</td>
+                <td>分组字段（多人对比）</td>
+            </tr>
+            <tr>
+                <td><code>area.style.fillOpacity</code></td>
+                <td><code>0.2</code></td>
+                <td>填充区域透明度</td>
+            </tr>
+            <tr>
+                <td><code>point.size</code></td>
+                <td><code>3</code></td>
+                <td>数据点大小</td>
+            </tr>
+            <tr>
+                <td><code>yAxis.min</code></td>
+                <td><code>0</code></td>
+                <td>Y轴最小值</td>
+            </tr>
+            <tr>
+                <td><code>yAxis.max</code></td>
+                <td><code>100</code></td>
+                <td>Y轴最大值</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>维度数量</td><td>建议 4-8 个维度，过少或过多都影响可读性</td></tr>
+            <tr><td>数值范围</td><td>建议统一数值范围（如 0-100），便于对比</td></tr>
+            <tr><td>系列数量</td><td>建议不超过 3 个系列，过多会重叠难以区分</td></tr>
+            <tr><td>填充透明度</td><td>建议 0.15-0.3，确保多系列重叠时仍可识别</td></tr>
         </tbody>
     </table>
 </div>
@@ -113,7 +217,7 @@ new Radar('chart-basic', {
     point: { size: 3 },
     padding: 'auto',
     appendPadding: [40, 20, 20, 20],
-    xAxis: { label: { style: { fontSize: 11, fill: '#646A73' } } },
+    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
     yAxis: { min: 0, max: 100 },
     legend: false,
 }).render();

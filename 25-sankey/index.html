@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>桑基图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🌊</span>
+        <span class="text">流程类</span>
+    </div>
+    <h1>桑基图 Sankey Chart</h1>
+    <p class="subtitle">展示数据的流向和流量关系，常用于能源流转、用户路径、资金流向等场景</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@antv/g2plot</span>
+        <span class="tech-tag">Sankey</span>
+        <span class="tech-tag">流程分析</span>
+    </div>
+</div>
+
+<!-- 主图表示例 -->
+<div class="spec-section">
+    <div class="spec-title">基础用法</div>
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="header-left">
+                <span class="chart-title">用户转化路径分析</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Sankey</span>
+                <button class="btn-view-code" onclick="toggleCode('code-basic', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 行为埋点, 用户路径表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#F6BD16"></span>数据周期: 2024年12月</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>渠道</option>
+                        <option>设备</option>
+                        <option>地区</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.12</option>
+                        <option>2024.Q4</option>
+                        <option>近30天</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="chart-body xl" style="position: relative;">
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">总访问量：</span>
+                <span class="summary-value blue">125,000</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">最终转化：</span>
+                <span class="summary-value green">8,500 (6.8%)</span>
+            </span>
+        </div>
+        <div class="chart-code-panel" id="code-basic">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-basic-content')">复制代码</button>
+            </div>
+            <pre id="code-basic-content">const config = {
+    data,
+    sourceField: 'source',
+    targetField: 'target',
+    weightField: 'value',
+    
+    // 节点样式
+    nodeStyle: {
+        opacity: 1,
+        fillOpacity: 1,
+    },
+    
+    // 边样式
+    edgeStyle: {
+        fillOpacity: 0.4,
+    },
+    
+    // 颜色配置
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452'],
+    
+    // 节点宽度
+    nodeWidthRatio: 0.01,
+    nodePaddingRatio: 0.03,
+    
+    // 标签配置
+    label: {
+        formatter: ({ name }) => name,
+        style: { fill: '#1D1D1F', fontSize: 11 },
+    },
+};</pre>
+        </div>
+    </div>
+</div>
+
+<!-- 桑基图规范 -->
+<div class="spec-section">
+    <div class="spec-title">桑基图规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>sourceField</code></td>
+                <td>string</td>
+                <td>源节点字段</td>
+            </tr>
+            <tr>
+                <td><code>targetField</code></td>
+                <td>string</td>
+                <td>目标节点字段</td>
+            </tr>
+            <tr>
+                <td><code>weightField</code></td>
+                <td>string</td>
+                <td>流量权重字段</td>
+            </tr>
+            <tr>
+                <td><code>nodeWidthRatio</code></td>
+                <td><code>0.01</code></td>
+                <td>节点宽度比例</td>
+            </tr>
+            <tr>
+                <td><code>nodePaddingRatio</code></td>
+                <td><code>0.03</code></td>
+                <td>节点间距比例</td>
+            </tr>
+            <tr>
+                <td><code>nodeStyle.fillOpacity</code></td>
+                <td><code>1</code></td>
+                <td>节点填充透明度</td>
+            </tr>
+            <tr>
+                <td><code>edgeStyle.fillOpacity</code></td>
+                <td><code>0.4</code></td>
+                <td>边填充透明度</td>
+            </tr>
+            <tr>
+                <td><code>label.style.fontSize</code></td>
+                <td><code>11px</code></td>
+                <td>标签字号</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用场景 -->
+<div class="spec-section">
+    <div class="spec-title">适用场景</div>
+    <div class="usage-grid">
+        <div class="usage-card do">
+            <div class="usage-header">✓ 适合</div>
+            <ul>
+                <li>用户行为路径分析</li>
+                <li>能源/资金流向展示</li>
+                <li>系统数据流转</li>
+                <li>分类归因分析</li>
+            </ul>
+        </div>
+        <div class="usage-card dont">
+            <div class="usage-header">✗ 不适合</div>
+            <ul>
+                <li>简单占比数据</li>
+                <li>时间序列趋势</li>
+                <li>节点过多的场景（>20个）</li>
+                <li>无明确流向关系的数据</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="../nav.js"></script>
+<script>
+const data = [
+    // 第一层：流量来源 -> 着陆页
+    { source: '搜索引擎', target: '首页', value: 45000 },
+    { source: '搜索引擎', target: '产品页', value: 15000 },
+    { source: '社交媒体', target: '首页', value: 25000 },
+    { source: '社交媒体', target: '活动页', value: 12000 },
+    { source: '直接访问', target: '首页', value: 18000 },
+    { source: '广告投放', target: '产品页', value: 10000 },
+    
+    // 第二层：着陆页 -> 行为
+    { source: '首页', target: '浏览商品', value: 68000 },
+    { source: '首页', target: '流失', value: 20000 },
+    { source: '产品页', target: '浏览商品', value: 22000 },
+    { source: '产品页', target: '流失', value: 3000 },
+    { source: '活动页', target: '浏览商品', value: 10000 },
+    { source: '活动页', target: '流失', value: 2000 },
+    
+    // 第三层：行为 -> 转化
+    { source: '浏览商品', target: '加入购物车', value: 45000 },
+    { source: '浏览商品', target: '流失', value: 55000 },
+    
+    // 第四层：加购 -> 结果
+    { source: '加入购物车', target: '完成购买', value: 8500 },
+    { source: '加入购物车', target: '放弃结算', value: 36500 },
+];
+
+new G2Plot.Sankey('chart-basic', {
+    data,
+    sourceField: 'source',
+    targetField: 'target',
+    weightField: 'value',
+    nodeStyle: {
+        opacity: 1,
+        fillOpacity: 1,
+    },
+    edgeStyle: {
+        fillOpacity: 0.35,
+    },
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452', '#00C7BE', '#FF9845', '#86868B'],
+    nodeWidthRatio: 0.012,
+    nodePaddingRatio: 0.025,
+    label: {
+        formatter: ({ name }) => name,
+        style: { fill: '#1D1D1F', fontSize: 11 },
+    },
+    tooltip: {
+        formatter: (datum) => {
+            if (datum.source && datum.target) {
+                return {
+                    name: `${datum.source} → ${datum.target}`,
+                    value: datum.value.toLocaleString(),
+                };
+            }
+            return { name: datum.name, value: datum.value?.toLocaleString() };
+        },
+    },
+}).render();
+</script>
+
+</body>
+</html>

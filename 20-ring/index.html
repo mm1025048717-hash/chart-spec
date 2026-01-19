@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>环图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .variant-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 768px) { .variant-grid { grid-template-columns: 1fr; } }
+        .center-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+        }
+        .center-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1D1D1F;
+        }
+        .center-label {
+            font-size: 12px;
+            color: #86868B;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🍩</span>
+        <span class="text">占比类</span>
+    </div>
+    <h1>环图 Ring Chart</h1>
+    <p class="subtitle">显示同一维度上占比关系，中心可展示汇总数据或关键指标</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@antv/g2plot</span>
+        <span class="tech-tag">Pie</span>
+        <span class="tech-tag">占比展示</span>
+    </div>
+</div>
+
+<!-- 主图表示例 -->
+<div class="spec-section">
+    <div class="spec-title">基础用法</div>
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="header-left">
+                <span class="chart-title">2024年Q4各渠道销售占比</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Ring</span>
+                <button class="btn-view-code" onclick="toggleCode('code-basic', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 销售系统, 渠道分析表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年Q4</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>渠道</option>
+                        <option>产品</option>
+                        <option>地区</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.Q4</option>
+                        <option>2024.Q3</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="chart-body md" style="position: relative;">
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">线上商城</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">线下门店</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #F6BD16;"></span>
+                    <span class="legend-text">经销商</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #945FB9;"></span>
+                    <span class="legend-text">企业客户</span>
+                </div>
+            </div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+            <div class="center-content">
+                <div class="center-value">8,846</div>
+                <div class="center-label">总销售额(万元)</div>
+            </div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">最大占比：</span>
+                <span class="summary-value blue">线上商城 42%</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">渠道数：</span>
+                <span class="summary-value">4个</span>
+            </span>
+        </div>
+        <div class="chart-code-panel" id="code-basic">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-basic-content')">复制代码</button>
+            </div>
+            <pre id="code-basic-content">const config = {
+    data,
+    angleField: 'value',
+    colorField: 'type',
+    radius: 1,
+    innerRadius: 0.6,  // 内径比例，形成环形
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
+    label: {
+        type: 'inner',
+        offset: '-50%',
+        content: '{percentage}',
+        style: { fill: '#fff', fontSize: 12, fontWeight: 600 },
+    },
+    statistic: {
+        title: { content: '总销售额', style: { fontSize: '12px', color: '#86868B' } },
+        content: { content: '8,846', style: { fontSize: '28px', fontWeight: 700 } },
+    },
+    legend: false,
+    interactions: [{ type: 'element-active' }],
+};</pre>
+        </div>
+    </div>
+</div>
+
+<!-- 变体展示 -->
+<div class="spec-section">
+    <div class="spec-title">常见变体</div>
+    <div class="variant-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="header-left">
+                    <span class="chart-title">带外部标签</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag green">Outer Label</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-outer', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
+            </div>
+            <div class="chart-body sm" style="position: relative;">
+                <div id="chart-outer" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-outer">
+                <div class="code-header"><span>Configuration</span><button class="btn-copy-code" onclick="copyCode('code-outer-content')">复制代码</button></div>
+                <pre id="code-outer-content">label: {
+    type: 'spider',
+    labelHeight: 24,
+    content: '{name}\n{percentage}',
+        style: { fontSize: 11, fill: '#86868B' },
+},
+statistic: {
+    title: {
+        content: 'Total',
+        style: { fontSize: 11, color: '#86868B' },
+    },
+    content: {
+        content: '3846',
+        style: { fontSize: 16, fontWeight: 700 },
+    },
+},</pre>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="header-left">
+                    <span class="chart-title">细环图</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag yellow">Thin Ring</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-thin', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
+            </div>
+            <div class="chart-body sm" style="position: relative;">
+                <div id="chart-thin" style="width: 100%; height: 100%;"></div>
+                <div class="center-content">
+                    <div class="center-value" style="font-size: 24px;">75%</div>
+                    <div class="center-label">完成率</div>
+                </div>
+            </div>
+            <div class="chart-code-panel" id="code-thin">
+                <div class="code-header"><span>Configuration</span><button class="btn-copy-code" onclick="copyCode('code-thin-content')">复制代码</button></div>
+                <pre id="code-thin-content">innerRadius: 0.85,  // 更大的内径比例，形成细环
+label: false,</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../nav.js"></script>
+<script>
+const data = [
+    { type: '线上商城', value: 3715 },
+    { type: '线下门店', value: 2654 },
+    { type: '经销商', value: 1593 },
+    { type: '企业客户', value: 884 },
+];
+
+// 基础环图
+new G2Plot.Pie('chart-basic', {
+    data,
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.85,
+    innerRadius: 0.6,
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
+    label: {
+        type: 'inner',
+        offset: '-50%',
+        content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        style: { fill: '#fff', fontSize: 12, fontWeight: 600 },
+    },
+    statistic: false,
+    legend: false,
+    interactions: [{ type: 'element-active' }],
+    pieStyle: { lineWidth: 2, stroke: '#fff' },
+}).render();
+
+// 外部标签环图
+new G2Plot.Pie('chart-outer', {
+    data,
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.75,
+    innerRadius: 0.55,  // 增大内径，给中心文字更多空间
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
+    label: {
+        type: 'spider',
+        labelHeight: 24,
+        content: '{name}\n{percentage}',
+        style: { fontSize: 11, fill: '#86868B' },
+    },
+    statistic: {
+        title: {
+            content: 'Total',
+            style: {
+                fontSize: 11,
+                color: '#86868B',
+                lineHeight: 1.2,
+                whiteSpace: 'nowrap',
+            },
+        },
+        content: {
+            content: '3846',
+            style: {
+                fontSize: 16,
+                fontWeight: 700,
+                color: '#1D1D1F',
+                lineHeight: 1.2,
+                whiteSpace: 'nowrap',
+            },
+        },
+    },
+    legend: false,
+    pieStyle: { lineWidth: 2, stroke: '#fff' },
+}).render();
+
+// 细环图
+new G2Plot.Pie('chart-thin', {
+    data: [
+        { type: '已完成', value: 75 },
+        { type: '未完成', value: 25 },
+    ],
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.9,
+    innerRadius: 0.85,
+    color: ['#5B8FF9', '#E8E8ED'],
+    label: false,
+    statistic: false,
+    legend: false,
+    pieStyle: { lineWidth: 0 },
+}).render();
+</script>
+
+</body>
+</html>

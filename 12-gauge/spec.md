@@ -8,7 +8,7 @@
 ```javascript
 {
     percent: 0.75,
-    range: { color: '#5B8FF9' },
+    range: { color: '#0071E3' },
     statistic: {
         content: {
             formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,

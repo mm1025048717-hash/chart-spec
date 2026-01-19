@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>进度条 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        @media (max-width: 768px) { .progress-grid { grid-template-columns: 1fr; } }
+        
+        .progress-demo {
+            padding: 24px;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #E8E8ED;
+        }
+        
+        .progress-item {
+            margin-bottom: 20px;
+        }
+        .progress-item:last-child { margin-bottom: 0; }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .progress-label { color: #1D1D1F; font-weight: 500; }
+        .progress-value { color: #5B8FF9; font-weight: 600; }
+        
+        .progress-bar {
+            height: 8px;
+            background: #E8E8ED;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.6s ease;
+        }
+        .progress-fill.blue { background: linear-gradient(90deg, #5B8FF9, #409CFF); }
+        .progress-fill.green { background: linear-gradient(90deg, #5AD8A6, #5AC37C); }
+        .progress-fill.yellow { background: linear-gradient(90deg, #F6BD16, #FAD34A); }
+        .progress-fill.red { background: linear-gradient(90deg, #E86452, #FF6961); }
+        
+        /* 圆形进度 */
+        .circular-progress {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            padding: 24px;
+        }
+        .circular-item {
+            text-align: center;
+        }
+        .circular-item .label {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #86868B;
+        }
+        
+        /* 步骤进度 */
+        .step-progress {
+            display: flex;
+            align-items: center;
+            padding: 24px;
+        }
+        .step-item {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+        .step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 16px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #E8E8ED;
+        }
+        .step-item.completed:not(:last-child)::after {
+            background: #5B8FF9;
+        }
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E8E8ED;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #86868B;
+            position: relative;
+            z-index: 1;
+        }
+        .step-item.completed .step-circle {
+            background: #5B8FF9;
+            color: #fff;
+        }
+        .step-item.active .step-circle {
+            background: #fff;
+            border: 2px solid #5B8FF9;
+            color: #5B8FF9;
+        }
+        .step-label {
+            font-size: 12px;
+            color: #86868B;
+        }
+        .step-item.completed .step-label,
+        .step-item.active .step-label {
+            color: #1D1D1F;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">📊</span>
+        <span class="text">指标类</span>
+    </div>
+    <h1>进度条 Progress</h1>
+    <p class="subtitle">展示任务进度或指标完成情况，支持线性、圆形、步骤等多种形式</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@antv/g2plot</span>
+        <span class="tech-tag">Progress</span>
+        <span class="tech-tag">进度展示</span>
+    </div>
+</div>
+
+<!-- 线性进度条 -->
+<div class="spec-section">
+    <div class="spec-title">线性进度条</div>
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="header-left">
+                <span class="chart-title">2024年Q4 KPI达成情况</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Linear</span>
+                <button class="btn-view-code" onclick="toggleCode('code-linear', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 业务系统, KPI指标表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年Q4</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>指标</option>
+                        <option>部门</option>
+                        <option>人员</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.Q4</option>
+                        <option>2024.Q3</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div style="padding: 24px;">
+            <div class="progress-item">
+                <div class="progress-header">
+                    <span class="progress-label">销售额目标</span>
+                    <span class="progress-value">92%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill blue" style="width: 92%;"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-header">
+                    <span class="progress-label">新客户数</span>
+                    <span class="progress-value" style="color: #5AD8A6;">105%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill green" style="width: 100%;"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-header">
+                    <span class="progress-label">客户满意度</span>
+                    <span class="progress-value" style="color: #F6BD16;">78%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill yellow" style="width: 78%;"></div>
+                </div>
+            </div>
+            <div class="progress-item">
+                <div class="progress-header">
+                    <span class="progress-label">退货率控制</span>
+                    <span class="progress-value" style="color: #E86452;">45%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill red" style="width: 45%;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="chart-code-panel" id="code-linear">
+            <div class="code-header">
+                <span>CSS Implementation</span>
+                <button class="btn-copy-code" onclick="copyCode('code-linear-content')">复制代码</button>
+            </div>
+            <pre id="code-linear-content">.progress-bar {
+    height: 8px;
+    background: #E8E8ED;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #5B8FF9, #409CFF);
+    transition: width 0.6s ease;
+}</pre>
+        </div>
+    </div>
+</div>
+
+<!-- 圆形进度 -->
+<div class="spec-section">
+    <div class="spec-title">圆形进度</div>
+    <div class="progress-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="header-left">
+                    <span class="chart-title">任务完成率</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag green">Circular</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-circular', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
+            </div>
+            <div class="circular-progress">
+                <div class="circular-item">
+                    <div id="progress-1" style="width: 100px; height: 100px;"></div>
+                    <div class="label">开发进度</div>
+                </div>
+                <div class="circular-item">
+                    <div id="progress-2" style="width: 100px; height: 100px;"></div>
+                    <div class="label">测试进度</div>
+                </div>
+                <div class="circular-item">
+                    <div id="progress-3" style="width: 100px; height: 100px;"></div>
+                    <div class="label">上线进度</div>
+                </div>
+            </div>
+            <div class="chart-code-panel" id="code-circular">
+                <div class="code-header"><span>G2Plot Configuration</span><button class="btn-copy-code" onclick="copyCode('code-circular-content')">复制代码</button></div>
+                <pre id="code-circular-content">new G2Plot.RingProgress('container', {
+    percent: 0.85,
+    color: ['#5B8FF9', '#E8E8ED'],
+    innerRadius: 0.85,
+    radius: 1,
+    statistic: {
+        title: { 
+            style: { fontSize: '24px', fontWeight: 700 },
+            formatter: () => '85%',
+        },
+    },
+});</pre>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="header-left">
+                    <span class="chart-title">步骤进度</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag yellow">Steps</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-steps', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
+            </div>
+            <div class="step-progress">
+                <div class="step-item completed">
+                    <div class="step-circle">✓</div>
+                    <div class="step-label">需求确认</div>
+                </div>
+                <div class="step-item completed">
+                    <div class="step-circle">✓</div>
+                    <div class="step-label">设计评审</div>
+                </div>
+                <div class="step-item active">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">开发中</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">测试</div>
+                </div>
+                <div class="step-item">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">上线</div>
+                </div>
+            </div>
+            <div class="chart-code-panel" id="code-steps">
+                <div class="code-header"><span>CSS Implementation</span><button class="btn-copy-code" onclick="copyCode('code-steps-content')">复制代码</button></div>
+                <pre id="code-steps-content">.step-item.completed .step-circle {
+    background: #5B8FF9;
+    color: #fff;
+}
+
+.step-item.completed:not(:last-child)::after {
+    background: #5B8FF9;  /* 连接线变色 */
+}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 进度条规范 -->
+<div class="spec-section">
+    <div class="spec-title">进度条规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>类型</th><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td rowspan="4">线性进度</td>
+                <td>高度</td>
+                <td><code>8px</code></td>
+                <td>进度条高度</td>
+            </tr>
+            <tr>
+                <td>圆角</td>
+                <td><code>4px</code></td>
+                <td>进度条圆角</td>
+            </tr>
+            <tr>
+                <td>背景色</td>
+                <td><code>#E8E8ED</code></td>
+                <td>未完成部分颜色</td>
+            </tr>
+            <tr>
+                <td>填充色</td>
+                <td>渐变色</td>
+                <td>已完成部分颜色（支持渐变）</td>
+            </tr>
+            <tr>
+                <td rowspan="4">圆形进度</td>
+                <td><code>percent</code></td>
+                <td>0-1</td>
+                <td>进度百分比</td>
+            </tr>
+            <tr>
+                <td><code>innerRadius</code></td>
+                <td><code>0.85</code></td>
+                <td>内径比例</td>
+            </tr>
+            <tr>
+                <td><code>radius</code></td>
+                <td><code>1</code></td>
+                <td>外径比例</td>
+            </tr>
+            <tr>
+                <td><code>statistic.title.style.fontSize</code></td>
+                <td><code>20-24px</code></td>
+                <td>中心文字字号</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>颜色语义</td><td>建议使用颜色表示状态：蓝色（进行中）、绿色（已完成）、黄色（警告）、红色（异常）</td></tr>
+            <tr><td>数值显示</td><td>建议显示百分比或具体数值，帮助用户了解进度</td></tr>
+            <tr><td>适用场景</td><td>适合展示任务进度、KPI达成率、文件上传进度等</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="../nav.js"></script>
+<script>
+// 圆形进度条
+new G2Plot.RingProgress('progress-1', {
+    percent: 0.85,
+    color: ['#5B8FF9', '#E8E8ED'],
+    innerRadius: 0.85,
+    radius: 1,
+    statistic: {
+        title: {
+            style: { fontSize: '20px', fontWeight: 700, color: '#1D1D1F' },
+            formatter: () => '85%',
+        },
+        content: false,
+    },
+}).render();
+
+new G2Plot.RingProgress('progress-2', {
+    percent: 0.62,
+    color: ['#5AD8A6', '#E8E8ED'],
+    innerRadius: 0.85,
+    radius: 1,
+    statistic: {
+        title: {
+            style: { fontSize: '20px', fontWeight: 700, color: '#1D1D1F' },
+            formatter: () => '62%',
+        },
+        content: false,
+    },
+}).render();
+
+new G2Plot.RingProgress('progress-3', {
+    percent: 0.35,
+    color: ['#F6BD16', '#E8E8ED'],
+    innerRadius: 0.85,
+    radius: 1,
+    statistic: {
+        title: {
+            style: { fontSize: '20px', fontWeight: 700, color: '#1D1D1F' },
+            formatter: () => '35%',
+        },
+        content: false,
+    },
+}).render();
+</script>
+
+</body>
+</html>

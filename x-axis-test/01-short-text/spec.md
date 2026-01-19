@@ -85,7 +85,7 @@ xAxis: {
 
 ```javascript
 {
-    color: '#5B8FF9',           // 主题蓝色
+    color: '#0071E3',           // 主题蓝色
     columnWidthRatio: 0.5,      // 柱体宽度占比
     columnStyle: {
         radius: [4, 4, 0, 0],   // 仅顶部圆角
@@ -101,7 +101,7 @@ xAxis: {
 label: {
     position: 'top',           // 标签位于柱体顶部
     style: {
-        fill: '#5B8FF9',       // 与柱体同色
+        fill: '#0071E3',       // 与柱体同色
         fontSize: 11,
     },
     formatter: (datum) => datum.value.toLocaleString(),

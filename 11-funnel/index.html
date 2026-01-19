@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -26,14 +26,42 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">电商转化漏斗</span>
-            <span class="chart-tag yellow">Funnel</span>
+            <div class="header-left">
+                <span class="chart-title">用户购买转化路径分析</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag yellow">Funnel</span>
+                <button class="btn-view-code" onclick="toggleCode('code-funnel', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
         </div>
         <div class="chart-meta">
-            <div class="chart-meta-title">用户购买转化路径分析</div>
-            <div class="chart-meta-info">
-                <span class="chart-meta-item"><span class="dot"></span>数据源：行为埋点数据</span>
-                <span class="chart-meta-item"><span class="dot" style="background: var(--chart-yellow);"></span>数据周期：2024年12月</span>
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 行为埋点, 转化漏斗表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#F6BD16"></span>数据周期: 2024年12月</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>渠道</option>
+                        <option>来源</option>
+                        <option>设备</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.12</option>
+                        <option>2024.11</option>
+                        <option>2024.Q4</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="chart-body md">
@@ -43,19 +71,19 @@
                     <span class="legend-text">访问</span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-icon-square" style="background: #61DDAA;"></span>
+                    <span class="legend-icon-square" style="background: #5AD8A6;"></span>
                     <span class="legend-text">浏览</span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-icon-square" style="background: #F6BD16;"></span>
+                    <span class="legend-icon-square" style="background: #FF9845;"></span>
                     <span class="legend-text">加购</span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-icon-square" style="background: #F6903D;"></span>
+                    <span class="legend-icon-square" style="background: #FF9845;"></span>
                     <span class="legend-text">下单</span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-icon-square" style="background: #E86452;"></span>
+                    <span class="legend-icon-square" style="background: #FF3B30;"></span>
                     <span class="legend-text">支付</span>
                 </div>
             </div>
@@ -81,20 +109,90 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">访问量</span><span class="summary-value blue">10,000</span></span>，<span class="summary-item"><span class="summary-label">最终转化</span><span class="summary-value green">12%</span></span>，<span class="summary-item"><span class="summary-label">支付人数</span><span class="summary-value">1,200</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-funnel">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-funnel-content')">复制代码</button>
+            </div>
+            <pre id="code-funnel-content">new Funnel('chart-basic', {
+    data,
+    xField: 'stage',
+    yField: 'value',
+    padding: [24, 80, 24, 24],
+    color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF9845', '#FF3B30'],
+    legend: false,
+    label: {
+        formatter: (datum) => `${datum.stage}\n${datum.value.toLocaleString()}`,
+        style: { fontSize: 11, fill: '#fff' },
+    },
+    conversionTag: {
+        formatter: (datum) => `${((datum.$$percentage$$) * 100).toFixed(1)}%`,
+    },
+}).render();</pre>
+        </div>
     </div>
 </div>
 
+<!-- 漏斗图规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">漏斗图规范</div>
     <table class="spec-table">
         <thead>
             <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>xField</code></td><td>string</td><td>阶段名称字段</td></tr>
-            <tr><td><code>yField</code></td><td>string</td><td>数值字段</td></tr>
-            <tr><td><code>isTransposed</code></td><td>boolean</td><td>是否横向显示</td></tr>
-            <tr><td><code>dynamicHeight</code></td><td>boolean</td><td>是否动态高度</td></tr>
+            <tr class="highlight">
+                <td><code>xField</code></td>
+                <td>string</td>
+                <td>阶段名称字段</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td>string</td>
+                <td>数值字段</td>
+            </tr>
+            <tr>
+                <td><code>isTransposed</code></td>
+                <td><code>false</code></td>
+                <td>是否横向显示（默认纵向）</td>
+            </tr>
+            <tr>
+                <td><code>dynamicHeight</code></td>
+                <td><code>false</code></td>
+                <td>是否动态高度（按比例）</td>
+            </tr>
+            <tr>
+                <td><code>conversionTag</code></td>
+                <td>object</td>
+                <td>转化率标签配置</td>
+            </tr>
+            <tr>
+                <td><code>label.style.fontSize</code></td>
+                <td><code>11px</code></td>
+                <td>标签字号</td>
+            </tr>
+            <tr>
+                <td><code>padding</code></td>
+                <td><code>[24,80,24,24]</code></td>
+                <td>右侧留出空间给转化率标签</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>阶段数量</td><td>建议 3-7 个阶段，过多会显得拥挤</td></tr>
+            <tr><td>转化率标签</td><td>建议显示转化率，帮助识别瓶颈环节</td></tr>
+            <tr><td>颜色渐变</td><td>建议使用渐变色，从深到浅表示转化递减</td></tr>
+            <tr><td>标签位置</td><td>建议使用 inner 位置，标签清晰可见</td></tr>
         </tbody>
     </table>
 </div>
@@ -130,7 +228,8 @@ new Funnel('chart-basic', {
     data,
     xField: 'stage',
     yField: 'value',
-    color: ['#5B8FF9', '#61DDAA', '#F6BD16', '#F6903D', '#E86452'],
+    padding: [24, 80, 24, 24], // 右侧留出空间给转化率标签
+    color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF9845', '#FF3B30'],
     legend: false,
     label: {
         formatter: (datum) => `${datum.stage}\n${datum.value.toLocaleString()}`,

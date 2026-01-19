@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玫瑰图 - 图表设计规范</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <link rel="stylesheet" href="../common.css">
+    <style>
+        .variant-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 768px) { .variant-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<div class="page-header">
+    <div class="chart-type-badge">
+        <span class="icon">🌹</span>
+        <span class="text">占比类</span>
+    </div>
+    <h1>玫瑰图 Rose Chart</h1>
+    <p class="subtitle">用面积表示数值大小的饼图变体，适合展示数据的大小对比与占比关系</p>
+    <div class="tech-stack">
+        <span class="tech-tag">@antv/g2plot</span>
+        <span class="tech-tag">Rose</span>
+        <span class="tech-tag">占比展示</span>
+    </div>
+</div>
+
+<!-- 主图表示例 -->
+<div class="spec-section">
+    <div class="spec-title">基础用法</div>
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <div class="header-left">
+                <span class="chart-title">2024年各产品线销售额分布</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag blue">Rose</span>
+                <button class="btn-view-code" onclick="toggleCode('code-basic', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 销售系统, 产品线报表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#945FB9"></span>数据周期: 2024年度</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>产品线</option>
+                        <option>地区</option>
+                        <option>渠道</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024年度</option>
+                        <option>2024.Q4</option>
+                        <option>2023年度</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="chart-body lg" style="position: relative;">
+            <div class="custom-legend">
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">智能手机</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">平板电脑</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #F6BD16;"></span>
+                    <span class="legend-text">笔记本</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #945FB9;"></span>
+                    <span class="legend-text">配件</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-square" style="background: #E86452;"></span>
+                    <span class="legend-text">服务</span>
+                </div>
+            </div>
+            <div id="chart-basic" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="chart-summary">
+            <span class="summary-item">
+                <span class="summary-label">最大销售：</span>
+                <span class="summary-value blue">智能手机 3,200万</span>
+            </span>
+            <span class="summary-item">
+                <span class="summary-label">产品线数：</span>
+                <span class="summary-value">5条</span>
+            </span>
+        </div>
+        <div class="chart-code-panel" id="code-basic">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-basic-content')">复制代码</button>
+            </div>
+            <pre id="code-basic-content">const config = {
+    data,
+    xField: 'type',
+    yField: 'value',
+    radius: 0.9,
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452'],
+    
+    // 玫瑰图特有：用半径表示数值
+    sectorStyle: {
+        stroke: '#fff',
+        lineWidth: 2,
+    },
+    
+    label: {
+        offset: -15,
+        content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        style: { fill: '#fff', fontSize: 11 },
+    },
+    
+    legend: false,
+    interactions: [{ type: 'element-active' }],
+};</pre>
+        </div>
+    </div>
+</div>
+
+<!-- 玫瑰图规范 -->
+<div class="spec-section">
+    <div class="spec-title">玫瑰图规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>radius</code></td>
+                <td><code>0.9</code></td>
+                <td>外半径比例</td>
+            </tr>
+            <tr>
+                <td><code>xField</code></td>
+                <td>string</td>
+                <td>分类字段</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td>string</td>
+                <td>数值字段（决定半径长度）</td>
+            </tr>
+            <tr>
+                <td><code>sectorStyle.stroke</code></td>
+                <td><code>#fff</code></td>
+                <td>扇形边框颜色</td>
+            </tr>
+            <tr>
+                <td><code>sectorStyle.lineWidth</code></td>
+                <td><code>2</code></td>
+                <td>扇形边框宽度</td>
+            </tr>
+            <tr>
+                <td><code>label.offset</code></td>
+                <td><code>-15</code></td>
+                <td>标签偏移距离</td>
+            </tr>
+            <tr>
+                <td><code>label.style.fontSize</code></td>
+                <td><code>11px</code></td>
+                <td>标签字号</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>数据差异</td><td>适合展示有明显差异的分类数据，半径差异更直观</td></tr>
+            <tr><td>分类数量</td><td>建议 4-8 个分类，过多会显得拥挤</td></tr>
+            <tr><td>适用场景</td><td>适合展示产品销量、地区分布等有明显差异的占比数据</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 变体展示 -->
+<div class="spec-section">
+    <div class="spec-title">常见变体</div>
+    <div class="variant-grid">
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="header-left">
+                    <span class="chart-title">分组玫瑰图</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag green">Grouped</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-grouped', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
+            </div>
+            <div class="chart-body md">
+                <div id="chart-grouped" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-grouped">
+                <div class="code-header"><span>Configuration</span><button class="btn-copy-code" onclick="copyCode('code-grouped-content')">复制代码</button></div>
+                <pre id="code-grouped-content">// 分组玫瑰图需要 seriesField
+seriesField: 'year',
+isGroup: true,</pre>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card-header">
+                <div class="header-left">
+                    <span class="chart-title">堆叠玫瑰图</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag yellow">Stacked</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-stacked', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
+            </div>
+            <div class="chart-body md">
+                <div id="chart-stacked" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-stacked">
+                <div class="code-header"><span>Configuration</span><button class="btn-copy-code" onclick="copyCode('code-stacked-content')">复制代码</button></div>
+                <pre id="code-stacked-content">// 堆叠玫瑰图
+seriesField: 'year',
+isStack: true,</pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../nav.js"></script>
+<script>
+const data = [
+    { type: '智能手机', value: 3200 },
+    { type: '平板电脑', value: 2100 },
+    { type: '笔记本', value: 1800 },
+    { type: '配件', value: 950 },
+    { type: '服务', value: 600 },
+];
+
+// 基础玫瑰图
+new G2Plot.Rose('chart-basic', {
+    data,
+    xField: 'type',
+    yField: 'value',
+    radius: 0.85,
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452'],
+    sectorStyle: {
+        stroke: '#fff',
+        lineWidth: 2,
+    },
+    label: {
+        offset: -20,
+        content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        style: { fill: '#fff', fontSize: 11, fontWeight: 500 },
+    },
+    legend: false,
+    interactions: [{ type: 'element-active' }],
+    tooltip: {
+        formatter: (datum) => ({
+            name: datum.type,
+            value: `${datum.value.toLocaleString()} 万元`,
+        }),
+    },
+}).render();
+
+// 分组玫瑰图数据
+const groupedData = [
+    { type: '智能手机', year: '2023', value: 2800 },
+    { type: '智能手机', year: '2024', value: 3200 },
+    { type: '平板电脑', year: '2023', value: 1900 },
+    { type: '平板电脑', year: '2024', value: 2100 },
+    { type: '笔记本', year: '2023', value: 1600 },
+    { type: '笔记本', year: '2024', value: 1800 },
+    { type: '配件', year: '2023', value: 800 },
+    { type: '配件', year: '2024', value: 950 },
+];
+
+new G2Plot.Rose('chart-grouped', {
+    data: groupedData,
+    xField: 'type',
+    yField: 'value',
+    seriesField: 'year',
+    isGroup: true,
+    radius: 0.85,
+    color: ['#5B8FF9', '#5AD8A6'],
+    sectorStyle: { stroke: '#fff', lineWidth: 1 },
+    label: false,
+    legend: false,
+}).render();
+
+// 堆叠玫瑰图
+new G2Plot.Rose('chart-stacked', {
+    data: groupedData,
+    xField: 'type',
+    yField: 'value',
+    seriesField: 'year',
+    isStack: true,
+    radius: 0.85,
+    color: ['#5B8FF9', '#5AD8A6'],
+    sectorStyle: { stroke: '#fff', lineWidth: 1 },
+    label: false,
+    legend: false,
+}).render();
+</script>
+
+</body>
+</html>

@@ -29,8 +29,43 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">产品分析：价格 × 销量 × 利润</span>
-            <span class="chart-tag purple">Bubble</span>
+            <div class="header-left">
+                <span class="chart-title">产品分析：价格 × 销量 × 利润</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag purple">Bubble</span>
+                <button class="btn-view-code" onclick="toggleCode('code-bubble', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 产品系统, SKU分析表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#945FB9"></span>数据周期: 2024年Q4</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>产品线</option>
+                        <option>品类</option>
+                        <option>品牌</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.Q4</option>
+                        <option>2024.Q3</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="chart-body md" style="position: relative;">
             <!-- 轴单位标签 -->
@@ -39,11 +74,11 @@
             <!-- 自定义图例 -->
             <div class="custom-legend">
                 <div class="legend-item">
-                    <span class="legend-icon-circle" style="background: #0071E3;"></span>
+                    <span class="legend-icon-circle" style="background: #5B8FF9;"></span>
                     <span class="legend-text">电子</span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-icon-circle" style="background: #34C759;"></span>
+                    <span class="legend-icon-circle" style="background: #5AD8A6;"></span>
                     <span class="legend-text">家电</span>
                 </div>
                 <div class="legend-item">
@@ -59,21 +94,111 @@
         </div>
         <!-- 汇总栏 -->
         <div class="chart-summary">
-            总计：<span class="summary-item"><span class="summary-label">产品数</span><span class="summary-value blue">7个</span></span>，<span class="summary-item"><span class="summary-label">总利润</span><span class="summary-value green">15,900元</span></span>
+            总计：<span class="summary-item"><span class="summary-label">产品数</span><span class="summary-value blue">7个</span></span>，<span class="summary-item"><span class="summary-label">总利润</span><span class="summary-value green">15,900 元</span></span>
+        </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-bubble">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-bubble-content')">复制代码</button>
+            </div>
+            <pre id="code-bubble-content">new Scatter('chart-basic', {
+    data,
+    xField: 'price',
+    yField: 'sales',
+    sizeField: 'profit',
+    size: [8, 30],  // 减小最大气泡尺寸，防止溢出
+    colorField: 'category',
+    color: ['#5B8FF9', '#5AD8A6', '#FF9500'],
+    shape: 'circle',
+    pointStyle: { 
+        fillOpacity: 0.6,
+        stroke: '#fff',
+        lineWidth: 1
+    },
+    padding: [40, 80, 50, 50],  // 右侧大幅增加空间，防止X轴标签和大气泡溢出
+    meta: {
+        price: { range: [0.12, 0.88] },  // 缩小映射范围，确保气泡不紧贴边缘
+        sales: { range: [0.12, 0.88] },
+    },
+    xAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+        line: null,
+    },
+    legend: false,
+    tooltip: {
+        fields: ['product', 'price', 'sales', 'profit'],
+    },
+}).render();</pre>
         </div>
     </div>
 </div>
 
+<!-- 气泡图规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">气泡图规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>sizeField</code></td><td>string</td><td>气泡大小映射字段（关键）</td></tr>
-            <tr><td><code>size</code></td><td>[min, max]</td><td>气泡大小范围</td></tr>
-            <tr><td><code>colorField</code></td><td>string</td><td>颜色分组字段</td></tr>
+            <tr class="highlight">
+                <td><code>sizeField</code></td>
+                <td>string</td>
+                <td>气泡大小映射字段（关键）</td>
+            </tr>
+            <tr>
+                <td><code>size</code></td>
+                <td><code>[8, 35]</code></td>
+                <td>气泡大小范围 [最小, 最大]</td>
+            </tr>
+            <tr>
+                <td><code>colorField</code></td>
+                <td>string</td>
+                <td>颜色分组字段</td>
+            </tr>
+            <tr>
+                <td><code>shape</code></td>
+                <td><code>circle</code></td>
+                <td>气泡形状（通常为圆形）</td>
+            </tr>
+            <tr>
+                <td><code>pointStyle.fillOpacity</code></td>
+                <td><code>0.6</code></td>
+                <td>气泡填充透明度</td>
+            </tr>
+            <tr>
+                <td><code>pointStyle.stroke</code></td>
+                <td><code>#fff</code></td>
+                <td>气泡边框颜色</td>
+            </tr>
+            <tr>
+                <td><code>pointStyle.lineWidth</code></td>
+                <td><code>1</code></td>
+                <td>气泡边框宽度</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>数据维度</td><td>气泡图可展示三个维度：X轴、Y轴、大小，可选颜色作为第四维度</td></tr>
+            <tr><td>大小范围</td><td>建议大小范围比例不超过 1:5，确保视觉差异明显但不过度</td></tr>
+            <tr><td>透明度</td><td>建议 0.5-0.7，确保重叠时仍可识别</td></tr>
+            <tr><td>适用场景</td><td>适合展示多维度数据关系，如价格-销量-利润分析</td></tr>
         </tbody>
     </table>
 </div>
@@ -86,7 +211,7 @@
     xField: <span class="string">'price'</span>,
     yField: <span class="string">'sales'</span>,
     sizeField: <span class="string">'profit'</span>,    <span class="comment">// 第三维度</span>
-    size: [<span class="number">4</span>, <span class="number">30</span>],              <span class="comment">// 气泡大小范围</span>
+    size: [<span class="number">8</span>, <span class="number">30</span>],              <span class="comment">// 气泡大小范围，减小最大值防止溢出</span>
     colorField: <span class="string">'category'</span>,
 };
     </div>
@@ -110,30 +235,28 @@ const data = [
         xField: 'price',
         yField: 'sales',
         sizeField: 'profit',
-        size: [8, 35], // 稍微减小最大值，提升整体紧凑度
+        size: [8, 30], // 减小最大气泡尺寸，防止溢出
         colorField: 'category',
-        color: ['#0071E3', '#34C759', '#FF9500'], // 使用 Apple 风格配色
+        color: ['#5B8FF9', '#5AD8A6', '#FF9500'], // 使用 Apple 风格配色
         shape: 'circle',
         pointStyle: { 
             fillOpacity: 0.6,
             stroke: '#fff',
             lineWidth: 1
         },
-        padding: 'auto',
-        // 关键：增加额外的 Padding 确保大气泡不溢出，并为轴标签预留空间
-        appendPadding: [40, 50, 40, 20], 
+        padding: [40, 80, 50, 50],  // 右侧大幅增加空间，防止X轴标签和大气泡溢出
         meta: {
             price: {
                 nice: true,
                 alias: '价格',
                 tickCount: 5,
-                range: [0.05, 0.95] // 关键：缩小映射范围，让点不紧贴轴线
+                range: [0.12, 0.88] // 进一步缩小映射范围，确保气泡不紧贴边缘
             },
             sales: {
                 nice: true,
                 alias: '销量',
                 tickCount: 5,
-                range: [0.05, 0.95] // 关键：缩小映射范围，让点不紧贴轴线
+                range: [0.12, 0.88] // 进一步缩小映射范围，确保气泡不紧贴边缘
             }
         },
         xAxis: { 

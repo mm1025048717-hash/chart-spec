@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -29,15 +29,42 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">一周访问热力分布</span>
-            <span class="chart-tag red">Heatmap</span>
+            <div class="header-left">
+                <span class="chart-title">网站访问量按时间段分布</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag red">Heatmap</span>
+                <button class="btn-view-code" onclick="toggleCode('code-heatmap', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
         </div>
-        <!-- 图表元信息 -->
         <div class="chart-meta">
-            <div class="chart-meta-title">网站访问量按时间段分布</div>
-            <div class="chart-meta-info">
-                <span class="chart-meta-item"><span class="dot"></span>数据源：访问日志</span>
-                <span class="chart-meta-item"><span class="dot" style="background: var(--red);"></span>数据周期：近7天</span>
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 访问日志, 热力统计表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#FF3B30"></span>数据周期: 近7天</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>小时</option>
+                        <option>周</option>
+                        <option>设备</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>近7天</option>
+                        <option>近30天</option>
+                        <option>本月</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="chart-body md" style="position: relative;">
@@ -53,20 +80,87 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">数据点</span><span class="summary-value blue">168个</span></span>，<span class="summary-item"><span class="summary-label">峰值时段</span><span class="summary-value red">周二 14:00</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-heatmap">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-heatmap-content')">复制代码</button>
+            </div>
+            <pre id="code-heatmap-content">new Heatmap('chart-basic', {
+    data,
+    xField: 'hour',
+    yField: 'day',
+    colorField: 'value',
+    color: ['#E8F3FF', '#5B8FF9', '#0051D4'],
+    shape: 'rect',
+    xAxis: {
+        label: {
+            style: { fontSize: 11, fill: '#86868B' },
+            formatter: (v) => v.split(':')[0],
+        },
+    },
+    yAxis: {
+        label: { style: { fontSize: 11 } },
+    },
+    legend: { position: 'bottom' },
+}).render();</pre>
+        </div>
     </div>
 </div>
 
+<!-- 热力图规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">热力图规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>xField</code></td><td>string</td><td>X轴字段</td></tr>
-            <tr><td><code>yField</code></td><td>string</td><td>Y轴字段</td></tr>
-            <tr><td><code>colorField</code></td><td>string</td><td>颜色映射字段（数值）</td></tr>
-            <tr><td><code>color</code></td><td>string[]</td><td>颜色渐变数组</td></tr>
+            <tr class="highlight">
+                <td><code>xField</code></td>
+                <td>string</td>
+                <td>X轴字段（分类或时间）</td>
+            </tr>
+            <tr>
+                <td><code>yField</code></td>
+                <td>string</td>
+                <td>Y轴字段（分类）</td>
+            </tr>
+            <tr>
+                <td><code>colorField</code></td>
+                <td>string</td>
+                <td>颜色映射字段（数值）</td>
+            </tr>
+            <tr>
+                <td><code>color</code></td>
+                <td>string[]</td>
+                <td>颜色渐变数组（顺序色板）</td>
+            </tr>
+            <tr>
+                <td><code>shape</code></td>
+                <td><code>rect</code></td>
+                <td>热力单元形状（矩形）</td>
+            </tr>
+            <tr>
+                <td><code>legend.position</code></td>
+                <td><code>bottom</code></td>
+                <td>图例位置（底部）</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>颜色映射</td><td>建议使用顺序色板，从浅到深表示数值大小</td></tr>
+            <tr><td>数据密度</td><td>适合展示二维分类数据的数值分布，如时间×类别的数据</td></tr>
+            <tr><td>适用场景</td><td>适合展示访问量热力图、销售热力图、相关性矩阵等</td></tr>
         </tbody>
     </table>
 </div>
@@ -109,11 +203,11 @@ new Heatmap('chart-basic', {
     xField: 'hour',
     yField: 'day',
     colorField: 'value',
-    color: ['#E8F3FF', '#5B8FF9', '#1A4B8F'],
+    color: ['#E8F3FF', '#5B8FF9', '#0051D4'],
     shape: 'rect',
     xAxis: {
         label: {
-            style: { fontSize: 10 },
+            style: { fontSize: 11, fill: '#86868B' },
             formatter: (v) => v.split(':')[0],
         },
     },

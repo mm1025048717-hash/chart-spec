@@ -10,7 +10,7 @@
     xField: 'x',
     yField: 'y',
     colorField: 'value',
-    color: ['#E8F3FF', '#5B8FF9', '#1A4B8F'],
+    color: ['#E8F3FF', '#0071E3', '#0051D4'],
 }
 ```
 

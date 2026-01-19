@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -30,8 +30,43 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">月度访问量趋势</span>
-            <span class="chart-tag green">Basic Area</span>
+            <div class="header-left">
+                <span class="chart-title">月度访问量趋势</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag green">Basic Area</span>
+                <button class="btn-view-code" onclick="toggleCode('code-area', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
+        </div>
+        <div class="chart-meta">
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 访问日志, 流量统计表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年1-8月</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>月份</option>
+                        <option>周</option>
+                        <option>渠道</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.1-8月</option>
+                        <option>2024年度</option>
+                        <option>2023年度</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="chart-body md" style="position: relative;">
             <!-- 轴单位标签 -->
@@ -54,22 +89,47 @@
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">访问量</span><span class="summary-value green">38,100</span></span>，<span class="summary-item"><span class="summary-label">月均</span><span class="summary-value">4,763</span></span>
         </div>
+        <!-- 代码面板 -->
+        <div class="chart-code-panel" id="code-area">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-area-content')">复制代码</button>
+            </div>
+            <pre id="code-area-content">new Area('chart-basic', {
+    data: basicData,
+    xField: 'date',
+    yField: 'value',
+    smooth: true,
+    color: '#5AD8A6',
+    areaStyle: { fillOpacity: 0.3 },
+    line: { style: { lineWidth: 2 } },
+    padding: 'auto',
+    appendPadding: [40, 20, 30, 20],
+    xAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+    },
+    yAxis: { 
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
+        line: null,
+    },
+    legend: false,
+}).render();</pre>
+        </div>
     </div>
 </div>
 
-<!-- 核心配置 -->
+<!-- 面积图规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">面积图规范</div>
     <table class="spec-table">
         <thead>
-            <tr>
-                <th style="width: 180px;">参数</th>
-                <th style="width: 150px;">值</th>
-                <th>说明</th>
-            </tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr>
+            <tr class="highlight">
                 <td><code>smooth</code></td>
                 <td><code>true</code></td>
                 <td>平滑曲线（面积图常用平滑）</td>
@@ -84,6 +144,48 @@
                 <td><code>2</code></td>
                 <td>边界线宽度</td>
             </tr>
+            <tr>
+                <td><code>color</code></td>
+                <td><code>#5AD8A6</code></td>
+                <td>面积填充颜色</td>
+            </tr>
+            <tr>
+                <td><code>padding</code></td>
+                <td><code>[40,20,50,50]</code></td>
+                <td>图表内边距 [上,右,下,左]</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 坐标轴配置 -->
+<div class="spec-section">
+    <div class="spec-title">坐标轴配置</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>参数</th><th>X轴值</th><th>Y轴值</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>label.fontSize</td><td><code>11px</code></td><td><code>11px</code></td></tr>
+            <tr><td>label.fill</td><td><code>#86868B</code></td><td><code>#86868B</code></td></tr>
+            <tr><td>line.stroke</td><td><code>#E8E8ED</code></td><td><code>null</code></td></tr>
+            <tr><td>grid.line</td><td><code>null</code></td><td><code>#E8E8ED [4,4]</code></td></tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>平滑曲线</td><td>面积图推荐使用平滑曲线，视觉效果更柔和</td></tr>
+            <tr><td>填充透明度</td><td>建议 0.25-0.4，过透明难以识别，过实遮挡下方内容</td></tr>
+            <tr><td>堆叠面积</td><td>多系列数据建议使用堆叠面积图，展示总量和构成</td></tr>
+            <tr><td>渐变填充</td><td>单系列面积图可使用渐变填充增强视觉效果</td></tr>
         </tbody>
     </table>
 </div>
@@ -116,20 +218,59 @@
     <div class="variant-grid">
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">堆叠面积图</span>
-                <span class="chart-tag blue">Stacked</span>
+                <div class="header-left"><span class="chart-title">堆叠面积图</span></div>
+                <div class="header-right">
+                    <span class="chart-tag blue">Stacked</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-stacked', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-stacked" style="width: 100%; height: 100%;"></div>
             </div>
+            <div class="chart-code-panel" id="code-stacked">
+                <div class="code-header"><span>Stacked Area</span><button class="btn-copy-code" onclick="copyCode('code-stacked-content')">复制代码</button></div>
+                <pre id="code-stacked-content">new Area('chart-stacked', {
+    data: stackedData,
+    xField: 'date',
+    yField: 'value',
+    seriesField: 'type',
+    isStack: true,
+    smooth: true,
+    color: ['#5B8FF9', '#5AD8A6'],
+    areaStyle: { fillOpacity: 0.4 },
+}).render();</pre>
+            </div>
         </div>
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">渐变面积图</span>
-                <span class="chart-tag yellow">Gradient</span>
+                <div class="header-left"><span class="chart-title">渐变面积图</span></div>
+                <div class="header-right">
+                    <span class="chart-tag yellow">Gradient</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-gradient', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-gradient" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-gradient">
+                <div class="code-header"><span>Gradient Area</span><button class="btn-copy-code" onclick="copyCode('code-gradient-content')">复制代码</button></div>
+                <pre id="code-gradient-content">new Area('chart-gradient', {
+    data: basicData,
+    xField: 'date',
+    yField: 'value',
+    smooth: true,
+    areaStyle: () => ({
+        fill: 'l(270) 0:#ffffff 0.5:#F6BD16 1:#F6BD16',
+        fillOpacity: 0.6,
+    }),
+    line: { style: { stroke: '#F6BD16', lineWidth: 2 } },
+}).render();</pre>
             </div>
         </div>
     </div>
@@ -161,13 +302,13 @@ new Area('chart-basic', {
     padding: 'auto',
     appendPadding: [40, 20, 30, 20],
     xAxis: { 
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        line: { style: { stroke: '#E5E6EB' } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: { 
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
     },
     legend: false,
@@ -196,7 +337,7 @@ new Area('chart-stacked', {
     color: ['#5B8FF9', '#5AD8A6'],
     areaStyle: { fillOpacity: 0.4 },
     legend: { position: 'top-right' },
-    xAxis: { label: { style: { fontSize: 10 } } },
+    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
 }).render();
 
 // 渐变面积图
@@ -210,7 +351,7 @@ new Area('chart-gradient', {
         fillOpacity: 0.6,
     }),
     line: { style: { stroke: '#F6BD16', lineWidth: 2 } },
-    xAxis: { label: { style: { fontSize: 10 } } },
+    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
 }).render();
 </script>
 

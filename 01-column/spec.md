@@ -40,11 +40,11 @@ xAxis: {
         rotate: 0,  // 或 -Math.PI/4 (45°), -Math.PI/2 (90°)
         style: {
             fontSize: 11,
-            fill: '#646A73',
+            fill: '#86868B',
             textAlign: 'center',  // 旋转时改为 'end'
         },
     },
-    line: { style: { stroke: '#E5E6EB' } },
+    line: { style: { stroke: '#E8E8ED' } },
     tickLine: null,
 }
 ```
@@ -53,11 +53,11 @@ xAxis: {
 ```javascript
 yAxis: {
     label: {
-        style: { fontSize: 11, fill: '#646A73' },
+        style: { fontSize: 11, fill: '#86868B' },
         formatter: (v) => v.toLocaleString(),
     },
     grid: {
-        line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } },
+        line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } },
     },
     line: null,
     tickLine: null,
@@ -78,7 +78,7 @@ yAxis: {
 
 | 参数 | 值 | 说明 |
 |-----|---|-----|
-| color | `#5B8FF9` | 主题蓝 |
+| color | `#0071E3` | 主题蓝 |
 | columnWidthRatio | `0.5` | 宽度占比 |
 | radius | `[4, 4, 0, 0]` | 仅顶部圆角 |
 | maxColumnWidth | `48` | 最大宽度 |
@@ -100,13 +100,13 @@ columnStyle: {
 | position | `top` | 柱体上方 |
 | offset | `8` | 与柱体距离 |
 | fontSize | `11px` | 字号 |
-| fill | `#5B8FF9` | 与柱体同色 |
+| fill | `#0071E3` | 与柱体同色 |
 
 ```javascript
 label: {
     position: 'top',
     offset: 8,
-    style: { fontSize: 11, fill: '#5B8FF9' },
+    style: { fontSize: 11, fill: '#0071E3' },
     formatter: (datum) => datum.value.toLocaleString(),
 }
 ```
@@ -128,16 +128,16 @@ label: {
 ## 6. 颜色规范
 
 ### 单系列
-- 主色: `#5B8FF9`
+- 主色: `#0071E3`
 
 ### 多系列
 ```javascript
 const colors = [
-    '#5B8FF9',  // 蓝
-    '#5AD8A6',  // 绿
-    '#F6BD16',  // 黄
-    '#E86452',  // 红
-    '#9270CA',  // 紫
+    '#0071E3',  // 蓝
+    '#34C759',  // 绿
+    '#FF9500',  // 黄
+    '#FF3B30',  // 红
+    '#5856D6',  // 紫
 ];
 ```
 
@@ -151,27 +151,27 @@ const config = {
     xField: 'region',
     yField: 'value',
     padding: [40, 20, 50, 50],
-    color: '#5B8FF9',
+    color: '#0071E3',
     columnWidthRatio: 0.5,
     columnStyle: { radius: [4, 4, 0, 0] },
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#646A73' } },
-        line: { style: { stroke: '#E5E6EB' } },
+        label: { style: { fontSize: 11, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
         label: {
-            style: { fontSize: 11, fill: '#646A73' },
+            style: { fontSize: 11, fill: '#86868B' },
             formatter: (v) => v.toLocaleString(),
         },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
         tickLine: null,
     },
     label: {
         position: 'top',
         offset: 8,
-        style: { fontSize: 11, fill: '#5B8FF9' },
+        style: { fontSize: 11, fill: '#0071E3' },
     },
     legend: { position: 'top-right', itemSpacing: 20 },
 };

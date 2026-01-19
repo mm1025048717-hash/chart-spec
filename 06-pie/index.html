@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -27,11 +27,43 @@
 <div class="chart-container">
     <div class="chart-card">
         <div class="chart-card-header">
-            <span class="chart-title">销售渠道占比</span>
-            <span class="chart-tag yellow">Basic Pie</span>
+            <div class="header-left">
+                <span class="chart-title">2024年Q4 销售渠道占比</span>
+            </div>
+            <div class="header-right">
+                <span class="chart-tag yellow">Basic Pie</span>
+                <button class="btn-view-code" onclick="toggleCode('code-pie', this)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                    Code
+                </button>
+            </div>
         </div>
         <div class="chart-meta">
-            <div class="chart-meta-title">2024年Q4 渠道分布</div>
+            <div class="chart-meta-left">
+                <div class="chart-meta-info">
+                    <span class="chart-meta-item"><span class="dot"></span>数据源: 销售系统, 分类指标表</span>
+                    <span class="chart-meta-item"><span class="dot" style="background:#F6BD16"></span>数据周期: 2024年Q4</span>
+                </div>
+            </div>
+            <div class="chart-filters">
+                <div class="filter-item">
+                    <span class="filter-label">按</span>
+                    <select class="filter-select">
+                        <option>产品类别</option>
+                        <option>品牌</option>
+                        <option>地区</option>
+                    </select>
+                    <span class="filter-label">× 分组</span>
+                </div>
+                <div class="filter-item">
+                    <span class="filter-label">日期:</span>
+                    <select class="filter-select">
+                        <option>2024.Q4</option>
+                        <option>2024.Q3</option>
+                        <option>2024年度</option>
+                    </select>
+                </div>
+            </div>
         </div>
         <div class="chart-body md">
             <div id="chart-basic" style="width: 100%; height: 100%;"></div>
@@ -63,6 +95,29 @@
                 <span class="summary-label">最大占比：</span>
                 <span class="summary-value green">线上直销 34.6%</span>
             </span>
+        </div>
+        <div class="chart-code-panel" id="code-pie">
+            <div class="code-header">
+                <span>Chart Configuration</span>
+                <button class="btn-copy-code" onclick="copyCode('code-pie-content')">复制代码</button>
+            </div>
+            <pre id="code-pie-content">const config = {
+    data: pieData,
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.8,
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
+    label: {
+        type: 'outer',
+        content: '{name} {percentage}',
+        style: { fontSize: 11 },
+    },
+    legend: {
+        position: 'right',
+        itemName: { style: { fontSize: 12 } },
+    },
+    interactions: [{ type: 'element-active' }],
+};</pre>
         </div>
     </div>
 </div>
@@ -104,8 +159,14 @@
     <div class="variant-grid">
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">环形图</span>
-                <span class="chart-tag blue">Donut</span>
+                <div class="header-left"><span class="chart-title">环形图</span></div>
+                <div class="header-right">
+                    <span class="chart-tag blue">Donut</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-donut', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-donut" style="width: 100%; height: 100%;"></div>
@@ -118,14 +179,45 @@
                     </div>
                 </div>
             </div>
+            <div class="chart-code-panel" id="code-donut">
+                <div class="code-header"><span>Donut Chart</span><button class="btn-copy-code" onclick="copyCode('code-donut-content')">复制代码</button></div>
+                <pre id="code-donut-content">new Pie('chart-donut', {
+    data,
+    angleField: 'value',
+    colorField: 'type',
+    radius: 0.8,
+    innerRadius: 0.6, // 环形关键配置
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
+    statistic: {
+        title: { content: '总计' },
+        content: { content: '13,000' },
+    },
+}).render();</pre>
+            </div>
         </div>
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">玫瑰图</span>
-                <span class="chart-tag green">Rose</span>
+                <div class="header-left"><span class="chart-title">玫瑰图</span></div>
+                <div class="header-right">
+                    <span class="chart-tag green">Rose</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-rose', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-rose" style="width: 100%; height: 100%;"></div>
+            </div>
+            <div class="chart-code-panel" id="code-rose">
+                <div class="code-header"><span>Rose Chart</span><button class="btn-copy-code" onclick="copyCode('code-rose-content')">复制代码</button></div>
+                <pre id="code-rose-content">new Rose('chart-rose', {
+    data,
+    xField: 'type',
+    yField: 'value',
+    radius: 0.9,
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
+}).render();</pre>
             </div>
         </div>
     </div>
@@ -141,7 +233,7 @@
     colorField: <span class="string">'type'</span>,
     radius: <span class="number">0.8</span>,
     innerRadius: <span class="number">0</span>,  <span class="comment">// 环形图设为 0.6</span>
-    color: [<span class="string">'#5B8FF9'</span>, <span class="string">'#5AD8A6'</span>, <span class="string">'#F6BD16'</span>, <span class="string">'#E86452'</span>, <span class="string">'#9270CA'</span>],
+    color: [<span class="string">'#5B8FF9'</span>, <span class="string">'#5AD8A6'</span>, <span class="string">'#F6BD16'</span>, <span class="string">'#E86452'</span>, <span class="string">'#945FB9'</span>],
     label: { type: <span class="string">'outer'</span>, content: <span class="string">'{name} {percentage}'</span> },
 };
     </div>
@@ -163,7 +255,7 @@ new Pie('chart-basic', {
     angleField: 'value',
     colorField: 'type',
     radius: 0.8,
-    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA'],
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
     label: { type: 'outer', content: '{name} {percentage}', style: { fontSize: 11 } },
     legend: { position: 'right' },
     interactions: [{ type: 'element-active' }],
@@ -175,7 +267,7 @@ new Pie('chart-donut', {
     colorField: 'type',
     radius: 0.8,
     innerRadius: 0.6,
-    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA'],
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
     label: { type: 'inner', offset: '-50%', content: '{percentage}', style: { fontSize: 10, textAlign: 'center', fill: '#fff' } },
     legend: { position: 'right' },
     statistic: {
@@ -190,7 +282,7 @@ new Rose('chart-rose', {
     yField: 'value',
     seriesField: 'type',
     radius: 0.9,
-    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#9270CA'],
+    color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
     legend: { position: 'right' },
 }).render();
 </script>

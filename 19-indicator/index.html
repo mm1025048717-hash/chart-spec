@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -112,7 +112,40 @@
 </div>
 
 <div class="spec-section">
-    <div class="spec-title">基础样式</div>
+    <div class="spec-title" style="display: flex; justify-content: space-between; align-items: center;">
+        基础样式
+        <button class="btn-view-code" onclick="toggleCode('code-indicator', this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            Code
+        </button>
+    </div>
+    <div class="chart-meta" style="margin-bottom: 16px; border-radius: 8px;">
+        <div class="chart-meta-left">
+            <div class="chart-meta-info">
+                <span class="chart-meta-item"><span class="dot"></span>数据源: 销售系统, 核心KPI表</span>
+                <span class="chart-meta-item"><span class="dot" style="background:#5B8FF9"></span>数据周期: 2024年12月</span>
+            </div>
+        </div>
+        <div class="chart-filters">
+            <div class="filter-item">
+                <span class="filter-label">按</span>
+                <select class="filter-select">
+                    <option>月度</option>
+                    <option>季度</option>
+                    <option>年度</option>
+                </select>
+                <span class="filter-label">× 分组</span>
+            </div>
+            <div class="filter-item">
+                <span class="filter-label">日期:</span>
+                <select class="filter-select">
+                    <option>2024.12</option>
+                    <option>2024.Q4</option>
+                    <option>2024年度</option>
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="indicator-grid">
         <div class="indicator-card blue">
             <div class="label">总销售额</div>
@@ -134,6 +167,27 @@
             <div class="value">2.3<span class="suffix">%</span></div>
             <div class="trend trend-up">↑ 0.5% 较上月</div>
         </div>
+    </div>
+    <!-- 代码面板 -->
+    <div class="chart-code-panel" id="code-indicator">
+        <div class="code-header">
+            <span>Indicator Card Configuration</span>
+            <button class="btn-copy-code" onclick="copyCode('code-indicator-content')">复制代码</button>
+        </div>
+        <pre id="code-indicator-content">import { Statistic, Card, Row, Col } from 'antd';
+import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+
+&lt;Card&gt;
+    &lt;Statistic
+        title="总销售额"
+        value={8846}
+        suffix="万元"
+        valueStyle={{ fontSize: 28, fontWeight: 600 }}
+    /&gt;
+    &lt;div style={{ marginTop: 8, fontSize: 12, color: '#52C41A' }}&gt;
+        &lt;ArrowUpOutlined /&gt; 12.5% 较上月
+    &lt;/div&gt;
+&lt;/Card&gt;</pre>
     </div>
 </div>
 
@@ -184,19 +238,65 @@
     </div>
 </div>
 
+<!-- 指标卡规范 -->
 <div class="spec-section">
-    <div class="spec-title">设计规范</div>
+    <div class="spec-title">指标卡规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 150px;">元素</th><th style="width: 150px;">规范</th><th>说明</th></tr>
+            <tr><th>元素</th><th>规范</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td>数值字号</td><td><code>28px</code></td><td>突出显示，字重600</td></tr>
-            <tr><td>标签字号</td><td><code>13px</code></td><td>颜色 #8C8C8C</td></tr>
-            <tr><td>单位字号</td><td><code>14px</code></td><td>紧跟数值后</td></tr>
-            <tr><td>趋势字号</td><td><code>12px</code></td><td>上涨绿/下跌红</td></tr>
-            <tr><td>卡片圆角</td><td><code>8px</code></td><td>内边距 20px</td></tr>
-            <tr><td>顶部色带</td><td><code>3px</code></td><td>可选，用于区分类型</td></tr>
+            <tr class="highlight">
+                <td>数值字号</td>
+                <td><code>28px</code></td>
+                <td>突出显示，字重600</td>
+            </tr>
+            <tr>
+                <td>标签字号</td>
+                <td><code>13px</code></td>
+                <td>颜色 #8C8C8C</td>
+            </tr>
+            <tr>
+                <td>单位字号</td>
+                <td><code>14px</code></td>
+                <td>紧跟数值后</td>
+            </tr>
+            <tr>
+                <td>趋势字号</td>
+                <td><code>12px</code></td>
+                <td>上涨绿/下跌红</td>
+            </tr>
+            <tr>
+                <td>卡片圆角</td>
+                <td><code>8px</code></td>
+                <td>内边距 20px</td>
+            </tr>
+            <tr>
+                <td>顶部色带</td>
+                <td><code>3px</code></td>
+                <td>可选，用于区分类型</td>
+            </tr>
+            <tr>
+                <td>卡片间距</td>
+                <td><code>16px</code></td>
+                <td>卡片之间的间距</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>指标数量</td><td>建议每行 2-4 个指标卡，保持视觉平衡</td></tr>
+            <tr><td>颜色语义</td><td>建议使用颜色表示状态：蓝色（正常）、绿色（良好）、黄色（警告）、红色（异常）</td></tr>
+            <tr><td>趋势显示</td><td>建议显示环比或同比趋势，帮助用户理解变化</td></tr>
+            <tr><td>适用场景</td><td>适合展示关键业务指标，如销售额、订单数、用户数等核心KPI</td></tr>
         </tbody>
     </table>
 </div>

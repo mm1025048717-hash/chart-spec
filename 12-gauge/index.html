@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -30,11 +30,46 @@
 
 <div class="spec-section">
     <div class="spec-title">常见变体</div>
+    <div class="chart-meta" style="margin-bottom: 16px; border-radius: 8px;">
+        <div class="chart-meta-left">
+            <div class="chart-meta-info">
+                <span class="chart-meta-item"><span class="dot"></span>数据源: 业务系统, KPI指标表</span>
+                <span class="chart-meta-item"><span class="dot" style="background:#945FB9"></span>数据周期: 2024年12月</span>
+            </div>
+        </div>
+        <div class="chart-filters">
+            <div class="filter-item">
+                <span class="filter-label">按</span>
+                <select class="filter-select">
+                    <option>月度</option>
+                    <option>季度</option>
+                    <option>年度</option>
+                </select>
+                <span class="filter-label">× 分组</span>
+            </div>
+            <div class="filter-item">
+                <span class="filter-label">日期:</span>
+                <select class="filter-select">
+                    <option>2024.12</option>
+                    <option>2024.Q4</option>
+                    <option>2024年度</option>
+                </select>
+            </div>
+        </div>
+    </div>
     <div class="variant-grid">
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">基础仪表盘</span>
-                <span class="chart-tag purple">Basic</span>
+                <div class="header-left">
+                    <span class="chart-title">基础仪表盘</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag purple">Basic</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-gauge-basic', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-basic" style="width: 100%; height: 100%;"></div>
@@ -42,11 +77,40 @@
             <div class="chart-summary">
                 <span class="summary-item"><span class="summary-label">当前达成率</span><span class="summary-value blue">75%</span></span>
             </div>
+            <!-- 代码面板 -->
+            <div class="chart-code-panel" id="code-gauge-basic">
+                <div class="code-header">
+                    <span>Gauge Configuration</span>
+                    <button class="btn-copy-code" onclick="copyCode('code-gauge-basic-content')">复制代码</button>
+                </div>
+                <pre id="code-gauge-basic-content">new Gauge('chart-basic', {
+    percent: 0.75,
+    range: { color: '#5B8FF9' },
+    indicator: {
+        pointer: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0' } },
+    },
+    statistic: {
+        content: {
+            style: { fontSize: '24px', color: '#5B8FF9' },
+            formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        },
+    },
+}).render();</pre>
+            </div>
         </div>
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">多色仪表盘</span>
-                <span class="chart-tag blue">Multi Color</span>
+                <div class="header-left">
+                    <span class="chart-title">多色仪表盘</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag blue">Multi Color</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-gauge-color', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-color" style="width: 100%; height: 100%;"></div>
@@ -54,11 +118,43 @@
             <div class="chart-summary">
                 <span class="summary-item"><span class="summary-label">当前达成率</span><span class="summary-value yellow">65%</span></span>
             </div>
+            <!-- 代码面板 -->
+            <div class="chart-code-panel" id="code-gauge-color">
+                <div class="code-header">
+                    <span>Multi Color Gauge</span>
+                    <button class="btn-copy-code" onclick="copyCode('code-gauge-color-content')">复制代码</button>
+                </div>
+                <pre id="code-gauge-color-content">new Gauge('chart-color', {
+    percent: 0.65,
+    range: {
+        ticks: [0, 1/3, 2/3, 1],
+        color: ['#FF3B30', '#F6BD16', '#5AD8A6'],
+    },
+    indicator: {
+        pointer: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0' } },
+    },
+    statistic: {
+        content: {
+            style: { fontSize: '20px' },
+            formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        },
+    },
+}).render();</pre>
+            </div>
         </div>
         <div class="chart-card">
             <div class="chart-card-header">
-                <span class="chart-title">刻度仪表盘</span>
-                <span class="chart-tag green">With Ticks</span>
+                <div class="header-left">
+                    <span class="chart-title">刻度仪表盘</span>
+                </div>
+                <div class="header-right">
+                    <span class="chart-tag green">With Ticks</span>
+                    <button class="btn-view-code" onclick="toggleCode('code-gauge-ticks', this)">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        Code
+                    </button>
+                </div>
             </div>
             <div class="chart-body sm">
                 <div id="chart-ticks" style="width: 100%; height: 100%;"></div>
@@ -66,21 +162,94 @@
             <div class="chart-summary">
                 <span class="summary-item"><span class="summary-label">当前达成率</span><span class="summary-value green">82%</span></span>
             </div>
+            <!-- 代码面板 -->
+            <div class="chart-code-panel" id="code-gauge-ticks">
+                <div class="code-header">
+                    <span>Gauge with Ticks</span>
+                    <button class="btn-copy-code" onclick="copyCode('code-gauge-ticks-content')">复制代码</button>
+                </div>
+                <pre id="code-gauge-ticks-content">new Gauge('chart-ticks', {
+    percent: 0.82,
+    range: { color: '#5AD8A6' },
+    axis: {
+        label: { formatter: (v) => (v * 100).toFixed(0) },
+        subTickLine: { count: 3 },
+    },
+    indicator: {
+        pointer: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0' } },
+    },
+    statistic: {
+        content: {
+            style: { fontSize: '20px', color: '#5AD8A6' },
+            formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
+        },
+    },
+}).render();</pre>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- 仪表盘规范 -->
 <div class="spec-section">
-    <div class="spec-title">核心配置参数</div>
+    <div class="spec-title">仪表盘规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>percent</code></td><td>number (0-1)</td><td>当前进度百分比</td></tr>
-            <tr><td><code>range.color</code></td><td>string | string[]</td><td>进度条颜色</td></tr>
-            <tr><td><code>indicator</code></td><td>object | null</td><td>指针配置</td></tr>
-            <tr><td><code>statistic</code></td><td>object</td><td>中心统计文本</td></tr>
+            <tr class="highlight">
+                <td><code>percent</code></td>
+                <td>number (0-1)</td>
+                <td>当前进度百分比</td>
+            </tr>
+            <tr>
+                <td><code>range.color</code></td>
+                <td>string | string[]</td>
+                <td>进度条颜色（单色或多色分段）</td>
+            </tr>
+            <tr>
+                <td><code>range.ticks</code></td>
+                <td>array</td>
+                <td>颜色分段点（如 [0, 1/3, 2/3, 1]）</td>
+            </tr>
+            <tr>
+                <td><code>indicator.pointer</code></td>
+                <td>object</td>
+                <td>指针样式配置</td>
+            </tr>
+            <tr>
+                <td><code>indicator.pin</code></td>
+                <td>object</td>
+                <td>中心点样式配置</td>
+            </tr>
+            <tr>
+                <td><code>statistic.content</code></td>
+                <td>object</td>
+                <td>中心统计文本配置</td>
+            </tr>
+            <tr>
+                <td><code>statistic.content.style.fontSize</code></td>
+                <td><code>20-24px</code></td>
+                <td>中心文字字号</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 使用建议 -->
+<div class="spec-section">
+    <div class="spec-title">使用建议</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>建议</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>颜色分段</td><td>建议使用 2-3 个颜色分段，表示不同状态（危险/警告/正常）</td></tr>
+            <tr><td>中心文字</td><td>建议显示百分比或具体数值，字号 20-24px</td></tr>
+            <tr><td>指针样式</td><td>建议使用浅灰色指针，不抢夺视觉焦点</td></tr>
+            <tr><td>适用场景</td><td>适合展示单一指标的完成度、达成率、进度等</td></tr>
         </tbody>
     </table>
 </div>
@@ -130,7 +299,7 @@ new Gauge('chart-color', {
     percent: 0.65,
     range: {
         ticks: [0, 1/3, 2/3, 1],
-        color: ['#E86452', '#F6BD16', '#5AD8A6'],
+        color: ['#FF3B30', '#F6BD16', '#5AD8A6'],
     },
     indicator: {
         pointer: { style: { stroke: '#D0D0D0' } },

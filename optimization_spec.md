@@ -53,10 +53,10 @@ padding: [20, 16, 40, 40]
 | 参数 | 数值 | 说明 |
 |------|------|------|
 | `label.style.fontSize` | `11px` | 标签字号 |
-| `label.style.fill` | `#646A73` | 标签颜色 |
+| `label.style.fill` | `#86868B` | 标签颜色 |
 | `label.style.textAlign` | `center` / `end` | 水平时居中，旋转时右对齐 |
 | `label.autoRotate` | `false` | 禁用自动旋转，使用智能策略 |
-| `line.style.stroke` | `#E5E6EB` | 轴线颜色 |
+| `line.style.stroke` | `#E8E8ED` | 轴线颜色 |
 | `tickLine` | `null` | 隐藏刻度线 |
 | `title` | `null` | 通常隐藏标题 |
 
@@ -76,12 +76,12 @@ xAxis: {
         rotate: -Math.PI / 4,  // 45度
         style: {
             fontSize: 11,
-            fill: '#646A73',
+            fill: '#86868B',
             textAlign: 'end',  // 旋转时必须设置
         },
         formatter: (text) => text.length > 8 ? text.slice(0, 8) + '...' : text,
     },
-    line: { style: { stroke: '#E5E6EB' } },
+    line: { style: { stroke: '#E8E8ED' } },
     tickLine: null,
 }
 ```
@@ -91,8 +91,8 @@ xAxis: {
 | 参数 | 数值 | 说明 |
 |------|------|------|
 | `label.style.fontSize` | `11px` | 标签字号 |
-| `label.style.fill` | `#646A73` | 标签颜色 |
-| `grid.line.style.stroke` | `#E5E6EB` | 网格线颜色 |
+| `label.style.fill` | `#86868B` | 标签颜色 |
+| `grid.line.style.stroke` | `#E8E8ED` | 网格线颜色 |
 | `grid.line.style.lineDash` | `[4, 4]` | 虚线样式 |
 | `line` | `null` | 隐藏Y轴线 |
 | `tickLine` | `null` | 隐藏刻度线 |
@@ -101,12 +101,12 @@ xAxis: {
 ```javascript
 yAxis: {
     label: {
-        style: { fontSize: 11, fill: '#646A73' },
+        style: { fontSize: 11, fill: '#86868B' },
         formatter: (v) => v >= 10000 ? (v / 10000).toFixed(1) + '万' : v.toLocaleString(),
     },
     grid: {
         line: {
-            style: { stroke: '#E5E6EB', lineDash: [4, 4] },
+            style: { stroke: '#E8E8ED', lineDash: [4, 4] },
         },
     },
     line: null,
@@ -122,15 +122,15 @@ yAxis: {
         position: 'left',
         label: {
             formatter: (v) => v.toLocaleString(),
-            style: { fontSize: 11, fill: '#646A73' },
+            style: { fontSize: 11, fill: '#86868B' },
         },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
     },
     rate: {
         position: 'right',
         label: {
             formatter: (v) => v + '%',
-            style: { fontSize: 11, fill: '#646A73' },
+            style: { fontSize: 11, fill: '#86868B' },
         },
         grid: null,  // 右侧Y轴不显示网格线
         min: 0,
@@ -146,9 +146,9 @@ yAxis: {
 | 参数 | 数值 |
 |------|------|
 | 位置 | 图表左上角 |
-| 背景色 | `#F7F8FA` |
+| 背景色 | `#F5F5F7` |
 | 字号 | `12px` |
-| 字色 | `#646A73` |
+| 字色 | `#86868B` |
 | 内边距 | `2px 8px` |
 | 圆角 | `2px` |
 | 内容 | 如"万元"、"%" 等 |
@@ -164,9 +164,9 @@ yAxis: {
 | 参数 | 数值 |
 |------|------|
 | 位置 | 图表右下角 |
-| 背景色 | `#F7F8FA` |
+| 背景色 | `#F5F5F7` |
 | 字号 | `12px` |
-| 字色 | `#646A73` |
+| 字色 | `#86868B` |
 | 内边距 | `4px 10px` |
 | 圆角 | `2px` |
 | 用途 | 说明X轴分组字段来源 |
@@ -187,7 +187,7 @@ yAxis: {
 | 项间距 | `gap: 20px` |
 | 图标与文字间距 | `6px` |
 | 字号 | `12px` |
-| 字色 | `#1F2329` |
+| 字色 | `#1D1D1F` |
 
 ### 6.2 图例图标样式
 
@@ -202,10 +202,10 @@ yAxis: {
 
 | 顺序 | 色值 | 用途 |
 |------|------|------|
-| 1 | `#5B8FF9` | 蓝色 - 主要指标 |
-| 2 | `#5AD8A6` | 绿色 - 次要指标/达成率 |
-| 3 | `#F6BD16` | 黄色 - 第三系列 |
-| 4 | `#E86452` | 红色 - 第四系列 |
+| 1 | `#0071E3` | 蓝色 - 主要指标 |
+| 2 | `#34C759` | 绿色 - 次要指标/达成率 |
+| 3 | `#FF9500` | 黄色 - 第三系列 |
+| 4 | `#FF3B30` | 红色 - 第四系列 |
 | 5 | `#9270CA` | 紫色 - 第五系列 |
 | 6 | `#6DC8EC` | 青色 - 第六系列 |
 | 7 | `#FF9845` | 橙色 - 第七系列 |
@@ -215,7 +215,7 @@ legend: {
     position: 'top-right',
     itemSpacing: 20,
     itemName: {
-        style: { fontSize: 12, fill: '#1F2329' },
+        style: { fontSize: 12, fill: '#1D1D1F' },
     },
     marker: {
         symbol: 'square',  // 或 'line', 'circle'
@@ -232,7 +232,7 @@ legend: {
 
 | 参数 | 数值 | 说明 |
 |------|------|------|
-| 主色 | `#5B8FF9` | 单系列默认色 |
+| 主色 | `#0071E3` | 单系列默认色 |
 | 宽度比例 | `0.5` | `columnWidthRatio` |
 | 圆角 | `[4, 4, 0, 0]` | 仅顶部圆角 |
 | 分组间距 | `0.25` | `marginRatio`（分组图） |
@@ -252,7 +252,7 @@ columnWidthRatio: data.length > 12 ? 0.6 : 0.5,
 
 | 参数 | 数值 | 说明 |
 |------|------|------|
-| 主色 | `#5B8FF9` | 单系列默认色 |
+| 主色 | `#0071E3` | 单系列默认色 |
 | 高度比例 | `0.5` | `barWidthRatio` |
 | 圆角 | `[0, 4, 4, 0]` | 仅右侧圆角 |
 
@@ -289,7 +289,7 @@ columnWidthRatio: data.length > 12 ? 0.6 : 0.5,
 | 参数 | 数值 | 说明 |
 |------|------|------|
 | 字号 | `11px` | 标签字号 |
-| 字色 | 与系列色一致 | 如 `#5B8FF9` |
+| 字色 | 与系列色一致 | 如 `#0071E3` |
 | 位置（柱状图） | `top` | 柱体上方 |
 | 位置（条形图） | `right` | 条形右侧 |
 | 位置（折线图） | `top` | 数据点上方 |
@@ -301,7 +301,7 @@ label: {
     offset: 8,
     style: {
         fontSize: 11,
-        fill: '#5B8FF9',
+        fill: '#0071E3',
     },
     formatter: (datum) => datum.value.toLocaleString(),
 }
@@ -387,7 +387,7 @@ animation: {
 | 参数 | 数值 |
 |------|------|
 | 背景色 | `#FFFFFF` |
-| 边框 | `1px solid #E5E6EB` |
+| 边框 | `1px solid #E8E8ED` |
 | 圆角 | `12px` |
 | 图表高度 | `400px` |
 | 内边距 | `16px` |
@@ -400,9 +400,9 @@ animation: {
 |------|------|
 | 内边距 | `12px 16px` |
 | 字号 | `13px` |
-| 字色 | `#646A73` |
+| 字色 | `#86868B` |
 | 对齐 | 居中 |
-| 分隔线 | `1px solid #E5E6EB` |
+| 分隔线 | `1px solid #E8E8ED` |
 
 ---
 
@@ -420,7 +420,7 @@ const config = {
     padding: [40, 20, 50, 50],
     
     // 柱体
-    color: '#5B8FF9',
+    color: '#0071E3',
     columnWidthRatio: 0.5,
     columnStyle: { radius: [4, 4, 0, 0] },
     
@@ -429,19 +429,19 @@ const config = {
         label: {
             autoRotate: false,
             rotate: -Math.PI / 4,
-            style: { fontSize: 11, fill: '#646A73', textAlign: 'end' },
+            style: { fontSize: 11, fill: '#86868B', textAlign: 'end' },
         },
-        line: { style: { stroke: '#E5E6EB' } },
+        line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     
     // Y轴
     yAxis: {
         label: {
-            style: { fontSize: 11, fill: '#646A73' },
+            style: { fontSize: 11, fill: '#86868B' },
             formatter: (v) => v.toLocaleString(),
         },
-        grid: { line: { style: { stroke: '#E5E6EB', lineDash: [4, 4] } } },
+        grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
         tickLine: null,
     },
@@ -450,7 +450,7 @@ const config = {
     label: {
         position: 'top',
         offset: 8,
-        style: { fontSize: 11, fill: '#5B8FF9' },
+        style: { fontSize: 11, fill: '#0071E3' },
     },
     
     // 图例

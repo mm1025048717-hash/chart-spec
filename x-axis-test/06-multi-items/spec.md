@@ -126,7 +126,7 @@ xAxis: {
 // 数据项多时关闭标签
 label: data.length >= 15 ? false : {
     position: 'top',
-    style: { fill: '#5B8FF9', fontSize: 10 },
+    style: { fill: '#0071E3', fontSize: 10 },
 }
 ```
 
@@ -187,7 +187,7 @@ const config = {
     // 多数据项时不显示标签
     label: isManyItems ? false : {
         position: 'top',
-        style: { fill: '#5B8FF9', fontSize: 10 },
+        style: { fill: '#0071E3', fontSize: 10 },
     },
     tooltip: {
         formatter: (datum) => ({
