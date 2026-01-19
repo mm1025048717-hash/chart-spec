@@ -370,15 +370,15 @@ chart.setOption(option);</pre>
         const container = document.getElementById('map-container');
         const loading = document.getElementById('loading');
         
-        // 优先使用本地 GeoJSON 文件（避免 CORS 问题）
-        // 如果本地文件不存在或格式不正确，尝试使用支持 CORS 的 CDN
+        // 使用支持 CORS 的 CDN（本地文件可能不包含省份数据）
+        // 注意：需要确保数据源支持 CORS，或者使用代理
         const geoJsonSources = [
-            // 方案1: 本地文件（最可靠，无 CORS 问题）
-            'china.json',
-            // 方案2: 使用 jsDelivr CDN（通过 npm 包）
+            // 方案1: 使用 jsDelivr CDN（通过 npm 包，通常支持 CORS）
             'https://cdn.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json',
-            // 方案3: 使用 unpkg CDN
-            'https://unpkg.com/echarts@5.4.3/map/json/china.json'
+            // 方案2: 使用 unpkg CDN
+            'https://unpkg.com/echarts@5.4.3/map/json/china.json',
+            // 方案3: 使用 fastly.jsdelivr（备用）
+            'https://fastly.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json'
         ];
         
         let chinaGeoJson = null;
@@ -444,18 +444,45 @@ chart.setOption(option);</pre>
         }
         
         try {
-            // 注册地图
-            echarts.registerMap('china', chinaGeoJson);
+            // 检查 GeoJSON 是否包含省份数据
+            const features = chinaGeoJson.features || [];
+            const hasProvinces = features.some(f => {
+                const name = f.properties?.name || '';
+                return name && name !== '中华人民共和国' && (name.includes('省') || name.includes('市') || name.includes('自治区') || name.includes('特别行政区'));
+            });
             
-            // 生成模拟数据
+            if (!hasProvinces) {
+                console.warn('GeoJSON 只包含国家边界，不包含省份数据。尝试使用 ECharts 内置地图...');
+                // 如果 GeoJSON 不包含省份，尝试使用 ECharts 内置的中国地图
+                // ECharts 5.x 版本内置了中国地图，可以直接使用
+                try {
+                    // 尝试注册内置地图（如果可用）
+                    if (typeof echarts.getMap === 'function') {
+                        const builtInMap = echarts.getMap('china');
+                        if (builtInMap) {
+                            console.log('使用 ECharts 内置中国地图');
+                            // 内置地图已注册，直接使用
+                        } else {
+                            throw new Error('ECharts 内置地图不可用');
+                        }
+                    }
+                } catch (e) {
+                    console.error('无法使用内置地图:', e);
+                }
+            } else {
+                // 注册自定义地图
+                echarts.registerMap('china', chinaGeoJson);
+            }
+            
+            // 生成模拟数据（使用标准的省份名称）
             const provinces = [
-                '北京市', '天津市', '河北省', '山西省', '内蒙古自治区', 
-                '辽宁省', '吉林省', '黑龙江省', '上海市', '江苏省', 
-                '浙江省', '安徽省', '福建省', '江西省', '山东省', 
-                '河南省', '湖北省', '湖南省', '广东省', '广西壮族自治区', 
-                '海南省', '重庆市', '四川省', '贵州省', '云南省', 
-                '西藏自治区', '陕西省', '甘肃省', '青海省', '宁夏回族自治区', 
-                '新疆维吾尔自治区', '台湾省', '香港特别行政区', '澳门特别行政区'
+                '北京', '天津', '河北', '山西', '内蒙古', 
+                '辽宁', '吉林', '黑龙江', '上海', '江苏', 
+                '浙江', '安徽', '福建', '江西', '山东', 
+                '河南', '湖北', '湖南', '广东', '广西', 
+                '海南', '重庆', '四川', '贵州', '云南', 
+                '西藏', '陕西', '甘肃', '青海', '宁夏', 
+                '新疆', '台湾', '香港', '澳门'
             ];
             
             const data = provinces.map(name => ({
@@ -516,7 +543,9 @@ chart.setOption(option);</pre>
                     name: '销售额',
                     type: 'map',
                     map: 'china',
+                    mapType: 'china', // 明确指定使用中国地图
                     roam: true, // 允许缩放和平移
+                    selectedMode: 'single', // 允许选择省份
                     zoom: 1.2,
                     center: [104, 36],
                     scaleLimit: {
