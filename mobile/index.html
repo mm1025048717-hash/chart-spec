@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#FFFFFF">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
+    <title>Chart Spec - 图表设计规范</title>
+    <style>
+        :root {
+            /* AntV 官方色彩体系 */
+            --blue: #5B8FF9;
+            --green: #5AD8A6;
+            --gray-blue: #5D7092;
+            --yellow: #F6BD16;
+            --red: #E86452;
+            --cyan: #6DC8EC;
+            --purple: #945FB9;
+            --orange: #FF9845;
+            
+            /* 界面色彩 */
+            --bg-gray: #F5F5F7;
+            --card-white: #FFFFFF;
+            --text-primary: #1D1D1F;
+            --text-secondary: #86868B;
+            --text-tertiary: #AEAEB2;
+            --border: rgba(0, 0, 0, 0.06);
+            
+            --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", "Helvetica Neue", sans-serif;
+            background: var(--bg-gray);
+            color: var(--text-primary);
+            line-height: 1.4;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ===== 导航栏 ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: calc(44px + var(--safe-top));
+            padding-top: var(--safe-top);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-left: 16px;
+            padding-right: 16px;
+            z-index: 1000;
+            border-bottom: 0.5px solid var(--border);
+        }
+
+        .navbar-title {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .navbar-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--blue);
+            text-decoration: none;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .navbar-btn:active {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        /* ===== 主内容 ===== */
+        .content {
+            padding-top: calc(56px + var(--safe-top));
+            padding-bottom: calc(84px + var(--safe-bottom));
+        }
+
+        /* ===== Hero 区域 ===== */
+        .hero {
+            padding: 32px 20px;
+            background: var(--card-white);
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(91, 143, 249, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--blue);
+            margin-bottom: 8px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-size: 34px;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-desc {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 90%;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ===== Section 标题 ===== */
+        .section-header {
+            padding: 24px 20px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .section-link {
+            font-size: 15px;
+            color: var(--blue);
+            text-decoration: none;
+            font-weight: 400;
+        }
+
+        /* ===== 快捷入口网格 ===== */
+        .quick-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            padding: 0 16px;
+        }
+
+        .quick-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            background: var(--card-white);
+            padding: 16px 8px;
+            border-radius: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            transition: all 0.3s var(--ease-out-expo);
+        }
+
+        .quick-item:active {
+            transform: scale(0.92);
+            background: var(--bg-gray);
+        }
+
+        .quick-icon {
+            font-size: 26px;
+            margin-bottom: 8px;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+        }
+
+        /* 使用 AntV 色彩体系的图标背景 */
+        .quick-icon.blue { background: rgba(91, 143, 249, 0.12); }
+        .quick-icon.green { background: rgba(90, 216, 166, 0.12); }
+        .quick-icon.yellow { background: rgba(246, 189, 22, 0.12); }
+        .quick-icon.red { background: rgba(232, 100, 82, 0.12); }
+        .quick-icon.cyan { background: rgba(109, 200, 236, 0.12); }
+        .quick-icon.purple { background: rgba(148, 95, 185, 0.12); }
+        .quick-icon.orange { background: rgba(255, 152, 69, 0.12); }
+        .quick-icon.gray-blue { background: rgba(93, 112, 146, 0.12); }
+
+        .quick-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* ===== 特性卡片 (横向滚动) ===== */
+        .feature-row {
+            display: flex;
+            overflow-x: auto;
+            padding: 12px 16px 20px;
+            gap: 12px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+        }
+
+        .feature-row::-webkit-scrollbar { display: none; }
+
+        .feature-card {
+            flex: 0 0 260px;
+            background: var(--card-white);
+            padding: 24px;
+            border-radius: 22px;
+            scroll-snap-align: start;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 16px;
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+        }
+
+        .feature-icon.blue { background: rgba(91, 143, 249, 0.12); }
+        .feature-icon.green { background: rgba(90, 216, 166, 0.12); }
+        .feature-icon.orange { background: rgba(255, 152, 69, 0.12); }
+
+        .feature-title {
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* ===== 图表垂直列表 ===== */
+        .chart-list {
+            padding: 0 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chart-row {
+            display: flex;
+            align-items: center;
+            background: var(--card-white);
+            padding: 14px;
+            border-radius: 18px;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.2s;
+        }
+
+        .chart-row:active {
+            background: #E5E5EA;
+        }
+
+        .chart-row-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-right: 14px;
+        }
+
+        .chart-row-info {
+            flex: 1;
+        }
+
+        .chart-row-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .chart-row-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .chart-row-arrow {
+            color: #C7C7CC;
+        }
+
+        /* ===== 底部标签栏 ===== */
+        .tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(50px + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            border-top: 0.5px solid var(--border);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--text-tertiary);
+            gap: 4px;
+        }
+
+        .tab-item.active {
+            color: var(--blue);
+        }
+
+        .tab-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .tab-label {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* ===== 动画 ===== */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate {
+            animation: slideUp 0.8s var(--ease-out-expo) both;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div style="width: 32px;"></div>
+        <span class="navbar-title">Chart Spec</span>
+        <a href="index.html" class="navbar-btn">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+        </a>
+    </nav>
+
+    <main class="content">
+        <section class="hero animate">
+            <span class="hero-tag">Design System</span>
+            <h1 class="hero-title">重新定义<br>专业图表设计</h1>
+            <p class="hero-desc">基于 AntV 的顶级可视化规范，严格遵循设计规范色彩体系。</p>
+        </section>
+
+        <section class="section-header animate delay-1">
+            <h2 class="section-title">快捷入口</h2>
+        </section>
+        
+        <div class="quick-grid animate delay-1">
+            <a href="01-column/index.html" class="quick-item">
+                <div class="quick-icon blue">📊</div>
+                <span class="quick-label">柱状图</span>
+            </a>
+            <a href="04-line/index.html" class="quick-item">
+                <div class="quick-icon green">📈</div>
+                <span class="quick-label">折线图</span>
+            </a>
+            <a href="06-pie/index.html" class="quick-item">
+                <div class="quick-icon yellow">🥧</div>
+                <span class="quick-label">饼图</span>
+            </a>
+            <a href="20-ring/index.html" class="quick-item">
+                <div class="quick-icon purple">🍩</div>
+                <span class="quick-label">环图</span>
+            </a>
+            <a href="10-radar/index.html" class="quick-item">
+                <div class="quick-icon cyan">🕸️</div>
+                <span class="quick-label">雷达图</span>
+            </a>
+            <a href="17-map/index.html" class="quick-item">
+                <div class="quick-icon gray-blue">🗺️</div>
+                <span class="quick-label">地图</span>
+            </a>
+            <a href="12-gauge/index.html" class="quick-item">
+                <div class="quick-icon red">⏱️</div>
+                <span class="quick-label">仪表盘</span>
+            </a>
+            <a href="00-design-system/index.html" class="quick-item">
+                <div class="quick-icon orange">✨</div>
+                <span class="quick-label">更多</span>
+            </a>
+        </div>
+
+        <section class="section-header animate delay-2">
+            <h2 class="section-title">核心特性</h2>
+        </section>
+        
+        <div class="feature-row animate delay-2">
+            <a href="x-axis-test/index.html" class="feature-card">
+                <div class="feature-icon blue">🔤</div>
+                <h3 class="feature-title">智能文字布局</h3>
+                <p class="feature-desc">自动在6种布局策略间切换，完美解决长文本问题。</p>
+            </a>
+            <a href="00-design-system/index.html" class="feature-card">
+                <div class="feature-icon green">🎨</div>
+                <h3 class="feature-title">设计系统</h3>
+                <p class="feature-desc">统一的颜色、字体、间距规范，开箱即用。</p>
+            </a>
+            <a href="09-bubble/index.html" class="feature-card">
+                <div class="feature-icon orange">📐</div>
+                <h3 class="feature-title">精准比例</h3>
+                <p class="feature-desc">每个像素都经过精心调校，确保视觉平衡。</p>
+            </a>
+        </div>
+
+        <section class="section-header animate delay-3">
+            <h2 class="section-title">精选图表</h2>
+            <a href="mobile-spec.html" class="section-link">全部图表</a>
+        </section>
+
+        <div class="chart-list animate delay-3">
+            <a href="01-column/index.html" class="chart-row">
+                <div class="chart-row-icon" style="background: rgba(91, 143, 249, 0.12);">📊</div>
+                <div class="chart-row-info">
+                    <h3 class="chart-row-title">柱状图</h3>
+                    <p class="chart-row-desc">极致比例，细腻圆角设计</p>
+                </div>
+                <div class="chart-row-arrow">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+            </a>
+            <a href="04-line/index.html" class="chart-row">
+                <div class="chart-row-icon" style="background: rgba(90, 216, 166, 0.12);">📈</div>
+                <div class="chart-row-info">
+                    <h3 class="chart-row-title">折线图</h3>
+                    <p class="chart-row-desc">平滑贝塞尔曲线与灵动交互</p>
+                </div>
+                <div class="chart-row-arrow">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+            </a>
+            <a href="06-pie/index.html" class="chart-row">
+                <div class="chart-row-icon" style="background: rgba(246, 189, 22, 0.12);">🥧</div>
+                <div class="chart-row-info">
+                    <h3 class="chart-row-title">饼图</h3>
+                    <p class="chart-row-desc">支持嵌套、多级联动与标注</p>
+                </div>
+                <div class="chart-row-arrow">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </div>
+            </a>
+        </div>
+    </main>
+
+    <nav class="tabbar">
+        <a href="mobile.html" class="tab-item active">
+            <div class="tab-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            </div>
+            <span class="tab-label">首页</span>
+        </a>
+        <a href="mobile-spec.html" class="tab-item">
+            <div class="tab-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            </div>
+            <span class="tab-label">规范</span>
+        </a>
+        <a href="data-agent.html" class="tab-item">
+            <div class="tab-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </div>
+            <span class="tab-label">方案</span>
+        </a>
+        <a href="index.html" class="tab-item">
+            <div class="tab-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            </div>
+            <span class="tab-label">桌面端</span>
+        </a>
+    </nav>
+</body>
+</html>
