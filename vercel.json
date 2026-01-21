@@ -5,6 +5,20 @@
   "outputDirectory": ".",
   "installCommand": "",
   "framework": null,
+  "rewrites": [
+    {
+      "source": "/mobile",
+      "destination": "/mobile.html"
+    },
+    {
+      "source": "/mobile-spec",
+      "destination": "/mobile-spec.html"
+    },
+    {
+      "source": "/data-agent",
+      "destination": "/data-agent.html"
+    }
+  ],
   "redirects": [
     {
       "source": "/mobile/mobile-spec",
