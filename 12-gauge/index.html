@@ -6,6 +6,7 @@
     <title>仪表盘 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         /* 使用 common.css 中的统一样式 */
         .variant-grid { grid-template-columns: repeat(3, 1fr); }
@@ -13,6 +14,15 @@
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -278,17 +288,22 @@
 <script>
 const { Gauge } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const statisticFontSize = mobile ? '22px' : '24px';
+const statisticFontSizeSm = mobile ? '18px' : '20px';
+
 // 基础仪表盘
 new Gauge('chart-basic', {
     percent: 0.75,
     range: { color: '#5B8FF9' },
     indicator: {
         pointer: { style: { stroke: '#D0D0D0' } },
-        pin: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0', r: mobile ? 8 : 10 } },
     },
     statistic: {
         content: {
-            style: { fontSize: '24px', color: '#5B8FF9' },
+            style: { fontSize: statisticFontSize, color: '#5B8FF9' },
             formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
         },
     },
@@ -303,11 +318,11 @@ new Gauge('chart-color', {
     },
     indicator: {
         pointer: { style: { stroke: '#D0D0D0' } },
-        pin: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0', r: mobile ? 8 : 10 } },
     },
     statistic: {
         content: {
-            style: { fontSize: '20px' },
+            style: { fontSize: statisticFontSizeSm },
             formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
         },
     },
@@ -323,15 +338,18 @@ new Gauge('chart-ticks', {
     },
     indicator: {
         pointer: { style: { stroke: '#D0D0D0' } },
-        pin: { style: { stroke: '#D0D0D0' } },
+        pin: { style: { stroke: '#D0D0D0', r: mobile ? 8 : 10 } },
     },
     statistic: {
         content: {
-            style: { fontSize: '20px', color: '#5AD8A6' },
+            style: { fontSize: statisticFontSizeSm, color: '#5AD8A6' },
             formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
         },
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

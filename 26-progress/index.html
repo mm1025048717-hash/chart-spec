@@ -6,13 +6,16 @@
     <title>进度条 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         .progress-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 24px;
         }
-        @media (max-width: 768px) { .progress-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .progress-grid { grid-template-columns: 1fr; gap: 12px; } 
+        }
         
         .progress-demo {
             padding: 24px;
@@ -20,17 +23,26 @@
             border-radius: 12px;
             border: 1px solid #E8E8ED;
         }
+        @media (max-width: 768px) { 
+            .progress-demo { padding: 14px; border-radius: 10px; }
+        }
         
         .progress-item {
             margin-bottom: 20px;
         }
         .progress-item:last-child { margin-bottom: 0; }
+        @media (max-width: 768px) { 
+            .progress-item { margin-bottom: 14px; }
+        }
         
         .progress-header {
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
             font-size: 13px;
+        }
+        @media (max-width: 768px) { 
+            .progress-header { font-size: 12px; margin-bottom: 6px; }
         }
         .progress-label { color: #1D1D1F; font-weight: 500; }
         .progress-value { color: #5B8FF9; font-weight: 600; }
@@ -41,10 +53,16 @@
             border-radius: 4px;
             overflow: hidden;
         }
+        @media (max-width: 768px) { 
+            .progress-bar { height: 6px; border-radius: 3px; }
+        }
         .progress-fill {
             height: 100%;
             border-radius: 4px;
             transition: width 0.6s ease;
+        }
+        @media (max-width: 768px) { 
+            .progress-fill { border-radius: 3px; }
         }
         .progress-fill.blue { background: linear-gradient(90deg, #5B8FF9, #409CFF); }
         .progress-fill.green { background: linear-gradient(90deg, #5AD8A6, #5AC37C); }
@@ -58,6 +76,9 @@
             gap: 32px;
             padding: 24px;
         }
+        @media (max-width: 768px) { 
+            .circular-progress { gap: 16px; padding: 14px 8px; }
+        }
         .circular-item {
             text-align: center;
         }
@@ -66,12 +87,18 @@
             font-size: 12px;
             color: #86868B;
         }
+        @media (max-width: 768px) { 
+            .circular-item .label { margin-top: 8px; font-size: 10px; }
+        }
         
         /* 步骤进度 */
         .step-progress {
             display: flex;
             align-items: center;
             padding: 24px;
+        }
+        @media (max-width: 768px) { 
+            .step-progress { padding: 14px 8px; }
         }
         .step-item {
             flex: 1;
@@ -125,6 +152,15 @@
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -411,6 +447,10 @@
 
 <script src="../nav.js"></script>
 <script>
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const statisticFontSize = mobile ? 16 : 20;
+
 // 圆形进度条
 new G2Plot.RingProgress('progress-1', {
     percent: 0.85,
@@ -419,7 +459,7 @@ new G2Plot.RingProgress('progress-1', {
     radius: 1,
     statistic: {
         title: {
-            style: { fontSize: '20px', fontWeight: 700, color: '#1D1D1F' },
+            style: { fontSize: `${statisticFontSize}px`, fontWeight: 700, color: '#1D1D1F' },
             formatter: () => '85%',
         },
         content: false,
@@ -433,7 +473,7 @@ new G2Plot.RingProgress('progress-2', {
     radius: 1,
     statistic: {
         title: {
-            style: { fontSize: '20px', fontWeight: 700, color: '#1D1D1F' },
+            style: { fontSize: `${statisticFontSize}px`, fontWeight: 700, color: '#1D1D1F' },
             formatter: () => '62%',
         },
         content: false,
@@ -447,12 +487,15 @@ new G2Plot.RingProgress('progress-3', {
     radius: 1,
     statistic: {
         title: {
-            style: { fontSize: '20px', fontWeight: 700, color: '#1D1D1F' },
+            style: { fontSize: `${statisticFontSize}px`, fontWeight: 700, color: '#1D1D1F' },
             formatter: () => '35%',
         },
         content: false,
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 </body>

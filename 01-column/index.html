@@ -6,8 +6,18 @@
     <title>柱状图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -328,30 +338,38 @@ const basicData = [
 // AntV 官方分类色板
 const ANTV_COLORS = ['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E86452', '#6DC8EC', '#945FB9', '#FF9845'];
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 10 : 11;
+const labelFontSize = mobile ? 10 : 11;
+const columnWidthRatio = mobile ? 0.55 : 0.5;
+const borderRadius = mobile ? 4 : 4;
+const basePadding = mobile ? [30, 15, 40, 40] : [40, 20, 50, 50];
+
 new Column('chart-basic', {
     data: basicData,
     xField: 'region',
     yField: 'value',
-    padding: [40, 20, 50, 50],
+    padding: basePadding,
     color: '#5B8FF9',
-    columnWidthRatio: 0.5,
-    columnStyle: { radius: [4, 4, 0, 0] },
+    columnWidthRatio: columnWidthRatio,
+    columnStyle: { radius: [borderRadius, borderRadius, 0, 0] },
     xAxis: {
         label: {
             autoRotate: false,
             rotate: 0,
-            style: { fontSize: 11, fill: '#86868B', textAlign: 'center' },
+            style: { fontSize: fontSize, fill: '#86868B', textAlign: 'center' },
         },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' }, formatter: (v) => v.toLocaleString() },
+        label: { style: { fontSize: fontSize, fill: '#86868B' }, formatter: (v) => v.toLocaleString() },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
         tickLine: null,
     },
-    label: { position: 'top', offset: 8, style: { fill: '#5B8FF9', fontSize: 11 } },
+    label: { position: 'top', offset: 8, style: { fill: '#5B8FF9', fontSize: labelFontSize } },
     legend: false,
     tooltip: {
         showTitle: true,
@@ -378,13 +396,13 @@ new Column('chart-label', {
     data: basicData,
     xField: 'region',
     yField: 'value',
-    padding: [40, 20, 50, 50],
+    padding: basePadding,
     color: '#5AD8A6',
-    columnWidthRatio: 0.5,
-    columnStyle: { radius: [4, 4, 0, 0] },
-    label: { position: 'top', offset: 8, style: { fill: '#5AD8A6', fontSize: 11 } },
-    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
-    yAxis: { label: { style: { fontSize: 11, fill: '#86868B' } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+    columnWidthRatio: columnWidthRatio,
+    columnStyle: { radius: [borderRadius, borderRadius, 0, 0] },
+    label: { position: 'top', offset: 8, style: { fill: '#5AD8A6', fontSize: labelFontSize } },
+    xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
+    yAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
 }).render();
 
 const groupedData = [
@@ -402,17 +420,17 @@ new Column('chart-grouped', {
     yField: 'value',
     seriesField: 'type',
     isGroup: true,
-    padding: [40, 20, 50, 50],
+    padding: basePadding,
     color: ['#5B8FF9', '#5AD8A6'],
-    columnWidthRatio: 0.6,
-    columnStyle: { radius: [4, 4, 0, 0] },
-    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
-    yAxis: { label: { style: { fontSize: 11, fill: '#86868B' } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+    columnWidthRatio: columnWidthRatio,
+    columnStyle: { radius: [borderRadius, borderRadius, 0, 0] },
+    xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
+    yAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
     legend: {
         position: 'top-right',
         itemSpacing: 20,
         itemName: {
-            style: { fontSize: 12, fill: '#1D1D1F' },
+            style: { fontSize: mobile ? 9 : 12, fill: '#1D1D1F' },
         },
         marker: {
             symbol: 'square',
@@ -420,6 +438,9 @@ new Column('chart-grouped', {
         },
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 <script src="../nav.js"></script>

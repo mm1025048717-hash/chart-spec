@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>图表规范大全 - Chart Spec</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        :root {
+            --apple-blue: #0071E3;
+            --apple-blue-rgb: 0, 113, 227;
+            --bg-gray: #F5F5F7;
+            --card-white: #FFFFFF;
+            --text-primary: #1D1D1F;
+            --text-secondary: #86868B;
+            --text-tertiary: #AEAEB2;
+            --border: rgba(0, 0, 0, 0.06);
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "PingFang SC", sans-serif;
+            background: var(--bg-gray);
+            color: var(--text-primary);
+            padding-bottom: calc(84px + var(--safe-bottom));
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== Header ===== */
+        .header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            padding: calc(20px + var(--safe-top)) 20px 20px;
+            text-align: center;
+            border-bottom: 0.5px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .device-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 12px;
+            padding: 6px 14px;
+            background: rgba(var(--apple-blue-rgb), 0.08);
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--apple-blue);
+        }
+
+        .device-indicator svg { width: 14px; height: 14px; }
+
+        /* ===== Grid ===== */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            padding: 16px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+        /* ===== Card ===== */
+        .card {
+            background: var(--card-white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+
+        .card-header {
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 0.5px solid var(--border);
+        }
+
+        .card-icon {
+            width: 42px;
+            height: 42px;
+            background: #F2F2F7;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .card-info { flex: 1; min-width: 0; }
+        .card-title { font-size: 16px; font-weight: 600; }
+        .card-sub { font-size: 11px; color: var(--text-secondary); margin-top: 1px; }
+
+        .card-badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 8px;
+            background: rgba(var(--apple-blue-rgb), 0.08);
+            color: var(--apple-blue);
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        /* ===== Chart Area ===== */
+        .chart-area {
+            padding: 16px;
+            background: #FAFAFA;
+            border-bottom: 0.5px solid var(--border);
+        }
+
+        .chart-box {
+            width: 100%;
+            height: 240px;
+        }
+
+        /* ===== Specs Table ===== */
+        .specs {
+            background: var(--card-white);
+        }
+
+        .specs-header {
+            padding: 10px 18px;
+            background: #FAFAFA;
+            border-bottom: 0.5px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .specs-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .device-tag {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            background: rgba(var(--apple-blue-rgb), 0.1);
+            color: var(--apple-blue);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .device-tag svg { width: 10px; height: 10px; }
+
+        .spec-table-header {
+            display: grid;
+            grid-template-columns: 1.2fr 0.7fr 1.4fr;
+            padding: 8px 18px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            background: #FAFAFA;
+            border-bottom: 0.5px solid var(--border);
+        }
+
+        .spec-row {
+            display: grid;
+            grid-template-columns: 1.2fr 0.7fr 1.4fr;
+            padding: 10px 18px;
+            border-bottom: 0.5px solid var(--border);
+            font-size: 12px;
+            align-items: center;
+        }
+
+        .spec-row:last-child { border-bottom: none; }
+
+        .spec-key {
+            font-family: "SF Mono", Menlo, monospace;
+            font-size: 10px;
+            color: #8E8E93;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .spec-val {
+            font-family: "SF Mono", Menlo, monospace;
+            font-weight: 600;
+            color: var(--apple-blue);
+            text-align: center;
+            background: rgba(var(--apple-blue-rgb), 0.06);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        .spec-desc {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        .card-footer {
+            padding: 14px 18px;
+            background: var(--card-white);
+            border-top: 0.5px solid var(--border);
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--apple-blue);
+            color: #FFFFFF;
+            border-radius: 12px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .btn:active { transform: scale(0.97); opacity: 0.9; }
+
+        /* ===== Special Components ===== */
+        .table-demo { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .table-demo th { text-align: left; padding: 12px 8px; color: var(--text-secondary); border-bottom: 1px solid var(--border); font-weight: 600; background: #FAFAFA; }
+        .table-demo td { padding: 14px 8px; border-bottom: 0.5px solid var(--border); }
+        .table-demo .trend-up { color: #5AD8A6; font-weight: 600; }
+        .table-demo .trend-down { color: #E86452; font-weight: 600; }
+
+        .indicator-box { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; padding: 40px; }
+        .indicator-box .value { font-size: 48px; font-weight: 700; letter-spacing: -0.02em; }
+        .indicator-box .label { font-size: 15px; color: var(--text-secondary); margin-top: 8px; }
+        .indicator-box .trend { font-size: 14px; color: #5AD8A6; margin-top: 12px; font-weight: 600; }
+
+        /* ===== Tabbar ===== */
+        .tabbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: calc(50px + var(--safe-bottom));
+            padding-bottom: var(--safe-bottom);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            border-top: 0.5px solid var(--border);
+            z-index: 1000;
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #8E8E93;
+            gap: 3px;
+        }
+
+        .tab-item.active { color: var(--apple-blue); }
+        .tab-icon { width: 24px; height: 24px; }
+        .tab-label { font-size: 10px; font-weight: 500; }
+
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease forwards;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <h1>图表规范大全</h1>
+    <p>26种图表 · 严格遵循 AntV 设计规范</p>
+    <div class="device-indicator" id="deviceIndicator">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        <span id="deviceText">移动端参数</span>
+    </div>
+</header>
+
+<div class="grid" id="chartGrid"></div>
+
+<nav class="tabbar">
+    <a href="mobile.html" class="tab-item">
+        <div class="tab-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        </div>
+        <span class="tab-label">首页</span>
+    </a>
+    <a href="mobile-spec.html" class="tab-item active">
+        <div class="tab-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </div>
+        <span class="tab-label">规范</span>
+    </a>
+    <a href="data-agent.html" class="tab-item">
+        <div class="tab-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+        </div>
+        <span class="tab-label">方案</span>
+    </a>
+    <a href="index.html" class="tab-item">
+        <div class="tab-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+        </div>
+        <span class="tab-label">桌面端</span>
+    </a>
+</nav>
+
+<script>
+// AntV 标准色彩体系
+const COLORS = ['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E86452', '#6DC8EC', '#945FB9', '#FF9845'];
+
+// 检测设备类型
+const isMobile = () => window.innerWidth < 769;
+let currentIsMobile = isMobile();
+
+// 26种图表配置 - 格式: [参数名, 移动端值, PC端值, 说明]
+const charts = [
+    { id: '01', name: '柱状图', en: 'Column', icon: '📊', cat: '基础', path: '01-column', 
+      specs: [
+        ['columnWidthRatio', '0.6', '0.5', '柱子宽度比例'],
+        ['label.fontSize', '9px', '11px', '标签字号'],
+        ['axis.fontSize', '9px', '11px', '轴标签字号'],
+        ['borderRadius', '3px', '4px', '圆角大小']
+      ]},
+    { id: '02', name: '堆叠柱状图', en: 'Stacked Column', icon: '📚', cat: '基础', path: '02-stacked-column', 
+      specs: [
+        ['columnWidthRatio', '0.6', '0.5', '柱子宽度比例'],
+        ['label.fontSize', '9px', '11px', '标签字号'],
+        ['legend.fontSize', '9px', '12px', '图例字号']
+      ]},
+    { id: '03', name: '条形图', en: 'Bar', icon: '📏', cat: '基础', path: '03-bar', 
+      specs: [
+        ['barWidthRatio', '0.55', '0.5', '条形宽度比例'],
+        ['label.fontSize', '9px', '11px', '标签字号'],
+        ['axis.fontSize', '9px', '11px', '轴标签字号']
+      ]},
+    { id: '04', name: '折线图', en: 'Line', icon: '📈', cat: '趋势', path: '04-line', 
+      specs: [
+        ['lineWidth', '1.5', '2', '线条宽度'],
+        ['point.size', '3', '4', '数据点大小'],
+        ['axis.fontSize', '9px', '11px', '轴标签字号'],
+        ['smooth', 'false', 'false', '是否平滑']
+      ]},
+    { id: '05', name: '面积图', en: 'Area', icon: '📉', cat: '趋势', path: '05-area', 
+      specs: [
+        ['lineWidth', '1.5', '2', '边界线宽度'],
+        ['fillOpacity', '0.25', '0.3', '填充透明度'],
+        ['axis.fontSize', '9px', '11px', '轴标签字号'],
+        ['smooth', 'true', 'true', '平滑曲线']
+      ]},
+    { id: '06', name: '饼图', en: 'Pie', icon: '🥧', cat: '占比', path: '06-pie', 
+      specs: [
+        ['radius', '0.85', '0.8', '饼图半径'],
+        ['label.fontSize', '8px', '10px', '标签字号'],
+        ['label.offset', '8', '12', '标签偏移量']
+      ]},
+    { id: '07', name: '直方图', en: 'Histogram', icon: '📊', cat: '统计', path: '07-histogram', 
+      specs: [
+        ['binNumber', '8', '12', '分组数量'],
+        ['axis.fontSize', '9px', '11px', '轴标签字号'],
+        ['columnStyle.radius', '2', '3', '圆角大小']
+      ]},
+    { id: '08', name: '散点图', en: 'Scatter', icon: '✨', cat: '统计', path: '08-scatter', 
+      specs: [
+        ['size', '4', '5', '点大小'],
+        ['axis.fontSize', '9px', '11px', '轴标签字号'],
+        ['legend.fontSize', '9px', '11px', '图例字号']
+      ]},
+    { id: '09', name: '气泡图', en: 'Bubble', icon: '🫧', cat: '统计', path: '09-bubble', 
+      specs: [
+        ['size', '[6,24]', '[8,30]', '气泡大小范围'],
+        ['axis.fontSize', '9px', '11px', '轴标签字号'],
+        ['strokeWidth', '0.5', '1', '描边宽度']
+      ]},
+    { id: '10', name: '雷达图', en: 'Radar', icon: '🕸️', cat: '比较', path: '10-radar', 
+      specs: [
+        ['point.size', '3', '4', '数据点大小'],
+        ['lineWidth', '1.5', '2', '线条宽度'],
+        ['label.fontSize', '9px', '11px', '标签字号']
+      ]},
+    { id: '11', name: '漏斗图', en: 'Funnel', icon: '🔻', cat: '流程', path: '11-funnel', 
+      specs: [
+        ['label.fontSize', '9px', '12px', '标签字号'],
+        ['conversionTag.size', '10px', '12px', '转化标签字号']
+      ]},
+    { id: '12', name: '仪表盘', en: 'Gauge', icon: '⏱️', cat: '进度', path: '12-gauge', 
+      specs: [
+        ['statistic.fontSize', '18px', '24px', '数值字号'],
+        ['indicator.pin', '8px', '10px', '指针大小']
+      ]},
+    { id: '13', name: '帕累托图', en: 'Pareto', icon: '📉', cat: '分析', path: '13-pareto', 
+      specs: [
+        ['lineWidth', '1.5', '2', '线条宽度'],
+        ['point.size', '3', '4', '数据点大小'],
+        ['axis.fontSize', '8px', '10px', '轴标签字号']
+      ]},
+    { id: '14', name: '矩形树图', en: 'Treemap', icon: '🗂️', cat: '层级', path: '14-treemap', 
+      specs: [
+        ['label.fontSize', '9px', '11px', '标签字号'],
+        ['rectStyle.lineWidth', '1', '2', '边框宽度']
+      ]},
+    { id: '15', name: '词云图', en: 'WordCloud', icon: '☁️', cat: '文本', path: '15-wordcloud', 
+      specs: [
+        ['fontSize', '[10,36]', '[14,48]', '字号范围'],
+        ['padding', '2', '4', '文字间距']
+      ]},
+    { id: '16', name: '热力图', en: 'Heatmap', icon: '🔥', cat: '分布', path: '16-heatmap', 
+      specs: [
+        ['xAxis.fontSize', '7px', '9px', 'X轴标签字号'],
+        ['yAxis.fontSize', '9px', '11px', 'Y轴标签字号']
+      ]},
+    { id: '17', name: '地图', en: 'Map', icon: '🗺️', cat: '地理', path: '17-map', 
+      specs: [
+        ['label.fontSize', '8px', '10px', '标签字号'],
+        ['borderWidth', '0.5', '1', '边框宽度'],
+        ['zoom', '1.0', '1.2', '缩放级别']
+      ]},
+    { id: '18', name: '表格', en: 'Table', icon: '📋', cat: '数据', path: '18-table', 
+      specs: [
+        ['header.fontSize', '10px', '12px', '表头字号'],
+        ['cell.fontSize', '9px', '11px', '单元格字号'],
+        ['cell.padding', '6px', '10px', '单元格内边距']
+      ]},
+    { id: '19', name: '指标卡', en: 'Indicator', icon: '🏷️', cat: '指标', path: '19-indicator', 
+      specs: [
+        ['value.fontSize', '24px', '32px', '数值字号'],
+        ['label.fontSize', '11px', '14px', '标签字号'],
+        ['trend.fontSize', '10px', '12px', '趋势字号']
+      ]},
+    { id: '20', name: '环图', en: 'Ring', icon: '🍩', cat: '占比', path: '20-ring', 
+      specs: [
+        ['innerRadius', '0.55', '0.6', '内圆半径'],
+        ['label.fontSize', '9px', '11px', '标签字号'],
+        ['statistic.fontSize', '16px', '20px', '中心数值字号']
+      ]},
+    { id: '21', name: '瀑布图', en: 'Waterfall', icon: '🌊', cat: '比较', path: '21-waterfall', 
+      specs: [
+        ['columnWidthRatio', '0.55', '0.5', '柱子宽度比例'],
+        ['label.fontSize', '9px', '11px', '标签字号'],
+        ['axis.fontSize', '8px', '10px', '轴标签字号']
+      ]},
+    { id: '22', name: '双轴图', en: 'DualAxes', icon: '📊', cat: '复合', path: '22-dual-axes', 
+      specs: [
+        ['columnWidthRatio', '0.45', '0.4', '柱子宽度比例'],
+        ['lineWidth', '1.5', '2', '线条宽度'],
+        ['axis.fontSize', '9px', '11px', '轴标签字号']
+      ]},
+    { id: '23', name: '玫瑰图', en: 'Rose', icon: '🌹', cat: '占比', path: '23-rose', 
+      specs: [
+        ['radius', '0.88', '0.9', '外圆半径'],
+        ['innerRadius', '0.25', '0.3', '内圆半径'],
+        ['label.fontSize', '9px', '11px', '标签字号']
+      ]},
+    { id: '24', name: '旭日图', en: 'Sunburst', icon: '☀️', cat: '层级', path: '24-sunburst', 
+      specs: [
+        ['innerRadius', '0.2', '0.25', '内圆半径'],
+        ['label.fontSize', '8px', '10px', '标签字号'],
+        ['strokeWidth', '1', '2', '分隔线宽度']
+      ]},
+    { id: '25', name: '桑基图', en: 'Sankey', icon: '🧬', cat: '流程', path: '25-sankey', 
+      specs: [
+        ['nodeWidthRatio', '0.015', '0.012', '节点宽度比例'],
+        ['label.fontSize', '7px', '9px', '标签字号'],
+        ['edgeOpacity', '0.3', '0.35', '连线透明度']
+      ]},
+    { id: '26', name: '进度条', en: 'Progress', icon: '📶', cat: '进度', path: '26-progress', 
+      specs: [
+        ['barWidthRatio', '0.25', '0.3', '进度条宽度比例'],
+        ['label.fontSize', '10px', '12px', '标签字号']
+      ]}
+];
+
+// 渲染卡片
+function renderCards() {
+    const grid = document.getElementById('chartGrid');
+    const mobile = isMobile();
+    const valueIndex = mobile ? 1 : 2;
+    
+    // 更新设备指示器
+    const indicator = document.getElementById('deviceIndicator');
+    const deviceText = document.getElementById('deviceText');
+    if (mobile) {
+        deviceText.textContent = '移动端参数';
+    } else {
+        deviceText.textContent = 'PC端参数';
+    }
+    
+    grid.innerHTML = '';
+    
+    charts.forEach((c, idx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.animationDelay = `${idx * 0.03}s`;
+        card.innerHTML = `
+            <div class="card-header">
+                <div class="card-icon">${c.icon}</div>
+                <div class="card-info">
+                    <div class="card-title">${c.name}</div>
+                    <div class="card-sub">@antv/g2plot · ${c.en}</div>
+                </div>
+                <span class="card-badge">${c.cat}</span>
+            </div>
+            <div class="chart-area"><div id="chart-${c.id}" class="chart-box"></div></div>
+            <div class="specs">
+                <div class="specs-header">
+                    <span class="specs-title">参数规范</span>
+                    <span class="device-tag">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                        ${mobile ? '移动端' : 'PC端'}
+                    </span>
+                </div>
+                <div class="spec-table-header">
+                    <span>参数</span>
+                    <span style="text-align:center;">值</span>
+                    <span>说明</span>
+                </div>
+                ${c.specs.map(s => `
+                    <div class="spec-row">
+                        <span class="spec-key">${s[0]}</span>
+                        <span class="spec-val">${s[valueIndex]}</span>
+                        <span class="spec-desc">${s[3]}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="card-footer"><a href="${c.path}/index.html" class="btn">查看完整规范 →</a></div>
+        `;
+        grid.appendChild(card);
+    });
+}
+
+// 图表数据
+const columnData = [
+    { type: '华东', value: 38 }, { type: '华北', value: 28 }, { type: '华南', value: 24 }, 
+    { type: '华中', value: 22 }, { type: '西北', value: 15 }, { type: '西南', value: 16 }
+];
+
+const lineData = [
+    { month: '1月', value: 36 }, { month: '2月', value: 42 }, { month: '3月', value: 38 },
+    { month: '4月', value: 46 }, { month: '5月', value: 52 }, { month: '6月', value: 48 }
+];
+
+const pieData = [
+    { type: '线上', value: 45 }, { type: '门店', value: 32 }, { type: '分销', value: 18 }, { type: '其他', value: 5 }
+];
+
+// 渲染中国地图
+async function renderChinaMap(containerId, mobile) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    // 显示加载状态
+    container.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#86868B;font-size:11px;">加载地图中...</div>';
+    
+    try {
+        // 尝试加载本地 GeoJSON
+        const geoJsonSources = [
+            '17-map/china.json',
+            'https://cdn.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json'
+        ];
+        
+        let geoJson = null;
+        for (const url of geoJsonSources) {
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    geoJson = await response.json();
+                    if (geoJson && geoJson.features) break;
+                }
+            } catch (e) { continue; }
+        }
+        
+        if (!geoJson || !geoJson.features) {
+            throw new Error('无法加载地图数据');
+        }
+        
+        // 注册地图
+        echarts.registerMap('china', geoJson);
+        
+        // 生成模拟数据
+        const provinceNames = geoJson.features
+            .map(f => f.properties?.name)
+            .filter(name => name && name !== '中华人民共和国');
+        
+        const mapData = provinceNames.map(name => ({
+            name: name,
+            value: Math.round(Math.random() * 8000 + 500)
+        }));
+        
+        // 清空容器并初始化 ECharts
+        container.innerHTML = '';
+        const chart = echarts.init(container);
+        
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#E8E8ED',
+                borderWidth: 1,
+                padding: [8, 12],
+                textStyle: { color: '#1D1D1F', fontSize: mobile ? 10 : 12 },
+                formatter: params => `${params.name.replace(/省|市|自治区|特别行政区|壮族|回族|维吾尔/g, '')}: ${params.value ? params.value.toLocaleString() : 0} 万元`
+            },
+            visualMap: {
+                show: !mobile,
+                min: 0,
+                max: 8000,
+                left: 10,
+                bottom: 10,
+                text: ['高', '低'],
+                textStyle: { color: '#86868B', fontSize: mobile ? 8 : 10 },
+                inRange: { color: ['#E8F4FD', '#7CB8F7', '#5B8FF9', '#3D6DD8'] },
+                itemWidth: mobile ? 8 : 12,
+                itemHeight: mobile ? 60 : 100
+            },
+            series: [{
+                type: 'map',
+                map: 'china',
+                roam: true,
+                zoom: mobile ? 1.0 : 1.2,
+                center: [104, 36],
+                scaleLimit: { min: 0.8, max: 3 },
+                label: { show: false },
+                itemStyle: { areaColor: '#f5f5f5', borderColor: '#fff', borderWidth: mobile ? 0.5 : 1 },
+                emphasis: {
+                    label: { show: true, color: '#fff', fontSize: mobile ? 8 : 10 },
+                    itemStyle: { areaColor: '#5B8FF9', shadowColor: 'rgba(91,143,249,0.4)', shadowBlur: 10 }
+                },
+                data: mapData
+            }]
+        };
+        
+        chart.setOption(option);
+        
+        // 响应式
+        const resizeObserver = new ResizeObserver(() => chart.resize());
+        resizeObserver.observe(container);
+        
+    } catch (error) {
+        console.error('地图加载失败:', error);
+        container.innerHTML = `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#86868B;font-size:11px;background:#F5F5F7;border-radius:8px;gap:8px;">
+            <span>🗺️ 地图加载失败</span>
+            <button onclick="renderChinaMap('${containerId}', ${mobile})" style="padding:4px 12px;background:#5B8FF9;color:#fff;border:none;border-radius:4px;font-size:10px;cursor:pointer;">重试</button>
+        </div>`;
+    }
+}
+
+// 统一图例配置
+function getLegendConfig(mobile, position = 'top-right') {
+    return {
+        position: position,
+        marker: { symbol: 'square', style: { r: mobile ? 4 : 5 } },
+        itemName: { style: { fontSize: mobile ? 10 : 12, fill: '#1D1D1F' } },
+        itemSpacing: mobile ? 8 : 12
+    };
+}
+
+// 渲染图表
+function renderCharts() {
+    const { Column, Bar, Line, Area, Pie, Scatter, Radar, Funnel, Gauge, Treemap, WordCloud, Heatmap, Rose, Sunburst, Progress, Waterfall, DualAxes, Sankey, Histogram } = G2Plot;
+    const mobile = isMobile();
+    
+    // 统一的尺寸配置
+    const fontSize = mobile ? 10 : 12;           // 统一轴标签字号
+    const bindRadius = mobile ? 3 : 4;           // 柱状图圆角
+    const labelFontSize = mobile ? 10 : 12;      // 图表内标签字号
+    const lineWidth = mobile ? 2 : 2.5;          // 线条宽度
+    const pointSize = mobile ? 4 : 5;            // 数据点大小
+    const circleRadius = mobile ? 0.8 : 0.75;    // 圆形图表半径
+    const basePadding = mobile ? [20, 15, 35, 40] : [25, 20, 40, 50]; // 统一基础padding
+
+    try {
+        // 01 柱状图
+        new Column('chart-01', {
+            data: columnData, xField: 'type', yField: 'value', color: '#5B8FF9',
+            columnWidthRatio: mobile ? 0.6 : 0.5, columnStyle: { radius: [bindRadius, bindRadius, 0, 0] },
+            label: { position: 'top', style: { fill: '#5B8FF9', fontSize: labelFontSize } },
+            xAxis: { label: { style: { fontSize } } },
+            yAxis: { label: { style: { fontSize } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+            legend: false,
+            padding: basePadding
+        }).render();
+
+        // 02 堆叠柱状图 - 无圆角
+        const stackData = [...columnData.slice(0, 4).map(d => ({ ...d, year: '2023' })), ...columnData.slice(0, 4).map(d => ({ type: d.type, value: Math.round(d.value * 1.15), year: '2024' }))];
+        new Column('chart-02', {
+            data: stackData, xField: 'type', yField: 'value', seriesField: 'year', isStack: true,
+            color: ['#5B8FF9', '#5AD8A6'], columnWidthRatio: mobile ? 0.6 : 0.5,
+            columnStyle: { radius: 0 },
+            xAxis: { label: { style: { fontSize } } },
+            yAxis: { label: { style: { fontSize } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+            legend: false,
+            padding: basePadding
+        }).render();
+
+        // 03 条形图
+        new Bar('chart-03', {
+            data: columnData.slice(0, 5), xField: 'value', yField: 'type', color: '#5B8FF9',
+            barWidthRatio: mobile ? 0.55 : 0.5,
+            barStyle: { radius: [0, bindRadius, bindRadius, 0] },
+            label: { position: 'right', style: { fill: '#5B8FF9', fontSize: labelFontSize } },
+            xAxis: { label: { style: { fontSize } } },
+            yAxis: { label: { style: { fontSize } } },
+            legend: false,
+            padding: mobile ? [15, 45, 15, 50] : [20, 50, 20, 60]
+        }).render();
+
+        // 04 折线图
+        new Line('chart-04', {
+            data: lineData, xField: 'month', yField: 'value', color: '#5B8FF9',
+            lineStyle: { lineWidth },
+            point: { size: pointSize, style: { fill: '#5B8FF9', stroke: '#fff', lineWidth: 1.5 } },
+            xAxis: { label: { style: { fontSize } } },
+            yAxis: { label: { style: { fontSize } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+            legend: false,
+            padding: basePadding
+        }).render();
+
+        // 05 面积图
+        new Area('chart-05', {
+            data: lineData, xField: 'month', yField: 'value', color: '#5AD8A6', smooth: true,
+            areaStyle: { fillOpacity: 0.3 },
+            line: { style: { lineWidth } },
+            xAxis: { label: { style: { fontSize } } },
+            yAxis: { label: { style: { fontSize } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+            legend: false,
+            padding: basePadding
+        }).render();
+
+        // 06 饼图
+        new Pie('chart-06', {
+            data: pieData, angleField: 'value', colorField: 'type', radius: circleRadius,
+            color: COLORS,
+            label: { 
+                type: 'spider',
+                content: '{name} {percentage}',
+                style: { fontSize: labelFontSize },
+                labelLine: { style: { lineWidth: 1, stroke: '#aaa' } }
+            },
+            legend: false,
+            padding: [15, 15, 15, 15]
+        }).render();
+
+        // 07 直方图
+        const histData = Array.from({ length: 100 }, () => ({ value: Math.random() * 100 }));
+        new Histogram('chart-07', {
+            data: histData, binField: 'value', binNumber: mobile ? 8 : 12, color: '#5B8FF9',
+            columnStyle: { radius: [bindRadius, bindRadius, 0, 0] },
+            xAxis: { label: { style: { fontSize } } },
+            yAxis: { label: { style: { fontSize } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+            legend: false,
+            padding: basePadding
+        }).render();
+
+        // 08 散点图
+        const scatterData = Array.from({ length: 30 }, () => ({ x: Math.random() * 100, y: Math.random() * 100, cat: Math.random() > 0.5 ? 'A类' : 'B类' }));
+        new Scatter('chart-08', {
+            data: scatterData, xField: 'x', yField: 'y', colorField: 'cat',
+            size: pointSize + 1, color: ['#5B8FF9', '#5AD8A6'],
+            shape: 'circle',
+            pointStyle: { fillOpacity: 0.8, stroke: '#fff', lineWidth: 1.5 },
+            xAxis: { label: { style: { fontSize } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+            yAxis: { label: { style: { fontSize } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+            legend: false,
+            padding: basePadding
+        }).render();
+
+        // 09 气泡图
+        const bubbleData = [
+            { x: 20, y: 75, z: 30, cat: '电子' }, { x: 45, y: 55, z: 22, cat: '家电' },
+            { x: 65, y: 65, z: 38, cat: '日用' }, { x: 85, y: 45, z: 18, cat: '食品' }
+        ];
+        new Scatter('chart-09', {
+            data: bubbleData, xField: 'x', yField: 'y', sizeField: 'z', colorField: 'cat',
+            size: mobile ? [18, 50] : [22, 60], color: COLORS.slice(0, 4),
+            shape: 'circle',
+            pointStyle: { fillOpacity: 0.75, stroke: '#fff', lineWidth: 1.5 },
+            xAxis: { label: { style: { fontSize } }, min: 0, max: 100 },
+            yAxis: { label: { style: { fontSize } }, min: 30, max: 90 },
+            legend: false,
+            padding: basePadding
+        }).render();
+
+        // 10 雷达图
+        const radarData = [{ item: '技术', score: 80 }, { item: '设计', score: 70 }, { item: '产品', score: 85 }, { item: '运营', score: 75 }, { item: '市场', score: 65 }];
+        new Radar('chart-10', {
+            data: radarData, xField: 'item', yField: 'score', color: '#5B8FF9',
+            area: { style: { fillOpacity: 0.3 } },
+            point: { size: pointSize, style: { fill: '#5B8FF9', stroke: '#fff', lineWidth: 1.5 } },
+            xAxis: { label: { style: { fontSize: labelFontSize } } },
+            legend: false,
+            padding: [30, 30, 30, 30]
+        }).render();
+
+        // 11 漏斗图
+        const funnelData = [{ stage: '浏览', value: 5000 }, { stage: '点击', value: 3500 }, { stage: '加购', value: 2100 }, { stage: '下单', value: 1200 }, { stage: '支付', value: 800 }];
+        new Funnel('chart-11', {
+            data: funnelData, xField: 'stage', yField: 'value',
+            color: ['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E86452'],
+            label: { 
+                formatter: d => d.stage, 
+                style: { fontSize: labelFontSize, fill: '#fff', fontWeight: 500 } 
+            },
+            conversionTag: false,
+            legend: false,
+            padding: [20, 20, 20, 20]
+        }).render();
+
+        // 12 仪表盘
+        new Gauge('chart-12', {
+            percent: 0.75,
+            range: { ticks: [0, 1/3, 2/3, 1], color: ['#E86452', '#F6BD16', '#5AD8A6'] },
+            indicator: { pointer: { style: { stroke: '#5D7092', lineWidth: 2 } }, pin: { style: { stroke: '#5D7092', r: mobile ? 6 : 8 } } },
+            statistic: { content: { style: { fontSize: mobile ? '26px' : '32px', fontWeight: 600, color: '#5AD8A6' }, formatter: ({ percent }) => `${(percent * 100).toFixed(0)}%` } },
+            padding: [20, 20, 20, 20]
+        }).render();
+
+        // 13 帕累托图
+        const paretoRaw = [{ type: '缺陷A', value: 120 }, { type: '缺陷B', value: 85 }, { type: '缺陷C', value: 45 }, { type: '缺陷D', value: 30 }];
+        const paretoTotal = paretoRaw.reduce((s, d) => s + d.value, 0);
+        let cumulative = 0;
+        const paretoLine = paretoRaw.map(d => { cumulative += d.value; return { type: d.type, percent: cumulative / paretoTotal }; });
+        new DualAxes('chart-13', {
+            data: [paretoRaw, paretoLine], xField: 'type', yField: ['value', 'percent'],
+            geometryOptions: [
+                { geometry: 'column', color: '#5B8FF9', columnWidthRatio: 0.5, columnStyle: { radius: [bindRadius, bindRadius, 0, 0] } },
+                { geometry: 'line', color: '#5AD8A6', lineStyle: { lineWidth }, point: { size: pointSize, style: { fill: '#5AD8A6', stroke: '#fff', lineWidth: 2 } } }
+            ],
+            yAxis: { value: { label: { style: { fontSize } } }, percent: { label: { style: { fontSize }, formatter: v => (v * 100).toFixed(0) + '%' } } },
+            xAxis: { label: { style: { fontSize } } },
+            legend: false,
+            padding: mobile ? [20, 45, 35, 45] : [25, 50, 40, 50]
+        }).render();
+
+        // 14 矩形树图
+        new Treemap('chart-14', {
+            data: { name: 'root', children: pieData.map(d => ({ name: d.type, value: d.value })) },
+            colorField: 'name', color: COLORS,
+            label: { style: { fontSize: labelFontSize + 1, fill: '#fff', fontWeight: 500 } },
+            rectStyle: { lineWidth: 2, stroke: '#fff' },
+            legend: false,
+            padding: [15, 15, 15, 15]
+        }).render();
+
+        // 15 词云图
+        const wordData = [{ word: 'AI', weight: 100 }, { word: '大数据', weight: 85 }, { word: '云计算', weight: 70 }, { word: '物联网', weight: 60 }, { word: '区块链', weight: 50 }, { word: '5G', weight: 45 }];
+        new WordCloud('chart-15', {
+            data: wordData, wordField: 'word', weightField: 'weight', colorField: 'word',
+            color: COLORS,
+            wordStyle: { fontSize: mobile ? [16, 48] : [20, 60], rotation: 0, fontWeight: 600 },
+            random: () => 0.5,
+            padding: [15, 15, 15, 15]
+        }).render();
+
+        // 16 热力图
+        const days = ['周一', '周二', '周三', '周四', '周五'];
+        const hours = ['9:00', '12:00', '15:00', '18:00'];
+        const heatData = [];
+        days.forEach(day => { hours.forEach(hour => { heatData.push({ day, hour, value: Math.floor(Math.random() * 100) }); }); });
+        new Heatmap('chart-16', {
+            data: heatData, xField: 'hour', yField: 'day', colorField: 'value',
+            color: ['#E8F4FD', '#5B8FF9', '#3D5A99'], shape: 'rect',
+            xAxis: { label: { style: { fontSize } }, tickLine: null },
+            yAxis: { label: { style: { fontSize } } },
+            legend: false,
+            padding: mobile ? [15, 20, 35, 50] : [20, 25, 40, 55]
+        }).render();
+
+        // 17 地图 - 使用 ECharts 渲染
+        renderChinaMap('chart-17', mobile);
+
+        // 18 表格
+        document.getElementById('chart-18').innerHTML = `
+            <table class="table-demo">
+                <tr><th>地区</th><th>销售额</th><th>环比</th></tr>
+                <tr><td>华东区</td><td>¥3,650,000</td><td class="trend-up">↑12.5%</td></tr>
+                <tr><td>华北区</td><td>¥2,808,000</td><td class="trend-up">↑8.2%</td></tr>
+                <tr><td>华南区</td><td>¥2,408,000</td><td class="trend-down">↓3.1%</td></tr>
+            </table>
+        `;
+
+        // 19 指标卡
+        document.getElementById('chart-19').innerHTML = `
+            <div class="indicator-box">
+                <div class="value" style="color:#5B8FF9;">8,846<span style="font-size:16px;color:#86868B;margin-left:6px;">万</span></div>
+                <div class="label">总销售额</div>
+                <div class="trend">↑ 12.5% 较上月</div>
+            </div>
+        `;
+
+        // 20 环图
+        new Pie('chart-20', {
+            data: pieData, angleField: 'value', colorField: 'type',
+            radius: circleRadius, innerRadius: mobile ? 0.55 : 0.6,
+            color: COLORS,
+            label: { 
+                type: 'spider',
+                content: '{name} {percentage}',
+                style: { fontSize: labelFontSize },
+                labelLine: { style: { lineWidth: 1, stroke: '#aaa' } }
+            },
+            statistic: { 
+                title: { content: '总计', style: { fontSize: mobile ? '11px' : '13px', color: '#86868B' } }, 
+                content: { content: '100', style: { fontSize: mobile ? '20px' : '24px', fontWeight: 600, color: '#1D1D1F' } } 
+            },
+            legend: false,
+            padding: [15, 15, 15, 15]
+        }).render();
+
+        // 21 瀑布图
+        const waterfallData = [{ type: '收入', value: 52 }, { type: '成本', value: -21 }, { type: '费用', value: -10 }, { type: '利润', value: null }];
+        new Waterfall('chart-21', {
+            data: waterfallData, xField: 'type', yField: 'value',
+            risingFill: '#5B8FF9', fallingFill: '#E86452',
+            total: { label: '利润', style: { fill: '#5D7092' } },
+            label: { position: 'middle', style: { fill: '#fff', fontSize: labelFontSize, fontWeight: 500 } },
+            columnWidthRatio: mobile ? 0.55 : 0.5,
+            xAxis: { label: { style: { fontSize } } },
+            yAxis: { label: { style: { fontSize } }, grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
+            legend: false,
+            padding: basePadding
+        }).render();
+
+        // 22 双轴图
+        new DualAxes('chart-22', {
+            data: [lineData, lineData], xField: 'month', yField: ['value', 'value'],
+            geometryOptions: [
+                { geometry: 'column', color: '#5B8FF9', columnWidthRatio: mobile ? 0.45 : 0.4, columnStyle: { radius: [bindRadius, bindRadius, 0, 0] } },
+                { geometry: 'line', color: '#E86452', lineStyle: { lineWidth }, point: { size: pointSize, style: { fill: '#E86452', stroke: '#fff', lineWidth: 2 } } }
+            ],
+            xAxis: { label: { style: { fontSize } } },
+            yAxis: { value: { label: { style: { fontSize } } } },
+            legend: false,
+            padding: mobile ? [20, 40, 35, 40] : [25, 45, 40, 45]
+        }).render();
+
+        // 23 玫瑰图
+        new Rose('chart-23', {
+            data: pieData, xField: 'type', yField: 'value', seriesField: 'type',
+            radius: circleRadius, innerRadius: mobile ? 0.2 : 0.25, color: COLORS,
+            label: { 
+                offset: 15,
+                formatter: (datum) => datum.type,
+                style: { fontSize: labelFontSize, fill: '#1D1D1F' },
+                labelLine: { style: { lineWidth: 1, stroke: '#aaa' } }
+            },
+            legend: false,
+            padding: [15, 15, 15, 15]
+        }).render();
+
+        // 24 旭日图
+        const sunburstData = { name: '总部', children: [
+            { name: '研发', children: [{ name: '前端', value: 30 }, { name: '后端', value: 40 }] },
+            { name: '销售', children: [{ name: '华东', value: 25 }, { name: '华南', value: 20 }] }
+        ]};
+        new Sunburst('chart-24', {
+            data: sunburstData, innerRadius: mobile ? 0.2 : 0.25,
+            hierarchyConfig: { field: 'value' },
+            color: COLORS,
+            sunburstStyle: { stroke: '#fff', lineWidth: 2 },
+            label: { layout: [{ type: 'limit-in-shape' }], style: { fontSize: labelFontSize, fill: '#fff', fontWeight: 500 } },
+            legend: false,
+            padding: [20, 20, 20, 20]
+        }).render();
+
+        // 25 桑基图
+        const sankeyData = [
+            { source: '搜索', target: '首页', value: 45 }, { source: '社交', target: '首页', value: 25 },
+            { source: '首页', target: '浏览', value: 60 }, { source: '首页', target: '流失', value: 10 },
+            { source: '浏览', target: '购买', value: 30 }, { source: '浏览', target: '流失', value: 30 }
+        ];
+        new Sankey('chart-25', {
+            data: sankeyData, sourceField: 'source', targetField: 'target', weightField: 'value',
+            color: COLORS, nodeWidthRatio: mobile ? 0.02 : 0.016,
+            nodePaddingRatio: mobile ? 0.02 : 0.015,
+            nodeStyle: { fillOpacity: 1 }, edgeStyle: { fillOpacity: mobile ? 0.45 : 0.5 },
+            label: { 
+                style: { fill: '#1D1D1F', fontSize: labelFontSize, fontWeight: 500 } 
+            },
+            legend: false,
+            padding: [25, 25, 25, 25]
+        }).render();
+
+        // 26 进度条
+        new Progress('chart-26', {
+            percent: 0.7, barWidthRatio: mobile ? 0.4 : 0.45, color: ['#5B8FF9', '#E8E8ED'],
+            legend: false,
+            padding: [80, 35, 80, 35]
+        }).render();
+
+        console.log(`✅ 26种图表全部加载完成 (${mobile ? '移动端' : 'PC端'}模式)`);
+    } catch (e) { console.error('图表渲染错误:', e); }
+}
+
+// 初始化
+function init() {
+    currentIsMobile = isMobile();
+    renderCards();
+    setTimeout(renderCharts, 100);
+}
+
+// 监听窗口大小变化
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        const nowMobile = isMobile();
+        if (nowMobile !== currentIsMobile) {
+            currentIsMobile = nowMobile;
+            renderCards();
+            renderCharts();
+        }
+    }, 200);
+});
+
+window.onload = init;
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
     <title>X轴文字智能处理 - Chart Spec</title>
     <link rel="stylesheet" href="../common.css">
     <style>
@@ -13,12 +13,15 @@
             --apple-gray-200: #E8E8ED;
             --apple-gray-400: #86868B;
             --apple-gray-900: #1D1D1F;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -28,12 +31,19 @@
             color: var(--apple-gray-900);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 80px 24px;
+            padding: calc(60px + var(--safe-top)) 20px calc(80px + var(--safe-bottom));
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding-top: calc(40px + var(--safe-top));
+            }
         }
 
         .back-link {

@@ -6,8 +6,18 @@
     <title>漏斗图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge" style="background: linear-gradient(135deg, #FFF7E6 0%, #FFE7BA 100%);">
@@ -83,7 +93,7 @@
                     <span class="legend-text">下单</span>
                 </div>
                 <div class="legend-item">
-                    <span class="legend-icon-square" style="background: #FF3B30;"></span>
+                    <span class="legend-icon-square" style="background: #E86452;"></span>
                     <span class="legend-text">支付</span>
                 </div>
             </div>
@@ -120,7 +130,7 @@
     xField: 'stage',
     yField: 'value',
     padding: [24, 80, 24, 24],
-    color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF9845', '#FF3B30'],
+    color: ['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E86452'],
     legend: false,
     label: {
         formatter: (datum) => `${datum.stage}\n${datum.value.toLocaleString()}`,
@@ -181,6 +191,69 @@
     </table>
 </div>
 
+<!-- 移动端参数配置 -->
+<div class="mobile-spec-section">
+    <div class="spec-title">移动端参数配置 <span class="mobile-spec-badge">Mobile</span></div>
+    <table class="compare-table">
+        <thead>
+            <tr>
+                <th>参数</th>
+                <th class="desktop-col">桌面端</th>
+                <th class="mobile-col">移动端</th>
+                <th>说明</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><code>height</code></td>
+                <td class="value-desktop">300px</td>
+                <td class="value-mobile">220px</td>
+                <td>图表高度适配小屏</td>
+            </tr>
+            <tr>
+                <td><code>padding</code></td>
+                <td class="value-desktop">[24, 80, 24, 24]</td>
+                <td class="value-mobile">[16, 60, 16, 16]</td>
+                <td>减少内边距，增大图表区</td>
+            </tr>
+            <tr>
+                <td><code>label.style.fontSize</code></td>
+                <td class="value-desktop">11px</td>
+                <td class="value-mobile">10px</td>
+                <td>标签字号缩小</td>
+            </tr>
+            <tr>
+                <td><code>conversionTag.style.fontSize</code></td>
+                <td class="value-desktop">12px</td>
+                <td class="value-mobile">10px</td>
+                <td>转化率标签字号</td>
+            </tr>
+            <tr>
+                <td><code>conversionTag.offsetX</code></td>
+                <td class="value-desktop">40</td>
+                <td class="value-mobile">25</td>
+                <td>转化率标签偏移量</td>
+            </tr>
+            <tr>
+                <td><code>isTransposed</code></td>
+                <td class="value-desktop">false</td>
+                <td class="value-mobile">false</td>
+                <td>移动端保持纵向更节省空间</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div class="mobile-tips">
+        <div class="mobile-tips-title">移动端优化建议</div>
+        <ul class="mobile-tips-list">
+            <li>阶段数量建议不超过 5 个，避免显示拥挤</li>
+            <li>标签优先显示数值，阶段名称可省略或简写</li>
+            <li>转化率标签使用较短格式如 "65%" 而非 "转化率: 65%"</li>
+            <li>考虑使用 tooltip 显示详细信息而非直接展示</li>
+        </ul>
+    </div>
+</div>
+
 <!-- 使用建议 -->
 <div class="spec-section">
     <div class="spec-title">使用建议</div>
@@ -216,6 +289,12 @@
 <script>
 const { Funnel } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const labelFontSize = mobile ? 11 : 11;
+const conversionFontSize = mobile ? 11 : 12;
+const padding = mobile ? [12, 40, 12, 12] : [24, 80, 24, 24];
+
 const data = [
     { stage: '访问', value: 10000 },
     { stage: '浏览', value: 6500 },
@@ -228,17 +307,21 @@ new Funnel('chart-basic', {
     data,
     xField: 'stage',
     yField: 'value',
-    padding: [24, 80, 24, 24], // 右侧留出空间给转化率标签
-    color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF9845', '#FF3B30'],
+    padding: padding,
+    color: ['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E86452'],
     legend: false,
     label: {
         formatter: (datum) => `${datum.stage}\n${datum.value.toLocaleString()}`,
-        style: { fontSize: 11, fill: '#fff' },
+        style: { fontSize: labelFontSize, fill: '#fff' },
     },
     conversionTag: {
         formatter: (datum) => `${((datum.$$percentage$$) * 100).toFixed(1)}%`,
+        style: { fontSize: conversionFontSize },
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

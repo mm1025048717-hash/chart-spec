@@ -6,11 +6,21 @@
     <title>堆叠柱状图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         /* 使用 common.css 中的统一样式 */
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -155,7 +165,7 @@
     <div class="spec-title">尺寸规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 150px;">参数</th><th style="width: 200px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
             <tr class="highlight">
@@ -281,6 +291,15 @@
 <script>
 const { Column } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 10 : 11;
+const labelFontSize = mobile ? 10 : 11;
+const legendFontSize = mobile ? 9 : 12;
+const columnWidthRatio = mobile ? 0.55 : 0.5;
+const borderRadius = mobile ? 4 : 4;
+const basePadding = mobile ? [25, 10, 35, 35] : [40, 20, 50, 50];
+
 const stackData = [
     { month: '1月', type: '线上', value: 2800 },
     { month: '1月', type: '线下', value: 1200 },
@@ -302,24 +321,24 @@ new Column('chart-basic', {
     yField: 'value',
     seriesField: 'type',
     isStack: true,
-    padding: [40, 20, 50, 50],
+    padding: basePadding,
     color: ['#5B8FF9', '#5AD8A6'],
-    columnWidthRatio: 0.5,
+    columnWidthRatio: columnWidthRatio,
     // 堆叠图：底部柱子无圆角，只有顶部柱子有圆角
     columnStyle: (datum) => {
         // 线上是堆叠在顶部的，所以只有线上有圆角
         if (datum.type === '线上') {
-            return { radius: [4, 4, 0, 0] };
+            return { radius: [borderRadius, borderRadius, 0, 0] };
         }
         return { radius: 0 };
     },
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
         tickLine: null,
@@ -336,15 +355,15 @@ new Column('chart-percent', {
     isPercent: true,
     padding: [40, 20, 50, 50],
     color: ['#5B8FF9', '#5AD8A6'],
-    columnWidthRatio: 0.5,
+    columnWidthRatio: columnWidthRatio,
     columnStyle: (datum) => {
         if (datum.type === '线上') {
-            return { radius: [4, 4, 0, 0] };
+            return { radius: [borderRadius, borderRadius, 0, 0] };
         }
         return { radius: 0 };
     },
-    yAxis: { label: { formatter: (v) => (v * 100).toFixed(0) + '%' } },
-    legend: { position: 'top-right' },
+    yAxis: { label: { formatter: (v) => (v * 100).toFixed(0) + '%', style: { fontSize: fontSize } } },
+    legend: { position: 'top-right', itemName: { style: { fontSize: legendFontSize } } },
 }).render();
 
 const multiData = [
@@ -367,18 +386,21 @@ new Column('chart-multi', {
     isStack: true,
     padding: [40, 20, 50, 50],
     color: ['#5B8FF9', '#5AD8A6', '#FF9500'],
-    columnWidthRatio: 0.5,
+    columnWidthRatio: columnWidthRatio,
     // 多系列堆叠：只有顶部系列（产品A）有圆角，底部系列（产品C）无圆角
     columnStyle: (datum) => {
         // 产品A在顶部，应该有圆角
         if (datum.type === '产品A') {
-            return { radius: [4, 4, 0, 0] };
+            return { radius: [borderRadius, borderRadius, 0, 0] };
         }
         // 底部和中间系列都没有圆角
         return { radius: 0 };
     },
-    legend: { position: 'top-right' },
+    legend: { position: 'top-right', itemName: { style: { fontSize: legendFontSize } } },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

@@ -6,6 +6,7 @@
     <title>环图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         .variant-grid { grid-template-columns: repeat(2, 1fr); }
         @media (max-width: 768px) { .variant-grid { grid-template-columns: 1fr; } }
@@ -30,6 +31,15 @@
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -223,6 +233,13 @@ label: false,</pre>
 
 <script src="../nav.js"></script>
 <script>
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const labelFontSize = mobile ? 9 : 11;
+const innerRadius = mobile ? 0.55 : 0.6;
+const statisticFontSize = mobile ? 16 : 20;
+const statisticTitleSize = mobile ? 10 : 11;
+
 const data = [
     { type: '线上商城', value: 3715 },
     { type: '线下门店', value: 2654 },
@@ -236,13 +253,13 @@ new G2Plot.Pie('chart-basic', {
     angleField: 'value',
     colorField: 'type',
     radius: 0.85,
-    innerRadius: 0.6,
+    innerRadius: innerRadius,
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
         offset: '-50%',
         content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-        style: { fill: '#fff', fontSize: 12, fontWeight: 600 },
+        style: { fill: '#fff', fontSize: labelFontSize, fontWeight: 600 },
     },
     statistic: false,
     legend: false,
@@ -256,19 +273,19 @@ new G2Plot.Pie('chart-outer', {
     angleField: 'value',
     colorField: 'type',
     radius: 0.75,
-    innerRadius: 0.55,  // 增大内径，给中心文字更多空间
+    innerRadius: innerRadius - 0.05,  // 增大内径，给中心文字更多空间
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'spider',
         labelHeight: 24,
         content: '{name}\n{percentage}',
-        style: { fontSize: 11, fill: '#86868B' },
+        style: { fontSize: labelFontSize, fill: '#86868B' },
     },
     statistic: {
         title: {
             content: 'Total',
             style: {
-                fontSize: 11,
+                fontSize: statisticTitleSize,
                 color: '#86868B',
                 lineHeight: 1.2,
                 whiteSpace: 'nowrap',
@@ -277,7 +294,7 @@ new G2Plot.Pie('chart-outer', {
         content: {
             content: '3846',
             style: {
-                fontSize: 16,
+                fontSize: statisticFontSize,
                 fontWeight: 700,
                 color: '#1D1D1F',
                 lineHeight: 1.2,
@@ -305,6 +322,9 @@ new G2Plot.Pie('chart-thin', {
     legend: false,
     pieStyle: { lineWidth: 0 },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 </body>

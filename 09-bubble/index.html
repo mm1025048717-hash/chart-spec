@@ -6,11 +6,18 @@
     <title>气泡图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
-    <style>
-        /* 使用 common.css 中的统一样式 */
-    </style>
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -220,6 +227,11 @@
 <script>
 const { Scatter } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 9 : 11;
+const bubbleSize = mobile ? [6, 24] : [8, 30];
+
 const data = [
     { product: '产品A', price: 120, sales: 850, profit: 2500, category: '电子' },
     { product: '产品B', price: 80, sales: 1200, profit: 1800, category: '电子' },
@@ -230,51 +242,54 @@ const data = [
     { product: '产品G', price: 180, sales: 500, profit: 3500, category: '电子' },
 ];
 
-    new Scatter('chart-basic', {
-        data,
-        xField: 'price',
-        yField: 'sales',
-        sizeField: 'profit',
-        size: [8, 30], // 减小最大气泡尺寸，防止溢出
-        colorField: 'category',
-        color: ['#5B8FF9', '#5AD8A6', '#FF9500'], // 使用 Apple 风格配色
-        shape: 'circle',
-        pointStyle: { 
-            fillOpacity: 0.6,
-            stroke: '#fff',
-            lineWidth: 1
+new Scatter('chart-basic', {
+    data,
+    xField: 'price',
+    yField: 'sales',
+    sizeField: 'profit',
+    size: bubbleSize,
+    colorField: 'category',
+    color: ['#5B8FF9', '#5AD8A6', '#FF9500'],
+    shape: 'circle',
+    pointStyle: { 
+        fillOpacity: 0.6,
+        stroke: '#fff',
+        lineWidth: mobile ? 0.5 : 1
+    },
+    padding: [40, 80, 50, 50],
+    meta: {
+        price: {
+            nice: true,
+            alias: '价格',
+            tickCount: 5,
+            range: [0.12, 0.88]
         },
-        padding: [40, 80, 50, 50],  // 右侧大幅增加空间，防止X轴标签和大气泡溢出
-        meta: {
-            price: {
-                nice: true,
-                alias: '价格',
-                tickCount: 5,
-                range: [0.12, 0.88] // 进一步缩小映射范围，确保气泡不紧贴边缘
-            },
-            sales: {
-                nice: true,
-                alias: '销量',
-                tickCount: 5,
-                range: [0.12, 0.88] // 进一步缩小映射范围，确保气泡不紧贴边缘
-            }
-        },
-        xAxis: { 
-            label: { style: { fontSize: 11, fill: '#86868B' } },
-            line: { style: { stroke: '#E8E8ED' } },
-            tickLine: null,
-            grid: { line: { style: { stroke: '#F5F5F7', lineDash: [4, 4] } } },
-        },
-        yAxis: { 
-            label: { style: { fontSize: 11, fill: '#86868B' } },
-            grid: { line: { style: { stroke: '#F5F5F7', lineDash: [4, 4] } } },
-            line: null,
-        },
+        sales: {
+            nice: true,
+            alias: '销量',
+            tickCount: 5,
+            range: [0.12, 0.88]
+        }
+    },
+    xAxis: { 
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
+        line: { style: { stroke: '#E8E8ED' } },
+        tickLine: null,
+        grid: { line: { style: { stroke: '#F5F5F7', lineDash: [4, 4] } } },
+    },
+    yAxis: { 
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
+        grid: { line: { style: { stroke: '#F5F5F7', lineDash: [4, 4] } } },
+        line: null,
+    },
     legend: false,
     tooltip: {
         fields: ['product', 'price', 'sales', 'profit'],
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

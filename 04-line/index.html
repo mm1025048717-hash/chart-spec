@@ -6,8 +6,18 @@
     <title>折线图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -256,6 +266,14 @@
 <script>
 const { Line } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 10 : 11;
+const pointSize = mobile ? 4 : 4;
+const lineWidth = mobile ? 2 : 2;
+const legendFontSize = mobile ? 10 : 12;
+const basePadding = mobile ? [30, 15, 40, 40] : [40, 20, 50, 50];
+
 const basicData = [
     { month: '1月', value: 3650 },
     { month: '2月', value: 4200 },
@@ -275,22 +293,22 @@ new Line('chart-basic', {
     data: basicData,
     xField: 'month',
     yField: 'value',
-    padding: [40, 20, 50, 50],
+    padding: basePadding,
     color: '#5B8FF9',
-    lineStyle: { lineWidth: 2 },
-    point: { size: 4, shape: 'circle', style: { fill: '#5B8FF9' } },
+    lineStyle: { lineWidth: lineWidth },
+    point: { size: pointSize, shape: 'circle', style: { fill: '#5B8FF9' } },
     xAxis: {
         label: {
             autoRotate: false,
             rotate: 0,
-            style: { fontSize: 11, fill: '#86868B', textAlign: 'center' },
+            style: { fontSize: fontSize, fill: '#86868B', textAlign: 'center' },
         },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
         label: { 
-            style: { fontSize: 11, fill: '#86868B' }, 
+            style: { fontSize: fontSize, fill: '#86868B' }, 
             formatter: (v) => v >= 10000 ? (v / 10000).toFixed(1) + '万' : v.toLocaleString(),
         },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
@@ -325,9 +343,9 @@ new Line('chart-smooth', {
     padding: [40, 20, 50, 50],
     smooth: true,
     color: '#5AD8A6',
-    lineStyle: { lineWidth: 2 },
-    point: { size: 3, shape: 'circle', style: { fill: '#5AD8A6' } },
-    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    lineStyle: { lineWidth: lineWidth },
+    point: { size: pointSize - 1, shape: 'circle', style: { fill: '#5AD8A6' } },
+    xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
     yAxis: { grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
 }).render();
 
@@ -354,13 +372,13 @@ new Line('chart-multi', {
     seriesField: 'type',
     padding: [40, 20, 50, 50],
     color: ['#5B8FF9', '#5AD8A6'],
-    lineStyle: { lineWidth: 2 },
-    point: { size: 3 },
+    lineStyle: { lineWidth: lineWidth },
+    point: { size: pointSize - 1 },
     legend: {
         position: 'top-right',
         itemSpacing: 20,
         itemName: {
-            style: { fontSize: 12, fill: '#1D1D1F' },
+            style: { fontSize: legendFontSize, fill: '#1D1D1F' },
         },
         marker: {
             symbol: 'line',
@@ -371,13 +389,13 @@ new Line('chart-multi', {
         label: {
             autoRotate: false,
             rotate: 0,
-            style: { fontSize: 11, fill: '#86868B', textAlign: 'center' },
+            style: { fontSize: fontSize, fill: '#86868B', textAlign: 'center' },
         },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
         tickLine: null,
@@ -402,6 +420,9 @@ new Line('chart-multi', {
         },
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

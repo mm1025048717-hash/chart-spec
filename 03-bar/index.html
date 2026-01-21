@@ -6,11 +6,21 @@
     <title>条形图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         /* 使用 common.css 中的统一样式 */
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -129,7 +139,7 @@
     <div class="spec-title">尺寸规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 150px;">参数</th><th style="width: 200px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
             <tr class="highlight">
@@ -151,7 +161,7 @@
     <div class="spec-title">条形规范</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 180px;">参数</th><th style="width: 150px;">值</th><th>说明</th></tr>
+            <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
             <tr>
@@ -183,7 +193,7 @@
     <div class="spec-title">柱状图 vs 条形图</div>
     <table class="spec-table">
         <thead>
-            <tr><th style="width: 150px;">特性</th><th>柱状图 Column</th><th>条形图 Bar</th></tr>
+            <tr><th>特性</th><th>柱状图 Column</th><th>条形图 Bar</th></tr>
         </thead>
         <tbody>
             <tr>
@@ -243,6 +253,14 @@
 <script>
 const { Bar } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 10 : 11;
+const labelFontSize = mobile ? 10 : 11;
+const barWidthRatio = mobile ? 0.55 : 0.5;
+const borderRadius = mobile ? 4 : 4;
+const basePadding = mobile ? [20, 40, 30, 140] : [30, 50, 40, 200];
+
 const data = [
     { product: 'MacBook Pro 16英寸 M3 Max', sales: 12000 },
     { product: 'iPhone 15 Pro Max 256GB', sales: 9200 },
@@ -258,27 +276,30 @@ new Bar('chart-basic', {
     data,
     xField: 'sales',
     yField: 'product',
-    padding: [30, 50, 40, 200],
+    padding: basePadding,
     color: '#5B8FF9',
-    barWidthRatio: 0.5,
-    barStyle: { radius: [0, 4, 4, 0] },
+    barWidthRatio: barWidthRatio,
+    barStyle: { radius: [0, borderRadius, borderRadius, 0] },
     label: {
         position: 'right',
         offset: 8,
-        style: { fill: '#5B8FF9', fontSize: 11 },
+        style: { fill: '#5B8FF9', fontSize: labelFontSize },
         formatter: (datum) => datum.sales.toLocaleString(),
     },
     xAxis: {
-        label: { formatter: (v) => (v / 1000).toFixed(0) + 'k' },
+        label: { formatter: (v) => (v / 1000).toFixed(0) + 'k', style: { fontSize: fontSize } },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
     },
     yAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         line: null,
         tickLine: null,
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

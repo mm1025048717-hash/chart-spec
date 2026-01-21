@@ -3,1454 +3,441 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AntV 可视化设计语言 | Chart Spec</title>
-    <link rel="stylesheet" href="../common.css">
+    <title>设计系统 - Chart Spec</title>
     <style>
-        :root {
-            --blue-primary: #007AFF;
-            --blue-light: #5AC8FA;
-            --blue-dark: #0051D5;
-            --white: #FFFFFF;
-            --gray-50: #FAFAFA;
-            --gray-100: #F5F5F7;
-            --gray-200: #E5E5EA;
-            --gray-300: #D1D1D6;
-            --gray-400: #AEAEB2;
-            --gray-500: #8E8E93;
-            --gray-600: #636366;
-            --gray-700: #48484A;
-            --gray-800: #1C1C1E;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", 
-                         "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
-            background: var(--white);
-            color: var(--gray-800);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .ds-container {
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 120px 32px 80px;
-        }
-
-        /* Hero Section - 极简设计 */
-        .ds-hero {
-            text-align: center;
-            margin-bottom: 120px;
-            padding: 0;
-        }
-
-        .ds-hero h1 {
-            font-size: 56px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-            color: var(--gray-800);
-            line-height: 1.1;
-        }
-
-        .ds-hero p {
-            font-size: 21px;
-            color: var(--gray-500);
-            max-width: 580px;
-            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
+            background: #fff;
+            color: #1d1d1f;
             line-height: 1.5;
-            font-weight: 400;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Section */
-        .ds-section {
-            margin-bottom: 100px;
-        }
-
-        .ds-section:last-child {
-            margin-bottom: 0;
-        }
-
-        .ds-section-header {
-            margin-bottom: 48px;
-        }
-
-        .ds-section-number {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--blue-primary);
-            margin-bottom: 12px;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .ds-section-title {
-            font-size: 40px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 16px;
-            color: var(--gray-800);
-            line-height: 1.2;
-        }
-
-        .ds-section-desc {
-            font-size: 19px;
-            color: var(--gray-500);
-            line-height: 1.6;
-            max-width: 680px;
-            font-weight: 400;
-        }
-
-        /* Principle Cards - 苹果风格卡片 */
-        .principle-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .principle-grid { 
-                grid-template-columns: 1fr; 
-            }
-        }
-
-        .principle-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 40px;
-            border: 0.5px solid var(--gray-200);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .principle-card::before {
-            content: '';
-            position: absolute;
+        /* 导航 */
+        nav {
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 3px;
-            background: var(--blue-primary);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .principle-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-            border-color: var(--gray-300);
-        }
-
-        .principle-card:hover::before {
-            opacity: 1;
-        }
-
-        .principle-icon {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
+            height: 48px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            z-index: 100;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
-            margin-bottom: 24px;
-            background: var(--gray-100);
         }
 
-        .principle-card:nth-child(1) .principle-icon { 
-            background: rgba(0, 122, 255, 0.1);
-        }
-        .principle-card:nth-child(2) .principle-icon { 
-            background: rgba(0, 122, 255, 0.08);
-        }
-        .principle-card:nth-child(3) .principle-icon { 
-            background: rgba(0, 122, 255, 0.06);
-        }
-        .principle-card:nth-child(4) .principle-icon { 
-            background: rgba(0, 122, 255, 0.04);
-        }
-
-        .principle-title {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--gray-800);
-            letter-spacing: -0.01em;
-        }
-
-        .principle-desc {
-            font-size: 17px;
-            color: var(--gray-500);
-            line-height: 1.6;
-            font-weight: 400;
-        }
-
-        /* Color System - 简约设计 */
-        .color-section {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 48px;
-            border: 0.5px solid var(--gray-200);
-        }
-
-        .color-category {
-            margin-bottom: 56px;
-        }
-
-        .color-category:last-child {
-            margin-bottom: 0;
-        }
-
-        .color-category-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--gray-800);
-            letter-spacing: -0.01em;
-        }
-
-        .color-category-badge {
-            font-size: 11px;
-            padding: 4px 10px;
-            background: rgba(0, 122, 255, 0.1);
-            color: var(--blue-primary);
-            border-radius: 6px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            margin-left: 12px;
-        }
-
-        .color-palette {
-            display: flex;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .color-chip {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .color-swatch {
-            width: 72px;
-            height: 72px;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s ease;
-        }
-
-        .color-swatch:hover {
-            transform: scale(1.08);
-        }
-
-        .color-label {
-            font-size: 13px;
-            color: var(--gray-600);
-            font-family: "SF Mono", "Monaco", monospace;
+        nav a {
+            font-size: 14px;
             font-weight: 500;
+            color: #1d1d1f;
+            text-decoration: none;
         }
 
-        .color-name {
-            font-size: 12px;
-            color: var(--gray-400);
-            font-weight: 400;
+        /* 主容器 */
+        main {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 88px 24px 80px;
         }
 
-        /* Sequential Colors */
-        .sequential-palette {
-            display: flex;
-            border-radius: 16px;
-            overflow: hidden;
-            height: 64px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 60px 0 80px;
         }
 
-        .sequential-swatch {
-            flex: 1;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: 10px;
-            font-size: 11px;
-            color: #fff;
+        .hero-eyebrow {
+            font-size: 17px;
             font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            color: #0071e3;
+            margin-bottom: 8px;
         }
 
-        .color-category-desc {
-            font-size: 15px;
-            color: var(--gray-500);
-            margin-bottom: 20px;
-            line-height: 1.6;
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.003em;
+            line-height: 1.1;
+            color: #1d1d1f;
         }
 
-        /* Component Specs - 简洁表格 */
-        .spec-grid {
+        .hero p {
+            font-size: 21px;
+            font-weight: 400;
+            color: #86868b;
+            margin-top: 12px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 17px; }
+        }
+
+        /* 区块 */
+        section {
+            margin-bottom: 80px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 32px;
+        }
+
+        @media (max-width: 768px) {
+            .section-title { font-size: 24px; margin-bottom: 24px; }
+        }
+
+        /* 原则网格 */
+        .principles {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 20px;
         }
 
-        @media (max-width: 768px) {
-            .spec-grid { 
-                grid-template-columns: 1fr; 
-            }
+        @media (max-width: 734px) {
+            .principles { grid-template-columns: 1fr; }
         }
 
-        .spec-card {
-            background: var(--white);
-            border-radius: 20px;
+        .principle {
+            background: #f5f5f7;
+            border-radius: 18px;
             padding: 32px;
-            border: 0.5px solid var(--gray-200);
         }
 
-        .spec-card-title {
-            font-size: 20px;
+        .principle-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(180deg, #0071e3 0%, #0077ed 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .principle-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: #fff;
+        }
+
+        .principle h3 {
+            font-size: 19px;
             font-weight: 600;
-            margin-bottom: 24px;
-            color: var(--gray-800);
-            letter-spacing: -0.01em;
+            color: #1d1d1f;
+            margin-bottom: 8px;
         }
 
-        .spec-table {
-            width: 100%;
-            border-collapse: collapse;
+        .principle p {
+            font-size: 14px;
+            color: #86868b;
+            line-height: 1.5;
         }
 
-        .spec-table tr {
-            border-bottom: 0.5px solid var(--gray-200);
+        /* 设计哲学 */
+        .philosophy-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .spec-table tr:last-child {
-            border-bottom: none;
+        .philosophy-item {
+            background: #f5f5f7;
+            border-radius: 14px;
+            padding: 24px 28px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
         }
 
-        .spec-table td {
-            padding: 16px 0;
-            font-size: 15px;
+        .philosophy-num {
+            font-size: 17px;
+            font-weight: 600;
+            color: #0071e3;
+            min-width: 28px;
         }
 
-        .spec-table td:first-child {
-            color: var(--gray-600);
-            font-weight: 400;
+        .philosophy-content h4 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 4px;
         }
 
-        .spec-table td:last-child {
-            text-align: right;
+        .philosophy-content p {
+            font-size: 14px;
+            color: #86868b;
+            line-height: 1.55;
         }
 
-        .spec-value {
-            background: rgba(0, 122, 255, 0.08);
-            color: var(--blue-primary);
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-family: "SF Mono", monospace;
-            font-size: 13px;
-            font-weight: 500;
+        /* 色彩 */
+        .colors {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        /* Interaction Section */
-        .interaction-grid {
+        .color {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+        }
+
+        .color-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .color-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f5f5f7;
+            padding: 10px 16px;
+            border-radius: 980px;
+            font-size: 14px;
+            color: #1d1d1f;
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* 参数 */
+        .params {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px;
         }
 
-        @media (max-width: 900px) {
-            .interaction-grid { 
-                grid-template-columns: 1fr; 
-            }
+        @media (max-width: 734px) {
+            .params { grid-template-columns: 1fr; }
         }
 
-        .interaction-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 32px;
-            border: 0.5px solid var(--gray-200);
-            text-align: center;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .param-card {
+            background: #f5f5f7;
+            border-radius: 18px;
+            padding: 28px;
         }
 
-        .interaction-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-        }
-
-        .interaction-level {
-            font-size: 11px;
-            color: var(--blue-primary);
+        .param-card h4 {
+            font-size: 17px;
             font-weight: 600;
-            margin-bottom: 12px;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-
-        .interaction-title {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--gray-800);
-            letter-spacing: -0.01em;
-        }
-
-        .interaction-desc {
-            font-size: 15px;
-            color: var(--gray-500);
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-
-        .interaction-actions {
+            color: #1d1d1f;
+            margin-bottom: 16px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .action-tag {
-            background: var(--gray-100);
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: var(--gray-600);
-            font-weight: 400;
-        }
-
-        /* Code Example - 深色代码块 */
-        .code-example {
-            background: var(--gray-800);
-            border-radius: 16px;
-            padding: 32px;
-            margin-top: 32px;
-            overflow-x: auto;
-        }
-
-        .code-example pre {
-            margin: 0;
-            color: #E5E5EA;
-            font-family: "SF Mono", "Monaco", monospace;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-
-        .code-example .keyword { color: #FF9F0A; }
-        .code-example .string { color: #30D158; }
-        .code-example .number { color: #FF9F0A; }
-        .code-example .comment { color: var(--gray-400); }
-
-        /* Layout Section */
-        .layout-demo {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 40px;
-            border: 0.5px solid var(--gray-200);
-        }
-
-        .spacing-demo {
-            display: flex;
-            align-items: flex-end;
-            gap: 24px;
-            padding: 40px;
-            background: var(--gray-50);
-            border-radius: 16px;
-        }
-
-        .spacing-item {
-            display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
-        .spacing-box {
-            background: var(--blue-primary);
-            opacity: 0.15;
-            border-radius: 8px;
+        .param-list {
+            list-style: none;
         }
 
-        .spacing-label {
-            font-size: 13px;
-            color: var(--gray-600);
-            font-weight: 500;
-        }
-
-        /* Typography Section */
-        .typography-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .typography-grid { 
-                grid-template-columns: 1fr; 
-            }
-        }
-
-        .typography-card {
-            background: var(--white);
-            border-radius: 20px;
-            padding: 32px;
-            border: 0.5px solid var(--gray-200);
-        }
-
-        .typography-sample {
-            margin-bottom: 24px;
-        }
-
-        .typography-sample h1 { 
-            font-size: 40px; 
-            font-weight: 700; 
-            margin-bottom: 12px; 
-            color: var(--gray-800);
-            letter-spacing: -0.02em;
-        }
-        .typography-sample h2 { 
-            font-size: 28px; 
-            font-weight: 600; 
-            margin-bottom: 12px; 
-            color: var(--gray-800);
-            letter-spacing: -0.01em;
-        }
-        .typography-sample h3 { 
-            font-size: 20px; 
-            font-weight: 600; 
-            margin-bottom: 12px; 
-            color: var(--gray-800);
-        }
-        .typography-sample p { 
-            font-size: 15px; 
-            color: var(--gray-500); 
-            line-height: 1.6; 
-        }
-
-        /* Footer */
-        .ds-footer {
-            text-align: center;
-            padding: 80px 0 40px;
-            border-top: 0.5px solid var(--gray-200);
-            margin-top: 100px;
-        }
-
-        .ds-footer p {
-            color: var(--gray-400);
+        .param-list li {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
             font-size: 14px;
-            font-weight: 400;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
         }
 
-        .ds-footer a {
-            color: var(--blue-primary);
+        .param-list li:last-child {
+            border-bottom: none;
+        }
+
+        .param-key {
+            color: #86868b;
+        }
+
+        .param-value {
+            font-family: "SF Mono", Monaco, monospace;
+            font-size: 13px;
+            color: #0071e3;
+        }
+
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 12px;
+            color: #86868b;
+            border-top: 1px solid rgba(0,0,0,0.04);
+        }
+
+        footer a {
+            color: #0071e3;
             text-decoration: none;
-            transition: opacity 0.2s ease;
-        }
-
-        .ds-footer a:hover {
-            opacity: 0.7;
         }
     </style>
 </head>
 <body>
 
-<div class="ds-container">
-    <!-- Hero -->
-    <header class="ds-hero">
-        <h1>AntV 可视化设计语言</h1>
-        <p>让数据栩栩如生。基于 AntV 设计体系，从微观像素到宏观布局，重新定义企业级数据可视化的每一个细节。</p>
-    </header>
+<nav>
+    <a href="../index.html">Chart Spec</a>
+</nav>
 
-    <!-- 01 设计原则 -->
-    <section class="ds-section">
-        <div class="ds-section-header">
-            <div class="ds-section-number">01</div>
-            <h2 class="ds-section-title">设计原则</h2>
-            <p class="ds-section-desc">可视化设计的四大核心原则，确保数据传达的准确性、有效性、清晰度和美观度。这些原则按优先级呈递进关系，是 AntV 设计体系的基石。</p>
-        </div>
-        <div class="principle-grid">
-            <div class="principle-card">
-                <div class="principle-icon">🎯</div>
-                <h3 class="principle-title">准确</h3>
-                <p class="principle-desc">从数据转化到可视表达时不歪曲、不误导、不遗漏，忠实反映数据里包含的信息。这是可视化设计的首要目标，确保用户能够信任图表所传达的数据。</p>
+<main>
+    <div class="hero">
+        <p class="hero-eyebrow">设计系统</p>
+        <h1>专业的数据可视化规范</h1>
+        <p>基于 AntV 体系，为 26 种图表建立统一、精确、可扩展的设计语言。</p>
+    </div>
+
+    <section>
+        <h2 class="section-title">设计原则</h2>
+        <div class="principles">
+            <div class="principle">
+                <div class="principle-icon">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#fff" stroke-width="2"/><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <h3>准确</h3>
+                <p>忠实反映数据，不歪曲、不误导。用户对数据的信任是可视化的基石。</p>
             </div>
-            <div class="principle-card">
-                <div class="principle-icon">⚡</div>
-                <h3 class="principle-title">有效</h3>
-                <p class="principle-desc">信息传达有重点，克制而不冗余，避免信息过载，用最适量的数据-油墨比表达最有用的信息。遵循 Data-ink Ratio 原则，去除不必要的视觉元素。</p>
+            <div class="principle">
+                <div class="principle-icon">
+                    <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+                </div>
+                <h3>有效</h3>
+                <p>克制而精准，遵循 Data-ink Ratio。去除冗余装饰，让数据成为主角。</p>
             </div>
-            <div class="principle-card">
-                <div class="principle-icon">💎</div>
-                <h3 class="principle-title">清晰</h3>
-                <p class="principle-desc">表现方式清楚易读，具条理性，帮助用户快速达成目标，在最少时间内获取更多信息。包括排版布局有序、图例、轴、标签、标题等组件的使用要规范。</p>
+            <div class="principle">
+                <div class="principle-icon">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="#fff" stroke-width="2"/><path d="M3 9h18M9 21V9" fill="none" stroke="#fff" stroke-width="2"/></svg>
+                </div>
+                <h3>清晰</h3>
+                <p>表现方式条理分明，通过合理的视觉层级引导用户快速获取关键见解。</p>
             </div>
-            <div class="principle-card">
-                <div class="principle-icon">✨</div>
-                <h3 class="principle-title">美</h3>
-                <p class="principle-desc">对数据的完美表达，合理利用视觉元素进行艺术创作，不过度修饰，给用户优雅的体验。在忠实反映数据的基础上，追求优雅与审美的统一。</p>
+            <div class="principle">
+                <div class="principle-icon">
+                    <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/></svg>
+                </div>
+                <h3>美观</h3>
+                <p>在功能性的基础上追求视觉美感。好的图表是数据与审美的平衡。</p>
             </div>
         </div>
     </section>
 
-    <!-- 02 色彩体系 -->
-    <section class="ds-section">
-        <div class="ds-section-header">
-            <div class="ds-section-number">02</div>
-            <h2 class="ds-section-title">色彩体系</h2>
-            <p class="ds-section-desc">AntV 官方色板体系，包含分类色板、顺序色板、发散色板，满足不同数据可视化场景需求。色彩映射遵循视觉通道原则：类别型数据使用色相映射，有序型数据使用明度或饱和度编码。</p>
-        </div>
-        <div class="color-section">
-            <!-- 分类色板 -->
-            <div class="color-category">
-                <div class="color-category-title">
-                    分类色板
-                    <span class="color-category-badge">Categorical</span>
-                </div>
-                <p class="color-category-desc">适用于类别型（无序）数据，使用不同色相区分不同类别。推荐用于柱状图、饼图、散点图等多分类场景。</p>
-                <div class="color-palette">
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #5B8FF9;"></div>
-                        <div class="color-label">#5B8FF9</div>
-                        <div class="color-name">蓝色</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #5AD8A6;"></div>
-                        <div class="color-label">#5AD8A6</div>
-                        <div class="color-name">绿色</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #5D7092;"></div>
-                        <div class="color-label">#5D7092</div>
-                        <div class="color-name">灰蓝</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #F6BD16;"></div>
-                        <div class="color-label">#F6BD16</div>
-                        <div class="color-name">黄色</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #E86452;"></div>
-                        <div class="color-label">#E86452</div>
-                        <div class="color-name">红色</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #6DC8EC;"></div>
-                        <div class="color-label">#6DC8EC</div>
-                        <div class="color-name">青色</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #945FB9;"></div>
-                        <div class="color-label">#945FB9</div>
-                        <div class="color-name">紫色</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #FF9845;"></div>
-                        <div class="color-label">#FF9845</div>
-                        <div class="color-name">橙色</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #1E9493;"></div>
-                        <div class="color-label">#1E9493</div>
-                        <div class="color-name">青绿</div>
-                    </div>
-                    <div class="color-chip">
-                        <div class="color-swatch" style="background: #FF99C3;"></div>
-                        <div class="color-label">#FF99C3</div>
-                        <div class="color-name">粉色</div>
-                    </div>
+    <section>
+        <h2 class="section-title">设计哲学</h2>
+        <div class="philosophy-list">
+            <div class="philosophy-item">
+                <span class="philosophy-num">01</span>
+                <div class="philosophy-content">
+                    <h4>响应式分离设计</h4>
+                    <p>移动端和 PC 端是两套独立方案。移动端需要更大的触控区域、更精简的信息层级、更紧凑的内边距。</p>
                 </div>
             </div>
-
-            <!-- 顺序色板 -->
-            <div class="color-category">
-                <div class="color-category-title">
-                    顺序色板
-                    <span class="color-category-badge">Sequential</span>
-                </div>
-                <p class="color-category-desc">适用于连续型或有序型数据，使用明度或饱和度编码数值大小。推荐用于热力图、等值线图、面积图等场景。</p>
-                <div class="sequential-palette">
-                    <div class="sequential-swatch" style="background: #B8E1FF;">10%</div>
-                    <div class="sequential-swatch" style="background: #9AC5FF;">20%</div>
-                    <div class="sequential-swatch" style="background: #7DAAFF;">30%</div>
-                    <div class="sequential-swatch" style="background: #5B8FF9;">40%</div>
-                    <div class="sequential-swatch" style="background: #3D76DD;">50%</div>
-                    <div class="sequential-swatch" style="background: #085EC0;">60%</div>
-                    <div class="sequential-swatch" style="background: #0047A5;">70%</div>
-                    <div class="sequential-swatch" style="background: #00318A;">80%</div>
+            <div class="philosophy-item">
+                <span class="philosophy-num">02</span>
+                <div class="philosophy-content">
+                    <h4>边界完整性</h4>
+                    <p>图表的每一个元素都应完整显示在视口内。坐标轴标签不截断、数据点不溢出、图例不换行。</p>
                 </div>
             </div>
-
-            <!-- 发散色板 -->
-            <div class="color-category">
-                <div class="color-category-title">
-                    发散色板
-                    <span class="color-category-badge">Diverging</span>
+            <div class="philosophy-item">
+                <span class="philosophy-num">03</span>
+                <div class="philosophy-content">
+                    <h4>场景化适配</h4>
+                    <p>同一图表在不同场景下需要不同呈现。数据报告中配合洞察结论，仪表盘中注重信息密度。</p>
                 </div>
-                <p class="color-category-desc">适用于有中心基准值的数据，使用两种色相从中心向两端渐变。推荐用于同比增减、偏差分析、温度分布等场景。</p>
-                <div class="sequential-palette">
-                    <div class="sequential-swatch" style="background: #E86452;">-4</div>
-                    <div class="sequential-swatch" style="background: #F08E7F;">-3</div>
-                    <div class="sequential-swatch" style="background: #F8B8AC;">-2</div>
-                    <div class="sequential-swatch" style="background: #FFE2D9;">-1</div>
-                    <div class="sequential-swatch" style="background: #F0F0F0; color: #666;">0</div>
-                    <div class="sequential-swatch" style="background: #D3F0E0;">+1</div>
-                    <div class="sequential-swatch" style="background: #A7E1C3;">+2</div>
-                    <div class="sequential-swatch" style="background: #7BD2A6;">+3</div>
-                    <div class="sequential-swatch" style="background: #5AD8A6;">+4</div>
+            </div>
+            <div class="philosophy-item">
+                <span class="philosophy-num">04</span>
+                <div class="philosophy-content">
+                    <h4>可读性优先</h4>
+                    <p>移动端 10-11px 是标签安全下限，坐标轴标签宁可省略也不要重叠。数值格式化符合业务语境。</p>
+                </div>
+            </div>
+            <div class="philosophy-item">
+                <span class="philosophy-num">05</span>
+                <div class="philosophy-content">
+                    <h4>色彩语义化</h4>
+                    <p>绿色代表增长，红色代表下降，蓝色是中性信息色。保持语义一致，用户无需学习即可理解。</p>
+                </div>
+            </div>
+            <div class="philosophy-item">
+                <span class="philosophy-num">06</span>
+                <div class="philosophy-content">
+                    <h4>系统性一致</h4>
+                    <p>26 种图表使用统一的色板、字号层级、间距规范和交互模式。用户在任何页面都感受到熟悉。</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 03 图表组件规范 -->
-    <section class="ds-section">
-        <div class="ds-section-header">
-            <div class="ds-section-number">03</div>
-            <h2 class="ds-section-title">图表组件规范</h2>
-            <p class="ds-section-desc">图表的核心组成元素：标题、坐标轴、图例、标签、提示信息、图形，每个组件都有明确的设计规范，确保信息传达的准确性和一致性。</p>
+    <section>
+        <h2 class="section-title">色彩体系</h2>
+        <div class="colors">
+            <div class="color" style="background: #5B8FF9;"></div>
+            <div class="color" style="background: #5AD8A6;"></div>
+            <div class="color" style="background: #5D7092;"></div>
+            <div class="color" style="background: #F6BD16;"></div>
+            <div class="color" style="background: #E86452;"></div>
+            <div class="color" style="background: #6DC8EC;"></div>
+            <div class="color" style="background: #945FB9;"></div>
+            <div class="color" style="background: #FF9845;"></div>
         </div>
-        <div class="spec-grid">
-            <div class="spec-card">
-                <h3 class="spec-card-title">X轴配置</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>标签字号</td>
-                        <td><span class="spec-value">11px</span></td>
-                    </tr>
-                    <tr>
-                        <td>标签颜色</td>
-                        <td><span class="spec-value">#86868B</span></td>
-                    </tr>
-                    <tr>
-                        <td>轴线颜色</td>
-                        <td><span class="spec-value">#E8E8ED</span></td>
-                    </tr>
-                    <tr>
-                        <td>textAlign</td>
-                        <td><span class="spec-value">center / end</span></td>
-                    </tr>
-                    <tr>
-                        <td>autoRotate</td>
-                        <td><span class="spec-value">false</span></td>
-                    </tr>
-                    <tr>
-                        <td>刻度线</td>
-                        <td><span class="spec-value">隐藏</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">Y轴配置</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>标签字号</td>
-                        <td><span class="spec-value">11px</span></td>
-                    </tr>
-                    <tr>
-                        <td>标签颜色</td>
-                        <td><span class="spec-value">#86868B</span></td>
-                    </tr>
-                    <tr>
-                        <td>网格线颜色</td>
-                        <td><span class="spec-value">#E8E8ED</span></td>
-                    </tr>
-                    <tr>
-                        <td>网格线样式</td>
-                        <td><span class="spec-value">虚线 [4,4]</span></td>
-                    </tr>
-                    <tr>
-                        <td>Y轴线</td>
-                        <td><span class="spec-value">隐藏</span></td>
-                    </tr>
-                    <tr>
-                        <td>刻度线</td>
-                        <td><span class="spec-value">隐藏</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">图例 Legend</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>图例位置</td>
-                        <td><span class="spec-value">top-right</span></td>
-                    </tr>
-                    <tr>
-                        <td>图例字号</td>
-                        <td><span class="spec-value">12px</span></td>
-                    </tr>
-                    <tr>
-                        <td>图例字色</td>
-                        <td><span class="spec-value">#1D1D1F</span></td>
-                    </tr>
-                    <tr>
-                        <td>项间距</td>
-                        <td><span class="spec-value">20px</span></td>
-                    </tr>
-                    <tr>
-                        <td>图标与文字间距</td>
-                        <td><span class="spec-value">6px</span></td>
-                    </tr>
-                    <tr>
-                        <td>图标大小</td>
-                        <td><span class="spec-value">10×10px</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">柱状图 Column</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>主色</td>
-                        <td><span class="spec-value">#5B8FF9</span></td>
-                    </tr>
-                    <tr>
-                        <td>柱体宽度占比</td>
-                        <td><span class="spec-value">0.5</span></td>
-                    </tr>
-                    <tr>
-                        <td>柱体圆角</td>
-                        <td><span class="spec-value">[4,4,0,0]</span></td>
-                    </tr>
-                    <tr>
-                        <td>分组间距</td>
-                        <td><span class="spec-value">0.25</span></td>
-                    </tr>
-                    <tr>
-                        <td>最小宽度</td>
-                        <td><span class="spec-value">8px</span></td>
-                    </tr>
-                    <tr>
-                        <td>最大宽度</td>
-                        <td><span class="spec-value">48px</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">折线图 Line</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>线条粗细</td>
-                        <td><span class="spec-value">2px</span></td>
-                    </tr>
-                    <tr>
-                        <td>数据点大小</td>
-                        <td><span class="spec-value">4px</span></td>
-                    </tr>
-                    <tr>
-                        <td>数据点形状</td>
-                        <td><span class="spec-value">circle</span></td>
-                    </tr>
-                    <tr>
-                        <td>平滑曲线</td>
-                        <td><span class="spec-value">false</span></td>
-                    </tr>
-                    <tr>
-                        <td>面积填充透明度</td>
-                        <td><span class="spec-value">0.3</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">条形图 Bar</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>主色</td>
-                        <td><span class="spec-value">#5B8FF9</span></td>
-                    </tr>
-                    <tr>
-                        <td>高度比例</td>
-                        <td><span class="spec-value">0.5</span></td>
-                    </tr>
-                    <tr>
-                        <td>圆角</td>
-                        <td><span class="spec-value">[0,4,4,0]</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">饼图 Pie</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>外半径</td>
-                        <td><span class="spec-value">0.8</span></td>
-                    </tr>
-                    <tr>
-                        <td>内半径（环形）</td>
-                        <td><span class="spec-value">0.6</span></td>
-                    </tr>
-                    <tr>
-                        <td>标签类型</td>
-                        <td><span class="spec-value">outer</span></td>
-                    </tr>
-                    <tr>
-                        <td>标签格式</td>
-                        <td><span class="spec-value">{name} {percentage}</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">标签 Labels</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>标签字号</td>
-                        <td><span class="spec-value">11px</span></td>
-                    </tr>
-                    <tr>
-                        <td>标签颜色</td>
-                        <td><span class="spec-value">与图形同色</span></td>
-                    </tr>
-                    <tr>
-                        <td>标签位置</td>
-                        <td><span class="spec-value">top / inside</span></td>
-                    </tr>
-                    <tr>
-                        <td>标签偏移</td>
-                        <td><span class="spec-value">8px</span></td>
-                    </tr>
-                    <tr>
-                        <td>位置（柱状图）</td>
-                        <td><span class="spec-value">top</span></td>
-                    </tr>
-                    <tr>
-                        <td>位置（条形图）</td>
-                        <td><span class="spec-value">right</span></td>
-                    </tr>
-                    <tr>
-                        <td>位置（折线图）</td>
-                        <td><span class="spec-value">top</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">提示信息 Tooltip</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>背景色</td>
-                        <td><span class="spec-value">rgba(255,255,255,0.96)</span></td>
-                    </tr>
-                    <tr>
-                        <td>背景模糊</td>
-                        <td><span class="spec-value">blur(12px)</span></td>
-                    </tr>
-                    <tr>
-                        <td>圆角</td>
-                        <td><span class="spec-value">8px</span></td>
-                    </tr>
-                    <tr>
-                        <td>内边距</td>
-                        <td><span class="spec-value">12px 16px</span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- Tooltip Code Example -->
-        <div class="code-example" style="margin-top: 32px;">
-            <pre><span class="keyword">tooltip</span>: {
-  <span class="keyword">showTitle</span>: <span class="keyword">true</span>,
-  <span class="keyword">formatter</span>: <span class="keyword">(datum)</span> => ({
-    <span class="keyword">name</span>: datum.seriesField || datum.xField,
-    <span class="keyword">value</span>: datum.yField.toLocaleString() + <span class="string">' 万元'</span>,
-  }),
-  <span class="keyword">domStyles</span>: {
-    <span class="string">'g2-tooltip'</span>: {
-      <span class="keyword">padding</span>: <span class="string">'12px 16px'</span>,
-      <span class="keyword">borderRadius</span>: <span class="string">'6px'</span>,
-      <span class="keyword">boxShadow</span>: <span class="string">'0 4px 12px rgba(0,0,0,0.15)'</span>,
-    },
-    <span class="string">'g2-tooltip-title'</span>: {
-      <span class="keyword">fontSize</span>: <span class="string">'13px'</span>,
-      <span class="keyword">fontWeight</span>: <span class="string">'600'</span>,
-      <span class="keyword">marginBottom</span>: <span class="string">'8px'</span>,
-    },
-  }
-}</pre>
-        </div>
-        
-        <!-- X轴旋转策略 -->
-        <div class="spec-grid" style="margin-top: 32px;">
-            <div class="spec-card">
-                <h3 class="spec-card-title">X轴旋转策略</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>短文本 (≤4字符)</td>
-                        <td><span class="spec-value">0° / center</span></td>
-                    </tr>
-                    <tr>
-                        <td>中等文本 (5-8字符)</td>
-                        <td><span class="spec-value">-45° / end</span></td>
-                    </tr>
-                    <tr>
-                        <td>长文本 (>8字符)</td>
-                        <td><span class="spec-value">-45° / end + 截断</span></td>
-                    </tr>
-                    <tr>
-                        <td>超长文本或项数≥15</td>
-                        <td><span class="spec-value">-90° / end + 截断</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">轴标签与单位</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>Y轴单位标签（左上）</td>
-                        <td><span class="spec-value">#F5F5F7 / 12px</span></td>
-                    </tr>
-                    <tr>
-                        <td>X轴字段标签（右下）</td>
-                        <td><span class="spec-value">#F5F5F7 / 12px</span></td>
-                    </tr>
-                    <tr>
-                        <td>单位标签内边距</td>
-                        <td><span class="spec-value">2px 8px</span></td>
-                    </tr>
-                    <tr>
-                        <td>字段标签内边距</td>
-                        <td><span class="spec-value">4px 10px</span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <!-- 系列颜色 -->
-        <div class="spec-grid" style="margin-top: 32px;">
-            <div class="spec-card">
-                <h3 class="spec-card-title">系列颜色顺序</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>1. 主要指标</td>
-                        <td><span class="spec-value">#5B8FF9</span></td>
-                    </tr>
-                    <tr>
-                        <td>2. 次要指标</td>
-                        <td><span class="spec-value">#5AD8A6</span></td>
-                    </tr>
-                    <tr>
-                        <td>3. 第三系列</td>
-                        <td><span class="spec-value">#F6BD16</span></td>
-                    </tr>
-                    <tr>
-                        <td>4. 第四系列</td>
-                        <td><span class="spec-value">#E86452</span></td>
-                    </tr>
-                    <tr>
-                        <td>5. 第五系列</td>
-                        <td><span class="spec-value">#945FB9</span></td>
-                    </tr>
-                    <tr>
-                        <td>6. 第六系列</td>
-                        <td><span class="spec-value">#6DC8EC</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">动画配置</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>出现动画</td>
-                        <td><span class="spec-value">scale-in-y</span></td>
-                    </tr>
-                    <tr>
-                        <td>出现时长</td>
-                        <td><span class="spec-value">400ms</span></td>
-                    </tr>
-                    <tr>
-                        <td>更新动画</td>
-                        <td><span class="spec-value">fade-in</span></td>
-                    </tr>
-                    <tr>
-                        <td>更新时长</td>
-                        <td><span class="spec-value">300ms</span></td>
-                    </tr>
-                </table>
-            </div>
+        <div class="color-info">
+            <span class="color-tag"><span class="color-dot" style="background: #5AD8A6;"></span>成功/增长</span>
+            <span class="color-tag"><span class="color-dot" style="background: #F6BD16;"></span>警告/注意</span>
+            <span class="color-tag"><span class="color-dot" style="background: #E86452;"></span>危险/下降</span>
+            <span class="color-tag"><span class="color-dot" style="background: #5B8FF9;"></span>信息/中性</span>
         </div>
     </section>
 
-    <!-- 04 交互设计 -->
-    <section class="ds-section">
-        <div class="ds-section-header">
-            <div class="ds-section-number">04</div>
-            <h2 class="ds-section-title">交互设计</h2>
-            <p class="ds-section-desc">遵循「概览第一，聚焦过滤，再按需查看详情」的可视化信息检索箴言，将交互分为三个层次，帮助用户从数据获取到知识流转的完整流程。</p>
-        </div>
-        <div class="interaction-grid">
-            <div class="interaction-card">
-                <div class="interaction-level">LEVEL 1</div>
-                <h3 class="interaction-title">数据获取</h3>
-                <p class="interaction-desc">用户与数据的初次接触，提供全局视图和关键指标，帮助用户快速了解数据概况。这是交互的基础层，确保信息传达的即时性。</p>
-                <div class="interaction-actions">
-                    <span class="action-tag">概览</span>
-                    <span class="action-tag">浏览</span>
-                    <span class="action-tag">定位</span>
-                </div>
+    <section>
+        <h2 class="section-title">参数规范</h2>
+        <div class="params">
+            <div class="param-card">
+                <h4>📱 移动端</h4>
+                <ul class="param-list">
+                    <li><span class="param-key">fontSize</span><span class="param-value">10-11px</span></li>
+                    <li><span class="param-key">pointSize</span><span class="param-value">3-4px</span></li>
+                    <li><span class="param-key">lineWidth</span><span class="param-value">2px</span></li>
+                    <li><span class="param-key">padding</span><span class="param-value">[25,10,35,35]</span></li>
+                </ul>
             </div>
-            <div class="interaction-card">
-                <div class="interaction-level">LEVEL 2</div>
-                <h3 class="interaction-title">信息加工</h3>
-                <p class="interaction-desc">用户对感兴趣的数据进行深入探索，通过筛选、对比、排序等操作获取洞察。支持多维度数据分析和交互式探索。</p>
-                <div class="interaction-actions">
-                    <span class="action-tag">筛选</span>
-                    <span class="action-tag">对比</span>
-                    <span class="action-tag">排序</span>
-                    <span class="action-tag">联动</span>
-                </div>
+            <div class="param-card">
+                <h4>🖥 PC 端</h4>
+                <ul class="param-list">
+                    <li><span class="param-key">fontSize</span><span class="param-value">11-12px</span></li>
+                    <li><span class="param-key">pointSize</span><span class="param-value">4-5px</span></li>
+                    <li><span class="param-key">lineWidth</span><span class="param-value">2px</span></li>
+                    <li><span class="param-key">padding</span><span class="param-value">[40,20,50,50]</span></li>
+                </ul>
             </div>
-            <div class="interaction-card">
-                <div class="interaction-level">LEVEL 3</div>
-                <h3 class="interaction-title">知识流转</h3>
-                <p class="interaction-desc">用户将分析结果进行保存、分享、导出，完成从数据到知识的转化。支持多种输出格式和协作方式。</p>
-                <div class="interaction-actions">
-                    <span class="action-tag">保存</span>
-                    <span class="action-tag">分享</span>
-                    <span class="action-tag">导出</span>
-                    <span class="action-tag">标注</span>
-                </div>
+            <div class="param-card">
+                <h4>📊 图表专项</h4>
+                <ul class="param-list">
+                    <li><span class="param-key">columnWidth</span><span class="param-value">0.5-0.6</span></li>
+                    <li><span class="param-key">pieRadius</span><span class="param-value">0.85-0.9</span></li>
+                    <li><span class="param-key">innerRadius</span><span class="param-value">0.55-0.6</span></li>
+                    <li><span class="param-key">fillOpacity</span><span class="param-value">0.25-0.3</span></li>
+                </ul>
             </div>
         </div>
     </section>
+</main>
 
-    <!-- 05 布局与间距 -->
-    <section class="ds-section">
-        <div class="ds-section-header">
-            <div class="ds-section-number">05</div>
-            <h2 class="ds-section-title">布局与间距</h2>
-            <p class="ds-section-desc">基于 8px 网格系统，确保所有元素的间距和尺寸具有一致的视觉节奏。图表内边距遵循标准规范，确保信息层次清晰。</p>
-        </div>
-        <div class="layout-demo">
-            <h4 style="margin-bottom: 24px; font-size: 18px; font-weight: 600; color: var(--gray-800);">8pt 网格系统</h4>
-            <div class="spacing-demo">
-                <div class="spacing-item">
-                    <div class="spacing-box" style="width: 8px; height: 8px;"></div>
-                    <span class="spacing-label">8px</span>
-                </div>
-                <div class="spacing-item">
-                    <div class="spacing-box" style="width: 16px; height: 16px;"></div>
-                    <span class="spacing-label">16px</span>
-                </div>
-                <div class="spacing-item">
-                    <div class="spacing-box" style="width: 24px; height: 24px;"></div>
-                    <span class="spacing-label">24px</span>
-                </div>
-                <div class="spacing-item">
-                    <div class="spacing-box" style="width: 32px; height: 32px;"></div>
-                    <span class="spacing-label">32px</span>
-                </div>
-                <div class="spacing-item">
-                    <div class="spacing-box" style="width: 40px; height: 40px;"></div>
-                    <span class="spacing-label">40px</span>
-                </div>
-                <div class="spacing-item">
-                    <div class="spacing-box" style="width: 48px; height: 48px;"></div>
-                    <span class="spacing-label">48px</span>
-                </div>
-                <div class="spacing-item">
-                    <div class="spacing-box" style="width: 56px; height: 56px;"></div>
-                    <span class="spacing-label">56px</span>
-                </div>
-                <div class="spacing-item">
-                    <div class="spacing-box" style="width: 64px; height: 64px;"></div>
-                    <span class="spacing-label">64px</span>
-                </div>
-            </div>
-            <div class="spec-grid" style="margin-top: 40px;">
-                <div class="spec-card">
-                    <h3 class="spec-card-title">图表内边距 Padding</h3>
-                    <table class="spec-table">
-                        <tr>
-                            <td>上边距 (Top)</td>
-                            <td><span class="spec-value">40px</span></td>
-                        </tr>
-                        <tr>
-                            <td>右边距 (Right)</td>
-                            <td><span class="spec-value">20px</span></td>
-                        </tr>
-                        <tr>
-                            <td>下边距 (Bottom)</td>
-                            <td><span class="spec-value">50px</span></td>
-                        </tr>
-                        <tr>
-                            <td>左边距 (Left)</td>
-                            <td><span class="spec-value">50px</span></td>
-                        </tr>
-                        <tr>
-                            <td>标准配置</td>
-                            <td><span class="spec-value">[40,20,50,50]</span></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="spec-card">
-                    <h3 class="spec-card-title">卡片规范</h3>
-                    <table class="spec-table">
-                        <tr>
-                            <td>卡片内边距</td>
-                            <td><span class="spec-value">24px</span></td>
-                        </tr>
-                        <tr>
-                            <td>卡片圆角</td>
-                            <td><span class="spec-value">12px</span></td>
-                        </tr>
-                        <tr>
-                            <td>卡片间距</td>
-                            <td><span class="spec-value">16px</span></td>
-                        </tr>
-                        <tr>
-                            <td>边框颜色</td>
-                            <td><span class="spec-value">#E8E8ED</span></td>
-                        </tr>
-                        <tr>
-                            <td>背景色</td>
-                            <td><span class="spec-value">#FFFFFF</span></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
+<footer>
+    <p>&copy; 2026 <a href="../index.html">Chart Spec</a></p>
+</footer>
 
-    <!-- 06 图表容器尺寸 -->
-    <section class="ds-section">
-        <div class="ds-section-header">
-            <div class="ds-section-number">06</div>
-            <h2 class="ds-section-title">图表容器尺寸</h2>
-            <p class="ds-section-desc">根据数据量和使用场景，提供标准图表高度。确保在不同场景下都能保持良好的视觉比例和信息密度。</p>
-        </div>
-        <div class="spec-grid">
-            <div class="spec-card">
-                <h3 class="spec-card-title">容器尺寸规范</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>全宽卡片（默认）</td>
-                        <td><span class="spec-value">400px</span></td>
-                    </tr>
-                    <tr>
-                        <td>半宽卡片</td>
-                        <td><span class="spec-value">320px</span></td>
-                    </tr>
-                    <tr>
-                        <td>小型图表</td>
-                        <td><span class="spec-value">240px</span></td>
-                    </tr>
-                    <tr>
-                        <td>大型图表</td>
-                        <td><span class="spec-value">500px</span></td>
-                    </tr>
-                    <tr>
-                        <td>容器内边距</td>
-                        <td><span class="spec-value">20px</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">使用场景</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>全宽卡片</td>
-                        <td><span class="spec-value">默认图表高度</span></td>
-                    </tr>
-                    <tr>
-                        <td>半宽卡片</td>
-                        <td><span class="spec-value">并排展示时</span></td>
-                    </tr>
-                    <tr>
-                        <td>小型图表</td>
-                        <td><span class="spec-value">指标卡内嵌图表</span></td>
-                    </tr>
-                    <tr>
-                        <td>大型图表</td>
-                        <td><span class="spec-value">详情页主图表</span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="spec-grid" style="margin-top: 20px;">
-            <div class="spec-card">
-                <h3 class="spec-card-title">G2Plot Padding 配置</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>标准配置</td>
-                        <td><span class="spec-value">[40, 20, 50, 50]</span></td>
-                    </tr>
-                    <tr>
-                        <td>双Y轴图表</td>
-                        <td><span class="spec-value">[40, 50, 50, 50]</span></td>
-                    </tr>
-                    <tr>
-                        <td>无图例图表</td>
-                        <td><span class="spec-value">[20, 20, 50, 50]</span></td>
-                    </tr>
-                    <tr>
-                        <td>紧凑模式</td>
-                        <td><span class="spec-value">[20, 16, 40, 40]</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">卡片容器规范</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>背景色</td>
-                        <td><span class="spec-value">#FFFFFF</span></td>
-                    </tr>
-                    <tr>
-                        <td>边框</td>
-                        <td><span class="spec-value">1px solid #E8E8ED</span></td>
-                    </tr>
-                    <tr>
-                        <td>圆角</td>
-                        <td><span class="spec-value">12px</span></td>
-                    </tr>
-                    <tr>
-                        <td>内边距</td>
-                        <td><span class="spec-value">16-20px</span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- 07 文字与排版 -->
-    <section class="ds-section">
-        <div class="ds-section-header">
-            <div class="ds-section-number">07</div>
-            <h2 class="ds-section-title">文字与排版</h2>
-            <p class="ds-section-desc">统一的字体系统确保信息层次清晰，可读性强。不同组件使用不同字号和字重，建立清晰的视觉层次。</p>
-        </div>
-        <div class="typography-grid">
-            <div class="typography-card">
-                <h3 class="spec-card-title">字号规范</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>图表标题</td>
-                        <td><span class="spec-value">15px / 600</span></td>
-                    </tr>
-                    <tr>
-                        <td>图例文字</td>
-                        <td><span class="spec-value">12px / 400</span></td>
-                    </tr>
-                    <tr>
-                        <td>坐标轴标签</td>
-                        <td><span class="spec-value">11px / 400</span></td>
-                    </tr>
-                    <tr>
-                        <td>数据标签</td>
-                        <td><span class="spec-value">11px / 400</span></td>
-                    </tr>
-                    <tr>
-                        <td>轴单位标签</td>
-                        <td><span class="spec-value">12px / 400</span></td>
-                    </tr>
-                    <tr>
-                        <td>Tooltip标题</td>
-                        <td><span class="spec-value">13px / 600</span></td>
-                    </tr>
-                    <tr>
-                        <td>Tooltip内容</td>
-                        <td><span class="spec-value">12px / 400</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="typography-card">
-                <h3 class="spec-card-title">颜色规范</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>主文字</td>
-                        <td><span class="spec-value">#1D1D1F</span></td>
-                    </tr>
-                    <tr>
-                        <td>次文字</td>
-                        <td><span class="spec-value">#86868B</span></td>
-                    </tr>
-                    <tr>
-                        <td>辅助文字</td>
-                        <td><span class="spec-value">#AEAEB2</span></td>
-                    </tr>
-                    <tr>
-                        <td>轴标签</td>
-                        <td><span class="spec-value">#86868B</span></td>
-                    </tr>
-                    <tr>
-                        <td>图例文字</td>
-                        <td><span class="spec-value">#1D1D1F</span></td>
-                    </tr>
-                    <tr>
-                        <td>数据标签</td>
-                        <td><span class="spec-value">与图形同色</span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <!-- 间距汇总 -->
-        <div class="spec-grid" style="margin-top: 32px;">
-            <div class="spec-card">
-                <h3 class="spec-card-title">标准间距</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>卡片内边距</td>
-                        <td><span class="spec-value">16-20px</span></td>
-                    </tr>
-                    <tr>
-                        <td>标题与图表</td>
-                        <td><span class="spec-value">16px</span></td>
-                    </tr>
-                    <tr>
-                        <td>图例间距</td>
-                        <td><span class="spec-value">20px</span></td>
-                    </tr>
-                    <tr>
-                        <td>图例图标与文字</td>
-                        <td><span class="spec-value">6px</span></td>
-                    </tr>
-                    <tr>
-                        <td>数据标签偏移</td>
-                        <td><span class="spec-value">8px</span></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="spec-card">
-                <h3 class="spec-card-title">底部汇总栏</h3>
-                <table class="spec-table">
-                    <tr>
-                        <td>内边距</td>
-                        <td><span class="spec-value">12px 16px</span></td>
-                    </tr>
-                    <tr>
-                        <td>字号</td>
-                        <td><span class="spec-value">13px</span></td>
-                    </tr>
-                    <tr>
-                        <td>字色</td>
-                        <td><span class="spec-value">#86868B</span></td>
-                    </tr>
-                    <tr>
-                        <td>对齐</td>
-                        <td><span class="spec-value">居中</span></td>
-                    </tr>
-                    <tr>
-                        <td>分隔线</td>
-                        <td><span class="spec-value">1px solid #E8E8ED</span></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="ds-footer">
-        <p>基于 <a href="https://antv.antgroup.com/" target="_blank">AntV</a> 设计语言 · Chart Spec 图表设计规范</p>
-    </footer>
-</div>
-
-<script src="../nav.js"></script>
 </body>
 </html>

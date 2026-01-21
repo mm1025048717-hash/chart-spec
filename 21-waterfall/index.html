@@ -6,8 +6,18 @@
     <title>瀑布图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -222,6 +232,13 @@
 
 <script src="../nav.js"></script>
 <script>
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 8 : 10;
+const labelFontSize = mobile ? 9 : 11;
+const columnWidthRatio = mobile ? 0.55 : 0.5;
+const borderRadius = mobile ? 3 : 4;
+
 const data = [
     { type: '营业收入', value: 5200 },
     { type: '营业成本', value: -2100 },
@@ -244,22 +261,22 @@ new G2Plot.Waterfall('chart-basic', {
     },
     label: {
         position: 'middle',
-        style: { fill: '#fff', fontSize: 11 },
+        style: { fill: '#fff', fontSize: labelFontSize },
         formatter: (datum) => {
             if (datum.value === null) return '';
             return datum.value > 0 ? `+${datum.value}` : datum.value;
         },
     },
-    columnWidthRatio: 0.5,
-    waterfallStyle: { radius: [4, 4, 0, 0] },
+    columnWidthRatio: columnWidthRatio,
+    waterfallStyle: { radius: [borderRadius, borderRadius, 0, 0] },
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
         label: { 
-            style: { fontSize: 11, fill: '#86868B' },
+            style: { fontSize: fontSize, fill: '#86868B' },
             formatter: (v) => v.toLocaleString(),
         },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
@@ -274,6 +291,9 @@ new G2Plot.Waterfall('chart-basic', {
         }),
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 </body>

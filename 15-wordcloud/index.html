@@ -6,6 +6,7 @@
     <title>词云图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         .chart-type-badge {
             display: inline-flex; align-items: center; gap: 8px;
@@ -17,6 +18,15 @@
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -181,6 +191,11 @@
 <script>
 const { WordCloud } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSizeRange = mobile ? [10, 36] : [14, 48];
+const padding = mobile ? 2 : 4;
+
 const data = [
     { word: '人工智能', weight: 100 },
     { word: '机器学习', weight: 85 },
@@ -209,11 +224,15 @@ new WordCloud('chart-basic', {
     colorField: 'word',
     color: ['#5B8FF9', '#5AD8A6', '#FF9500', '#FF3B30', '#5856D6', '#32ADE6'],
     wordStyle: {
-        fontSize: [14, 48],
+        fontSize: fontSizeRange,
         rotation: 0,
+        padding: padding,
     },
     random: () => 0.5,
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

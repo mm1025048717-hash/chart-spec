@@ -6,12 +6,25 @@
     <title>双轴图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         .variant-grid { grid-template-columns: repeat(2, 1fr); }
-        @media (max-width: 768px) { .variant-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 768px) { 
+            .variant-grid { grid-template-columns: 1fr; }
+            .variant-grid .chart-body.lg { height: 280px; }
+        }
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -212,7 +225,7 @@
                     </button>
                 </div>
             </div>
-            <div class="chart-body md">
+            <div class="chart-body lg">
                 <div id="chart-stacked" style="width: 100%; height: 100%;"></div>
             </div>
             <div class="chart-code-panel" id="code-stacked">
@@ -244,7 +257,7 @@
                     </button>
                 </div>
             </div>
-            <div class="chart-body md">
+            <div class="chart-body lg">
                 <div id="chart-dual-line" style="width: 100%; height: 100%;"></div>
             </div>
             <div class="chart-code-panel" id="code-dual-line">
@@ -268,6 +281,15 @@
 
 <script src="../nav.js"></script>
 <script>
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 10 : 11;
+const columnWidthRatio = mobile ? 0.5 : 0.4;
+const lineWidth = mobile ? 2 : 2;
+const pointSize = mobile ? 4 : 4;
+const borderRadius = mobile ? 4 : 4;
+const basePadding = mobile ? [30, 35, 45, 40] : [40, 50, 60, 60];
+
 // 销售额数据
 const columnData = [
     { month: '1月', value: 580 },
@@ -305,35 +327,35 @@ new G2Plot.DualAxes('chart-basic', {
     data: [columnData, lineData],
     xField: 'month',
     yField: ['value', 'rate'],
-    padding: [40, 50, 60, 60],
+    padding: basePadding,
     geometryOptions: [
         {
             geometry: 'column',
             color: '#5B8FF9',
-            columnWidthRatio: 0.4,
-            columnStyle: { radius: [4, 4, 0, 0] },
+            columnWidthRatio: columnWidthRatio,
+            columnStyle: { radius: [borderRadius, borderRadius, 0, 0] },
         },
         {
             geometry: 'line',
             color: '#5AD8A6',
-            lineStyle: { lineWidth: 2 },
-            point: { size: 4, style: { fill: '#fff', stroke: '#5AD8A6', lineWidth: 2 } },
+            lineStyle: { lineWidth: lineWidth },
+            point: { size: pointSize, style: { fill: '#fff', stroke: '#5AD8A6', lineWidth: 2 } },
         },
     ],
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
         value: {
-            label: { style: { fontSize: 11, fill: '#86868B' }, formatter: (v) => v.toLocaleString() },
+            label: { style: { fontSize: fontSize, fill: '#86868B' }, formatter: (v) => v.toLocaleString() },
             grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
             line: null,
             tickLine: null,
         },
         rate: {
-            label: { style: { fontSize: 11, fill: '#86868B' }, formatter: (v) => `${v}%` },
+            label: { style: { fontSize: fontSize, fill: '#86868B' }, formatter: (v) => `${v}%` },
             line: null,
             tickLine: null,
             grid: null,
@@ -365,34 +387,34 @@ new G2Plot.DualAxes('chart-stacked', {
     data: [stackedColumnData, stackedLineData],
     xField: 'month',
     yField: ['value', 'total'],
-    padding: [40, 50, 50, 50],  // 双Y轴：右侧留出空间
+    padding: mobile ? [30, 30, 40, 35] : [40, 50, 50, 50],
     geometryOptions: [
         {
             geometry: 'column',
             isStack: true,
             seriesField: 'type',
             color: ['#5B8FF9', '#5AD8A6'],
-            columnWidthRatio: 0.4,
+            columnWidthRatio: columnWidthRatio,
             columnStyle: (datum) => {
-                if (datum.type === '线上') return { radius: [4, 4, 0, 0] };
+                if (datum.type === '线上') return { radius: [borderRadius, borderRadius, 0, 0] };
                 return { radius: 0 };
             },
         },
         {
             geometry: 'line',
             color: '#F6BD16',
-            lineStyle: { lineWidth: 2 },
-            point: { size: 3, style: { fill: '#fff', stroke: '#F6BD16', lineWidth: 2 } },
+            lineStyle: { lineWidth: lineWidth },
+            point: { size: pointSize - 1, style: { fill: '#fff', stroke: '#F6BD16', lineWidth: 2 } },
         },
     ],
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
         value: {
-            label: { style: { fontSize: 11, fill: '#86868B' } },
+            label: { style: { fontSize: fontSize, fill: '#86868B' } },
             grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
             line: null,
             tickLine: null,
@@ -415,29 +437,29 @@ new G2Plot.DualAxes('chart-dual-line', {
     data: [salesData, targetData],
     xField: 'month',
     yField: ['value', 'value'],
-    padding: [40, 50, 50, 50],  // 双Y轴：右侧留出空间
+    padding: mobile ? [30, 30, 40, 35] : [40, 50, 50, 50],
     geometryOptions: [
         {
             geometry: 'line',
             color: '#5B8FF9',
             smooth: true,
-            lineStyle: { lineWidth: 2 },
+            lineStyle: { lineWidth: lineWidth },
         },
         {
             geometry: 'line',
             color: '#E86452',
             smooth: true,
-            lineStyle: { lineWidth: 2, lineDash: [4, 4] },
+            lineStyle: { lineWidth: lineWidth, lineDash: [4, 4] },
         },
     ],
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
         value: {
-            label: { style: { fontSize: 11, fill: '#86868B' } },
+            label: { style: { fontSize: fontSize, fill: '#86868B' } },
             grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
             line: null,
             tickLine: null,
@@ -445,6 +467,9 @@ new G2Plot.DualAxes('chart-dual-line', {
     },
     legend: false,
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 </body>

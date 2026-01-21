@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>表格 - 图表设计规范</title>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         .chart-type-badge {
             display: inline-flex; align-items: center; gap: 8px;
@@ -45,6 +46,15 @@
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -292,5 +302,11 @@ const columns = [
 
 
 <script src="../nav.js"></script>
+<script>
+// 初始化响应式
+if (typeof ChartSpec !== 'undefined') {
+    ChartSpec.init();
+}
+</script>
 </body>
 </html>

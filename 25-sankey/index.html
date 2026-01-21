@@ -6,8 +6,18 @@
     <title>桑基图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -197,6 +207,12 @@
 
 <script src="../nav.js"></script>
 <script>
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const labelFontSize = mobile ? 7 : 9;
+const nodeWidthRatio = mobile ? 0.015 : 0.012;
+const edgeOpacity = mobile ? 0.3 : 0.35;
+
 const data = [
     // 第一层：流量来源 -> 着陆页
     { source: '搜索引擎', target: '首页', value: 45000 },
@@ -233,14 +249,14 @@ new G2Plot.Sankey('chart-basic', {
         fillOpacity: 1,
     },
     edgeStyle: {
-        fillOpacity: 0.35,
+        fillOpacity: edgeOpacity,
     },
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452', '#00C7BE', '#FF9845', '#86868B'],
-    nodeWidthRatio: 0.012,
+    nodeWidthRatio: nodeWidthRatio,
     nodePaddingRatio: 0.025,
     label: {
         formatter: ({ name }) => name,
-        style: { fill: '#1D1D1F', fontSize: 11 },
+        style: { fill: '#1D1D1F', fontSize: labelFontSize },
     },
     tooltip: {
         formatter: (datum) => {
@@ -254,6 +270,9 @@ new G2Plot.Sankey('chart-basic', {
         },
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 </body>

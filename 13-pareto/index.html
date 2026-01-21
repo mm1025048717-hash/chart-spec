@@ -6,8 +6,18 @@
     <title>帕累托图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge" style="background: linear-gradient(135deg, #FFE8E8 0%, #FFD4D4 100%);">
@@ -229,6 +239,14 @@
 <script>
 const { DualAxes } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 10 : 10;
+const lineWidth = mobile ? 2 : 2;
+const pointSize = mobile ? 4 : 4;
+const borderRadius = mobile ? 4 : 4;
+const basePadding = mobile ? [30, 35, 40, 35] : [40, 50, 50, 50];
+
 const rawData = [
     { type: '界面缺陷', value: 120 },
     { type: '功能异常', value: 85 },
@@ -249,26 +267,36 @@ new DualAxes('chart-basic', {
     data: [rawData, lineData],
     xField: 'type',
     yField: ['value', 'percent'],
+    padding: basePadding,
     geometryOptions: [
         {
             geometry: 'column',
             color: '#5B8FF9',
-            columnWidthRatio: 0.5,
-            columnStyle: { radius: [4, 4, 0, 0] },
+            columnWidthRatio: mobile ? 0.55 : 0.5,
+            columnStyle: { radius: [borderRadius, borderRadius, 0, 0] },
         },
         {
             geometry: 'line',
             color: '#5AD8A6',
-            lineStyle: { lineWidth: 2 },
-            point: { size: 4 },
+            lineStyle: { lineWidth: lineWidth },
+            point: { size: pointSize },
         },
     ],
     yAxis: {
-        value: { title: { text: '缺陷数', style: { fontSize: 11 } } },
-        percent: {
-            title: { text: '累计占比', style: { fontSize: 11 } },
-            label: { formatter: (v) => (v * 100).toFixed(0) + '%' },
+        value: { 
+            title: { text: '缺陷数', style: { fontSize: fontSize } },
+            label: { style: { fontSize: fontSize } },
         },
+        percent: {
+            title: { text: '累计占比', style: { fontSize: fontSize } },
+            label: { 
+                style: { fontSize: fontSize },
+                formatter: (v) => (v * 100).toFixed(0) + '%',
+            },
+        },
+    },
+    xAxis: {
+        label: { style: { fontSize: fontSize } },
     },
     annotations: {
         percent: [
@@ -281,6 +309,9 @@ new DualAxes('chart-basic', {
         ],
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

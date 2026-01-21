@@ -6,11 +6,18 @@
     <title>直方图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
-    <style>
-        /* 使用 common.css 中的统一样式 */
-    </style>
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -193,6 +200,11 @@
 <script>
 const { Histogram } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 9 : 11;
+const borderRadius = mobile ? 2 : 4;
+
 // 模拟用户年龄数据
 const data = [];
 for (let i = 0; i < 200; i++) {
@@ -204,21 +216,24 @@ new Histogram('chart-basic', {
     binField: 'age',
     binWidth: 5,
     color: '#5AD8A6',
-    columnStyle: { radius: [4, 4, 0, 0] },
+    columnStyle: { radius: [borderRadius, borderRadius, 0, 0] },
     padding: 'auto',
     appendPadding: [40, 20, 30, 20],
     xAxis: { 
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: { 
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
     },
     legend: false,
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

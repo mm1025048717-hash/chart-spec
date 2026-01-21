@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <title>DataAgent - 智能图表分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        :root {
+            --blue: #5B8FF9;
+            --green: #5AD8A6;
+            --yellow: #F6BD16;
+            --red: #E86452;
+            --cyan: #6DC8EC;
+            --purple: #945FB9;
+            --bg: #F7F8FA;
+            --card: #FFFFFF;
+            --text-1: #1F2329;
+            --text-2: #646A73;
+            --text-3: #8F959E;
+            --border: #E5E6EB;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+            background: var(--bg);
+            color: var(--text-1);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 极简头部 */
+        .header {
+            padding: calc(8px + var(--safe-top)) 16px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card);
+            border-bottom: 0.5px solid var(--border);
+            flex-shrink: 0;
+        }
+        .header-back { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--text-1); }
+        .header-title { font-size: 16px; font-weight: 600; }
+        .header-action { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; background: none; border: none; color: var(--text-2); }
+
+        /* 聊天区 */
+        .chat-area { flex: 1; overflow-y: auto; }
+        .welcome {
+            height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 40px 24px;
+        }
+        .welcome-icon { font-size: 56px; margin-bottom: 16px; }
+        .welcome-title { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+        .welcome-desc { font-size: 13px; color: var(--text-2); text-align: center; }
+
+        .messages { padding: 12px 16px; display: none; }
+        .messages.active { display: block; }
+
+        /* 用户消息 - 极简气泡 */
+        .msg-user {
+            display: flex; justify-content: flex-end;
+            margin-bottom: 12px;
+        }
+        .msg-user-content {
+            background: var(--blue);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 16px 16px 4px 16px;
+            font-size: 14px;
+            max-width: 75%;
+        }
+
+        /* Agent消息 */
+        .msg-agent { margin-bottom: 16px; }
+
+        /* ===== 简约图表卡片 ===== */
+        .chart-card {
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .chart-header {
+            padding: 14px 16px 12px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .chart-title-area { flex: 1; }
+        .chart-title { font-size: 15px; font-weight: 600; color: var(--text-1); }
+        .chart-subtitle { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+        .chart-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .chart-badge:hover { opacity: 0.8; }
+        .chart-badge:active { transform: scale(0.95); }
+        .chart-badge.blue { background: rgba(91,143,249,0.1); color: var(--blue); }
+        .chart-badge.green { background: rgba(90,216,166,0.1); color: var(--green); }
+        .chart-badge.yellow { background: rgba(246,189,22,0.1); color: #D69E00; }
+        .chart-badge.red { background: rgba(232,100,82,0.1); color: var(--red); }
+        .chart-badge.purple { background: rgba(148,95,185,0.1); color: var(--purple); }
+        .chart-badge.gray { background: rgba(143,149,158,0.1); color: var(--text-2); }
+
+        .chart-body {
+            padding: 0 16px 16px;
+            position: relative;
+        }
+        .chart-box { width: 100%; height: 220px; }
+
+        /* 简化的汇总行 */
+        .chart-footer {
+            padding: 12px 16px;
+            background: var(--bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        .footer-stat { color: var(--text-2); }
+        .footer-stat strong { color: var(--blue); font-weight: 600; }
+        .footer-trend { display: flex; align-items: center; gap: 4px; font-weight: 500; }
+        .footer-trend.up { color: var(--green); }
+        .footer-trend.down { color: var(--red); }
+
+        /* 简约洞察 */
+        .insight-line {
+            padding: 10px 16px;
+            font-size: 12px;
+            color: var(--text-2);
+            border-top: 0.5px solid var(--border);
+            line-height: 1.5;
+        }
+        .insight-line strong { color: var(--blue); }
+
+        /* 数据卡片 - 紧凑版 */
+        .data-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .data-card-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+        .data-item {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        .data-label { font-size: 10px; color: var(--text-3); }
+        .data-value { font-size: 18px; font-weight: 700; color: var(--blue); margin-top: 2px; }
+        .data-trend { font-size: 10px; color: var(--green); margin-top: 2px; }
+
+        /* 占比卡片 */
+        .ratio-card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 12px;
+        }
+        .ratio-title { font-size: 13px; font-weight: 600; margin-bottom: 10px; }
+        .ratio-bar {
+            height: 8px;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+            display: flex;
+        }
+        .ratio-segment { height: 100%; }
+        .ratio-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+        .ratio-legend-item { display: flex; align-items: center; gap: 4px; color: var(--text-2); }
+        .ratio-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+        /* 排名列表 */
+        .rank-list { padding: 0; }
+        .rank-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 0.5px solid var(--border);
+        }
+        .rank-item:last-child { border-bottom: none; }
+        .rank-num {
+            width: 20px; height: 20px;
+            border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 600;
+            margin-right: 10px;
+        }
+        .rank-num.top { background: var(--blue); color: #fff; }
+        .rank-num.normal { background: var(--bg); color: var(--text-2); }
+        .rank-name { flex: 1; font-size: 13px; color: var(--text-1); }
+        .rank-value { font-size: 13px; font-weight: 600; color: var(--text-1); }
+        .rank-bar-wrap { width: 80px; margin-left: 10px; }
+        .rank-bar { height: 4px; background: var(--blue); border-radius: 2px; }
+
+        /* 漏斗数据 - 居中漏斗形状 */
+        .funnel-list { padding: 0 10px; }
+        .funnel-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .funnel-label { width: 40px; font-size: 11px; color: var(--text-2); text-align: right; padding-right: 8px; }
+        .funnel-bar-wrap { flex: 1; height: 28px; display: flex; align-items: center; justify-content: center; }
+        .funnel-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--blue), var(--cyan));
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #fff;
+            font-weight: 500;
+            min-width: 40px;
+        }
+        .funnel-rate { width: 45px; text-align: left; font-size: 11px; color: var(--text-3); padding-left: 8px; }
+
+        /* 输入 */
+        .typing { padding: 12px 0; }
+        .typing-dots { display: flex; gap: 4px; }
+        .typing-dot {
+            width: 6px; height: 6px;
+            background: var(--text-3);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-4px)} }
+
+        /* 快捷操作 */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .quick-btn {
+            padding: 6px 12px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            font-size: 12px;
+            color: var(--text-1);
+            cursor: pointer;
+        }
+        .quick-btn:active { background: var(--bg); }
+
+        /* 底部 */
+        .bottom-area {
+            flex-shrink: 0;
+            background: var(--card);
+            border-top: 0.5px solid var(--border);
+            padding-bottom: var(--safe-bottom);
+        }
+        .prompts-scroll {
+            padding: 10px 0;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .prompts-scroll::-webkit-scrollbar { display: none; }
+        .prompts-container {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px;
+            width: max-content;
+        }
+        .prompt-chip {
+            flex-shrink: 0;
+            padding: 6px 12px;
+            background: var(--bg);
+            border-radius: 16px;
+            font-size: 12px;
+            color: var(--text-1);
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .prompt-chip:active { background: rgba(91,143,249,0.1); color: var(--blue); }
+
+        .input-area {
+            padding: 8px 16px 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .input-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            background: var(--bg);
+            border-radius: 20px;
+            padding: 0 14px;
+            height: 40px;
+        }
+        .input-box input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            outline: none;
+            color: var(--text-1);
+        }
+        .input-box input::placeholder { color: var(--text-3); }
+        .send-btn {
+            width: 40px; height: 40px;
+            background: var(--blue);
+            border: none; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; cursor: pointer;
+        }
+
+        /* 底部导航 */
+        .tabbar {
+            display: flex;
+            padding: 6px 0;
+            border-top: 0.5px solid var(--border);
+        }
+        .tab-item {
+            flex: 1;
+            display: flex; flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-3);
+            font-size: 10px;
+            gap: 2px;
+        }
+        .tab-item.active { color: var(--blue); }
+        .tab-icon { width: 20px; height: 20px; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <button class="header-back" onclick="history.back()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <span class="header-title">数据分析</span>
+    <button class="header-action">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    </button>
+</header>
+
+<div class="chat-area" id="chatArea">
+    <div class="welcome" id="welcome">
+        <div class="welcome-icon">📊</div>
+        <div class="welcome-title">DataAgent</div>
+        <div class="welcome-desc">问我任何数据问题，我会选择最合适的图表来回答</div>
+    </div>
+    <div class="messages" id="messages"></div>
+</div>
+
+<div class="bottom-area">
+    <div class="prompts-scroll">
+        <div class="prompts-container" id="prompts"></div>
+    </div>
+    <div class="input-area">
+        <div class="input-box">
+            <input type="text" id="userInput" placeholder="输入分析问题..." onkeypress="if(event.key==='Enter')send()">
+        </div>
+        <button class="send-btn" onclick="send()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+    </div>
+    <nav class="tabbar">
+        <a href="mobile.html" class="tab-item"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>首页</span></a>
+        <a href="mobile-spec.html" class="tab-item"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg><span>规范</span></a>
+        <a href="data-agent.html" class="tab-item active"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/></svg><span>方案</span></a>
+        <a href="index.html" class="tab-item"><svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg><span>桌面</span></a>
+    </nav>
+</div>
+
+<script>
+const COLORS = ['#5B8FF9', '#5AD8A6', '#5D7092', '#F6BD16', '#E86452', '#6DC8EC', '#945FB9', '#FF9845'];
+let msgId = 0;
+
+// 问题场景列表 - 26种图表全覆盖
+const promptList = [
+    // 1. 柱状图 - 对比类
+    { text: '各区域销售额对比', type: 'column', question: '各区域销售额对比如何？' },
+    
+    // 2. 堆叠柱状图 - 构成对比
+    { text: '各区域产品构成', type: 'stackedColumn', question: '各区域产品销售构成如何？' },
+    
+    // 3. 条形图 - 排名
+    { text: '销量排行TOP5', type: 'bar', question: '哪些产品销量最高？' },
+    
+    // 4. 折线图 - 趋势
+    { text: '销售额月度趋势', type: 'line', question: '销售额趋势如何变化？' },
+    
+    // 5. 面积图 - 累积趋势
+    { text: '用户增长走势', type: 'area', question: '用户增长趋势如何？' },
+    
+    // 6. 饼图 - 占比
+    { text: '各渠道销售占比', type: 'pie', question: '各渠道占比多少？' },
+    
+    // 7. 直方图 - 分布
+    { text: '订单金额分布', type: 'histogram', question: '订单金额分布情况？' },
+    
+    // 8. 散点图 - 相关性
+    { text: '销售利润相关性', type: 'scatter', question: '销售和利润有什么关系？' },
+    
+    // 9. 气泡图 - 三维关系
+    { text: '产品销量利润规模', type: 'bubble', question: '各产品销量、利润和规模？' },
+    
+    // 10. 雷达图 - 多维评估
+    { text: '产品能力评估', type: 'radar', question: '产品各维度表现如何？' },
+    
+    // 11. 漏斗图 - 转化
+    { text: '用户转化漏斗', type: 'funnel', question: '用户转化率怎么样？' },
+    
+    // 12. 仪表盘 - KPI
+    { text: 'KPI达成情况', type: 'gauge', question: 'KPI完成得怎么样？' },
+    
+    // 13. 帕累托图 - 二八分析
+    { text: '问题类型帕累托', type: 'pareto', question: '哪些问题最关键？' },
+    
+    // 14. 矩形树图 - 层级构成
+    { text: '品类结构分析', type: 'treemap', question: '各品类占比结构如何？' },
+    
+    // 15. 词云 - 文本
+    { text: '热门关键词分析', type: 'wordcloud', question: '用户搜索热词有哪些？' },
+    
+    // 16. 热力图 - 时间分布
+    { text: '访问热力分析', type: 'heatmap', question: '什么时候访问量最高？' },
+    
+    // 17. 地图 - 地理分布
+    { text: '各省销售分布', type: 'map', question: '各省销售情况如何？' },
+    
+    // 18. 表格 - 明细数据
+    { text: '销售明细数据', type: 'table', question: '销售明细数据是什么？' },
+    
+    // 19. 指标卡 - 核心指标
+    { text: '关键业务指标', type: 'indicator', question: '关键业务指标是多少？' },
+    
+    // 20. 环图 - 进度/占比
+    { text: '目标完成进度', type: 'ring', question: '目标完成了多少？' },
+    
+    // 21. 瀑布图 - 增减分析
+    { text: '利润构成分析', type: 'waterfall', question: '利润是怎么构成的？' },
+    
+    // 22. 双轴图 - 复合分析
+    { text: '销量与增长率对比', type: 'dualAxes', question: '销量和增长率关系？' },
+    
+    // 23. 玫瑰图 - 极坐标占比
+    { text: '客户来源分布', type: 'rose', question: '客户都从哪来？' },
+    
+    // 24. 旭日图 - 层级占比
+    { text: '组织架构分布', type: 'sunburst', question: '组织架构分布情况？' },
+    
+    // 25. 桑基图 - 流向
+    { text: '用户流向分析', type: 'sankey', question: '用户从哪来到哪去？' },
+    
+    // 26. 进度条 - 多任务进度
+    { text: '项目进度追踪', type: 'progress', question: '项目进度如何？' }
+];
+
+function initPrompts() {
+    document.getElementById('prompts').innerHTML = promptList.map(p => 
+        `<div class="prompt-chip" onclick="ask('${p.question}','${p.type}')">${p.text}</div>`
+    ).join('');
+}
+
+function send() {
+    const input = document.getElementById('userInput');
+    const text = input.value.trim();
+    if (!text) return;
+    
+    let type = 'column';
+    // 26种图表关键词映射
+    const map = {
+        // 基础图表
+        '柱状': 'column', '堆叠': 'stackedColumn', '条形': 'bar', '折线': 'line', 
+        '趋势': 'line', '面积': 'area', '饼': 'pie', '环': 'ring',
+        // 统计图表
+        '直方': 'histogram', '散点': 'scatter', '气泡': 'bubble', '雷达': 'radar',
+        // 特殊图表
+        '漏斗': 'funnel', '转化': 'funnel', '仪表': 'gauge', '帕累托': 'pareto', '二八': 'pareto',
+        // 层级/构成
+        '树图': 'treemap', '词云': 'wordcloud', '热力': 'heatmap', '旭日': 'sunburst',
+        // 地理/表格
+        '地图': 'map', '省份': 'map', '表格': 'table', '明细': 'table', 
+        // 指标/进度
+        '指标': 'indicator', 'KPI': 'indicator', '进度': 'progress',
+        // 流程/复合
+        '瀑布': 'waterfall', '双轴': 'dualAxes', '玫瑰': 'rose', '桑基': 'sankey', '流向': 'sankey',
+        // 通用关键词
+        '销售': 'column', '排名': 'bar', '占比': 'pie', '构成': 'stackedColumn',
+        '分布': 'histogram', '相关': 'scatter', '关键词': 'wordcloud', '热门': 'wordcloud'
+    };
+    for (const [k, v] of Object.entries(map)) { if (text.includes(k)) { type = v; break; } }
+    
+    ask(text, type);
+    input.value = '';
+}
+
+function ask(text, type) {
+    showMessages();
+    addUserMsg(text);
+    showTyping();
+    
+    setTimeout(() => {
+        hideTyping();
+        renderResponse(type);
+        scrollToBottom();
+    }, 800);
+}
+
+function showMessages() {
+    document.getElementById('welcome').classList.add('hidden');
+    document.getElementById('messages').classList.add('active');
+}
+
+function addUserMsg(text) {
+    const el = document.createElement('div');
+    el.className = 'msg-user';
+    el.innerHTML = `<div class="msg-user-content">${text}</div>`;
+    document.getElementById('messages').appendChild(el);
+}
+
+function showTyping() {
+    const el = document.createElement('div');
+    el.className = 'msg-agent';
+    el.id = 'typing';
+    el.innerHTML = `<div class="typing"><div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+    document.getElementById('messages').appendChild(el);
+    scrollToBottom();
+}
+
+function hideTyping() {
+    const el = document.getElementById('typing');
+    if (el) el.remove();
+}
+
+// 根据图表类型渲染不同样式的响应
+function renderResponse(type) {
+    const container = document.getElementById('messages');
+    const div = document.createElement('div');
+    div.className = 'msg-agent';
+    
+    const configs = getChartConfig(type);
+    div.innerHTML = configs.html;
+    container.appendChild(div);
+    
+    // 渲染图表
+    if (configs.chartId) {
+        setTimeout(() => renderChart(configs.chartId, type), 100);
+    }
+}
+
+function getChartConfig(type) {
+    const chartId = `chart-${++msgId}`;
+    
+    switch(type) {
+        case 'column':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-area">
+                                <div class="chart-title">销售额对比</div>
+                                <div class="chart-subtitle">2024年12月 · 按地区</div>
+                            </div>
+                            <a href="01-column/index.html" class="chart-badge blue">柱状图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                        <div class="chart-footer">
+                            <span class="footer-stat">合计 <strong>1.83亿</strong></span>
+                            <span class="footer-trend up">↑ 12.5%</span>
+                        </div>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="ask('换成条形图','bar')">换条形图</button>
+                        <button class="quick-btn" onclick="ask('查看趋势','line')">看趋势</button>
+                    </div>`
+            };
+        case 'stackedColumn':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-area">
+                                <div class="chart-title">各区域产品构成</div>
+                                <div class="chart-subtitle">2024年12月 · 按产品类型</div>
+                            </div>
+                            <a href="02-stacked-column/index.html" class="chart-badge purple">堆叠柱状图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                        <div class="chart-footer">
+                            <span class="footer-stat">产品A占比 <strong>42%</strong></span>
+                            <span class="footer-trend up">主力产品</span>
+                        </div>
+                    </div>`
+            };
+        case 'bar':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-area">
+                                <div class="chart-title">销量排行 TOP5</div>
+                            </div>
+                            <a href="03-bar/index.html" class="chart-badge green">条形图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                        <div class="insight-line">华东区销量最高，占总量的 <strong>28%</strong></div>
+                    </div>`
+            };
+        case 'line':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div class="data-card-title">📈 趋势概览</div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">本月销售</div><div class="data-value">3,200</div><div class="data-trend">↑ 15.3%</div></div>
+                            <div class="data-item"><div class="data-label">环比增长</div><div class="data-value">+420</div><div class="data-trend">稳步上升</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">月度趋势</div>
+                            <a href="04-line/index.html" class="chart-badge blue">折线图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                    </div>`
+            };
+        case 'area':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">销售趋势</div>
+                            <a href="05-area/index.html" class="chart-badge cyan" style="background:rgba(109,200,236,0.1);color:#6DC8EC;">面积图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                        <div class="chart-footer">
+                            <span class="footer-stat">累计 <strong>1.55亿</strong></span>
+                            <span class="footer-trend up">持续增长</span>
+                        </div>
+                    </div>`
+            };
+        case 'pie':
+            return {
+                chartId,
+                html: `
+                    <div class="ratio-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="ratio-title" style="margin-bottom:0;">📊 渠道占比</div>
+                            <a href="06-pie/index.html" class="chart-badge blue">饼图</a>
+                        </div>
+                        <div class="ratio-bar" style="margin-top:10px;">
+                            <div class="ratio-segment" style="width:45%;background:#5B8FF9;"></div>
+                            <div class="ratio-segment" style="width:32%;background:#5AD8A6;"></div>
+                            <div class="ratio-segment" style="width:18%;background:#F6BD16;"></div>
+                            <div class="ratio-segment" style="width:5%;background:#E86452;"></div>
+                        </div>
+                        <div class="ratio-legend">
+                            <span class="ratio-legend-item"><span class="ratio-dot" style="background:#5B8FF9;"></span>线上 45%</span>
+                            <span class="ratio-legend-item"><span class="ratio-dot" style="background:#5AD8A6;"></span>门店 32%</span>
+                            <span class="ratio-legend-item"><span class="ratio-dot" style="background:#F6BD16;"></span>分销 18%</span>
+                            <span class="ratio-legend-item"><span class="ratio-dot" style="background:#E86452;"></span>其他 5%</span>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-body" style="padding-top:16px;">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                    </div>`
+            };
+        case 'histogram':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div class="data-card-title">📊 分布概览</div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">平均值</div><div class="data-value">¥856</div></div>
+                            <div class="data-item"><div class="data-label">中位数</div><div class="data-value">¥720</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">订单金额分布</div>
+                            <a href="07-histogram/index.html" class="chart-badge blue">直方图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                        <div class="insight-line">大部分订单集中在 <strong>500-1000元</strong> 区间</div>
+                    </div>`
+            };
+        case 'bubble':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-area">
+                                <div class="chart-title">产品三维分析</div>
+                                <div class="chart-subtitle">销量 × 利润 × 规模</div>
+                            </div>
+                            <a href="09-bubble/index.html" class="chart-badge cyan" style="background:rgba(109,200,236,0.1);color:#6DC8EC;">气泡图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:260px;"></div>
+                        </div>
+                        <div class="insight-line">产品A销量高、利润好，是 <strong>明星产品</strong></div>
+                    </div>`
+            };
+        case 'pareto':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div class="data-card-title">📈 帕累托分析 (80/20法则)</div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">关键问题</div><div class="data-value">3个</div></div>
+                            <div class="data-item"><div class="data-label">占比影响</div><div class="data-value" style="color:#E86452;">78%</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">问题类型分析</div>
+                            <a href="13-pareto/index.html" class="chart-badge red">帕累托图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:280px;"></div>
+                        </div>
+                        <div class="insight-line">优先解决 <strong>质量问题</strong> 和 <strong>交付延迟</strong></div>
+                    </div>`
+            };
+        case 'wordcloud':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-area">
+                                <div class="chart-title">热门搜索词</div>
+                                <div class="chart-subtitle">近7天用户搜索</div>
+                            </div>
+                            <a href="15-wordcloud/index.html" class="chart-badge yellow">词云</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                        <div class="insight-line">「<strong>智能手机</strong>」搜索量最高，达 <strong>12,580</strong> 次</div>
+                    </div>`
+            };
+        case 'map':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">各省销售分布</div>
+                            <a href="17-map/index.html" class="chart-badge gray">地图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:280px;"></div>
+                        </div>
+                        <div class="insight-line"><strong>广东省</strong> 销售额最高，达 <strong>¥8,200万</strong></div>
+                    </div>`
+            };
+        case 'table':
+            return {
+                chartId: null,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">📋 销售明细数据</div>
+                            <a href="18-table/index.html" class="chart-badge gray">表格</a>
+                        </div>
+                        <div style="overflow-x:auto;margin-top:10px;">
+                            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                                <thead>
+                                    <tr style="background:#F7F8FA;border-bottom:1px solid #E5E6EB;">
+                                        <th style="padding:10px 8px;text-align:left;color:#646A73;font-weight:500;">产品</th>
+                                        <th style="padding:10px 8px;text-align:right;color:#646A73;font-weight:500;">销量</th>
+                                        <th style="padding:10px 8px;text-align:right;color:#646A73;font-weight:500;">金额</th>
+                                        <th style="padding:10px 8px;text-align:right;color:#646A73;font-weight:500;">环比</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom:1px solid #E5E6EB;">
+                                        <td style="padding:10px 8px;">智能手机</td>
+                                        <td style="padding:10px 8px;text-align:right;font-weight:600;">3,580</td>
+                                        <td style="padding:10px 8px;text-align:right;color:#5B8FF9;">¥2,148万</td>
+                                        <td style="padding:10px 8px;text-align:right;color:#5AD8A6;">↑ 15.3%</td>
+                                    </tr>
+                                    <tr style="border-bottom:1px solid #E5E6EB;">
+                                        <td style="padding:10px 8px;">笔记本电脑</td>
+                                        <td style="padding:10px 8px;text-align:right;font-weight:600;">2,240</td>
+                                        <td style="padding:10px 8px;text-align:right;color:#5B8FF9;">¥1,792万</td>
+                                        <td style="padding:10px 8px;text-align:right;color:#5AD8A6;">↑ 8.7%</td>
+                                    </tr>
+                                    <tr style="border-bottom:1px solid #E5E6EB;">
+                                        <td style="padding:10px 8px;">平板电脑</td>
+                                        <td style="padding:10px 8px;text-align:right;font-weight:600;">1,860</td>
+                                        <td style="padding:10px 8px;text-align:right;color:#5B8FF9;">¥930万</td>
+                                        <td style="padding:10px 8px;text-align:right;color:#E86452;">↓ 3.2%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:10px 8px;">智能手表</td>
+                                        <td style="padding:10px 8px;text-align:right;font-weight:600;">4,120</td>
+                                        <td style="padding:10px 8px;text-align:right;color:#5B8FF9;">¥824万</td>
+                                        <td style="padding:10px 8px;text-align:right;color:#5AD8A6;">↑ 22.1%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="ask('用柱状图展示','column')">柱状图</button>
+                        <button class="quick-btn" onclick="ask('查看趋势','line')">看趋势</button>
+                    </div>`
+            };
+        case 'indicator':
+            return {
+                chartId: null,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">📊 关键业务指标</div>
+                            <a href="19-indicator/index.html" class="chart-badge blue">指标卡</a>
+                        </div>
+                        <div class="data-grid" style="grid-template-columns:repeat(2,1fr);gap:12px;">
+                            <div class="data-item">
+                                <div class="data-label">总销售额</div>
+                                <div class="data-value" style="font-size:24px;">8,846</div>
+                                <div style="font-size:11px;color:#646A73;">万元</div>
+                                <div class="data-trend">↑ 12.5%</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">订单数</div>
+                                <div class="data-value" style="font-size:24px;">15,280</div>
+                                <div style="font-size:11px;color:#646A73;">单</div>
+                                <div class="data-trend">↑ 8.3%</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">客单价</div>
+                                <div class="data-value" style="font-size:24px;">579</div>
+                                <div style="font-size:11px;color:#646A73;">元</div>
+                                <div class="data-trend">↑ 3.8%</div>
+                            </div>
+                            <div class="data-item">
+                                <div class="data-label">转化率</div>
+                                <div class="data-value" style="font-size:24px;color:#5AD8A6;">6.8%</div>
+                                <div style="font-size:11px;color:#646A73;"> </div>
+                                <div class="data-trend">↑ 0.5pp</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="insight-line" style="background:var(--card);border-radius:12px;margin-top:-4px;">本月业绩 <strong>超额完成</strong>，同比增长 <strong>12.5%</strong></div>`
+            };
+        case 'ring':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-area">
+                                <div class="chart-title">完成进度</div>
+                                <div class="chart-subtitle">年度目标达成</div>
+                            </div>
+                            <a href="20-ring/index.html" class="chart-badge green">环图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                        <div class="insight-line">已完成 <strong>75%</strong>，预计提前达成目标</div>
+                    </div>`
+            };
+        case 'funnel':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title-area">
+                                <div class="chart-title">用户转化漏斗</div>
+                                <div class="chart-subtitle">购买路径分析</div>
+                            </div>
+                            <a href="11-funnel/index.html" class="chart-badge yellow">漏斗图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:300px;"></div>
+                        </div>
+                        <div class="insight-line">整体转化率 <strong>16%</strong>，加购→下单环节需优化</div>
+                    </div>`
+            };
+        case 'radar':
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">能力评估</div>
+                            <a href="10-radar/index.html" class="chart-badge purple">雷达图</a>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:220px;"></div>
+                        </div>
+                        <div class="insight-line">产品能力突出 <strong>85分</strong>，市场能力有待提升</div>
+                    </div>`
+            };
+        case 'gauge':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">⏱️ 目标达成</div>
+                            <a href="12-gauge/index.html" class="chart-badge green">仪表盘</a>
+                        </div>
+                        <div style="text-align:center;padding:20px 0;">
+                            <div style="font-size:48px;font-weight:700;color:#5AD8A6;">75%</div>
+                            <div style="font-size:12px;color:var(--text-2);margin-top:4px;">年度销售目标</div>
+                        </div>
+                        <div class="ratio-bar" style="height:6px;">
+                            <div class="ratio-segment" style="width:75%;background:linear-gradient(90deg,#5AD8A6,#5B8FF9);border-radius:3px;"></div>
+                        </div>
+                    </div>`
+            };
+        case 'progress':
+            return {
+                chartId: null,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">📶 项目进度</div>
+                            <a href="26-progress/index.html" class="chart-badge blue">进度条</a>
+                        </div>
+                        <div style="margin-top:12px;">
+                            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text-2);">需求分析</span><span style="color:#5AD8A6;font-weight:600;">100%</span></div>
+                            <div class="ratio-bar" style="height:6px;margin-bottom:12px;"><div class="ratio-segment" style="width:100%;background:#5AD8A6;border-radius:3px;"></div></div>
+                            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text-2);">设计开发</span><span style="color:#5B8FF9;font-weight:600;">70%</span></div>
+                            <div class="ratio-bar" style="height:6px;margin-bottom:12px;"><div class="ratio-segment" style="width:70%;background:#5B8FF9;border-radius:3px;"></div></div>
+                            <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;"><span style="color:var(--text-2);">测试上线</span><span style="color:#F6BD16;font-weight:600;">30%</span></div>
+                            <div class="ratio-bar" style="height:6px;"><div class="ratio-segment" style="width:30%;background:#F6BD16;border-radius:3px;"></div></div>
+                        </div>
+                    </div>`
+            };
+        case 'heatmap':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">🔥 用户活跃时段</div>
+                            <a href="16-heatmap/index.html" class="chart-badge red">热力图</a>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">高峰时段</div><div class="data-value">周三 15:00</div></div>
+                            <div class="data-item"><div class="data-label">日均访问</div><div class="data-value" style="color:#E86452;">12.8万</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:240px;"></div>
+                        </div>
+                        <div class="insight-line">建议在 <strong>周三下午</strong> 进行重要活动推广</div>
+                    </div>`
+            };
+        case 'treemap':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">🏷️ 品类销售构成</div>
+                            <a href="14-treemap/index.html" class="chart-badge yellow">矩形树图</a>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">品类数</div><div class="data-value">8个</div></div>
+                            <div class="data-item"><div class="data-label">TOP1</div><div class="data-value" style="color:#5B8FF9;">数码产品</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:240px;"></div>
+                        </div>
+                        <div class="insight-line">数码产品占比 <strong>35%</strong>，是主力品类</div>
+                    </div>`
+            };
+        case 'scatter':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">📈 销售-利润相关性</div>
+                            <a href="08-scatter/index.html" class="chart-badge purple">散点图</a>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">相关系数</div><div class="data-value">0.78</div></div>
+                            <div class="data-item"><div class="data-label">异常点</div><div class="data-value" style="color:#E86452;">3个</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:240px;"></div>
+                        </div>
+                        <div class="insight-line">存在 <strong>3个</strong> 高销售低利润产品，建议关注定价策略</div>
+                    </div>`
+            };
+        case 'waterfall':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">💰 利润构成分析</div>
+                            <a href="21-waterfall/index.html" class="chart-badge green">瀑布图</a>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">总收入</div><div class="data-value">5,200万</div></div>
+                            <div class="data-item"><div class="data-label">净利润</div><div class="data-value" style="color:#5AD8A6;">2,100万</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:240px;"></div>
+                        </div>
+                        <div class="insight-line">利润率 <strong>40.4%</strong>，成本控制良好</div>
+                    </div>`
+            };
+        case 'dualAxes':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">📊 销量与增长率对比</div>
+                            <a href="22-dual-axes/index.html" class="chart-badge purple">双轴图</a>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">累计销售</div><div class="data-value">3.2亿</div></div>
+                            <div class="data-item"><div class="data-label">平均增长</div><div class="data-value" style="color:#5AD8A6;">+15.3%</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:260px;"></div>
+                        </div>
+                        <div class="insight-line">6月销量最高，增长率呈 <strong>上升趋势</strong></div>
+                    </div>`
+            };
+        case 'rose':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">🌹 客户来源分析</div>
+                            <a href="23-rose/index.html" class="chart-badge purple">玫瑰图</a>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">主要来源</div><div class="data-value">线上渠道</div></div>
+                            <div class="data-item"><div class="data-label">占比</div><div class="data-value" style="color:#5B8FF9;">45%</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:260px;"></div>
+                        </div>
+                        <div class="insight-line">线上渠道贡献最大，建议 <strong>加大线上投放</strong></div>
+                    </div>`
+            };
+        case 'sankey':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">🌊 用户流向分析</div>
+                            <a href="25-sankey/index.html" class="chart-badge cyan" style="background:rgba(109,200,236,0.1);color:#6DC8EC;">桑基图</a>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">主要入口</div><div class="data-value">搜索引擎</div></div>
+                            <div class="data-item"><div class="data-label">转化率</div><div class="data-value" style="color:#5AD8A6;">23.5%</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-subtitle" style="color:#86868B;font-size:11px;">渠道 → 行为 → 结果</div>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:260px;"></div>
+                        </div>
+                        <div class="insight-line">搜索引擎用户转化最高，<strong>ROI 达 3.2</strong></div>
+                    </div>`
+            };
+        case 'sunburst':
+            return {
+                chartId,
+                html: `
+                    <div class="data-card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <div class="data-card-title" style="margin-bottom:0;">☀️ 组织架构分布</div>
+                            <a href="24-sunburst/index.html" class="chart-badge yellow">旭日图</a>
+                        </div>
+                        <div class="data-grid">
+                            <div class="data-item"><div class="data-label">部门数</div><div class="data-value">6个</div></div>
+                            <div class="data-item"><div class="data-label">最大团队</div><div class="data-value" style="color:#5B8FF9;">技术部</div></div>
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box" style="height:260px;"></div>
+                        </div>
+                        <div class="insight-line">技术部人数最多，占比 <strong>35%</strong></div>
+                    </div>`
+            };
+        default:
+            return {
+                chartId,
+                html: `
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">数据分析</div>
+                            <span class="chart-badge blue">图表</span>
+                        </div>
+                        <div class="chart-body">
+                            <div id="${chartId}" class="chart-box"></div>
+                        </div>
+                    </div>`
+            };
+    }
+}
+
+function renderChart(id, type) {
+    const { Column, Bar, Line, Area, Pie, Rose, Scatter, Radar, Treemap, Heatmap, Waterfall, DualAxes, Sankey, Sunburst, Histogram, WordCloud, Funnel } = G2Plot;
+    
+    const colData = [
+        { x: '华东', y: 3650 }, { x: '华北', y: 2808 }, { x: '华南', y: 2408 },
+        { x: '华中', y: 2236 }, { x: '西北', y: 1500 }, { x: '西南', y: 1648 }
+    ];
+    const lineData = [
+        { x: '1月', y: 2100 }, { x: '2月', y: 2350 }, { x: '3月', y: 2580 },
+        { x: '4月', y: 2460 }, { x: '5月', y: 2780 }, { x: '6月', y: 3200 }
+    ];
+    const pieData = [
+        { type: '线上', value: 45 }, { type: '门店', value: 32 },
+        { type: '分销', value: 18 }, { type: '其他', value: 5 }
+    ];
+    // 堆叠柱状图数据
+    const stackedData = [
+        { x: '华东', y: 1800, type: '产品A' }, { x: '华东', y: 1200, type: '产品B' }, { x: '华东', y: 650, type: '产品C' },
+        { x: '华北', y: 1400, type: '产品A' }, { x: '华北', y: 900, type: '产品B' }, { x: '华北', y: 508, type: '产品C' },
+        { x: '华南', y: 1200, type: '产品A' }, { x: '华南', y: 750, type: '产品B' }, { x: '华南', y: 458, type: '产品C' },
+        { x: '华中', y: 1000, type: '产品A' }, { x: '华中', y: 800, type: '产品B' }, { x: '华中', y: 436, type: '产品C' }
+    ];
+    // 直方图数据
+    const histogramData = Array.from({ length: 100 }, () => ({ value: Math.floor(Math.random() * 1500) + 200 }));
+    // 气泡图数据
+    const bubbleData = [
+        { x: 80, y: 45, size: 3200, cat: '产品A' }, { x: 65, y: 38, size: 2800, cat: '产品B' },
+        { x: 50, y: 55, size: 1800, cat: '产品C' }, { x: 35, y: 25, size: 2200, cat: '产品D' },
+        { x: 70, y: 30, size: 1500, cat: '产品E' }, { x: 45, y: 42, size: 2600, cat: '产品F' }
+    ];
+    // 帕累托图数据
+    const paretoData = [
+        { x: '质量问题', y: 45, rate: 45 }, { x: '交付延迟', y: 25, rate: 70 },
+        { x: '价格争议', y: 12, rate: 82 }, { x: '服务态度', y: 10, rate: 92 },
+        { x: '其他', y: 8, rate: 100 }
+    ];
+    // 词云数据
+    const wordcloudData = [
+        { word: '智能手机', weight: 100 }, { word: '笔记本', weight: 85 }, { word: '平板电脑', weight: 70 },
+        { word: '智能手表', weight: 65 }, { word: '耳机', weight: 58 }, { word: '充电器', weight: 45 },
+        { word: '手机壳', weight: 42 }, { word: '数据线', weight: 38 }, { word: '蓝牙音箱', weight: 35 },
+        { word: '移动电源', weight: 32 }, { word: '键盘', weight: 28 }, { word: '鼠标', weight: 25 }
+    ];
+    
+    // ===== 移动端参数规范 (参考 mobile-spec.html) =====
+    const fontSize = 10;           // 统一轴标签字号
+    const labelFontSize = 10;      // 图表内标签字号
+    const bindRadius = 3;          // 柱状图圆角
+    const lineWidth = 1.5;         // 线条宽度 (移动端)
+    const pointSize = 3;           // 数据点大小 (移动端)
+    const circleRadius = 0.8;      // 圆形图表半径 (移动端)
+    const basePadding = [20, 15, 35, 40]; // 统一基础padding
+    
+    const axisStyle = { label: { style: { fontSize, fill: '#86868B' } } };
+    const gridStyle = { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } };
+
+    try {
+        let chart;
+        switch(type) {
+            case 'column':
+                chart = new Column(id, {
+                    data: colData, xField: 'x', yField: 'y',
+                    padding: basePadding,
+                    color: '#5B8FF9',
+                    columnWidthRatio: 0.6,  // 移动端 0.6
+                    columnStyle: { radius: [bindRadius, bindRadius, 0, 0] },
+                    label: { position: 'top', style: { fill: '#5B8FF9', fontSize: labelFontSize } },
+                    xAxis: { ...axisStyle, line: { style: { stroke: '#E8E8ED' } }, tickLine: null },
+                    yAxis: { ...axisStyle, grid: gridStyle, line: null, tickLine: null },
+                    legend: false
+                });
+                break;
+            case 'stackedColumn':
+                chart = new Column(id, {
+                    data: stackedData, xField: 'x', yField: 'y', seriesField: 'type',
+                    isStack: true,
+                    padding: basePadding,
+                    color: ['#5B8FF9', '#5AD8A6', '#F6BD16'],
+                    columnWidthRatio: 0.6,  // 移动端 0.6
+                    columnStyle: { radius: 0 },  // 堆叠柱状图无圆角
+                    xAxis: { ...axisStyle, line: { style: { stroke: '#E8E8ED' } }, tickLine: null },
+                    yAxis: { ...axisStyle, grid: gridStyle, line: null, tickLine: null },
+                    legend: false
+                });
+                break;
+            case 'bar':
+                chart = new Bar(id, {
+                    data: colData.slice(0, 5), xField: 'y', yField: 'x',
+                    padding: [15, 45, 15, 50],
+                    color: '#5B8FF9',
+                    barWidthRatio: 0.55,  // 移动端 0.55
+                    barStyle: { radius: [0, bindRadius, bindRadius, 0] },
+                    label: { position: 'right', style: { fill: '#5B8FF9', fontSize: labelFontSize } },
+                    xAxis: { ...axisStyle },
+                    yAxis: { ...axisStyle, line: null },
+                    legend: false
+                });
+                break;
+            case 'line':
+                chart = new Line(id, {
+                    data: lineData, xField: 'x', yField: 'y',
+                    padding: basePadding,
+                    color: '#5B8FF9',
+                    lineStyle: { lineWidth },  // 移动端 1.5
+                    point: { size: pointSize, style: { fill: '#5B8FF9', stroke: '#fff', lineWidth: 1.5 } },  // 移动端 size: 3
+                    xAxis: { ...axisStyle, line: { style: { stroke: '#E8E8ED' } }, tickLine: null },
+                    yAxis: { ...axisStyle, grid: gridStyle, line: null },
+                    legend: false
+                });
+                break;
+            case 'area':
+                chart = new Area(id, {
+                    data: lineData, xField: 'x', yField: 'y',
+                    padding: basePadding,
+                    color: '#5AD8A6',
+                    smooth: true,
+                    areaStyle: { fillOpacity: 0.3 },  // 移动端 0.25-0.3
+                    line: { style: { lineWidth } },
+                    xAxis: { ...axisStyle, line: { style: { stroke: '#E8E8ED' } }, tickLine: null },
+                    yAxis: { ...axisStyle, grid: gridStyle, line: null },
+                    legend: false
+                });
+                break;
+            case 'pie':
+                chart = new Pie(id, {
+                    data: pieData, angleField: 'value', colorField: 'type',
+                    radius: 0.85,  // 移动端 0.85
+                    padding: [15, 15, 15, 15],
+                    color: COLORS,
+                    label: { 
+                        type: 'spider',
+                        content: '{name} {percentage}',
+                        style: { fontSize: labelFontSize },
+                        labelLine: { style: { lineWidth: 1, stroke: '#aaa' } }
+                    },
+                    legend: false
+                });
+                break;
+            case 'histogram':
+                chart = new Histogram(id, {
+                    data: histogramData, binField: 'value',
+                    binNumber: 8,  // 移动端 8
+                    padding: basePadding,
+                    color: '#5B8FF9',
+                    columnStyle: { radius: [bindRadius, bindRadius, 0, 0] },
+                    xAxis: { ...axisStyle, line: { style: { stroke: '#E8E8ED' } }, tickLine: null },
+                    yAxis: { ...axisStyle, grid: gridStyle, line: null, tickLine: null },
+                    legend: false
+                });
+                break;
+            case 'bubble':
+                chart = new Scatter(id, {
+                    data: bubbleData, xField: 'x', yField: 'y', sizeField: 'size', colorField: 'cat',
+                    size: [8, 28],  // 进一步缩小气泡
+                    padding: [40, 40, 50, 50],  // 更大的padding
+                    color: COLORS.slice(0, 6),
+                    shape: 'circle',
+                    pointStyle: { fillOpacity: 0.65, stroke: '#fff', lineWidth: 1 },
+                    xAxis: { ...axisStyle, min: 15, max: 100, grid: gridStyle },
+                    yAxis: { ...axisStyle, min: 10, max: 70, grid: gridStyle },
+                    legend: false
+                });
+                break;
+            case 'pareto':
+                // 帕累托图数据
+                const paretoRaw = [{ type: '缺陷A', value: 120 }, { type: '缺陷B', value: 85 }, { type: '缺陷C', value: 45 }, { type: '缺陷D', value: 30 }];
+                const paretoTotal = paretoRaw.reduce((s, d) => s + d.value, 0);
+                let cumulative = 0;
+                const paretoLine = paretoRaw.map(d => { cumulative += d.value; return { type: d.type, percent: cumulative / paretoTotal }; });
+                chart = new DualAxes(id, {
+                    data: [paretoRaw, paretoLine], xField: 'type', yField: ['value', 'percent'],
+                    padding: [20, 30, 35, 30],
+                    geometryOptions: [
+                        { geometry: 'column', color: '#5B8FF9', columnWidthRatio: 0.6, columnStyle: { radius: [bindRadius, bindRadius, 0, 0] } },
+                        { geometry: 'line', color: '#5AD8A6', lineStyle: { lineWidth }, point: { size: pointSize, style: { fill: '#5AD8A6', stroke: '#fff', lineWidth: 2 } } }
+                    ],
+                    xAxis: { ...axisStyle },
+                    yAxis: { 
+                        value: { ...axisStyle }, 
+                        percent: { ...axisStyle, label: { formatter: v => (v * 100).toFixed(0) + '%' } } 
+                    },
+                    legend: false
+                });
+                break;
+            case 'wordcloud':
+                chart = new WordCloud(id, {
+                    data: wordcloudData, wordField: 'word', weightField: 'weight', colorField: 'word',
+                    padding: [15, 15, 15, 15],
+                    color: COLORS,
+                    wordStyle: {
+                        fontSize: [16, 48],  // 移动端 [16, 48]
+                        rotation: 0,
+                        fontWeight: 600
+                    },
+                    random: () => 0.5
+                });
+                break;
+            case 'funnel':
+                const funnelData = [
+                    { stage: '浏览', value: 5000 },
+                    { stage: '点击', value: 3500 },
+                    { stage: '加购', value: 2100 },
+                    { stage: '下单', value: 1200 },
+                    { stage: '支付', value: 800 },
+                ];
+                chart = new Funnel(id, {
+                    data: funnelData,
+                    xField: 'stage',
+                    yField: 'value',
+                    shape: 'funnel',
+                    dynamicHeight: false,
+                    padding: [10, 5, 10, 5],
+                    color: ['#5B8FF9', '#61DDAA', '#65789B', '#F6BD16', '#E86452'],
+                    legend: false,
+                    label: {
+                        formatter: (d) => `${d.stage}\n${(d.value/1000).toFixed(1)}k`,
+                        style: { fontSize: 12, fill: '#fff', fontWeight: 600, textAlign: 'center' },
+                    },
+                    conversionTag: {
+                        formatter: (datum) => `${((datum.$$percentage$$) * 100).toFixed(0)}%`,
+                        style: { fontSize: 10, fill: '#8C8C8C' },
+                    },
+                    funnelStyle: {
+                        stroke: '#fff',
+                        lineWidth: 2,
+                    },
+                });
+                break;
+            case 'map':
+                // 地图使用 ECharts 渲染
+                renderMapChart(id);
+                return;
+            case 'ring':
+                chart = new Pie(id, {
+                    data: [{ type: '已完成', value: 75 }, { type: '未完成', value: 25 }],
+                    angleField: 'value', colorField: 'type',
+                    radius: circleRadius, innerRadius: 0.55,  // 移动端 innerRadius: 0.55
+                    padding: [15, 15, 15, 15],
+                    color: ['#5AD8A6', '#E8E8ED'],
+                    statistic: {
+                        title: { content: '总计', style: { fontSize: '11px', color: '#86868B' } },
+                        content: { content: '75%', style: { fontSize: '20px', fontWeight: 600, color: '#5AD8A6' } }  // 移动端 16-20px
+                    },
+                    legend: false
+                });
+                break;
+            case 'radar':
+                chart = new Radar(id, {
+                    data: [{ item: '技术', score: 80 }, { item: '设计', score: 70 }, { item: '产品', score: 85 }, { item: '运营', score: 75 }, { item: '市场', score: 65 }],
+                    xField: 'item', yField: 'score',
+                    padding: [30, 30, 30, 30],
+                    color: '#5B8FF9',
+                    area: { style: { fillOpacity: 0.3 } },
+                    point: { size: pointSize, style: { fill: '#5B8FF9', stroke: '#fff', lineWidth: 1.5 } },  // 移动端 point.size: 3
+                    xAxis: { label: { style: { fontSize: labelFontSize } } },
+                    legend: false
+                });
+                break;
+            case 'heatmap':
+                const days = ['周一', '周二', '周三', '周四', '周五'];
+                const hours = ['9:00', '12:00', '15:00', '18:00'];
+                const heatData = [];
+                days.forEach(d => { hours.forEach(h => { heatData.push({ day: d, hour: h, value: Math.floor(Math.random() * 100) }); }); });
+                chart = new Heatmap(id, {
+                    data: heatData, xField: 'hour', yField: 'day', colorField: 'value',
+                    padding: [15, 20, 35, 50],
+                    color: ['#E8F4FD', '#5B8FF9', '#3D5A99'],
+                    shape: 'rect',
+                    xAxis: { ...axisStyle, tickLine: null },
+                    yAxis: { ...axisStyle },
+                    legend: false
+                });
+                break;
+            case 'treemap':
+                chart = new Treemap(id, {
+                    data: { name: 'root', children: pieData.map(d => ({ name: d.type, value: d.value })) },
+                    colorField: 'name',
+                    padding: [15, 15, 15, 15],
+                    color: COLORS,
+                    label: { style: { fontSize: labelFontSize + 1, fill: '#fff', fontWeight: 500 } },
+                    rectStyle: { lineWidth: 2, stroke: '#fff' },
+                    legend: false
+                });
+                break;
+            case 'scatter':
+                const scatterData = Array.from({ length: 30 }, () => ({ 
+                    x: Math.random() * 100, 
+                    y: Math.random() * 100, 
+                    cat: Math.random() > 0.5 ? 'A类' : 'B类' 
+                }));
+                chart = new Scatter(id, {
+                    data: scatterData,
+                    xField: 'x',
+                    yField: 'y',
+                    colorField: 'cat',
+                    size: pointSize + 2,  // 移动端 size: 4-5
+                    shape: 'circle',
+                    color: ['#5B8FF9', '#5AD8A6'],
+                    pointStyle: { fillOpacity: 0.8, stroke: '#fff', lineWidth: 1.5 },
+                    padding: basePadding,
+                    xAxis: { ...axisStyle, grid: gridStyle },
+                    yAxis: { ...axisStyle, grid: gridStyle },
+                    legend: false,
+                });
+                break;
+            case 'waterfall':
+                chart = new Waterfall(id, {
+                    data: [{ type: '收入', value: 52 }, { type: '成本', value: -21 }, { type: '费用', value: -10 }, { type: '利润', value: null }],
+                    xField: 'type', yField: 'value',
+                    padding: basePadding,
+                    risingFill: '#5B8FF9', fallingFill: '#E86452',
+                    total: { label: '利润', style: { fill: '#5D7092' } },
+                    columnWidthRatio: 0.55,  // 移动端 0.55
+                    label: { position: 'middle', style: { fill: '#fff', fontSize: labelFontSize, fontWeight: 500 } },
+                    xAxis: { ...axisStyle }, 
+                    yAxis: { ...axisStyle, grid: gridStyle },
+                    legend: false
+                });
+                break;
+            case 'dualAxes':
+                chart = new DualAxes(id, {
+                    data: [lineData, lineData], xField: 'x', yField: ['y', 'y'],
+                    padding: [20, 25, 35, 25],
+                    geometryOptions: [
+                        { geometry: 'column', color: '#5B8FF9', columnWidthRatio: 0.55, columnStyle: { radius: [bindRadius, bindRadius, 0, 0] } },  // 移动端 0.55
+                        { geometry: 'line', color: '#E86452', lineStyle: { lineWidth }, point: { size: pointSize, style: { fill: '#E86452', stroke: '#fff', lineWidth: 2 } } }
+                    ],
+                    xAxis: { ...axisStyle },
+                    yAxis: { y: { ...axisStyle } },
+                    legend: false
+                });
+                break;
+            case 'rose':
+                chart = new Rose(id, {
+                    data: pieData, xField: 'type', yField: 'value', seriesField: 'type',
+                    radius: 0.88, innerRadius: 0.2,  // 移动端 radius: 0.88, innerRadius: 0.2
+                    padding: [15, 15, 15, 15],
+                    color: COLORS,
+                    label: { 
+                        offset: 15,
+                        formatter: (datum) => datum.type,
+                        style: { fontSize: labelFontSize, fill: '#1D1D1F' },
+                        labelLine: { style: { lineWidth: 1, stroke: '#aaa' } }
+                    },
+                    legend: false
+                });
+                break;
+            case 'sankey':
+                const sankeyData = [
+                    { source: '搜索', target: '首页', value: 45 }, { source: '社交', target: '首页', value: 25 },
+                    { source: '首页', target: '浏览', value: 60 }, { source: '首页', target: '流失', value: 10 },
+                    { source: '浏览', target: '购买', value: 30 }, { source: '浏览', target: '流失', value: 30 }
+                ];
+                chart = new Sankey(id, {
+                    data: sankeyData,
+                    sourceField: 'source', targetField: 'target', weightField: 'value',
+                    padding: [25, 25, 25, 25],
+                    color: COLORS,
+                    nodeWidthRatio: 0.02,  // 移动端 0.02
+                    nodePaddingRatio: 0.02,
+                    nodeStyle: { fillOpacity: 1 }, 
+                    edgeStyle: { fillOpacity: 0.45 },  // 移动端 0.45
+                    label: { style: { fill: '#1D1D1F', fontSize: labelFontSize, fontWeight: 500 } },
+                    legend: false
+                });
+                break;
+            case 'sunburst':
+                chart = new Sunburst(id, {
+                    data: { name: '总部', children: [{ name: '研发', children: [{ name: '前端', value: 30 }, { name: '后端', value: 40 }] }, { name: '销售', children: [{ name: '华东', value: 25 }, { name: '华南', value: 20 }] }] },
+                    innerRadius: 0.2,  // 移动端 0.2
+                    padding: [20, 20, 20, 20],
+                    hierarchyConfig: { field: 'value' },
+                    color: COLORS,
+                    sunburstStyle: { stroke: '#fff', lineWidth: 2 },
+                    label: { layout: [{ type: 'limit-in-shape' }], style: { fontSize: labelFontSize, fill: '#fff', fontWeight: 500 } },
+                    legend: false
+                });
+                break;
+        }
+        if (chart) chart.render();
+    } catch (e) { console.error('Chart render error:', type, e); }
+}
+
+// 地图渲染函数 (使用 ECharts 真实地图)
+async function renderMapChart(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    
+    // 显示加载状态
+    el.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#86868B;font-size:11px;">加载地图中...</div>';
+    
+    try {
+        // 尝试加载本地 GeoJSON
+        const geoJsonSources = [
+            '17-map/china.json',
+            'https://cdn.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json'
+        ];
+        
+        let geoJson = null;
+        for (const url of geoJsonSources) {
+            try {
+                const response = await fetch(url);
+                if (response.ok) {
+                    geoJson = await response.json();
+                    if (geoJson && geoJson.features) break;
+                }
+            } catch (e) { continue; }
+        }
+        
+        if (!geoJson || !geoJson.features) {
+            throw new Error('无法加载地图数据');
+        }
+        
+        // 注册地图
+        echarts.registerMap('china', geoJson);
+        
+        // 生成模拟数据
+        const provinceNames = geoJson.features
+            .map(f => f.properties?.name)
+            .filter(name => name && name !== '中华人民共和国');
+        
+        const mapData = provinceNames.map(name => ({
+            name: name,
+            value: Math.round(Math.random() * 8000 + 500)
+        }));
+        
+        // 清空容器并初始化 ECharts
+        el.innerHTML = '';
+        const chart = echarts.init(el);
+        
+        const option = {
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: 'rgba(255,255,255,0.95)',
+                borderColor: '#E8E8ED',
+                borderWidth: 1,
+                padding: [8, 12],
+                textStyle: { color: '#1D1D1F', fontSize: 10 },
+                formatter: params => `${params.name.replace(/省|市|自治区|特别行政区|壮族|回族|维吾尔/g, '')}: ${params.value ? params.value.toLocaleString() : 0} 万元`
+            },
+            visualMap: {
+                show: false,
+                min: 0,
+                max: 8000,
+                inRange: { color: ['#E8F4FD', '#7CB8F7', '#5B8FF9', '#3D6DD8'] }
+            },
+            series: [{
+                type: 'map',
+                map: 'china',
+                roam: true,
+                zoom: 1.0,
+                center: [104, 36],
+                scaleLimit: { min: 0.8, max: 3 },
+                label: { show: false },
+                itemStyle: { areaColor: '#f5f5f5', borderColor: '#fff', borderWidth: 0.5 },
+                emphasis: {
+                    label: { show: true, color: '#fff', fontSize: 8 },
+                    itemStyle: { areaColor: '#5B8FF9', shadowColor: 'rgba(91,143,249,0.4)', shadowBlur: 10 }
+                },
+                data: mapData
+            }]
+        };
+        
+        chart.setOption(option);
+        
+        // 响应式
+        const resizeObserver = new ResizeObserver(() => chart.resize());
+        resizeObserver.observe(el);
+        
+    } catch (error) {
+        console.error('地图加载失败:', error);
+        el.innerHTML = `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#86868B;font-size:11px;background:#F5F5F7;border-radius:8px;gap:8px;">
+            <span>🗺️ 地图加载失败</span>
+            <button onclick="renderMapChart('${id}')" style="padding:4px 12px;background:#5B8FF9;color:#fff;border:none;border-radius:4px;font-size:10px;cursor:pointer;">重试</button>
+        </div>`;
+    }
+}
+
+function scrollToBottom() {
+    setTimeout(() => {
+        document.getElementById('chatArea').scrollTo({ top: 999999, behavior: 'smooth' });
+    }, 50);
+}
+
+window.onload = initPrompts;
+</script>
+</body>
+</html>

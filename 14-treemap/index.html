@@ -6,11 +6,18 @@
     <title>矩形树图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
-    <style>
-        /* 使用 common.css 中的统一样式 */
-    </style>
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -205,6 +212,11 @@
 <script>
 const { Treemap } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const labelFontSize = mobile ? 9 : 12;
+const rectLineWidth = mobile ? 1 : 2;
+
 const data = {
     name: 'root',
     children: [
@@ -239,15 +251,18 @@ const data = {
 new Treemap('chart-basic', {
     data,
     colorField: 'name',
-    padding: [40, 24, 24, 24], // 顶部留出空间给自定义图例
+    padding: [40, 24, 24, 24],
     color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF3B30', '#5856D6', '#32ADE6', '#FF99C3'],
     label: {
-        style: { fontSize: 12, fill: '#fff' },
+        style: { fontSize: labelFontSize, fill: '#fff' },
         formatter: (v) => v.name,
     },
-    rectStyle: { stroke: '#fff', lineWidth: 2 },
+    rectStyle: { stroke: '#fff', lineWidth: rectLineWidth },
     interactions: [{ type: 'treemap-drill-down' }],
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

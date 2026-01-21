@@ -7,6 +7,7 @@
     <!-- 使用 ECharts 渲染地图 -->
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         .chart-type-badge {
             display: inline-flex; align-items: center; gap: 8px;
@@ -105,6 +106,15 @@
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -586,7 +596,13 @@ chart.setOption(option);</pre>
     }
 
     // 页面加载后渲染地图
-    document.addEventListener('DOMContentLoaded', renderMap);
+    document.addEventListener('DOMContentLoaded', function() {
+        renderMap();
+        // 初始化响应式
+        if (typeof ChartSpec !== 'undefined') {
+            ChartSpec.init();
+        }
+    });
 </script>
 
 <script src="../nav.js"></script>

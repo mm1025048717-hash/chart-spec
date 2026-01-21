@@ -6,11 +6,18 @@
     <title>雷达图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
-    <style>
-        /* 使用 common.css 中的统一样式 */
-    </style>
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -192,6 +199,13 @@
 <script>
 const { Radar } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 10 : 11;
+const pointSize = mobile ? 3 : 4;
+const lineWidth = mobile ? 2 : 2;
+const appendPadding = mobile ? [30, 10, 10, 10] : [40, 20, 20, 20];
+
 const data = [
     { skill: '沟通能力', score: 85, name: '张三' },
     { skill: '技术能力', score: 90, name: '张三' },
@@ -214,13 +228,17 @@ new Radar('chart-basic', {
     seriesField: 'name',
     color: ['#5B8FF9', '#5AD8A6'],
     area: { style: { fillOpacity: 0.2 } },
-    point: { size: 3 },
+    point: { size: pointSize },
+    lineStyle: { lineWidth: lineWidth },
     padding: 'auto',
-    appendPadding: [40, 20, 20, 20],
-    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    appendPadding: appendPadding,
+    xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
     yAxis: { min: 0, max: 100 },
     legend: false,
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

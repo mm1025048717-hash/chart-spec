@@ -6,8 +6,18 @@
     <title>旭日图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -238,6 +248,12 @@
 
 <script src="../nav.js"></script>
 <script>
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const labelFontSize = mobile ? 8 : 10;
+const innerRadius = mobile ? 0.2 : 0.25;
+const strokeWidth = mobile ? 1 : 2;
+
 const data = {
     name: '公司',
     children: [
@@ -289,7 +305,7 @@ const data = {
 
 new G2Plot.Sunburst('chart-basic', {
     data,
-    innerRadius: 0.25,
+    innerRadius: innerRadius,
     hierarchyConfig: {
         field: 'value',
     },
@@ -297,11 +313,11 @@ new G2Plot.Sunburst('chart-basic', {
     interactions: [{ type: 'element-active' }],
     label: {
         layout: [{ type: 'limit-in-shape' }],
-        style: { fontSize: 11, fill: '#fff' },
+        style: { fontSize: labelFontSize, fill: '#fff' },
     },
     sunburstStyle: {
         stroke: '#fff',
-        lineWidth: 1,
+        lineWidth: strokeWidth,
     },
     tooltip: {
         formatter: (datum) => ({
@@ -310,6 +326,9 @@ new G2Plot.Sunburst('chart-basic', {
         }),
     },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 </body>

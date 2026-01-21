@@ -6,11 +6,21 @@
     <title>面积图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         /* 使用 common.css 中的统一样式 */
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -279,6 +289,12 @@
 <script>
 const { Area } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const fontSize = mobile ? 9 : 11;
+const lineWidth = mobile ? 1.5 : 2;
+const fillOpacity = mobile ? 0.25 : 0.3;
+
 const basicData = [
     { date: '1月', value: 3650 },
     { date: '2月', value: 4200 },
@@ -297,17 +313,17 @@ new Area('chart-basic', {
     yField: 'value',
     smooth: true,
     color: '#5AD8A6',
-    areaStyle: { fillOpacity: 0.3 },
-    line: { style: { lineWidth: 2 } },
+    areaStyle: { fillOpacity: fillOpacity },
+    line: { style: { lineWidth: lineWidth } },
     padding: 'auto',
     appendPadding: [40, 20, 30, 20],
     xAxis: { 
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: { 
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#86868B' } },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
     },
@@ -336,8 +352,8 @@ new Area('chart-stacked', {
     smooth: true,
     color: ['#5B8FF9', '#5AD8A6'],
     areaStyle: { fillOpacity: 0.4 },
-    legend: { position: 'top-right' },
-    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    legend: { position: 'top-right', itemName: { style: { fontSize: mobile ? 9 : 11 } } },
+    xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
 }).render();
 
 // 渐变面积图
@@ -350,9 +366,12 @@ new Area('chart-gradient', {
         fill: 'l(270) 0:#ffffff 0.5:#F6BD16 1:#F6BD16',
         fillOpacity: 0.6,
     }),
-    line: { style: { stroke: '#F6BD16', lineWidth: 2 } },
-    xAxis: { label: { style: { fontSize: 11, fill: '#86868B' } } },
+    line: { style: { stroke: '#F6BD16', lineWidth: lineWidth } },
+    xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 

@@ -6,12 +6,22 @@
     <title>玫瑰图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
+    <script src="../responsive-spec.js"></script>
     <style>
         .variant-grid { grid-template-columns: repeat(2, 1fr); }
         @media (max-width: 768px) { .variant-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -253,6 +263,12 @@ isStack: true,</pre>
 
 <script src="../nav.js"></script>
 <script>
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const labelFontSize = mobile ? 9 : 11;
+const radius = mobile ? 0.88 : 0.9;
+const legendFontSize = mobile ? 9 : 11;
+
 const data = [
     { type: '智能手机', value: 3200 },
     { type: '平板电脑', value: 2100 },
@@ -266,7 +282,7 @@ new G2Plot.Rose('chart-basic', {
     data,
     xField: 'type',
     yField: 'value',
-    radius: 0.85,
+    radius: radius,
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452'],
     sectorStyle: {
         stroke: '#fff',
@@ -275,7 +291,7 @@ new G2Plot.Rose('chart-basic', {
     label: {
         offset: -20,
         content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-        style: { fill: '#fff', fontSize: 11, fontWeight: 500 },
+        style: { fill: '#fff', fontSize: labelFontSize, fontWeight: 500 },
     },
     legend: false,
     interactions: [{ type: 'element-active' }],
@@ -305,7 +321,7 @@ new G2Plot.Rose('chart-grouped', {
     yField: 'value',
     seriesField: 'year',
     isGroup: true,
-    radius: 0.85,
+    radius: radius,
     color: ['#5B8FF9', '#5AD8A6'],
     sectorStyle: { stroke: '#fff', lineWidth: 1 },
     label: false,
@@ -319,12 +335,15 @@ new G2Plot.Rose('chart-stacked', {
     yField: 'value',
     seriesField: 'year',
     isStack: true,
-    radius: 0.85,
+    radius: radius,
     color: ['#5B8FF9', '#5AD8A6'],
     sectorStyle: { stroke: '#fff', lineWidth: 1 },
     label: false,
     legend: false,
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 </body>

@@ -2,7 +2,11 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
     <title>Chart Spec - 重新定义专业图表设计</title>
     <style>
         :root {
@@ -16,11 +20,20 @@
             --text-main: #1D1D1F;
             --text-sub: #86868B;
             --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+            /* 安全区域变量 */
+            --safe-area-top: env(safe-area-inset-top, 0px);
+            --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-left: env(safe-area-inset-left, 0px);
+            --safe-area-right: env(safe-area-inset-right, 0px);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        html { scroll-behavior: smooth; }
+        html { 
+            scroll-behavior: smooth; 
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "PingFang SC", sans-serif;
@@ -30,7 +43,15 @@
             font-weight: 400;
             letter-spacing: -0.022em;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
+            /* 防止iOS橡皮筋效果导致的布局问题 */
+            overscroll-behavior-y: none;
+        }
+
+        /* 防止iOS点击高亮 */
+        a, button {
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* ===== Animated Background ===== */
@@ -61,7 +82,7 @@
             z-index: 9999;
         }
 
-        /* ===== Mouse Spotlight ===== */
+        /* ===== Mouse Spotlight (仅桌面端) ===== */
         .spotlight {
             position: fixed;
             top: 0; left: 0;
@@ -75,7 +96,8 @@
         .nav {
             position: fixed;
             top: 0; left: 0; right: 0;
-            height: 52px;
+            height: calc(52px + var(--safe-area-top));
+            padding-top: var(--safe-area-top);
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
@@ -88,7 +110,7 @@
         .nav-inner {
             max-width: 1200px;
             margin: 0 auto;
-            height: 100%;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -112,9 +134,13 @@
             display: flex; align-items: center; justify-content: center;
             color: white; font-weight: 800; font-size: 16px;
             box-shadow: 0 2px 8px rgba(0, 113, 227, 0.3);
+            flex-shrink: 0;
         }
 
-        .nav-links { display: flex; gap: 40px; }
+        .nav-links { 
+            display: flex; 
+            gap: 40px; 
+        }
         .nav-link {
             font-size: 13px;
             color: var(--text-main);
@@ -124,16 +150,111 @@
         }
         .nav-link:hover { opacity: 1; color: var(--apple-blue); }
 
+        /* ===== 移动端汉堡菜单按钮 ===== */
+        .nav-toggle {
+            display: none;
+            width: 44px;
+            height: 44px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            z-index: 10001;
+            padding: 0;
+            margin-right: -10px;
+        }
+
+        .nav-toggle-icon {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--text-main);
+            position: relative;
+            transition: all 0.3s var(--ease-apple);
+            margin: 0 auto;
+        }
+
+        .nav-toggle-icon::before,
+        .nav-toggle-icon::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background: var(--text-main);
+            transition: all 0.3s var(--ease-apple);
+            left: 0;
+        }
+
+        .nav-toggle-icon::before { top: -6px; }
+        .nav-toggle-icon::after { top: 6px; }
+
+        /* 汉堡菜单打开状态 */
+        .nav-toggle.active .nav-toggle-icon {
+            background: transparent;
+        }
+        .nav-toggle.active .nav-toggle-icon::before {
+            transform: rotate(45deg);
+            top: 0;
+        }
+        .nav-toggle.active .nav-toggle-icon::after {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+
+        /* ===== 移动端导航菜单 ===== */
+        .nav-mobile {
+            display: none;
+            position: fixed;
+            top: calc(52px + var(--safe-area-top));
+            left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            z-index: 9999;
+            padding: 20px;
+            padding-bottom: calc(20px + var(--safe-area-bottom));
+            transform: translateY(-100%);
+            opacity: 0;
+            transition: all 0.4s var(--ease-apple);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-mobile.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .nav-mobile-link {
+            display: block;
+            padding: 20px 0;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-main);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+            transition: all 0.3s var(--ease-apple);
+        }
+
+        .nav-mobile-link:last-child {
+            border-bottom: none;
+        }
+
+        .nav-mobile-link:active {
+            color: var(--apple-blue);
+            transform: translateX(10px);
+        }
+
         /* ===== Hero Section ===== */
         .hero {
-            padding: 180px 40px 120px;
+            padding: calc(120px + var(--safe-area-top)) 40px 120px;
             text-align: center;
             position: relative;
             z-index: 2;
         }
 
         .hero-title {
-            font-size: clamp(64px, 12vw, 120px);
+            font-size: clamp(48px, 12vw, 120px);
             font-weight: 700;
             letter-spacing: -0.05em;
             line-height: 1.0;
@@ -146,6 +267,7 @@
             display: inline-block;
             background: linear-gradient(180deg, #1D1D1F 30%, #434345 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: textReveal 1.2s var(--ease-apple) backwards;
         }
@@ -153,6 +275,7 @@
         .hero-title .blue-text {
             background: linear-gradient(180deg, var(--apple-blue) 0%, #004F9E 100%);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
@@ -162,12 +285,12 @@
         }
 
         .hero-subtitle {
-            font-size: clamp(20px, 4vw, 26px);
+            font-size: clamp(18px, 4vw, 26px);
             color: var(--apple-gray-400);
             max-width: 800px;
             margin: 0 auto 56px;
             font-weight: 400;
-            line-height: 1.4;
+            line-height: 1.5;
             animation: fadeIn 1.5s var(--ease-apple) 0.3s backwards;
         }
 
@@ -182,6 +305,7 @@
             align-items: center;
             gap: 32px;
             animation: fadeIn 1.5s var(--ease-apple) 0.5s backwards;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -193,6 +317,7 @@
             transition: all 0.5s var(--ease-apple);
             position: relative;
             overflow: hidden;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -205,12 +330,34 @@
             box-shadow: 0 20px 40px rgba(0, 113, 227, 0.3);
             background: var(--apple-blue-hover);
         }
+        /* 触摸设备按下效果 */
+        .btn-primary:active {
+            transform: scale(0.98);
+            box-shadow: 0 5px 15px rgba(0, 113, 227, 0.2);
+        }
 
         .btn-secondary {
             color: var(--apple-blue);
             display: flex; align-items: center; gap: 8px;
         }
         .btn-secondary:hover { transform: translateX(6px); }
+        .btn-secondary:active { transform: translateX(3px); }
+
+        .btn-mobile {
+            background: linear-gradient(135deg, #1D1D1F 0%, #434345 100%);
+            color: #FFF;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+        .btn-mobile:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        .btn-mobile:active {
+            transform: scale(0.98);
+        }
 
         /* ===== Bento Grid ===== */
         .section {
@@ -237,7 +384,7 @@
         }
 
         .section-title {
-            font-size: 56px;
+            font-size: clamp(36px, 8vw, 56px);
             font-weight: 700;
             letter-spacing: -0.03em;
             color: var(--apple-gray-900);
@@ -284,13 +431,19 @@
         
         .bento-item:hover::after { opacity: 1; }
 
+        /* 触摸设备按下效果 */
+        .bento-item:active {
+            transform: scale(0.98);
+            transition-duration: 0.1s;
+        }
+
         .bento-6 { grid-column: span 6; }
         .bento-4 { grid-column: span 4; }
         .bento-8 { grid-column: span 8; }
         .bento-12 { grid-column: span 12; }
 
         .bento-title {
-            font-size: 32px;
+            font-size: clamp(24px, 5vw, 32px);
             font-weight: 700;
             margin-bottom: 16px;
             letter-spacing: -0.02em;
@@ -298,7 +451,7 @@
         }
 
         .bento-desc {
-            font-size: 18px;
+            font-size: clamp(15px, 3vw, 18px);
             color: var(--apple-gray-400);
             line-height: 1.5;
             z-index: 2;
@@ -341,13 +494,13 @@
 
         /* ===== Footer ===== */
         .footer {
-            padding: 120px 40px 60px;
+            padding: 120px 40px calc(60px + var(--safe-area-bottom));
             background: var(--apple-gray-100);
             text-align: center;
         }
 
         .footer-logo {
-            font-size: 32px;
+            font-size: clamp(24px, 5vw, 32px);
             font-weight: 700;
             color: var(--apple-gray-900);
             text-decoration: none;
@@ -360,6 +513,7 @@
             justify-content: center;
             gap: 64px;
             margin-bottom: 64px;
+            flex-wrap: wrap;
         }
 
         .footer-link {
@@ -369,12 +523,218 @@
             transition: color 0.3s;
         }
         .footer-link:hover { color: var(--apple-blue); }
+        .footer-link:active { color: var(--apple-blue); }
 
-        @media (max-width: 900px) {
-            .bento-grid { grid-template-columns: 1fr; }
+        /* ===== 平板适配 (768px - 1024px) ===== */
+        @media (max-width: 1024px) {
+            .nav-inner { padding: 0 24px; }
+            .section { padding: 80px 24px; }
+            .hero { padding: calc(100px + var(--safe-area-top)) 24px 80px; }
+            .bento-grid { gap: 24px; }
+            .bento-item { padding: 36px; border-radius: 32px; }
+            .section-header { margin-bottom: 60px; }
+            
+            .bento-6 { grid-column: span 6; }
+            .bento-4 { grid-column: span 6; }
+            .bento-8 { grid-column: span 12; }
+        }
+
+        /* ===== 移动端适配 (768px以下) ===== */
+        @media (max-width: 768px) {
+            /* 隐藏桌面导航，显示汉堡菜单 */
+            .nav-links { display: none; }
+            .nav-toggle { display: flex; align-items: center; justify-content: center; }
+            .nav-mobile { display: block; }
+            
+            .nav-inner { padding: 0 16px; }
+            
+            /* 隐藏桌面端鼠标聚光灯效果 */
+            .spotlight { display: none; }
+            
+            /* Hero 区域 */
+            .hero { 
+                padding: calc(80px + var(--safe-area-top)) 20px 60px; 
+            }
+            .hero-title { 
+                font-size: clamp(36px, 10vw, 56px);
+                margin-bottom: 24px;
+            }
+            .hero-subtitle { 
+                font-size: 17px;
+                margin-bottom: 40px;
+                line-height: 1.6;
+            }
+            .hero-cta { 
+                flex-direction: column; 
+                gap: 16px;
+                width: 100%;
+            }
+            .btn { 
+                padding: 16px 32px; 
+                font-size: 17px;
+                width: 100%;
+                max-width: 280px;
+                text-align: center;
+                justify-content: center;
+            }
+            
+            /* Section 区域 */
+            .section { padding: 60px 16px; }
+            .section-header { 
+                margin-bottom: 40px; 
+                text-align: center;
+            }
+            .eyebrow { font-size: 14px; }
+            
+            /* Bento Grid */
+            .bento-grid { 
+                grid-template-columns: 1fr; 
+                gap: 16px;
+            }
             .bento-4, .bento-6, .bento-8, .bento-12 { grid-column: span 1; }
-            .hero-title { font-size: 48px; }
-            .section-title { font-size: 40px; }
+            .bento-item { 
+                padding: 28px;
+                border-radius: 24px;
+            }
+            .bento-item:hover {
+                transform: none; /* 移动端禁用悬停位移 */
+            }
+            .bento-title { font-size: 22px; }
+            .bento-desc { 
+                font-size: 15px;
+                max-width: 100%;
+            }
+            .bento-visual { margin-top: 24px; }
+            .bento-visual[style*="font-size: 80px"] {
+                font-size: 60px !important;
+            }
+            
+            .chart-mock {
+                height: 150px;
+                gap: 8px;
+                padding: 12px;
+            }
+            
+            /* 特色卡片调整 */
+            .bento-featured > div {
+                max-width: 100% !important;
+            }
+            
+            /* Footer */
+            .footer { 
+                padding: 60px 20px calc(40px + var(--safe-area-bottom)); 
+            }
+            .footer-links { 
+                flex-direction: column; 
+                gap: 20px;
+                align-items: center;
+            }
+            .footer-link { 
+                font-size: 16px;
+                padding: 8px 0;
+            }
+            
+            /* 深色卡片调整 */
+            .section > .bento-item[style*="background: #1D1D1F"] > div {
+                margin: 20px auto !important;
+            }
+            .section > .bento-item[style*="background: #1D1D1F"] h2 {
+                font-size: 28px !important;
+                margin-bottom: 16px !important;
+            }
+            .section > .bento-item[style*="background: #1D1D1F"] p {
+                font-size: 16px !important;
+                margin-bottom: 24px !important;
+            }
+        }
+
+        /* ===== 小屏手机适配 (375px以下) ===== */
+        @media (max-width: 375px) {
+            .hero-title { font-size: 32px; }
+            .hero-subtitle { font-size: 15px; }
+            .btn { 
+                padding: 14px 24px; 
+                font-size: 16px;
+            }
+            .bento-item { padding: 20px; }
+            .bento-title { font-size: 20px; }
+            .bento-desc { font-size: 14px; }
+            .nav-brand { font-size: 16px; gap: 8px; }
+            .logo-mark { width: 24px; height: 24px; font-size: 14px; }
+        }
+
+        /* ===== 横屏模式优化 ===== */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .hero { 
+                padding-top: calc(60px + var(--safe-area-top)); 
+                padding-bottom: 40px;
+            }
+            .hero-title { font-size: 36px; margin-bottom: 16px; }
+            .hero-subtitle { margin-bottom: 24px; }
+            .hero-cta { flex-direction: row; }
+            .btn { width: auto; }
+        }
+
+        /* ===== 减少动画偏好 ===== */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            html { scroll-behavior: auto; }
+            .bg-mesh { animation: none; }
+        }
+
+        /* ===== 深色模式支持 ===== */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --apple-gray-50: #1D1D1F;
+                --apple-gray-100: #2D2D2F;
+                --apple-gray-200: #3D3D3F;
+                --apple-gray-400: #98989D;
+                --apple-gray-900: #F5F5F7;
+                --text-main: #F5F5F7;
+                --text-sub: #98989D;
+            }
+            
+            body { background: #000; }
+            .bg-mesh { background-color: #000; }
+            
+            .nav {
+                background: rgba(0, 0, 0, 0.7);
+                border-bottom-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            .nav-mobile {
+                background: rgba(0, 0, 0, 0.98);
+            }
+            
+            .nav-toggle-icon,
+            .nav-toggle-icon::before,
+            .nav-toggle-icon::after {
+                background: #F5F5F7;
+            }
+            
+            .bento-item {
+                background: rgba(45, 45, 47, 0.6);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            .bento-item:hover {
+                border-color: rgba(var(--apple-blue-rgb), 0.4);
+            }
+            
+            .footer { background: var(--apple-gray-100); }
+            
+            .grain { opacity: 0.03; }
+        }
+
+        /* ===== 打印样式 ===== */
+        @media print {
+            .nav, .spotlight, .bg-mesh, .grain, .nav-mobile { display: none !important; }
+            .hero { padding-top: 40px; }
+            body { background: white; color: black; }
         }
     </style>
 </head>
@@ -387,7 +747,7 @@
         <div class="nav-inner">
             <a href="#" class="nav-brand">
                 <div class="logo-mark">C</div>
-                Chart Spec
+                <span class="brand-text">Chart Spec</span>
             </a>
             <div class="nav-links">
                 <a href="#featured" class="nav-link">方案</a>
@@ -395,8 +755,19 @@
                 <a href="00-design-system/index.html" class="nav-link">规范</a>
                 <a href="https://github.com/mm1025048717-hash/chart-spec" class="nav-link">GitHub</a>
             </div>
+            <button class="nav-toggle" aria-label="打开菜单" aria-expanded="false">
+                <span class="nav-toggle-icon"></span>
+            </button>
         </div>
     </nav>
+    
+    <!-- 移动端导航菜单 -->
+    <div class="nav-mobile" aria-hidden="true">
+        <a href="#featured" class="nav-mobile-link">方案</a>
+        <a href="#library" class="nav-mobile-link">组件库</a>
+        <a href="00-design-system/index.html" class="nav-mobile-link">规范</a>
+        <a href="https://github.com/mm1025048717-hash/chart-spec" class="nav-mobile-link">GitHub</a>
+    </div>
 
     <header class="hero">
         <h1 class="hero-title">
@@ -408,6 +779,13 @@
         </p>
         <div class="hero-cta">
             <a href="#featured" class="btn btn-primary">立即体验</a>
+            <a href="mobile.html" class="btn btn-mobile">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                    <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+                移动端版本
+            </a>
             <a href="00-design-system/index.html" class="btn btn-secondary">
                 探索设计哲学
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -516,26 +894,93 @@
     </footer>
 
     <script>
-        // Mouse Spotlight Effect
-        document.addEventListener('mousemove', e => {
-            document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-            document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+        // 检测是否为触摸设备
+        const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+        
+        // Mouse Spotlight Effect (仅非触摸设备)
+        if (!isTouchDevice) {
+            document.addEventListener('mousemove', e => {
+                document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+                document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+                
+                // Item-specific spotlight
+                document.querySelectorAll('.bento-item').forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    item.style.setProperty('--item-x', `${x}px`);
+                    item.style.setProperty('--item-y', `${y}px`);
+                });
+            });
+        }
+
+        // ===== 移动端导航菜单 =====
+        const navToggle = document.querySelector('.nav-toggle');
+        const navMobile = document.querySelector('.nav-mobile');
+        const navMobileLinks = document.querySelectorAll('.nav-mobile-link');
+        let isMenuOpen = false;
+
+        function toggleMenu() {
+            isMenuOpen = !isMenuOpen;
+            navToggle.classList.toggle('active', isMenuOpen);
+            navMobile.classList.toggle('active', isMenuOpen);
+            navToggle.setAttribute('aria-expanded', isMenuOpen);
+            navMobile.setAttribute('aria-hidden', !isMenuOpen);
             
-            // Item-specific spotlight
-            document.querySelectorAll('.bento-item').forEach(item => {
-                const rect = item.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                item.style.setProperty('--item-x', `${x}px`);
-                item.style.setProperty('--item-y', `${y}px`);
+            // 防止背景滚动
+            document.body.style.overflow = isMenuOpen ? 'hidden' : '';
+        }
+
+        function closeMenu() {
+            if (isMenuOpen) {
+                isMenuOpen = false;
+                navToggle.classList.remove('active');
+                navMobile.classList.remove('active');
+                navToggle.setAttribute('aria-expanded', 'false');
+                navMobile.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+            }
+        }
+
+        navToggle.addEventListener('click', toggleMenu);
+
+        // 点击菜单项后关闭菜单
+        navMobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                // 延迟关闭以便看到点击效果
+                setTimeout(closeMenu, 150);
             });
         });
 
-        // Scroll Reveal
+        // 点击菜单外区域关闭菜单
+        document.addEventListener('click', (e) => {
+            if (isMenuOpen && !navMobile.contains(e.target) && !navToggle.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        // ESC键关闭菜单
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && isMenuOpen) {
+                closeMenu();
+            }
+        });
+
+        // 窗口大小变化时关闭移动菜单
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && isMenuOpen) {
+                closeMenu();
+            }
+        });
+
+        // ===== Scroll Reveal =====
         const observerOptions = {
             threshold: 0.1,
             rootMargin: "0px 0px -50px 0px"
         };
+
+        // 检查是否支持减少动画
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -547,33 +992,101 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.section-header, .bento-item').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(40px)';
-            el.style.filter = 'blur(10px)';
-            el.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
-            observer.observe(el);
-        });
+        if (!prefersReducedMotion) {
+            document.querySelectorAll('.section-header, .bento-item').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(40px)';
+                el.style.filter = 'blur(10px)';
+                el.style.transition = 'all 1s cubic-bezier(0.16, 1, 0.3, 1)';
+                observer.observe(el);
+            });
+        }
 
-        // Sticky Nav Effect
+        // ===== Sticky Nav Effect =====
         let lastScroll = 0;
-        window.addEventListener('scroll', () => {
+        let ticking = false;
+
+        function updateNav() {
             const currentScroll = window.pageYOffset;
             const nav = document.querySelector('.nav');
+            
+            // 移动菜单打开时不隐藏导航栏
+            if (isMenuOpen) {
+                nav.style.transform = 'translateY(0)';
+                ticking = false;
+                return;
+            }
             
             if (currentScroll <= 0) {
                 nav.style.transform = 'translateY(0)';
                 nav.style.boxShadow = 'none';
-                return;
-            }
-            
-            if (currentScroll > lastScroll && currentScroll > 100) {
+            } else if (currentScroll > lastScroll && currentScroll > 100) {
                 nav.style.transform = 'translateY(-100%)';
             } else {
                 nav.style.transform = 'translateY(0)';
                 nav.style.boxShadow = '0 4px 30px rgba(0,0,0,0.03)';
             }
+            
             lastScroll = currentScroll;
+            ticking = false;
+        }
+
+        // 使用 requestAnimationFrame 优化滚动性能
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(updateNav);
+                ticking = true;
+            }
+        }, { passive: true });
+
+        // ===== 平滑滚动到锚点 (兼容性处理) =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    e.preventDefault();
+                    const navHeight = document.querySelector('.nav').offsetHeight;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ===== 触摸设备优化 =====
+        if (isTouchDevice) {
+            // 为 bento-item 添加触摸反馈
+            document.querySelectorAll('.bento-item').forEach(item => {
+                item.addEventListener('touchstart', function() {
+                    this.style.transform = 'scale(0.98)';
+                }, { passive: true });
+                
+                item.addEventListener('touchend', function() {
+                    this.style.transform = '';
+                }, { passive: true });
+                
+                item.addEventListener('touchcancel', function() {
+                    this.style.transform = '';
+                }, { passive: true });
+            });
+        }
+
+        // ===== 视口高度修复 (解决移动端100vh问题) =====
+        function setViewportHeight() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        }
+        
+        setViewportHeight();
+        window.addEventListener('resize', setViewportHeight);
+        window.addEventListener('orientationchange', () => {
+            setTimeout(setViewportHeight, 100);
         });
     </script>
 </body>

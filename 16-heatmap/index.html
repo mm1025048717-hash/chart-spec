@@ -6,11 +6,18 @@
     <title>热力图 - 图表设计规范</title>
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
-    <style>
-        /* 使用 common.css 中的统一样式 */
-    </style>
+    <script src="../responsive-spec.js"></script>
 </head>
 <body>
+
+<div class="back-nav">
+    <a href="../data-agent.html" class="back-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+        返回数据分析
+    </a>
+</div>
 
 <div class="page-header">
     <div class="chart-type-badge">
@@ -184,6 +191,11 @@
 <script>
 const { Heatmap } = G2Plot;
 
+// 响应式参数
+const mobile = ChartSpec.isMobile();
+const xFontSize = mobile ? 7 : 9;
+const yFontSize = mobile ? 9 : 11;
+
 const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
 const hours = Array.from({ length: 24 }, (_, i) => `${i}:00`);
 
@@ -207,15 +219,18 @@ new Heatmap('chart-basic', {
     shape: 'rect',
     xAxis: {
         label: {
-            style: { fontSize: 11, fill: '#86868B' },
+            style: { fontSize: xFontSize, fill: '#86868B' },
             formatter: (v) => v.split(':')[0],
         },
     },
     yAxis: {
-        label: { style: { fontSize: 11 } },
+        label: { style: { fontSize: yFontSize, fill: '#86868B' } },
     },
     legend: { position: 'bottom' },
 }).render();
+
+// 初始化响应式
+ChartSpec.init();
 </script>
 
 
