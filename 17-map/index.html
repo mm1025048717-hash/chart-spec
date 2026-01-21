@@ -390,9 +390,9 @@ chart.setOption(option);</pre>
         
         // 方案2: 尝试从多个数据源加载
         const geoJsonSources = [
-            'china.json',  // 本地文件（最可靠）
-            'https://cdn.jsdelivr.net/npm/echarts@5.4.3/map/json/china.json',
-            'https://unpkg.com/echarts@5.4.3/map/json/china.json'
+            '/17-map/china.json',  // 本地文件（绝对路径）
+            'https://geo.datav.aliyun.com/areas_v3/bound/100000_full.json',  // 阿里云 DataV（推荐）
+            'https://geojson.cn/api/data/china.json'  // 备用数据源
         ];
         
         let lastError = null;
