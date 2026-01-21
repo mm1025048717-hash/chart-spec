@@ -309,15 +309,20 @@
         }
 
         .btn {
-            padding: 20px 44px;
+            padding: 18px 36px;
             border-radius: 980px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.5s var(--ease-apple);
             position: relative;
             overflow: hidden;
             white-space: nowrap;
+            min-width: 180px;
+            text-align: center;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn-primary {
@@ -338,10 +343,18 @@
 
         .btn-secondary {
             color: var(--apple-blue);
-            display: flex; align-items: center; gap: 8px;
+            background: transparent;
+            border: 2px solid var(--apple-blue);
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 8px;
         }
-        .btn-secondary:hover { transform: translateX(6px); }
-        .btn-secondary:active { transform: translateX(3px); }
+        .btn-secondary:hover { 
+            transform: scale(1.05) translateY(-2px); 
+            background: rgba(0, 113, 227, 0.05);
+        }
+        .btn-secondary:active { transform: scale(0.98); }
 
         .btn-mobile {
             background: linear-gradient(135deg, #1D1D1F 0%, #434345 100%);
