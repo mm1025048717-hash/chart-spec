@@ -1,11 +1,21 @@
 {
   "cleanUrls": true,
-  "trailingSlash": true,
+  "trailingSlash": false,
   "buildCommand": "",
   "outputDirectory": ".",
   "installCommand": "",
   "framework": null,
   "redirects": [
+    {
+      "source": "/mobile/mobile-spec",
+      "destination": "/mobile-spec",
+      "permanent": true
+    },
+    {
+      "source": "/mobile/data-agent",
+      "destination": "/data-agent",
+      "permanent": true
+    },
     {
       "source": "/mobile/:path*",
       "destination": "/:path*",
