@@ -4,5 +4,12 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "installCommand": "",
-  "framework": null
+  "framework": null,
+  "redirects": [
+    {
+      "source": "/mobile/:path*",
+      "destination": "/:path*",
+      "permanent": true
+    }
+  ]
 }
