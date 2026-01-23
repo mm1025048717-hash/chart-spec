@@ -580,6 +580,47 @@
             </div>
         </div>
     </section>
+
+    <section>
+        <h2 class="section-title">多指标图表规则</h2>
+        <div class="philosophy-list">
+            <div class="philosophy-item">
+                <span class="philosophy-num">01</span>
+                <div class="philosophy-content">
+                    <h4>Ant Charts 双轴限制</h4>
+                    <p>双轴图不支持同时使用两个柱状图，只能一个柱状图 + 一个其他图（如折线图）。两个柱状图只支持分组柱状图（共用 Y 轴）。</p>
+                </div>
+            </div>
+            <div class="philosophy-item">
+                <span class="philosophy-num">02</span>
+                <div class="philosophy-content">
+                    <h4>数字格式类型</h4>
+                    <p>系统支持三种格式：<strong>currency</strong>（货币）、<strong>number(int)</strong>（整数）、<strong>percentage</strong>（百分比）。</p>
+                </div>
+            </div>
+            <div class="philosophy-item">
+                <span class="philosophy-num">03</span>
+                <div class="philosophy-content">
+                    <h4>两者有其二规则</h4>
+                    <p>当只有两种格式时：<strong>currency</strong> 优先柱状图，其次 <strong>number(int)</strong>，剩下的用折线图。例如：销售额（currency）用柱状图，销售量（number）用折线图。</p>
+                </div>
+            </div>
+            <div class="philosophy-item">
+                <span class="philosophy-num">04</span>
+                <div class="philosophy-content">
+                    <h4>三者都有规则</h4>
+                    <p>当三种格式都存在时：<strong>currency</strong> 和 <strong>number(int)</strong> 都用柱状图（分组柱状图，共用左侧 Y 轴），<strong>percentage</strong> 用折线图（右侧 Y 轴）。</p>
+                </div>
+            </div>
+            <div class="philosophy-item">
+                <span class="philosophy-num">05</span>
+                <div class="philosophy-content">
+                    <h4>判断逻辑</h4>
+                    <p>判断顺序：<strong>currency</strong>、<strong>percentage</strong>、其他（其他都扔到一个逻辑里面去）。点击图例可隐藏系列，Y 轴会自动适配。</p>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 <footer>

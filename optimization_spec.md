@@ -406,7 +406,169 @@ animation: {
 
 ---
 
-## 14. 完整配置示例
+## 14. 多指标图表类型选择规则
+
+### 14.1 Ant Charts 双轴限制说明
+
+**重要限制**：Ant Charts 的双轴图（DualAxes）不支持同时使用两个柱状图。
+
+| 限制项 | 说明 |
+|--------|------|
+| 双轴柱状图 | ❌ 不支持两个柱状图同时使用 |
+| 柱状图 + 折线图 | ✅ 支持（最常用组合） |
+| 分组柱状图 | ✅ 支持（但使用同一个 Y 轴，数据量级差别大时显示效果不佳） |
+| 分组柱状图 + 分组折线图 | ✅ 支持（可放在一张图上） |
+
+**解决方案**：
+- 当需要展示两个不同量级的指标时，使用 **柱状图 + 折线图** 的组合
+- 当两个指标量级相近时，可以使用 **分组柱状图**（共用 Y 轴）
+- 点击图例可以隐藏/显示系列，Y 轴会自动适配
+
+### 14.2 数字格式类型
+
+系统支持三种数字格式：
+
+| 格式类型 | 说明 | 示例 |
+|----------|------|------|
+| `currency` | 货币格式 | 销售额、金额等（单位：万元、亿元等） |
+| `number(int)` | 整数格式 | 销售量、数量、人数等 |
+| `percentage` | 百分比格式 | 增长率、转化率、占比等 |
+
+### 14.3 图表类型选择规则
+
+#### 规则 1：三者有其二的情况
+
+当只有两种数字格式时：
+
+| 组合 | 图表类型分配 | 说明 |
+|------|-------------|------|
+| `currency` + `number(int)` | `currency` → 柱状图<br>`number(int)` → 折线图 | currency 优先使用柱状图 |
+| `currency` + `percentage` | `currency` → 柱状图<br>`percentage` → 折线图 | currency 优先使用柱状图 |
+| `number(int)` + `percentage` | `number(int)` → 柱状图<br>`percentage` → 折线图 | number(int) 优先使用柱状图 |
+
+**优先级**：`currency` > `number(int)` > `percentage`
+
+#### 规则 2：三者都有的情况
+
+当三种数字格式都存在时：
+
+| 指标 | 图表类型 | Y 轴 |
+|------|---------|------|
+| `currency` | 柱状图 | 左侧 Y 轴（共用） |
+| `number(int)` | 柱状图 | 左侧 Y 轴（共用） |
+| `percentage` | 折线图 | 右侧 Y 轴 |
+
+**说明**：
+- `currency` 和 `number(int)` 使用**分组柱状图**，共用左侧 Y 轴
+- `percentage` 使用**折线图**，使用右侧 Y 轴
+- ⚠️ **注意**：当 `currency` 和 `number(int)` 数据量级差别太大时，共用 Y 轴会导致显示效果不佳。此时可以通过点击图例隐藏其中一个系列，Y 轴会自动适配。
+
+### 14.4 判断逻辑
+
+**实现建议**：
+
+```javascript
+// 判断逻辑：currency、percentage、其他
+function determineChartType(indicators) {
+    const hasCurrency = indicators.some(ind => ind.format === 'currency');
+    const hasPercentage = indicators.some(ind => ind.format === 'percentage');
+    const hasNumber = indicators.some(ind => ind.format === 'number(int)');
+    
+    const formatCount = [hasCurrency, hasPercentage, hasNumber].filter(Boolean).length;
+    
+    if (formatCount === 2) {
+        // 三者有其二
+        if (hasCurrency && hasNumber) {
+            return {
+                currency: 'column',
+                number: 'line'
+            };
+        }
+        if (hasCurrency && hasPercentage) {
+            return {
+                currency: 'column',
+                percentage: 'line'
+            };
+        }
+        if (hasNumber && hasPercentage) {
+            return {
+                number: 'column',
+                percentage: 'line'
+            };
+        }
+    } else if (formatCount === 3) {
+        // 三者都有
+        return {
+            currency: 'column',      // 分组柱状图，共用左侧Y轴
+            number: 'column',         // 分组柱状图，共用左侧Y轴
+            percentage: 'line'       // 折线图，右侧Y轴
+        };
+    }
+    
+    // 单一指标的情况
+    return {
+        [indicators[0].format]: 'column'
+    };
+}
+```
+
+### 14.5 使用示例
+
+#### 示例 1：销售额（currency）+ 销售量（number）
+
+```javascript
+// 配置：销售额用柱状图，销售量用折线图
+geometryOptions: [
+    {
+        geometry: 'column',
+        yField: 'sales',  // currency
+        color: '#5B8FF9',
+    },
+    {
+        geometry: 'line',
+        yField: 'volume',  // number(int)
+        color: '#5AD8A6',
+    },
+],
+yAxis: {
+    sales: { position: 'left' },   // 左侧Y轴
+    volume: { position: 'right' }, // 右侧Y轴
+}
+```
+
+#### 示例 2：销售额（currency）+ 销售量（number）+ 增长率（percentage）
+
+```javascript
+// 配置：销售额和销售量用分组柱状图（共用左侧Y轴），增长率用折线图（右侧Y轴）
+geometryOptions: [
+    {
+        geometry: 'column',
+        yField: 'sales',  // currency
+        seriesField: 'type',
+        color: '#5B8FF9',
+    },
+    {
+        geometry: 'column',
+        yField: 'volume',  // number(int)
+        seriesField: 'type',
+        color: '#5AD8A6',
+    },
+    {
+        geometry: 'line',
+        yField: 'growth',  // percentage
+        color: '#F6BD16',
+    },
+],
+yAxis: {
+    sales: { position: 'left' },    // 左侧Y轴（共用）
+    volume: { position: 'left' },   // 左侧Y轴（共用）
+    growth: { position: 'right' },  // 右侧Y轴
+}
+```
+
+---
+
+## 15. 完整配置示例
 
 ```javascript
 import { Column } from '@ant-design/charts';
