@@ -122,7 +122,7 @@
                 <div class="filter-summary" id="filterSummary"></div>
             </div>
         </div>
-        <div class="chart-body xl" style="position: relative; padding-right: 20px; padding-left: 10px;">
+        <div class="chart-body xl" style="position: relative; padding: 8px;">
             <!-- 图例统一在右侧对齐，不遮挡图表 -->
             <!-- 显示主要节点类型的颜色对应关系 -->
             <div class="custom-legend horizontal">
@@ -310,7 +310,7 @@ new G2Plot.Sankey('chart-basic', {
     sourceField: 'source',
     targetField: 'target',
     weightField: 'value',
-    padding: mobile ? [20, 140, 20, 10] : [30, 160, 30, 10], // 减少左侧padding，让图表向右移动，右侧为图例留空间
+    padding: mobile ? [15, 20, 15, 15] : [20, 20, 20, 20], // 平衡左右padding，让图表居中，减少留白
     nodeStyle: {
         opacity: 1,
         fillOpacity: 1,
@@ -319,8 +319,8 @@ new G2Plot.Sankey('chart-basic', {
         fillOpacity: edgeOpacity,
     },
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9', '#E86452', '#00C7BE', '#FF9845', '#86868B'],
-    nodeWidthRatio: nodeWidthRatio,
-    nodePaddingRatio: 0.025,
+    nodeWidthRatio: mobile ? 0.018 : 0.015, // 增大节点宽度，让图表更大
+    nodePaddingRatio: mobile ? 0.03 : 0.025, // 稍微增加节点间距
     label: {
         formatter: ({ name }) => name,
         style: { fill: '#1D1D1F', fontSize: labelFontSize },
