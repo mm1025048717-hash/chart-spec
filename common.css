@@ -1616,7 +1616,7 @@ a:hover {
     flex-direction: column;
     align-items: flex-start; /* 图例项内内容左对齐 */
     gap: 8px;
-    z-index: 10; /* 降低z-index，避免遮挡图表内容 */
+    z-index: 1; /* 最低z-index，确保不遮挡图表内容 */
     font-size: 11px;
     color: var(--text-primary);
     background: rgba(255, 255, 255, 0.95);
@@ -1627,6 +1627,8 @@ a:hover {
     box-shadow: var(--shadow-sm);
     max-width: 140px;
     pointer-events: auto; /* 确保图例可交互 */
+    /* 确保图例在图表容器外，不遮挡数据区域 */
+    transform: translateX(0);
 }
 
 /* 图例横向布局（适用于某些图表） */
@@ -1955,6 +1957,8 @@ a:hover {
     .chart-body { 
         height: 260px;
         padding: 8px 6px 12px; 
+        /* 移动端图例在下方，不需要右侧padding */
+        padding-right: 6px;
         overflow: visible;
     }
     .chart-body.lg { height: 300px; }
