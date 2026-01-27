@@ -385,6 +385,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+// 初始化统一筛选系统
+document.addEventListener('DOMContentLoaded', function() {
+    initUnifiedFilter({
+        dimensions: [
+            { key: 'dimension', type: 'multi' },
+            { key: 'date', type: 'multi' }
+        ],
+        onApply: function(state) {
+            console.log('筛选已应用:', state);
+        }
+    });
+});
 </script>
 
 </body>
