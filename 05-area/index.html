@@ -131,7 +131,7 @@
             <!-- 自定义图例 -->
             <div class="custom-legend horizontal">
                 <div class="legend-item">
-                    <span class="legend-icon-square" style="background: #5AD8A6;"></span>
+                    <span class="legend-icon-circle" style="background: #5AD8A6;"></span>
                     <span class="legend-text">访问量</span>
                 </div>
             </div>
@@ -401,7 +401,7 @@ new Area('chart-stacked', {
     legend: { 
         position: 'top-right', 
         itemName: { style: { fontSize: mobile ? 9 : 11 } },
-        marker: { symbol: 'square', style: { r: 4 } } // 统一使用方形标记
+        marker: { symbol: 'circle', style: { r: 4 } } // 统一使用圆形标记
     },
     xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
 }).render();

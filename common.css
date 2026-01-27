@@ -1656,6 +1656,7 @@ a:hover {
     align-items: flex-start; /* 图例项内内容左对齐 */
     gap: 8px;
     z-index: 1; /* 最低z-index，确保不遮挡图表内容 */
+    max-width: 200px; /* 横向图例增加最大宽度，避免遮挡 */
     font-size: 11px;
     color: var(--text-primary);
     background: rgba(255, 255, 255, 0.95);
@@ -1677,6 +1678,8 @@ a:hover {
     align-items: center;
     justify-content: flex-end; /* 横向布局时面板靠右 */
     max-width: none;
+    top: 8px; /* 稍微上移，避免遮挡图表顶部 */
+    right: 8px; /* 稍微右移，避免遮挡图表右侧 */
 }
 
 /* 横向布局时，图例项内文字仍左对齐 */
@@ -1713,13 +1716,13 @@ a:hover {
     font-weight: 400;
 }
 
-/* 统一图例标记为方形 - 所有图表统一使用方形标记 */
+/* 统一图例标记为圆形 - 所有图表统一使用圆形标记 */
 .legend-icon-square,
 .legend-icon-circle,
 .legend-icon-line-dot {
     width: 10px;
     height: 10px;
-    border-radius: 2px; /* 统一使用方形，border-radius: 2px 为圆角方形 */
+    border-radius: 50%; /* 统一使用圆形，border-radius: 50% 为圆形 */
     flex-shrink: 0;
     display: inline-block;
 }
