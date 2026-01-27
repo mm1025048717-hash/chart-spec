@@ -1725,18 +1725,17 @@ a:hover {
     font-weight: 500;
 }
 
-/* Y轴单位标签 - 统一靠右，不遮挡图表和图例 */
-/* 当有图例时，Y轴标签应该在图例下方，避免重叠 */
-/* 位置优化：更靠近Y轴，但仍在图例下方，保持视觉关联性 */
+/* Y轴单位标签 - 应该在左侧Y轴附近，与Y轴对齐 */
 .axis-unit.y-left { 
-    top: 50px; /* 调整到图例下方，避免重叠 */
-    right: 180px; /* 稍微左移，更靠近Y轴，但仍避免与图例重叠 */
-    left: auto;
+    top: 6px; /* 图表顶部，与Y轴顶部对齐 */
+    left: 6px; /* 左侧，靠近Y轴 */
+    right: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 .axis-unit.y-right { 
-    top: 50px; /* 调整到图例下方，避免重叠 */
-    right: 180px; /* 稍微左移，更靠近Y轴，但仍避免与图例重叠 */
+    top: 6px; /* 图表顶部，与Y轴顶部对齐 */
+    left: 6px; /* 左侧，靠近Y轴（即使类名是y-right，但Y轴在左侧时也应该在左侧） */
+    right: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 .axis-unit.x-bottom { 
@@ -1745,11 +1744,12 @@ a:hover {
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 
-/* X轴字段标签 - 右下角，不遮挡图表 */
+/* X轴字段标签 - 应该在X轴附近，与X轴对齐 */
 .x-field-label {
     position: absolute;
     bottom: 6px;
-    right: 12px; /* 确保靠右，不遮挡图表 */
+    left: 6px; /* 左侧，与X轴左端对齐 */
+    right: auto;
     background: var(--gray-100);
     color: var(--text-secondary);
     font-size: 9px;
