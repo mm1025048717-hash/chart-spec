@@ -1714,16 +1714,17 @@ a:hover {
     font-weight: 500;
 }
 
-/* Y轴单位标签 - 统一靠右，不遮挡图表 */
+/* Y轴单位标签 - 统一靠右，不遮挡图表和图例 */
+/* 当有图例时，Y轴标签应该在图例下方，避免重叠 */
 .axis-unit.y-left { 
     top: 6px; 
-    right: 12px; /* 改为右侧，不遮挡图表 */
+    right: 160px; /* 调整位置，避免与图例重叠（图例宽度140px + 20px边距） */
     left: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 .axis-unit.y-right { 
     top: 6px; 
-    right: 6px; 
+    right: 160px; /* 调整位置，避免与图例重叠 */
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 .axis-unit.x-bottom { 
