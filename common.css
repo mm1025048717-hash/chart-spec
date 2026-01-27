@@ -722,6 +722,8 @@ a:hover {
     padding: 16px 20px; /* 增大内边距 */
     margin-bottom: 16px; /* 增大间距 */
     border: 1px solid var(--border-light);
+    padding-left: 20px; /* 确保左侧padding，让内容向右移动 */
+    padding-right: 20px;
     max-width: var(--content-max-width);
     margin-left: auto;
     margin-right: auto;
@@ -1431,8 +1433,8 @@ a:hover {
     height: var(--chart-height-md);
     padding: 16px; /* 增大内边距，让图表有更多空间 */
     /* 平衡左右padding，让图表内容居中显示，右侧为图例留出空间 */
-    padding-left: 16px;
-    padding-right: 160px; /* 右侧padding为图例留出空间（图例宽度约140px+间距） */
+    padding-left: 10px; /* 减少左侧padding，让图表向右移动 */
+    padding-right: 20px; /* 横向图例不需要太多右侧空间 */
     background: var(--bg-primary);
     overflow: hidden;
     width: 100%;
@@ -1454,6 +1456,8 @@ a:hover {
 @media (max-width: 768px) {
     .chart-body {
         padding: 8px 6px 12px;
+        padding-left: 6px; /* 移动端也减少左侧padding */
+        padding-right: 6px; /* 移动端横向图例不需要太多右侧空间 */
     }
     .chart-body.sm { height: 200px; }
     .chart-body.md { height: 260px; }
