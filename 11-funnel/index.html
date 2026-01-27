@@ -339,7 +339,7 @@ const { Funnel } = G2Plot;
 const mobile = ChartSpec.isMobile();
 const labelFontSize = mobile ? 11 : 11;
 const conversionFontSize = mobile ? 11 : 12;
-const padding = mobile ? [12, 40, 12, 12] : [24, 80, 24, 24];
+const padding = mobile ? [8, 30, 8, 8] : [16, 50, 16, 16]; // 减少padding，让图表更大，减少留白
 
 const data = [
     { stage: '访问', value: 10000 },

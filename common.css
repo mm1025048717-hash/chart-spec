@@ -1678,8 +1678,10 @@ a:hover {
     align-items: center;
     justify-content: flex-end; /* 横向布局时面板靠右 */
     max-width: none;
-    top: 8px; /* 稍微上移，避免遮挡图表顶部 */
-    right: 8px; /* 稍微右移，避免遮挡图表右侧 */
+    top: 4px; /* 进一步上移，避免遮挡图表顶部 */
+    right: 4px; /* 进一步右移，避免遮挡图表右侧 */
+    z-index: 0; /* 降低z-index，确保不遮挡图表 */
+    pointer-events: none; /* 禁用交互，避免遮挡图表交互 */
 }
 
 /* 横向布局时，图例项内文字仍左对齐 */
