@@ -1453,7 +1453,7 @@ a:hover {
 .hover-hint {
     position: absolute;
     top: 8px;
-    right: 8px;
+    right: 160px; /* 调整位置，避免与图例重叠（图例在right: 12px） */
     font-size: 10px;
     color: var(--primary);
     background: rgba(0, 122, 255, 0.1);
@@ -1462,6 +1462,8 @@ a:hover {
     opacity: 1;
     transition: opacity var(--transition-fast);
     z-index: 50;
+    white-space: nowrap; /* 防止文字换行重叠 */
+    pointer-events: none; /* 不阻挡交互 */
 }
 
 .chart-body:hover .hover-hint {
