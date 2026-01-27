@@ -1436,6 +1436,13 @@ a:hover {
     box-sizing: border-box;
 }
 
+/* 外部标签图表需要允许overflow visible */
+.chart-body[style*="overflow: visible"],
+.chart-body .has-outer-labels {
+    overflow: visible;
+    padding: 20px; /* 增加padding为外部标签留出空间 */
+}
+
 .chart-body.sm { height: var(--chart-height-sm); }
 .chart-body.md { height: var(--chart-height-md); }
 .chart-body.lg { height: var(--chart-height-lg); }

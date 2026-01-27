@@ -42,14 +42,15 @@
         /* 响应式优化 */
         @media (max-width: 768px) {
             .center-content {
-                max-width: 40%; /* 移动端进一步缩小最大宽度 */
+                max-width: 35%; /* 移动端进一步缩小最大宽度，避免与标签重叠 */
                 padding: 0 4px;
             }
             .center-value {
-                font-size: 24px;
+                font-size: 20px; /* 移动端减小字体，避免与标签重叠 */
             }
             .center-label {
-                font-size: 11px;
+                font-size: 10px; /* 移动端减小字体 */
+                margin-top: 2px;
             }
         }
     </style>
@@ -167,7 +168,7 @@
                 <div class="filter-summary" id="filterSummary"></div>
             </div>
         </div>
-        <div class="chart-body md" style="position: relative;">
+        <div class="chart-body md" style="position: relative; overflow: hidden;">
             <!-- 图例统一在右侧对齐，不遮挡图表 -->
             <div class="custom-legend">
                 <div class="legend-item">
@@ -212,31 +213,28 @@
     data,
     angleField: 'value',
     colorField: 'type',
-    radius: 1,
-    innerRadius: 0.6,  // 内径比例，形成环形
+    radius: 0.85,
+    innerRadius: 0.6,  // 内径比例，形成环形（移动端建议0.5）
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
-        offset: '-70%', // 进一步增加负偏移量，让标签更靠近中心，确保完全在环形内部，不会跑出来
+        offset: '-60%', // 响应式offset，确保标签在环形内部，不会超出边界
         content: ({ percent }) => {
             const percentage = (percent * 100).toFixed(0);
             return percentage + '%';
         },
         style: { 
             fill: '#fff', 
-            fontSize: 12, 
+            fontSize: 11, // 移动端建议9px
             fontWeight: 600,
             textAlign: 'center',
             textBaseline: 'middle',
         },
         autoRotate: false, // 禁用自动旋转，保持水平显示
     },
-    statistic: {
-        title: { content: '总销售额', style: { fontSize: '12px', color: '#86868B' } },
-        content: { content: '8,846', style: { fontSize: '28px', fontWeight: 700 } },
-    },
     legend: false,
     interactions: [{ type: 'element-active' }],
+    pieStyle: { lineWidth: 2, stroke: '#fff' },
 };</pre>
         </div>
     </div>
@@ -317,7 +315,8 @@ label: false,</pre>
 // 响应式参数
 const mobile = ChartSpec.isMobile();
 const labelFontSize = mobile ? 9 : 11;
-const innerRadius = mobile ? 0.55 : 0.6;
+const innerRadius = mobile ? 0.5 : 0.6; // 移动端增大内径，给标签更多空间
+const labelOffset = mobile ? '-50%' : '-60%'; // 移动端调整offset，防止标签超出
 const statisticFontSize = mobile ? 16 : 20;
 const statisticTitleSize = mobile ? 10 : 11;
 
@@ -338,7 +337,7 @@ new G2Plot.Pie('chart-basic', {
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
-        offset: '-70%', // 进一步增加负偏移量，让标签更靠近中心，确保完全在环形内部，不会跑出来
+        offset: labelOffset, // 响应式offset，确保标签在环形内部，不会超出边界
         content: ({ percent }) => {
             const percentage = (percent * 100).toFixed(0);
             return percentage + '%';
@@ -363,12 +362,12 @@ new G2Plot.Pie('chart-outer', {
     data,
     angleField: 'value',
     colorField: 'type',
-    radius: 0.65, // 减小外半径，为外部标签留出空间，防止标签超出容器
-    innerRadius: innerRadius - 0.05,  // 增大内径，给中心文字更多空间
+    radius: mobile ? 0.6 : 0.65, // 移动端进一步减小外半径，为外部标签留出更多空间
+    innerRadius: mobile ? innerRadius - 0.08 : innerRadius - 0.05,  // 移动端增大内径，给中心文字更多空间
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'spider',
-        labelHeight: 20, // 减小标签高度，让标签更紧凑
+        labelHeight: mobile ? 16 : 20, // 移动端减小标签高度，让标签更紧凑
         content: '{name}\n{percentage}',
         style: { fontSize: labelFontSize, fill: '#86868B' },
     },
