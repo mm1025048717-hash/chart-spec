@@ -1749,14 +1749,14 @@ a:hover {
 /* Y轴单位标签 - 规范位置：Y轴顶部右侧，紧贴Y轴标签 */
 .axis-unit.y-left { 
     top: 6px; /* 图表顶部，与Y轴顶部对齐 */
-    left: 28px; /* Y轴右侧，紧贴Y轴标签（根据padding[3]=20px，Y轴标签在20-25px位置，单位标签在其右侧） */
+    left: 28px; /* 左Y轴右侧，紧贴Y轴标签（根据padding[3]=20px，Y轴标签在20-25px位置，单位标签在其右侧） */
     right: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 .axis-unit.y-right { 
     top: 6px; /* 图表顶部，与Y轴顶部对齐 */
-    left: 28px; /* Y轴右侧，紧贴Y轴标签 */
-    right: auto;
+    right: 28px; /* 右Y轴左侧，紧贴Y轴标签（双轴图右侧Y轴） */
+    left: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 .axis-unit.x-bottom { 
@@ -2080,7 +2080,7 @@ a:hover {
     /* 坐标轴单位 */
     .axis-unit { font-size: 8px; }
     .axis-unit.y-left { left: 22px; top: 4px; } /* 移动端：根据padding[3]=20px，单位标签在Y轴标签右侧 */
-    .axis-unit.y-right { left: 22px; top: 4px; } /* 移动端：Y轴在左侧时，单位标签也在左侧 */
+    .axis-unit.y-right { right: 22px; top: 4px; left: auto; } /* 移动端：右Y轴单位标签在右上角 */
     
     /* X轴字段标签 - 移动端位置 */
     .x-field-label {

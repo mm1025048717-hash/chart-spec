@@ -130,8 +130,11 @@
             </div>
         </div>
         <div class="chart-body lg" style="position: relative;">
+            <!-- 左Y轴单位标签 - 左上角 -->
             <div class="axis-unit y-left">万元</div>
-            <div class="axis-unit y-left" style="top: 30px;">%</div>
+            <!-- 右Y轴单位标签 - 右上角 -->
+            <div class="axis-unit y-right">%</div>
+            <!-- 图例统一在右侧对齐，不遮挡图表 -->
             <div class="custom-legend">
                 <div class="legend-item">
                     <span class="legend-icon-square" style="background: #5B8FF9;"></span>
@@ -142,6 +145,8 @@
                     <span class="legend-text">增长率</span>
                 </div>
             </div>
+            <!-- X轴字段标签 - 右下角 -->
+            <div class="x-field-label">月份</div>
             <div id="chart-basic" style="width: 100%; height: 100%;"></div>
         </div>
         <div class="chart-summary">
