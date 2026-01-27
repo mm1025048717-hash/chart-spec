@@ -232,7 +232,7 @@
             gap: 3px;
         }
         .filter-option {
-            padding: 2px 6px;
+            padding: 3px 8px;
             border: 1px solid #E8E8E8;
             border-radius: 3px;
             background: white;
@@ -240,6 +240,11 @@
             color: #1D1D1F;
             cursor: pointer;
             transition: all 0.15s ease;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
         .filter-option:hover {
             border-color: #5B8FF9;
@@ -253,15 +258,18 @@
         
         .filter-range {
             display: flex;
-            gap: 3px;
+            gap: 4px;
             align-items: center;
         }
         .filter-range-input {
             flex: 1;
-            padding: 2px 5px;
+            min-width: 0;
+            padding: 3px 6px;
             border: 1px solid #E8E8E8;
             border-radius: 3px;
             font-size: 9px;
+            height: 20px;
+            box-sizing: border-box;
         }
         .filter-range-input:focus {
             outline: none;
@@ -272,6 +280,7 @@
             font-size: 9px;
             color: #86868B;
             white-space: nowrap;
+            flex-shrink: 0;
         }
         
         .filter-panel-footer {
@@ -283,13 +292,18 @@
             flex-shrink: 0;
         }
         .filter-btn {
-            padding: 2px 8px;
+            padding: 4px 10px;
             border-radius: 3px;
             font-size: 9px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
             border: none;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
         .filter-btn-reset {
             background: transparent;
