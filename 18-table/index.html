@@ -122,15 +122,15 @@
             transition: width 0.3s ease;
         }
         
-        /* 筛选下拉面板 - 超简洁设计 */
+        /* 筛选下拉面板 - 适中尺寸，确保完整显示 */
         .filter-modal {
             display: none;
             position: absolute;
-            top: calc(100% + 6px);
+            top: calc(100% + 8px);
             right: 0;
             z-index: 1000;
-            min-width: 240px;
-            max-width: 280px;
+            min-width: 320px;
+            max-width: 360px;
         }
         .filter-modal.show {
             display: block;
@@ -138,17 +138,17 @@
         
         .filter-panel {
             background: white;
-            border-radius: 6px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
             border: 1px solid #E8E8E8;
             overflow: hidden;
-            max-height: 80vh;
+            max-height: calc(100vh - 200px);
             display: flex;
             flex-direction: column;
         }
         
         .filter-panel-header {
-            padding: 6px 8px;
+            padding: 10px 12px;
             border-bottom: 1px solid #F0F0F0;
             display: flex;
             justify-content: space-between;
@@ -156,21 +156,21 @@
             flex-shrink: 0;
         }
         .filter-panel-title {
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 500;
-            color: #86868B;
+            color: #1D1D1F;
         }
         .filter-panel-close {
             background: none;
             border: none;
-            font-size: 12px;
+            font-size: 16px;
             color: #86868B;
             cursor: pointer;
             padding: 0;
             line-height: 1;
             transition: color 0.2s ease;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -180,15 +180,14 @@
         }
         
         .filter-panel-body {
-            padding: 6px;
+            padding: 12px;
             overflow-y: auto;
             flex: 1;
             min-height: 0;
-            max-height: calc(80vh - 70px);
         }
         
         .filter-dimension {
-            margin-bottom: 4px;
+            margin-bottom: 12px;
         }
         .filter-dimension:last-child {
             margin-bottom: 0;
@@ -200,22 +199,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 4px 2px;
+            padding: 6px 4px;
             cursor: pointer;
             user-select: none;
         }
         .filter-dimension-header:hover {
             background: #FAFAFA;
-            border-radius: 3px;
+            border-radius: 4px;
         }
         .filter-dimension-title {
-            font-size: 10px;
+            font-size: 12px;
             font-weight: 500;
             color: #1D1D1F;
             margin: 0;
         }
         .filter-dimension-toggle {
-            font-size: 9px;
+            font-size: 10px;
             color: #86868B;
             transition: transform 0.2s ease;
         }
@@ -223,24 +222,24 @@
             transform: rotate(-90deg);
         }
         .filter-dimension-content {
-            padding: 4px 2px 6px;
+            padding: 8px 4px 10px;
         }
         
         .filter-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 3px;
+            gap: 6px;
         }
         .filter-option {
-            padding: 3px 8px;
+            padding: 5px 12px;
             border: 1px solid #E8E8E8;
-            border-radius: 3px;
+            border-radius: 4px;
             background: white;
-            font-size: 9px;
+            font-size: 11px;
             color: #1D1D1F;
             cursor: pointer;
             transition: all 0.15s ease;
-            height: 20px;
+            height: 28px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -258,17 +257,17 @@
         
         .filter-range {
             display: flex;
-            gap: 4px;
+            gap: 8px;
             align-items: center;
         }
         .filter-range-input {
             flex: 1;
             min-width: 0;
-            padding: 3px 6px;
+            padding: 5px 8px;
             border: 1px solid #E8E8E8;
-            border-radius: 3px;
-            font-size: 9px;
-            height: 20px;
+            border-radius: 4px;
+            font-size: 11px;
+            height: 28px;
             box-sizing: border-box;
         }
         .filter-range-input:focus {
@@ -277,29 +276,29 @@
             box-shadow: 0 0 0 2px rgba(91, 143, 249, 0.08);
         }
         .filter-range span {
-            font-size: 9px;
+            font-size: 11px;
             color: #86868B;
             white-space: nowrap;
             flex-shrink: 0;
         }
         
         .filter-panel-footer {
-            padding: 4px 6px;
+            padding: 10px 12px;
             border-top: 1px solid #F0F0F0;
             display: flex;
             justify-content: flex-end;
-            gap: 4px;
+            gap: 8px;
             flex-shrink: 0;
         }
         .filter-btn {
-            padding: 4px 10px;
-            border-radius: 3px;
-            font-size: 9px;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-size: 11px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
             border: none;
-            height: 22px;
+            height: 32px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
