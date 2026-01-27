@@ -29,11 +29,10 @@
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
+            position: relative;
         }
         .filter-unified-btn:hover {
             background: #409CFF;
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px rgba(91, 143, 249, 0.3);
         }
         .filter-unified-btn.active {
             background: #0051D4;
@@ -43,6 +42,12 @@
             padding: 2px 6px;
             border-radius: 10px;
             font-size: 10px;
+        }
+        
+        /* 筛选按钮容器 - 用于定位下拉面板 */
+        .filter-wrapper {
+            position: relative;
+            display: inline-block;
         }
         
         /* 表格样式 */
@@ -100,112 +105,99 @@
             border-radius: 3px;
         }
         
-        /* 筛选面板模态框 */
+        /* 筛选下拉面板 - 极简设计 */
         .filter-modal {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
+            position: absolute;
+            top: calc(100% + 8px);
             right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-            overflow-y: auto;
+            min-width: 320px;
+            max-width: 360px;
         }
         .filter-modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
+            display: block;
         }
         
         .filter-panel {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            max-width: 480px;
-            width: 100%;
-            max-height: calc(100vh - 32px);
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            border: 1px solid #E8E8E8;
+            overflow: hidden;
+            max-height: 70vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            margin: auto;
         }
         
         .filter-panel-header {
-            padding: 12px 16px;
-            border-bottom: 1px solid #E8E8E8;
+            padding: 10px 12px;
+            border-bottom: 1px solid #F0F0F0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #FAFAFA;
             flex-shrink: 0;
         }
         .filter-panel-title {
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
             color: #1D1D1F;
         }
         .filter-panel-close {
             background: none;
             border: none;
-            font-size: 20px;
+            font-size: 16px;
             color: #86868B;
             cursor: pointer;
-            padding: 4px;
+            padding: 2px;
             line-height: 1;
             transition: color 0.2s ease;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .filter-panel-close:hover {
             color: #1D1D1F;
         }
         
         .filter-panel-body {
-            padding: 16px;
+            padding: 12px;
             overflow-y: auto;
             flex: 1;
             min-height: 0;
         }
         
         .filter-dimension {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
         .filter-dimension:last-child {
             margin-bottom: 0;
         }
         .filter-dimension-title {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 600;
-            color: #1D1D1F;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .filter-dimension-title::before {
-            content: '';
-            width: 3px;
-            height: 14px;
-            background: #5B8FF9;
-            border-radius: 2px;
+            color: #86868B;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
         .filter-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 4px;
         }
         .filter-option {
-            padding: 6px 12px;
+            padding: 4px 10px;
             border: 1px solid #E8E8E8;
-            border-radius: 6px;
+            border-radius: 4px;
             background: white;
-            font-size: 12px;
+            font-size: 11px;
             color: #1D1D1F;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
         }
         .filter-option:hover {
             border-color: #5B8FF9;
@@ -219,47 +211,48 @@
         
         .filter-range {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             align-items: center;
         }
         .filter-range-input {
             flex: 1;
-            padding: 6px 10px;
+            padding: 4px 8px;
             border: 1px solid #E8E8E8;
-            border-radius: 6px;
-            font-size: 12px;
+            border-radius: 4px;
+            font-size: 11px;
         }
         .filter-range-input:focus {
             outline: none;
             border-color: #5B8FF9;
-            box-shadow: 0 0 0 3px rgba(91, 143, 249, 0.1);
+            box-shadow: 0 0 0 2px rgba(91, 143, 249, 0.1);
+        }
+        .filter-range span {
+            font-size: 11px;
+            color: #86868B;
         }
         
         .filter-panel-footer {
-            padding: 12px 16px;
-            border-top: 1px solid #E8E8E8;
+            padding: 8px 12px;
+            border-top: 1px solid #F0F0F0;
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            background: #FAFAFA;
+            gap: 8px;
             flex-shrink: 0;
         }
         .filter-btn {
-            padding: 6px 16px;
-            border-radius: 6px;
-            font-size: 12px;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 11px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             border: none;
         }
         .filter-btn-reset {
-            background: white;
+            background: transparent;
             color: #86868B;
-            border: 1px solid #E8E8E8;
         }
         .filter-btn-reset:hover {
-            background: #F5F5F5;
             color: #1D1D1F;
         }
         .filter-btn-apply {
@@ -299,58 +292,39 @@
             opacity: 1;
         }
         
-        /* PC端中等屏幕优化 */
-        @media (max-width: 1024px) {
-            .filter-panel {
-                max-width: 420px;
-            }
-        }
-        
-        /* 移动端适配 */
+        /* 移动端适配 - 保持下拉样式但调整位置 */
         @media (max-width: 768px) {
-            .filter-modal.show {
-                padding: 0;
-                align-items: flex-end;
+            .filter-modal {
+                right: auto;
+                left: 0;
+                min-width: 280px;
+                max-width: calc(100vw - 32px);
             }
             .filter-panel {
-                max-width: 100%;
-                max-height: 85vh;
-                border-radius: 16px 16px 0 0;
-            }
-            .filter-panel-header {
-                padding: 12px 14px;
-            }
-            .filter-panel-title {
-                font-size: 14px;
+                max-height: 60vh;
             }
             .filter-panel-body {
-                padding: 14px;
+                padding: 10px;
             }
             .filter-dimension {
-                margin-bottom: 14px;
+                margin-bottom: 10px;
             }
             .filter-options {
-                gap: 6px;
+                gap: 4px;
             }
             .filter-option {
-                padding: 5px 10px;
-                font-size: 11px;
-            }
-            .filter-panel-footer {
-                padding: 10px 14px;
-                flex-direction: column;
-            }
-            .filter-btn {
-                width: 100%;
-                padding: 8px;
-                font-size: 12px;
+                padding: 4px 8px;
+                font-size: 10px;
             }
             .filter-range {
-                gap: 6px;
+                gap: 4px;
             }
             .filter-range-input {
-                padding: 5px 8px;
-                font-size: 11px;
+                padding: 4px 6px;
+                font-size: 10px;
+            }
+            .filter-range span {
+                font-size: 10px;
             }
             .demo-table th, .demo-table td {
                 padding: 10px 12px;
@@ -424,13 +398,79 @@
                 </div>
             </div>
             <div class="chart-filters">
-                <button class="filter-unified-btn" onclick="openFilterPanel()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
-                    </svg>
-                    筛选
-                    <span class="filter-count" id="filterCount">0</span>
-                </button>
+                <div class="filter-wrapper">
+                    <button class="filter-unified-btn" onclick="toggleFilterPanel(event)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        筛选
+                        <span class="filter-count" id="filterCount">0</span>
+                    </button>
+                    <!-- 筛选下拉面板 -->
+                    <div class="filter-modal" id="filterModal" onclick="event.stopPropagation()">
+                        <div class="filter-panel">
+                            <div class="filter-panel-header">
+                                <div class="filter-panel-title">筛选</div>
+                                <button class="filter-panel-close" onclick="closeFilterPanel()">×</button>
+                            </div>
+                            <div class="filter-panel-body">
+                                <!-- 地区筛选 -->
+                                <div class="filter-dimension">
+                                    <div class="filter-dimension-title">地区</div>
+                                    <div class="filter-options" id="filterRegion">
+                                        <div class="filter-option" data-value="华东区" onclick="toggleFilterOption(this, 'region', '华东区')">华东区</div>
+                                        <div class="filter-option" data-value="华北区" onclick="toggleFilterOption(this, 'region', '华北区')">华北区</div>
+                                        <div class="filter-option" data-value="华南区" onclick="toggleFilterOption(this, 'region', '华南区')">华南区</div>
+                                        <div class="filter-option" data-value="华中区" onclick="toggleFilterOption(this, 'region', '华中区')">华中区</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 销售额筛选 -->
+                                <div class="filter-dimension">
+                                    <div class="filter-dimension-title">销售额</div>
+                                    <div class="filter-range">
+                                        <input type="number" class="filter-range-input" id="salesMin" placeholder="最小值" min="0">
+                                        <span>至</span>
+                                        <input type="number" class="filter-range-input" id="salesMax" placeholder="最大值" min="0">
+                                    </div>
+                                </div>
+                                
+                                <!-- 环比筛选 -->
+                                <div class="filter-dimension">
+                                    <div class="filter-dimension-title">环比</div>
+                                    <div class="filter-options" id="filterChange">
+                                        <div class="filter-option" data-value="positive" onclick="toggleFilterOption(this, 'change', 'positive')">上升</div>
+                                        <div class="filter-option" data-value="negative" onclick="toggleFilterOption(this, 'change', 'negative')">下降</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 完成率筛选 -->
+                                <div class="filter-dimension">
+                                    <div class="filter-dimension-title">完成率</div>
+                                    <div class="filter-range">
+                                        <input type="number" class="filter-range-input" id="completionMin" placeholder="最小值" min="0" max="100">
+                                        <span>至</span>
+                                        <input type="number" class="filter-range-input" id="completionMax" placeholder="最大值" min="0" max="100">
+                                    </div>
+                                </div>
+                                
+                                <!-- 进度筛选 -->
+                                <div class="filter-dimension">
+                                    <div class="filter-dimension-title">进度</div>
+                                    <div class="filter-range">
+                                        <input type="number" class="filter-range-input" id="progressMin" placeholder="最小值" min="0" max="100">
+                                        <span>至</span>
+                                        <input type="number" class="filter-range-input" id="progressMax" placeholder="最大值" min="0" max="100">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-panel-footer">
+                                <button class="filter-btn filter-btn-reset" onclick="resetFilters()">重置</button>
+                                <button class="filter-btn filter-btn-apply" onclick="applyFilters()">应用</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="filter-tags" id="filterTags"></div>
             </div>
         </div>
@@ -492,71 +532,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-        
-        <!-- 筛选面板 -->
-        <div class="filter-modal" id="filterModal" onclick="closeFilterPanelOnBackdrop(event)">
-            <div class="filter-panel" onclick="event.stopPropagation()">
-                <div class="filter-panel-header">
-                    <div class="filter-panel-title">筛选条件</div>
-                    <button class="filter-panel-close" onclick="closeFilterPanel()">×</button>
-                </div>
-                <div class="filter-panel-body">
-                    <!-- 地区筛选 -->
-                    <div class="filter-dimension">
-                        <div class="filter-dimension-title">地区</div>
-                        <div class="filter-options" id="filterRegion">
-                            <div class="filter-option" data-value="华东区" onclick="toggleFilterOption(this, 'region', '华东区')">华东区</div>
-                            <div class="filter-option" data-value="华北区" onclick="toggleFilterOption(this, 'region', '华北区')">华北区</div>
-                            <div class="filter-option" data-value="华南区" onclick="toggleFilterOption(this, 'region', '华南区')">华南区</div>
-                            <div class="filter-option" data-value="华中区" onclick="toggleFilterOption(this, 'region', '华中区')">华中区</div>
-                        </div>
-                    </div>
-                    
-                    <!-- 销售额筛选 -->
-                    <div class="filter-dimension">
-                        <div class="filter-dimension-title">销售额</div>
-                        <div class="filter-range">
-                            <input type="number" class="filter-range-input" id="salesMin" placeholder="最小值" min="0">
-                            <span style="color: #86868B;">至</span>
-                            <input type="number" class="filter-range-input" id="salesMax" placeholder="最大值" min="0">
-                        </div>
-                    </div>
-                    
-                    <!-- 环比筛选 -->
-                    <div class="filter-dimension">
-                        <div class="filter-dimension-title">环比</div>
-                        <div class="filter-options" id="filterChange">
-                            <div class="filter-option" data-value="positive" onclick="toggleFilterOption(this, 'change', 'positive')">上升</div>
-                            <div class="filter-option" data-value="negative" onclick="toggleFilterOption(this, 'change', 'negative')">下降</div>
-                        </div>
-                    </div>
-                    
-                    <!-- 完成率筛选 -->
-                    <div class="filter-dimension">
-                        <div class="filter-dimension-title">完成率</div>
-                        <div class="filter-range">
-                            <input type="number" class="filter-range-input" id="completionMin" placeholder="最小值" min="0" max="100">
-                            <span style="color: #86868B;">至</span>
-                            <input type="number" class="filter-range-input" id="completionMax" placeholder="最大值" min="0" max="100">
-                        </div>
-                    </div>
-                    
-                    <!-- 进度筛选 -->
-                    <div class="filter-dimension">
-                        <div class="filter-dimension-title">进度</div>
-                        <div class="filter-range">
-                            <input type="number" class="filter-range-input" id="progressMin" placeholder="最小值" min="0" max="100">
-                            <span style="color: #86868B;">至</span>
-                            <input type="number" class="filter-range-input" id="progressMax" placeholder="最大值" min="0" max="100">
-                        </div>
-                    </div>
-                </div>
-                <div class="filter-panel-footer">
-                    <button class="filter-btn filter-btn-reset" onclick="resetFilters()">重置</button>
-                    <button class="filter-btn filter-btn-apply" onclick="applyFilters()">应用筛选</button>
-                </div>
-            </div>
         </div>
         <!-- 汇总栏 -->
         <div class="chart-summary">
@@ -784,7 +759,16 @@ let filterState = {
     progress: { min: null, max: null }
 };
 
-// 打开筛选面板
+// 切换筛选面板（下拉式）
+function toggleFilterPanel(event) {
+    if (event) {
+        event.stopPropagation();
+    }
+    const modal = document.getElementById('filterModal');
+    modal.classList.toggle('show');
+}
+
+// 打开筛选面板（用于表格单元格点击）
 function openFilterPanel(dimension = null, value = null) {
     const modal = document.getElementById('filterModal');
     modal.classList.add('show');
@@ -812,13 +796,6 @@ function openFilterPanel(dimension = null, value = null) {
 function closeFilterPanel() {
     const modal = document.getElementById('filterModal');
     modal.classList.remove('show');
-}
-
-// 点击背景关闭
-function closeFilterPanelOnBackdrop(event) {
-    if (event.target.id === 'filterModal') {
-        closeFilterPanel();
-    }
 }
 
 // 切换筛选选项
@@ -982,6 +959,15 @@ function removeFilter(dimension, value) {
     
     updateFilterUI();
 }
+
+// 点击外部关闭面板
+document.addEventListener('click', function(e) {
+    const modal = document.getElementById('filterModal');
+    const wrapper = document.querySelector('.filter-wrapper');
+    if (modal && modal.classList.contains('show') && wrapper && !wrapper.contains(e.target)) {
+        closeFilterPanel();
+    }
+});
 
 // ESC键关闭面板
 document.addEventListener('keydown', function(e) {
