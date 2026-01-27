@@ -194,7 +194,7 @@
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
-        offset: '-60%', // 增加负偏移量，让标签更靠近中心，确保在环形内部并居中对齐
+        offset: '-70%', // 进一步增加负偏移量，让标签更靠近中心，确保完全在环形内部，不会跑出来
         content: ({ percent }) => {
             const percentage = (percent * 100).toFixed(0);
             return percentage + '%';
@@ -315,7 +315,7 @@ new G2Plot.Pie('chart-basic', {
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
-        offset: '-60%', // 增加负偏移量，让标签更靠近中心，确保在环形内部并居中对齐
+        offset: '-70%', // 进一步增加负偏移量，让标签更靠近中心，确保完全在环形内部，不会跑出来
         content: ({ percent }) => {
             const percentage = (percent * 100).toFixed(0);
             return percentage + '%';
