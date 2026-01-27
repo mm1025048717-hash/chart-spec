@@ -1015,7 +1015,8 @@ a:hover {
     gap: 6px;
 }
 
-/* 筛选控件区域 */
+/* ==================== 统一筛选系统 ==================== */
+/* 筛选控件区域 - 统一使用筛选按钮，不再使用分散的dropdown */
 .chart-filters {
     display: flex;
     align-items: center;
@@ -1023,59 +1024,373 @@ a:hover {
     flex-wrap: wrap;
 }
 
-.filter-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    color: var(--text-secondary);
+/* 统一筛选按钮 */
+.filter-wrapper {
+    position: relative;
+    display: inline-block;
 }
 
-.filter-label {
+.filter-unified-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.filter-unified-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.filter-unified-btn.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.filter-unified-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+}
+
+.filter-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 9px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 2px;
+}
+
+.filter-unified-btn.active .filter-count {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+/* 筛选面板 - 使用fixed定位，不遮挡图表 */
+.filter-modal {
+    position: fixed;
+    z-index: 10000;
+    display: none;
+    pointer-events: none;
+}
+
+.filter-modal.show {
+    display: block;
+    pointer-events: auto;
+}
+
+.filter-panel {
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-lg);
+    min-width: 240px;
+    max-width: 320px;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.filter-panel-header {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--gray-50);
+    cursor: move;
+    user-select: none;
+}
+
+.filter-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.filter-panel-drag-handle {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: move;
     color: var(--text-tertiary);
 }
 
-.filter-select {
-    padding: 4px 24px 4px 8px;
-    font-size: 11px;
+.filter-panel-drag-handle svg {
+    width: 100%;
+    height: 100%;
+}
+
+.filter-panel-close {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.filter-panel-close:hover {
+    color: var(--text-primary);
+}
+
+.filter-panel-body {
+    padding: 12px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.filter-dimension {
+    margin-bottom: 12px;
+}
+
+.filter-dimension:last-child {
+    margin-bottom: 0;
+}
+
+.filter-dimension.collapsed .filter-dimension-content {
+    display: none;
+}
+
+.filter-dimension-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 4px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.filter-dimension-header:hover {
+    background: var(--gray-50);
+    border-radius: 4px;
+}
+
+.filter-dimension-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.filter-dimension-toggle {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    transition: transform 0.2s ease;
+}
+
+.filter-dimension.collapsed .filter-dimension-toggle {
+    transform: rotate(-90deg);
+}
+
+.filter-dimension-content {
+    padding: 8px 4px 10px;
+}
+
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.filter-option {
+    padding: 5px 12px;
     border: 1px solid var(--border-light);
     border-radius: 4px;
-    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2386868B' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E") no-repeat right 6px center;
-    appearance: none;
-    cursor: pointer;
-    color: var(--text-primary);
-    min-width: 80px;
-}
-
-.filter-select:hover {
-    border-color: var(--primary);
-}
-
-.filter-select:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.1);
-}
-
-.filter-date {
-    padding: 4px 8px;
+    background: white;
     font-size: 11px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.filter-option:hover {
+    border-color: var(--primary);
+    background: rgba(91, 143, 249, 0.08);
+}
+
+.filter-option.selected {
+    background: rgba(91, 143, 249, 0.15);
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.filter-range {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.filter-range-input {
+    flex: 1;
+    min-width: 0;
+    padding: 5px 8px;
     border: 1px solid var(--border-light);
     border-radius: 4px;
-    background: #fff;
-    cursor: pointer;
-    color: var(--text-primary);
-    min-width: 90px;
+    font-size: 11px;
+    height: 28px;
+    box-sizing: border-box;
 }
 
-.filter-date:hover {
-    border-color: var(--primary);
-}
-
-.filter-date:focus {
+.filter-range-input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.1);
+    box-shadow: 0 0 0 2px rgba(91, 143, 249, 0.1);
+}
+
+.filter-range span {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    white-space: nowrap;
+}
+
+.filter-panel-footer {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.filter-btn {
+    padding: 6px 16px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border: none;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.filter-btn-reset {
+    background: transparent;
+    color: var(--text-tertiary);
+}
+
+.filter-btn-reset:hover {
+    color: var(--text-primary);
+}
+
+.filter-btn-apply {
+    background: white;
+    color: var(--primary);
+    border: 1px solid var(--primary);
+}
+
+.filter-btn-apply:hover {
+    background: rgba(91, 143, 249, 0.08);
+    border-color: var(--primary-light);
+    color: var(--primary-light);
+}
+
+/* 筛选摘要 */
+.filter-summary {
+    display: none;
+    margin-top: 6px;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.filter-summary.has-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.filter-summary-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    color: var(--text-primary);
+}
+
+.filter-summary-label {
+    color: var(--text-tertiary);
+    font-size: 10px;
+}
+
+.filter-summary-value {
+    color: var(--text-primary);
+    font-size: 10px;
+}
+
+.filter-summary-clear {
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-size: 12px;
+    width: 14px;
+    height: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    transition: all var(--transition-fast);
+    margin-left: 2px;
+}
+
+.filter-summary-clear:hover {
+    color: var(--text-primary);
+    background: var(--gray-100);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .filter-modal {
+        min-width: 300px;
+        max-width: calc(100vw - 24px);
+    }
+    
+    .filter-panel {
+        max-height: 75vh;
+    }
+    
+    .chart-filters {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
 }
 
 .chart-meta-item .dot {
