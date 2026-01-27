@@ -357,6 +357,141 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     </table>
 </div>
 
+<!-- 颜色语义规范 -->
+<div class="spec-section">
+    <div class="spec-title">颜色语义规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>颜色</th><th>语义</th><th>使用场景</th><th>示例</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td><span style="display: inline-block; width: 20px; height: 20px; background: #5B8FF9; border-radius: 4px; vertical-align: middle;"></span> 蓝色</td>
+                <td><strong>正常</strong></td>
+                <td>指标处于正常范围，表现稳定</td>
+                <td>总销售额、常规业务指标</td>
+            </tr>
+            <tr>
+                <td><span style="display: inline-block; width: 20px; height: 20px; background: #5AD8A6; border-radius: 4px; vertical-align: middle;"></span> 绿色</td>
+                <td><strong>良好</strong></td>
+                <td>指标表现优秀，超出预期或目标</td>
+                <td>订单数增长、用户增长、转化率提升</td>
+            </tr>
+            <tr>
+                <td><span style="display: inline-block; width: 20px; height: 20px; background: #F6BD16; border-radius: 4px; vertical-align: middle;"></span> 黄色</td>
+                <td><strong>警告</strong></td>
+                <td>指标出现下降趋势，需要关注</td>
+                <td>客单价下降、活跃度下降、轻微异常</td>
+            </tr>
+            <tr>
+                <td><span style="display: inline-block; width: 20px; height: 20px; background: #E86452; border-radius: 4px; vertical-align: middle;"></span> 红色</td>
+                <td><strong>异常</strong></td>
+                <td>指标严重偏离正常值，需要立即处理</td>
+                <td>退货率上升、错误率上升、严重异常</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 状态判定规则 -->
+<div class="spec-section">
+    <div class="spec-title">状态判定规则</div>
+    <div class="code-block" style="background: #F7F8FA; border: 1px solid #E8E8E8;">
+        <div style="margin-bottom: 12px; font-weight: 600; color: #262626;">如何决定良好、警告、异常状态：</div>
+        
+        <div style="margin-bottom: 16px;">
+            <div style="font-weight: 600; color: #5AD8A6; margin-bottom: 6px;">✓ 良好（绿色）判定标准：</div>
+            <ul style="margin: 0; padding-left: 20px; color: #595959; line-height: 1.8;">
+                <li>正向指标：增长幅度 ≥ 5% 或超过目标值</li>
+                <li>负向指标：下降幅度 ≥ 5% 或低于警戒线</li>
+                <li>示例：订单数增长 8.2%（良好）、转化率提升 10%（良好）</li>
+            </ul>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+            <div style="font-weight: 600; color: #F6BD16; margin-bottom: 6px;">⚠ 警告（黄色）判定标准：</div>
+            <ul style="margin: 0; padding-left: 20px; color: #595959; line-height: 1.8;">
+                <li>正向指标：下降幅度在 2%-5% 之间</li>
+                <li>负向指标：上升幅度在 2%-5% 之间</li>
+                <li>接近警戒线但未达到异常水平</li>
+                <li>示例：客单价下降 3.1%（警告）、活跃度下降 4%（警告）</li>
+            </ul>
+        </div>
+        
+        <div style="margin-bottom: 16px;">
+            <div style="font-weight: 600; color: #E86452; margin-bottom: 6px;">✗ 异常（红色）判定标准：</div>
+            <ul style="margin: 0; padding-left: 20px; color: #595959; line-height: 1.8;">
+                <li>正向指标：下降幅度 ≥ 5% 或低于目标值 20%</li>
+                <li>负向指标：上升幅度 ≥ 5% 或超过警戒线</li>
+                <li>严重偏离正常范围，需要立即处理</li>
+                <li>示例：退货率上升 0.5%但超过阈值（异常）、错误率超过 5%（异常）</li>
+            </ul>
+        </div>
+        
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #E8E8E8;">
+            <div style="font-weight: 600; color: #262626; margin-bottom: 6px;">💡 判定建议：</div>
+            <ul style="margin: 0; padding-left: 20px; color: #595959; line-height: 1.8;">
+                <li>根据业务特点设定阈值，不同指标可能有不同的判定标准</li>
+                <li>结合趋势方向和绝对值综合判断，避免仅看百分比</li>
+                <li>考虑季节性因素和业务周期，动态调整判定标准</li>
+                <li>建议在配置中预设阈值，支持业务人员灵活调整</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- UI设计规范 -->
+<div class="spec-section">
+    <div class="spec-title">美观的UI设计规范</div>
+    <table class="spec-table">
+        <thead>
+            <tr><th>设计元素</th><th>规范</th><th>说明</th></tr>
+        </thead>
+        <tbody>
+            <tr class="highlight">
+                <td>视觉层次</td>
+                <td>数值 > 标签 > 趋势</td>
+                <td>通过字号、字重、颜色建立清晰的视觉层次</td>
+            </tr>
+            <tr>
+                <td>间距设计</td>
+                <td>卡片内边距 20px，卡片间距 16px</td>
+                <td>保持适当的留白，避免拥挤感</td>
+            </tr>
+            <tr>
+                <td>颜色搭配</td>
+                <td>顶部色带 + 趋势颜色</td>
+                <td>色带表示状态，趋势箭头颜色表示方向</td>
+            </tr>
+            <tr>
+                <td>圆角设计</td>
+                <td>8px 圆角</td>
+                <td>现代、友好的视觉感受</td>
+            </tr>
+            <tr>
+                <td>阴影效果</td>
+                <td>0 1px 2px rgba(0,0,0,0.05)</td>
+                <td>轻微阴影增加层次感，不过度</td>
+            </tr>
+            <tr>
+                <td>响应式布局</td>
+                <td>PC端 4列，移动端 2列</td>
+                <td>适配不同屏幕尺寸，保持美观</td>
+            </tr>
+            <tr>
+                <td>字体规范</td>
+                <td>数值 28px/600，标签 13px/400</td>
+                <td>清晰的字体大小和字重对比</td>
+            </tr>
+            <tr>
+                <td>对齐方式</td>
+                <td>左对齐标签和数值</td>
+                <td>符合阅读习惯，信息易读</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
 <!-- 使用建议 -->
 <div class="spec-section">
     <div class="spec-title">使用建议</div>
