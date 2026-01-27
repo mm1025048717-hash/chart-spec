@@ -170,7 +170,7 @@
                     <div class="params-row"><span class="label">X轴标签</span><span class="value">11px</span></div>
                     <div class="params-row"><span class="label">Y轴标签</span><span class="value">11px</span></div>
                     <div class="params-row"><span class="label">网格线</span><span class="value">[4,4]虚线</span></div>
-                    <div class="params-row"><span class="label">padding</span><span class="value highlight">[40,20,50,50]</span></div>
+                    <div class="params-row"><span class="label">padding</span><span class="value highlight">[40,12,30,20]</span></div>
                 </div>
             </div>
         </div>
@@ -198,7 +198,7 @@
     data: basicData,
     xField: 'region',
     yField: 'value',
-    padding: [40, 12, 50, 50], // 减少右侧padding，让图表向右扩展
+    padding: [40, 12, 30, 20], // 减少左侧和底部padding，让柱状图紧贴Y轴和X轴
     color: '#5B8FF9',
     columnWidthRatio: 0.5,
     columnStyle: { radius: [4, 4, 0, 0] },
@@ -239,7 +239,7 @@
             <tr><th>参数</th><th>值</th><th>说明</th></tr>
         </thead>
         <tbody>
-            <tr class="highlight"><td><code>padding</code></td><td><code>[40, 20, 50, 50]</code></td><td>图表内边距 [上, 右, 下, 左]</td></tr>
+            <tr class="highlight"><td><code>padding</code></td><td><code>[40, 12, 30, 20]</code></td><td>图表内边距 [上, 右, 下, 左]</td></tr>
             <tr><td>容器高度</td><td><code>240px</code></td><td>标准图表高度</td></tr>
             <tr><td><code>columnWidthRatio</code></td><td><code>0.5</code></td><td>柱体宽度占比</td></tr>
         </tbody>
@@ -270,7 +270,7 @@
     data,
     xField: <span class="string">'region'</span>,
     yField: <span class="string">'value'</span>,
-    padding: [<span class="number">40</span>, <span class="number">20</span>, <span class="number">50</span>, <span class="number">50</span>],
+    padding: [<span class="number">40</span>, <span class="number">12</span>, <span class="number">30</span>, <span class="number">20</span>],
     color: <span class="string">'#5B8FF9'</span>,
     columnWidthRatio: <span class="number">0.5</span>,
     columnStyle: { radius: [<span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">0</span>] },
@@ -305,7 +305,7 @@
     data: basicData,
     xField: 'region',
     yField: 'value',
-    padding: [40, 12, 50, 50], // 减少右侧padding，让图表向右扩展
+    padding: [40, 12, 30, 20], // 减少左侧和底部padding，让柱状图紧贴Y轴和X轴
     color: '#5AD8A6',
     columnWidthRatio: 0.5,
     columnStyle: { radius: [4, 4, 0, 0] },
@@ -346,7 +346,7 @@
     yField: 'value',
     seriesField: 'type',
     isGroup: true,
-    padding: [40, 12, 50, 50], // 减少右侧padding，让图表向右扩展
+    padding: [40, 12, 30, 20], // 减少左侧和底部padding，让柱状图紧贴Y轴和X轴
     color: ['#5B8FF9', '#5AD8A6'],
     columnWidthRatio: 0.6,
     columnStyle: { radius: [3, 3, 0, 0] },
@@ -393,7 +393,7 @@ const fontSize = mobile ? 10 : 11;
 const labelFontSize = mobile ? 10 : 11;
 const columnWidthRatio = mobile ? 0.55 : 0.5;
 const borderRadius = mobile ? 4 : 4;
-const basePadding = mobile ? [30, 15, 40, 40] : [40, 20, 50, 50];
+const basePadding = mobile ? [30, 15, 30, 20] : [40, 12, 30, 20]; // 减少左侧和底部padding，让柱状图紧贴Y轴和X轴
 
 new Column('chart-basic', {
     data: basicData,
