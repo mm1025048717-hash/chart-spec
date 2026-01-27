@@ -120,7 +120,7 @@
                 <div class="filter-summary" id="filterSummary"></div>
             </div>
         </div>
-        <div class="chart-body xl" style="position: relative; padding: 8px;">
+        <div class="chart-body xl" style="position: relative; padding: 8px; overflow: hidden;">
             <!-- Y轴单位标签 - 左上角 -->
             <div class="axis-unit y-left">缺陷数</div>
             <!-- 右Y轴单位标签 - 右上角 -->
@@ -296,7 +296,7 @@ const fontSize = mobile ? 10 : 10;
 const lineWidth = mobile ? 2 : 2;
 const pointSize = mobile ? 4 : 4;
 const borderRadius = mobile ? 4 : 4;
-const basePadding = mobile ? [20, 35, 40, 10] : [25, 40, 45, 10]; // 增加右侧padding，为右Y轴单位标签和图例留出空间
+const basePadding = mobile ? [20, 50, 40, 10] : [25, 55, 45, 10]; // 大幅增加右侧padding，为右Y轴标签留出充足空间，避免被滚动条遮挡
 
 const rawData = [
     { type: '界面缺陷', value: 120 },
@@ -319,7 +319,7 @@ new DualAxes('chart-basic', {
     xField: 'type',
     yField: ['value', 'percent'],
     padding: basePadding,
-    appendPadding: [0, 0, 0, 0], // 不添加额外padding，让图表占满空间
+    appendPadding: [0, 15, 0, 0], // 增加右侧appendPadding，为右Y轴标签留出空间，避免被滚动条遮挡
     autoFit: true, // 自动适应容器大小
     geometryOptions: [
         {
@@ -345,6 +345,7 @@ new DualAxes('chart-basic', {
             label: { 
                 style: { fontSize: fontSize },
                 formatter: (v) => (v * 100).toFixed(0), // 移除'%'，因为右上角已有单位标签"%"
+                offset: mobile ? 8 : 10, // 增加左偏移，让标签更靠左，避免被滚动条遮挡
             },
         },
     },
