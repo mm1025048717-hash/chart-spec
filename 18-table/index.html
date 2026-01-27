@@ -122,18 +122,21 @@
             transition: width 0.3s ease;
         }
         
-        /* 筛选下拉面板 - 适中尺寸，确保完整显示 */
+        /* 筛选下拉面板 - 可超出表格范围 */
         .filter-modal {
             display: none;
-            position: absolute;
-            top: calc(100% + 8px);
-            right: 0;
-            z-index: 1000;
+            position: fixed;
+            z-index: 10000;
             min-width: 320px;
             max-width: 360px;
         }
         .filter-modal.show {
             display: block;
+        }
+        
+        /* 计算面板位置 */
+        .filter-modal.positioned {
+            position: fixed;
         }
         
         .filter-panel {
@@ -870,7 +873,30 @@ function toggleFilterPanel(event) {
         event.stopPropagation();
     }
     const modal = document.getElementById('filterModal');
-    modal.classList.toggle('show');
+    const btn = event.target.closest('.filter-unified-btn') || document.querySelector('.filter-unified-btn');
+    
+    if (modal.classList.contains('show')) {
+        modal.classList.remove('show', 'positioned');
+    } else {
+        // 计算按钮位置
+        if (btn) {
+            const rect = btn.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                // 移动端：左侧对齐
+                modal.style.top = (rect.bottom + 8) + 'px';
+                modal.style.left = '12px';
+                modal.style.right = 'auto';
+            } else {
+                // PC端：右侧对齐
+                modal.style.top = (rect.bottom + 8) + 'px';
+                modal.style.right = (window.innerWidth - rect.right) + 'px';
+                modal.style.left = 'auto';
+            }
+        }
+        modal.classList.add('show', 'positioned');
+    }
 }
 
 // 切换筛选维度折叠/展开
@@ -888,7 +914,16 @@ function toggleFilterDimension(header) {
 // 打开筛选面板（用于表格单元格点击）
 function openFilterPanel(dimension = null, value = null) {
     const modal = document.getElementById('filterModal');
-    modal.classList.add('show');
+    const btn = document.querySelector('.filter-unified-btn');
+    
+    // 计算按钮位置
+    if (btn) {
+        const rect = btn.getBoundingClientRect();
+        modal.style.top = (rect.bottom + 8) + 'px';
+        modal.style.right = (window.innerWidth - rect.right) + 'px';
+    }
+    
+    modal.classList.add('show', 'positioned');
     
     // 如果指定了维度和值，自动展开并选中
     if (dimension && value) {
@@ -1096,8 +1131,54 @@ function removeFilter(dimension, value) {
 document.addEventListener('click', function(e) {
     const modal = document.getElementById('filterModal');
     const wrapper = document.querySelector('.filter-wrapper');
-    if (modal && modal.classList.contains('show') && wrapper && !wrapper.contains(e.target)) {
-        closeFilterPanel();
+    const btn = document.querySelector('.filter-unified-btn');
+    
+    if (modal && modal.classList.contains('show')) {
+        // 如果点击的不是面板内部和按钮，则关闭
+        if (!modal.contains(e.target) && !btn.contains(e.target)) {
+            closeFilterPanel();
+        }
+    }
+});
+
+// 窗口滚动或调整大小时重新计算位置
+window.addEventListener('scroll', function() {
+    const modal = document.getElementById('filterModal');
+    if (modal && modal.classList.contains('show')) {
+        const btn = document.querySelector('.filter-unified-btn');
+        if (btn) {
+            const rect = btn.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 768;
+            
+            modal.style.top = (rect.bottom + 8) + 'px';
+            if (isMobile) {
+                modal.style.left = '12px';
+                modal.style.right = 'auto';
+            } else {
+                modal.style.right = (window.innerWidth - rect.right) + 'px';
+                modal.style.left = 'auto';
+            }
+        }
+    }
+}, true);
+
+window.addEventListener('resize', function() {
+    const modal = document.getElementById('filterModal');
+    if (modal && modal.classList.contains('show')) {
+        const btn = document.querySelector('.filter-unified-btn');
+        if (btn) {
+            const rect = btn.getBoundingClientRect();
+            const isMobile = window.innerWidth <= 768;
+            
+            modal.style.top = (rect.bottom + 8) + 'px';
+            if (isMobile) {
+                modal.style.left = '12px';
+                modal.style.right = 'auto';
+            } else {
+                modal.style.right = (window.innerWidth - rect.right) + 'px';
+                modal.style.left = 'auto';
+            }
+        }
     }
 });
 
