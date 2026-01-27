@@ -236,16 +236,17 @@
                     </button>
                 </div>
             </div>
-            <div class="chart-body sm" style="position: relative;">
+            <div class="chart-body sm" style="position: relative; overflow: visible;">
                 <div id="chart-outer" style="width: 100%; height: 100%;"></div>
             </div>
             <div class="chart-code-panel" id="code-outer">
                 <div class="code-header"><span>Configuration</span><button class="btn-copy-code" onclick="copyCode('code-outer-content')">复制代码</button></div>
-                <pre id="code-outer-content">label: {
+                <pre id="code-outer-content">radius: 0.65,  // 减小外半径，为外部标签留出空间
+label: {
     type: 'spider',
-    labelHeight: 24,
+    labelHeight: 20,  // 减小标签高度，让标签更紧凑
     content: '{name}\n{percentage}',
-        style: { fontSize: 11, fill: '#86868B' },
+    style: { fontSize: 11, fill: '#86868B' },
 },
 statistic: {
     title: {
@@ -339,12 +340,12 @@ new G2Plot.Pie('chart-outer', {
     data,
     angleField: 'value',
     colorField: 'type',
-    radius: 0.75,
+    radius: 0.65, // 减小外半径，为外部标签留出空间，防止标签超出容器
     innerRadius: innerRadius - 0.05,  // 增大内径，给中心文字更多空间
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'spider',
-        labelHeight: 24,
+        labelHeight: 20, // 减小标签高度，让标签更紧凑
         content: '{name}\n{percentage}',
         style: { fontSize: labelFontSize, fill: '#86868B' },
     },
