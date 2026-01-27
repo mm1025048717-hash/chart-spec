@@ -160,7 +160,7 @@
             <pre id="code-treemap-content">new Treemap('chart-basic', {
     data,
     colorField: 'name',
-    padding: [40, 160, 24, 24],  // 右侧padding增加到160px，为图例预留空间
+    padding: mobile ? [20, 20, 20, 20] : [25, 20, 25, 20],  // 平衡左右padding，让图表居中，横向图例不需要太多右侧空间
     color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF3B30', '#5856D6', '#32ADE6', '#FF99C3'],
     label: {
         style: { fontSize: 12, fill: '#fff' },
@@ -298,7 +298,7 @@ const data = {
 new Treemap('chart-basic', {
     data,
     colorField: 'name',
-    padding: [40, 160, 24, 24],  // 右侧padding增加到160px，为图例预留空间
+    padding: mobile ? [20, 20, 20, 20] : [25, 20, 25, 20],  // 平衡左右padding，让图表居中，横向图例不需要太多右侧空间
     color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF3B30', '#5856D6', '#32ADE6', '#FF99C3'],
     label: {
         style: { fontSize: labelFontSize, fill: '#fff' },
