@@ -14,6 +14,38 @@
         }
         .chart-type-badge .icon { font-size: 20px; }
         .chart-type-badge .text { font-size: 14px; color: #595959; font-weight: 500; }
+        
+        /* 统一筛选按钮 */
+        .filter-unified-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: #5B8FF9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .filter-unified-btn:hover {
+            background: #409CFF;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(91, 143, 249, 0.3);
+        }
+        .filter-unified-btn.active {
+            background: #0051D4;
+        }
+        .filter-unified-btn .filter-count {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+        
+        /* 表格样式 */
         .demo-table {
             width: 100%;
             border-collapse: collapse;
@@ -23,11 +55,35 @@
             padding: 12px 16px;
             text-align: left;
             border-bottom: 1px solid #E8E8E8;
+            position: relative;
         }
         .demo-table th {
             background: #FAFAFA;
             font-weight: 600;
             color: #595959;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+        .demo-table th:hover {
+            background: #F0F0F0;
+        }
+        .demo-table th.filterable::after {
+            content: '🔽';
+            margin-left: 6px;
+            font-size: 10px;
+            opacity: 0.5;
+            transition: opacity 0.2s ease;
+        }
+        .demo-table th.filterable:hover::after {
+            opacity: 1;
+        }
+        .demo-table td {
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .demo-table td:hover {
+            background: #F5F5F5;
         }
         .demo-table tr:hover { background: #F5F5F5; }
         .trend-up { color: #52C41A; }
@@ -42,6 +98,261 @@
             height: 100%;
             background: #5B8FF9;
             border-radius: 3px;
+        }
+        
+        /* 筛选面板模态框 */
+        .filter-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .filter-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .filter-panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .filter-panel-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #E8E8E8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #FAFAFA;
+        }
+        .filter-panel-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1D1D1F;
+        }
+        .filter-panel-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #86868B;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+        .filter-panel-close:hover {
+            color: #1D1D1F;
+        }
+        
+        .filter-panel-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .filter-dimension {
+            margin-bottom: 24px;
+        }
+        .filter-dimension:last-child {
+            margin-bottom: 0;
+        }
+        .filter-dimension-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1D1D1F;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-dimension-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: #5B8FF9;
+            border-radius: 2px;
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .filter-option {
+            padding: 8px 14px;
+            border: 1px solid #E8E8E8;
+            border-radius: 6px;
+            background: white;
+            font-size: 13px;
+            color: #1D1D1F;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .filter-option:hover {
+            border-color: #5B8FF9;
+            background: #F0F7FF;
+        }
+        .filter-option.selected {
+            background: #5B8FF9;
+            color: white;
+            border-color: #5B8FF9;
+        }
+        
+        .filter-range {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .filter-range-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #E8E8E8;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .filter-range-input:focus {
+            outline: none;
+            border-color: #5B8FF9;
+            box-shadow: 0 0 0 3px rgba(91, 143, 249, 0.1);
+        }
+        
+        .filter-panel-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #E8E8E8;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: #FAFAFA;
+        }
+        .filter-btn {
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+        }
+        .filter-btn-reset {
+            background: white;
+            color: #86868B;
+            border: 1px solid #E8E8E8;
+        }
+        .filter-btn-reset:hover {
+            background: #F5F5F5;
+            color: #1D1D1F;
+        }
+        .filter-btn-apply {
+            background: #5B8FF9;
+            color: white;
+        }
+        .filter-btn-apply:hover {
+            background: #409CFF;
+        }
+        
+        /* 已选筛选标签 */
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            background: #F0F7FF;
+            color: #5B8FF9;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .filter-tag-remove {
+            cursor: pointer;
+            font-size: 12px;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        .filter-tag-remove:hover {
+            opacity: 1;
+        }
+        
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .filter-modal.show {
+                padding: 0;
+                align-items: flex-end;
+            }
+            .filter-panel {
+                max-width: 100%;
+                max-height: 90vh;
+                border-radius: 16px 16px 0 0;
+            }
+            .filter-panel-header {
+                padding: 14px 16px;
+            }
+            .filter-panel-title {
+                font-size: 15px;
+            }
+            .filter-panel-body {
+                padding: 16px;
+            }
+            .filter-dimension {
+                margin-bottom: 20px;
+            }
+            .filter-options {
+                gap: 6px;
+            }
+            .filter-option {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+            .filter-panel-footer {
+                padding: 12px 16px;
+                flex-direction: column;
+            }
+            .filter-btn {
+                width: 100%;
+                padding: 10px;
+            }
+            .demo-table th, .demo-table td {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+            .filter-unified-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+            .filter-tags {
+                margin-top: 8px;
+                gap: 6px;
+            }
+            .filter-tag {
+                font-size: 10px;
+                padding: 3px 8px;
+            }
+            .chart-filters {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
         }
     </style>
 </head>
@@ -93,76 +404,67 @@
                 </div>
             </div>
             <div class="chart-filters">
-                <div class="filter-item">
-                    <span class="filter-label">按</span>
-                    <select class="filter-select">
-                        <option>地区</option>
-                        <option>产品</option>
-                        <option>销售员</option>
-                    </select>
-                    <span class="filter-label">× 分组</span>
-                </div>
-                <div class="filter-item">
-                    <span class="filter-label">日期:</span>
-                    <select class="filter-select">
-                        <option>2024.Q4</option>
-                        <option>2024.Q3</option>
-                        <option>2024年度</option>
-                    </select>
-                </div>
+                <button class="filter-unified-btn" onclick="openFilterPanel()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                    </svg>
+                    筛选
+                    <span class="filter-count" id="filterCount">0</span>
+                </button>
+                <div class="filter-tags" id="filterTags"></div>
             </div>
         </div>
         <div style="padding: 0;">
             <table class="demo-table">
                 <thead>
                     <tr>
-                        <th>地区</th>
-                        <th>销售额</th>
-                        <th>环比</th>
-                        <th>完成率</th>
-                        <th>进度</th>
+                        <th class="filterable" data-dimension="region" onclick="openFilterPanel('region')">地区</th>
+                        <th class="filterable" data-dimension="sales" onclick="openFilterPanel('sales')">销售额</th>
+                        <th class="filterable" data-dimension="change" onclick="openFilterPanel('change')">环比</th>
+                        <th class="filterable" data-dimension="completion" onclick="openFilterPanel('completion')">完成率</th>
+                        <th class="filterable" data-dimension="progress" onclick="openFilterPanel('progress')">进度</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>华东区</td>
-                        <td>¥ 3,650,000</td>
-                        <td class="trend-up">↑ 12.5%</td>
-                        <td>92%</td>
-                        <td>
+                        <td onclick="openFilterPanel('region', '华东区')">华东区</td>
+                        <td onclick="openFilterPanel('sales', '3650000')">¥ 3,650,000</td>
+                        <td class="trend-up" onclick="openFilterPanel('change', 'positive')">↑ 12.5%</td>
+                        <td onclick="openFilterPanel('completion', '92')">92%</td>
+                        <td onclick="openFilterPanel('progress', '92')">
                             <div class="progress-bar">
                                 <div class="progress-bar-fill" style="width: 92%;"></div>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td>华北区</td>
-                        <td>¥ 2,808,000</td>
-                        <td class="trend-up">↑ 8.2%</td>
-                        <td>85%</td>
-                        <td>
+                        <td onclick="openFilterPanel('region', '华北区')">华北区</td>
+                        <td onclick="openFilterPanel('sales', '2808000')">¥ 2,808,000</td>
+                        <td class="trend-up" onclick="openFilterPanel('change', 'positive')">↑ 8.2%</td>
+                        <td onclick="openFilterPanel('completion', '85')">85%</td>
+                        <td onclick="openFilterPanel('progress', '85')">
                             <div class="progress-bar">
                                 <div class="progress-bar-fill" style="width: 85%;"></div>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td>华南区</td>
-                        <td>¥ 2,408,000</td>
-                        <td class="trend-down">↓ 3.1%</td>
-                        <td>78%</td>
-                        <td>
+                        <td onclick="openFilterPanel('region', '华南区')">华南区</td>
+                        <td onclick="openFilterPanel('sales', '2408000')">¥ 2,408,000</td>
+                        <td class="trend-down" onclick="openFilterPanel('change', 'negative')">↓ 3.1%</td>
+                        <td onclick="openFilterPanel('completion', '78')">78%</td>
+                        <td onclick="openFilterPanel('progress', '78')">
                             <div class="progress-bar">
                                 <div class="progress-bar-fill" style="width: 78%;"></div>
                             </div>
                         </td>
                     </tr>
                     <tr>
-                        <td>华中区</td>
-                        <td>¥ 2,236,000</td>
-                        <td class="trend-up">↑ 5.8%</td>
-                        <td>81%</td>
-                        <td>
+                        <td onclick="openFilterPanel('region', '华中区')">华中区</td>
+                        <td onclick="openFilterPanel('sales', '2236000')">¥ 2,236,000</td>
+                        <td class="trend-up" onclick="openFilterPanel('change', 'positive')">↑ 5.8%</td>
+                        <td onclick="openFilterPanel('completion', '81')">81%</td>
+                        <td onclick="openFilterPanel('progress', '81')">
                             <div class="progress-bar">
                                 <div class="progress-bar-fill" style="width: 81%;"></div>
                             </div>
@@ -170,6 +472,71 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        
+        <!-- 筛选面板 -->
+        <div class="filter-modal" id="filterModal" onclick="closeFilterPanelOnBackdrop(event)">
+            <div class="filter-panel" onclick="event.stopPropagation()">
+                <div class="filter-panel-header">
+                    <div class="filter-panel-title">筛选条件</div>
+                    <button class="filter-panel-close" onclick="closeFilterPanel()">×</button>
+                </div>
+                <div class="filter-panel-body">
+                    <!-- 地区筛选 -->
+                    <div class="filter-dimension">
+                        <div class="filter-dimension-title">地区</div>
+                        <div class="filter-options" id="filterRegion">
+                            <div class="filter-option" data-value="华东区" onclick="toggleFilterOption(this, 'region', '华东区')">华东区</div>
+                            <div class="filter-option" data-value="华北区" onclick="toggleFilterOption(this, 'region', '华北区')">华北区</div>
+                            <div class="filter-option" data-value="华南区" onclick="toggleFilterOption(this, 'region', '华南区')">华南区</div>
+                            <div class="filter-option" data-value="华中区" onclick="toggleFilterOption(this, 'region', '华中区')">华中区</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 销售额筛选 -->
+                    <div class="filter-dimension">
+                        <div class="filter-dimension-title">销售额</div>
+                        <div class="filter-range">
+                            <input type="number" class="filter-range-input" id="salesMin" placeholder="最小值" min="0">
+                            <span style="color: #86868B;">至</span>
+                            <input type="number" class="filter-range-input" id="salesMax" placeholder="最大值" min="0">
+                        </div>
+                    </div>
+                    
+                    <!-- 环比筛选 -->
+                    <div class="filter-dimension">
+                        <div class="filter-dimension-title">环比</div>
+                        <div class="filter-options" id="filterChange">
+                            <div class="filter-option" data-value="positive" onclick="toggleFilterOption(this, 'change', 'positive')">上升</div>
+                            <div class="filter-option" data-value="negative" onclick="toggleFilterOption(this, 'change', 'negative')">下降</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 完成率筛选 -->
+                    <div class="filter-dimension">
+                        <div class="filter-dimension-title">完成率</div>
+                        <div class="filter-range">
+                            <input type="number" class="filter-range-input" id="completionMin" placeholder="最小值" min="0" max="100">
+                            <span style="color: #86868B;">至</span>
+                            <input type="number" class="filter-range-input" id="completionMax" placeholder="最大值" min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <!-- 进度筛选 -->
+                    <div class="filter-dimension">
+                        <div class="filter-dimension-title">进度</div>
+                        <div class="filter-range">
+                            <input type="number" class="filter-range-input" id="progressMin" placeholder="最小值" min="0" max="100">
+                            <span style="color: #86868B;">至</span>
+                            <input type="number" class="filter-range-input" id="progressMax" placeholder="最大值" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-panel-footer">
+                    <button class="filter-btn filter-btn-reset" onclick="resetFilters()">重置</button>
+                    <button class="filter-btn filter-btn-apply" onclick="applyFilters()">应用筛选</button>
+                </div>
+            </div>
         </div>
         <!-- 汇总栏 -->
         <div class="chart-summary">
@@ -181,29 +548,109 @@
                 <span>Table Configuration</span>
                 <button class="btn-copy-code" onclick="copyCode('code-table-content')">复制代码</button>
             </div>
-            <pre id="code-table-content">import { Table } from 'antd';
+            <pre id="code-table-content">import { Table, Button, Modal, Input, Space, Tag } from 'antd';
+import { FilterOutlined } from '@ant-design/icons';
 
+// 统一筛选组件
+const FilterPanel = ({ visible, onClose, onApply, onReset }) => {
+    return (
+        &lt;Modal
+            title="筛选条件"
+            open={visible}
+            onCancel={onClose}
+            footer={[
+                &lt;Button key="reset" onClick={onReset}&gt;重置&lt;/Button&gt;,
+                &lt;Button key="apply" type="primary" onClick={onApply}&gt;应用筛选&lt;/Button&gt;,
+            ]}
+        &gt;
+            {/* 所有维度的筛选选项 */}
+            &lt;Space direction="vertical" style={{ width: '100%' }}&gt;
+                {/* 地区筛选 */}
+                &lt;div&gt;
+                    &lt;div style={{ fontWeight: 600, marginBottom: 8 }}&gt;地区&lt;/div&gt;
+                    &lt;Space wrap&gt;
+                        {['华东区', '华北区', '华南区', '华中区'].map(region => (
+                            &lt;Button key={region} onClick={() => toggleFilter('region', region)}&gt;
+                                {region}
+                            &lt;/Button&gt;
+                        ))}
+                    &lt;/Space&gt;
+                &lt;/div&gt;
+                
+                {/* 销售额范围 */}
+                &lt;div&gt;
+                    &lt;div style={{ fontWeight: 600, marginBottom: 8 }}&gt;销售额&lt;/div&gt;
+                    &lt;Space&gt;
+                        &lt;Input placeholder="最小值" type="number" /&gt;
+                        &lt;span&gt;至&lt;/span&gt;
+                        &lt;Input placeholder="最大值" type="number" /&gt;
+                    &lt;/Space&gt;
+                &lt;/div&gt;
+                
+                {/* 其他维度... */}
+            &lt;/Space&gt;
+        &lt;/Modal&gt;
+    );
+};
+
+// 表格列配置 - 所有列可点击筛选
 const columns = [
-    { title: '地区', dataIndex: 'region', key: 'region' },
+    {
+        title: '地区',
+        dataIndex: 'region',
+        key: 'region',
+        onHeaderCell: () => ({
+            onClick: () => openFilterPanel('region'),
+            style: { cursor: 'pointer' }
+        }),
+        onCell: (record) => ({
+            onClick: () => openFilterPanel('region', record.region),
+            style: { cursor: 'pointer' }
+        }),
+    },
     {
         title: '销售额',
         dataIndex: 'sales',
         key: 'sales',
         render: (val) => `¥ ${val.toLocaleString()}`,
-        sorter: (a, b) => a.sales - b.sales,
-    },
-    {
-        title: '环比',
-        dataIndex: 'change',
-        render: (val) => (
-            &lt;span style={{ color: val > 0 ? '#52C41A' : '#FF4D4F' }}&gt;
-                {val > 0 ? '↑' : '↓'} {Math.abs(val)}%
-            &lt;/span&gt;
-        ),
+        onHeaderCell: () => ({
+            onClick: () => openFilterPanel('sales'),
+            style: { cursor: 'pointer' }
+        }),
+        onCell: (record) => ({
+            onClick: () => openFilterPanel('sales', record.sales),
+            style: { cursor: 'pointer' }
+        }),
     },
 ];
 
-&lt;Table columns={columns} dataSource={data} /&gt;</pre>
+// 使用
+&lt;div&gt;
+    &lt;Button 
+        icon={&lt;FilterOutlined /&gt;} 
+        onClick={() => setFilterVisible(true)}
+    &gt;
+        筛选
+        {filterCount > 0 && &lt;Badge count={filterCount} /&gt;}
+    &lt;/Button&gt;
+    
+    &lt;Table 
+        columns={columns} 
+        dataSource={data}
+        onRow={(record) => ({
+            onClick: () => {
+                // 点击行也可以触发筛选
+            }
+        })}
+    /&gt;
+    
+    &lt;FilterPanel 
+        visible={filterVisible}
+        onClose={() => setFilterVisible(false)}
+        onApply={handleApplyFilter}
+        onReset={handleResetFilter}
+    /&gt;
+&lt;/div&gt;</pre>
         </div>
     </div>
 </div>
@@ -306,6 +753,250 @@ const columns = [
 // 初始化响应式
 if (typeof ChartSpec !== 'undefined') {
     ChartSpec.init();
+}
+
+// 筛选状态
+let filterState = {
+    region: [],
+    sales: { min: null, max: null },
+    change: [],
+    completion: { min: null, max: null },
+    progress: { min: null, max: null }
+};
+
+// 打开筛选面板
+function openFilterPanel(dimension = null, value = null) {
+    const modal = document.getElementById('filterModal');
+    modal.classList.add('show');
+    
+    // 如果指定了维度和值，自动选中
+    if (dimension && value) {
+        setTimeout(() => {
+            if (dimension === 'region' || dimension === 'change') {
+                const options = document.querySelectorAll(`#filter${dimension.charAt(0).toUpperCase() + dimension.slice(1)} .filter-option`);
+                options.forEach(opt => {
+                    if (opt.dataset.value === value || opt.textContent === value) {
+                        opt.classList.add('selected');
+                        if (!filterState[dimension].includes(value)) {
+                            filterState[dimension].push(value);
+                        }
+                    }
+                });
+            }
+            updateFilterUI();
+        }, 100);
+    }
+}
+
+// 关闭筛选面板
+function closeFilterPanel() {
+    const modal = document.getElementById('filterModal');
+    modal.classList.remove('show');
+}
+
+// 点击背景关闭
+function closeFilterPanelOnBackdrop(event) {
+    if (event.target.id === 'filterModal') {
+        closeFilterPanel();
+    }
+}
+
+// 切换筛选选项
+function toggleFilterOption(element, dimension, value) {
+    element.classList.toggle('selected');
+    
+    if (element.classList.contains('selected')) {
+        if (!filterState[dimension].includes(value)) {
+            filterState[dimension].push(value);
+        }
+    } else {
+        filterState[dimension] = filterState[dimension].filter(v => v !== value);
+    }
+    
+    updateFilterUI();
+}
+
+// 应用筛选
+function applyFilters() {
+    // 获取范围输入值
+    const salesMin = document.getElementById('salesMin').value;
+    const salesMax = document.getElementById('salesMax').value;
+    const completionMin = document.getElementById('completionMin').value;
+    const completionMax = document.getElementById('completionMax').value;
+    const progressMin = document.getElementById('progressMin').value;
+    const progressMax = document.getElementById('progressMax').value;
+    
+    filterState.sales.min = salesMin ? parseFloat(salesMin) : null;
+    filterState.sales.max = salesMax ? parseFloat(salesMax) : null;
+    filterState.completion.min = completionMin ? parseFloat(completionMin) : null;
+    filterState.completion.max = completionMax ? parseFloat(completionMax) : null;
+    filterState.progress.min = progressMin ? parseFloat(progressMin) : null;
+    filterState.progress.max = progressMax ? parseFloat(progressMax) : null;
+    
+    updateFilterUI();
+    closeFilterPanel();
+    
+    // 这里可以添加实际的筛选逻辑
+    console.log('应用筛选:', filterState);
+}
+
+// 重置筛选
+function resetFilters() {
+    filterState = {
+        region: [],
+        sales: { min: null, max: null },
+        change: [],
+        completion: { min: null, max: null },
+        progress: { min: null, max: null }
+    };
+    
+    // 清除所有选中状态
+    document.querySelectorAll('.filter-option').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    
+    // 清空范围输入
+    document.getElementById('salesMin').value = '';
+    document.getElementById('salesMax').value = '';
+    document.getElementById('completionMin').value = '';
+    document.getElementById('completionMax').value = '';
+    document.getElementById('progressMin').value = '';
+    document.getElementById('progressMax').value = '';
+    
+    updateFilterUI();
+}
+
+// 更新筛选UI（标签和计数）
+function updateFilterUI() {
+    const filterTags = document.getElementById('filterTags');
+    const filterCount = document.getElementById('filterCount');
+    let count = 0;
+    let tagsHTML = '';
+    
+    // 地区筛选
+    filterState.region.forEach(value => {
+        count++;
+        tagsHTML += `<div class="filter-tag">
+            <span>地区: ${value}</span>
+            <span class="filter-tag-remove" onclick="removeFilter('region', '${value}')">×</span>
+        </div>`;
+    });
+    
+    // 环比筛选
+    filterState.change.forEach(value => {
+        count++;
+        const label = value === 'positive' ? '上升' : '下降';
+        tagsHTML += `<div class="filter-tag">
+            <span>环比: ${label}</span>
+            <span class="filter-tag-remove" onclick="removeFilter('change', '${value}')">×</span>
+        </div>`;
+    });
+    
+    // 销售额范围
+    if (filterState.sales.min !== null || filterState.sales.max !== null) {
+        count++;
+        const min = filterState.sales.min !== null ? `¥${filterState.sales.min.toLocaleString()}` : '';
+        const max = filterState.sales.max !== null ? `¥${filterState.sales.max.toLocaleString()}` : '';
+        const range = min && max ? `${min} - ${max}` : min || max;
+        tagsHTML += `<div class="filter-tag">
+            <span>销售额: ${range}</span>
+            <span class="filter-tag-remove" onclick="removeFilter('sales', null)">×</span>
+        </div>`;
+    }
+    
+    // 完成率范围
+    if (filterState.completion.min !== null || filterState.completion.max !== null) {
+        count++;
+        const min = filterState.completion.min !== null ? `${filterState.completion.min}%` : '';
+        const max = filterState.completion.max !== null ? `${filterState.completion.max}%` : '';
+        const range = min && max ? `${min} - ${max}` : min || max;
+        tagsHTML += `<div class="filter-tag">
+            <span>完成率: ${range}</span>
+            <span class="filter-tag-remove" onclick="removeFilter('completion', null)">×</span>
+        </div>`;
+    }
+    
+    // 进度范围
+    if (filterState.progress.min !== null || filterState.progress.max !== null) {
+        count++;
+        const min = filterState.progress.min !== null ? `${filterState.progress.min}%` : '';
+        const max = filterState.progress.max !== null ? `${filterState.progress.max}%` : '';
+        const range = min && max ? `${min} - ${max}` : min || max;
+        tagsHTML += `<div class="filter-tag">
+            <span>进度: ${range}</span>
+            <span class="filter-tag-remove" onclick="removeFilter('progress', null)">×</span>
+        </div>`;
+    }
+    
+    filterTags.innerHTML = tagsHTML;
+    filterCount.textContent = count;
+    
+    // 更新按钮状态
+    const filterBtn = document.querySelector('.filter-unified-btn');
+    if (count > 0) {
+        filterBtn.classList.add('active');
+    } else {
+        filterBtn.classList.remove('active');
+    }
+}
+
+// 移除单个筛选
+function removeFilter(dimension, value) {
+    if (dimension === 'region' || dimension === 'change') {
+        filterState[dimension] = filterState[dimension].filter(v => v !== value);
+        // 更新UI中的选中状态
+        const options = document.querySelectorAll(`#filter${dimension.charAt(0).toUpperCase() + dimension.slice(1)} .filter-option`);
+        options.forEach(opt => {
+            if (opt.dataset.value === value) {
+                opt.classList.remove('selected');
+            }
+        });
+    } else {
+        // 范围筛选
+        filterState[dimension] = { min: null, max: null };
+        const minInput = document.getElementById(`${dimension}Min`);
+        const maxInput = document.getElementById(`${dimension}Max`);
+        if (minInput) minInput.value = '';
+        if (maxInput) maxInput.value = '';
+    }
+    
+    updateFilterUI();
+}
+
+// ESC键关闭面板
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeFilterPanel();
+    }
+});
+
+// 切换代码面板
+function toggleCode(id, btn) {
+    const panel = document.getElementById(id);
+    if (panel) {
+        panel.classList.toggle('show');
+        btn.classList.toggle('active');
+    }
+}
+
+// 复制代码
+function copyCode(id) {
+    const codeElement = document.getElementById(id);
+    if (codeElement) {
+        const text = codeElement.textContent || codeElement.innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = codeElement.parentElement.querySelector('.btn-copy-code');
+            if (btn) {
+                const originalText = btn.textContent;
+                btn.textContent = '已复制';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.classList.remove('copied');
+                }, 2000);
+            }
+        });
+    }
 }
 </script>
 </body>
