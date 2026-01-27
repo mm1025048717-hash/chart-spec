@@ -1462,7 +1462,7 @@ a:hover {
 .hover-hint {
     position: absolute;
     top: 8px;
-    right: 160px; /* 调整位置，避免与图例重叠（图例在right: 12px） */
+    right: 180px; /* 调整位置，避免与图例和Y轴标签重叠 */
     font-size: 10px;
     color: var(--primary);
     background: rgba(0, 122, 255, 0.1);
