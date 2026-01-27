@@ -1765,12 +1765,12 @@ a:hover {
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 
-/* X轴字段标签 - 应该在X轴标签的右侧，左上角位置 */
+/* X轴字段标签 - 应该在X轴右下角位置 */
 .x-field-label {
     position: absolute;
     bottom: 6px; /* X轴底部位置 */
-    left: 35px; /* X轴标签右侧，根据padding[3]=20px，X轴标签从约25px开始，标签在右侧约35px */
-    right: auto;
+    right: 12px; /* X轴右下角位置 */
+    left: auto;
     background: var(--gray-100);
     color: var(--text-secondary);
     font-size: 9px;
@@ -2084,7 +2084,8 @@ a:hover {
     
     /* X轴字段标签 - 移动端位置 */
     .x-field-label {
-        left: 30px; /* 移动端：X轴标签右侧 */
+        right: 8px; /* 移动端：X轴右下角 */
+        left: auto;
         bottom: 4px;
     }
     
