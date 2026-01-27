@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@antv/g2plot@2.4.31/dist/g2plot.min.js"></script>
     <link rel="stylesheet" href="../common.css">
     <script src="../responsive-spec.js"></script>
+    <script src="../unified-filter.js"></script>
     <style>
         .variant-grid { grid-template-columns: repeat(2, 1fr); }
         @media (max-width: 768px) { .variant-grid { grid-template-columns: 1fr; } }
@@ -60,24 +61,69 @@
                     <span class="chart-meta-item"><span class="dot" style="background:#945FB9"></span>数据周期: 2024年度</span>
                 </div>
             </div>
+            
             <div class="chart-filters">
-                <div class="filter-item">
-                    <span class="filter-label">按</span>
-                    <select class="filter-select">
-                        <option>产品线</option>
-                        <option>地区</option>
-                        <option>渠道</option>
-                    </select>
-                    <span class="filter-label">× 分组</span>
+                <div class="filter-wrapper">
+                    <button class="filter-unified-btn" onclick="toggleFilterPanel(event)">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        筛选
+                        <span class="filter-count" id="filterCount">0</span>
+                    </button>
+                    <div class="filter-modal" id="filterModal" onclick="(function(e){e.stopPropagation();})(event)">
+                        <div class="filter-panel">
+                            <div class="filter-panel-header" id="filterPanelHeader">
+                                <div class="filter-panel-title">
+                                    <div class="filter-panel-drag-handle">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="9" cy="5" r="1"></circle>
+                                            <circle cx="9" cy="12" r="1"></circle>
+                                            <circle cx="9" cy="19" r="1"></circle>
+                                            <circle cx="15" cy="5" r="1"></circle>
+                                            <circle cx="15" cy="12" r="1"></circle>
+                                            <circle cx="15" cy="19" r="1"></circle>
+                                        </svg>
+                                    </div>
+                                    筛选
+                                </div>
+                                <button class="filter-panel-close" onclick="closeFilterPanel()">×</button>
+                            </div>
+                            <div class="filter-panel-body">
+                                <div class="filter-dimension collapsed">
+                                    <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
+                                        <div class="filter-dimension-title">维度</div>
+                                        <span class="filter-dimension-toggle">▶</span>
+                                    </div>
+                                    <div class="filter-dimension-content">
+                                        <div class="filter-options" id="filterDimension">
+                                            <div class="filter-option" data-value="产品线" onclick="toggleFilterOption(this, 'dimension', '产品线')">产品线</div>
+                                            <div class="filter-option" data-value="地区" onclick="toggleFilterOption(this, 'dimension', '地区')">地区</div>
+                                            <div class="filter-option" data-value="渠道" onclick="toggleFilterOption(this, 'dimension', '渠道')">渠道</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="filter-dimension collapsed">
+                                    <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
+                                        <div class="filter-dimension-title">日期</div>
+                                        <span class="filter-dimension-toggle">▶</span>
+                                    </div>
+                                    <div class="filter-dimension-content">
+                                        <div class="filter-options" id="filterDate">
+                                            <div class="filter-option" data-value="2024.12" onclick="toggleFilterOption(this, 'date', '2024.12')">2024.12</div>
+                                            <div class="filter-option" data-value="2024.Q4" onclick="toggleFilterOption(this, 'date', '2024.Q4')">2024.Q4</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="filter-panel-footer">
+                                <button class="filter-btn filter-btn-reset" onclick="resetFilters()">重置</button>
+                                <button class="filter-btn filter-btn-apply" onclick="applyFilters()">应用</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="filter-item">
-                    <span class="filter-label">日期:</span>
-                    <select class="filter-select">
-                        <option>2024年度</option>
-                        <option>2024.Q4</option>
-                        <option>2023年度</option>
-                    </select>
-                </div>
+                <div class="filter-summary" id="filterSummary"></div>
             </div>
         </div>
         <div class="chart-body lg" style="position: relative;">
@@ -344,6 +390,19 @@ new G2Plot.Rose('chart-stacked', {
 
 // 初始化响应式
 ChartSpec.init();
+
+// 初始化统一筛选系统
+document.addEventListener('DOMContentLoaded', function() {
+    initUnifiedFilter({
+        dimensions: [
+            { key: 'dimension', type: 'multi' },
+            { key: 'date', type: 'multi' }
+        ],
+        onApply: function(state) {
+            console.log('筛选已应用:', state);
+        }
+    });
+});
 </script>
 
 </body>
