@@ -1679,14 +1679,15 @@ a:hover {
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end; /* 横向布局时面板靠右 */
-    max-width: calc(100% - 40px); /* 限制最大宽度，为右侧单位标签留出空间，避免超出容器 */
+    max-width: calc(100% - 60px); /* 增加左侧空间，确保文字不被截断 */
     top: 4px; /* 进一步上移，避免遮挡图表顶部 */
-    right: 32px; /* 增加右边距，为右Y轴单位标签留出空间，避免被截断 */
+    right: 50px; /* 增加右边距，为右Y轴单位标签留出更多空间，避免文字被截断 */
     left: auto;
     z-index: 0; /* 降低z-index，确保不遮挡图表 */
     pointer-events: none; /* 禁用交互，避免遮挡图表交互 */
-    padding: 6px 10px; /* 减少内边距，让图例更紧凑 */
+    padding: 6px 12px; /* 增加内边距，确保文字有足够空间显示 */
     font-size: 10px; /* 稍微减小字体，让图例更紧凑 */
+    white-space: nowrap; /* 防止文字换行 */
 }
 
 /* 横向布局时，图例项内文字仍左对齐 */
@@ -1702,9 +1703,10 @@ a:hover {
     gap: 6px;
     cursor: pointer;
     transition: all var(--transition-fast);
-    padding: 2px 0;
-    white-space: nowrap;
-    width: 100%; /* 确保图例项不重叠 */
+    padding: 2px 4px; /* 增加左右padding，确保文字有足够空间 */
+    white-space: nowrap; /* 防止文字换行 */
+    width: auto; /* 允许图例项根据内容自适应宽度 */
+    min-width: fit-content; /* 确保文字不被截断 */
 }
 
 .legend-item:hover { 
@@ -1770,9 +1772,10 @@ a:hover {
 }
 .axis-unit.y-right { 
     top: 6px; /* 图表顶部，与Y轴顶部对齐 */
-    right: 30px; /* 右Y轴右侧，留出足够空间避免被切断，不遮挡图表标签 */
+    right: 50px; /* 右Y轴右侧，留出足够空间避免被切断，不遮挡图表标签 */
     left: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
+    white-space: nowrap; /* 防止文字换行 */
 }
 .axis-unit.x-bottom { 
     bottom: 6px; 
@@ -1784,7 +1787,7 @@ a:hover {
 .x-field-label {
     position: absolute;
     bottom: 6px; /* X轴底部位置 */
-    right: 8px; /* X轴右下角位置，更靠右 */
+    right: 50px; /* 增加右边距，避免遮挡图表内容，为滚动条留出空间 */
     left: auto;
     background: var(--gray-100);
     color: var(--text-secondary);
@@ -1793,6 +1796,7 @@ a:hover {
     border-radius: 3px;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
     pointer-events: none;
+    white-space: nowrap; /* 防止文字换行 */
 }
 
 /* ==================== Use Cases & Variants ==================== */
