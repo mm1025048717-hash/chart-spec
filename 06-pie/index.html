@@ -122,6 +122,29 @@
             </div>
         </div>
         <div class="chart-body md">
+            <!-- 图例统一在右侧横向排列，与环形图保持一致 -->
+            <div class="custom-legend horizontal">
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #5B8FF9;"></span>
+                    <span class="legend-text">线上直销</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #5AD8A6;"></span>
+                    <span class="legend-text">线下门店</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #F6BD16;"></span>
+                    <span class="legend-text">分销渠道</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #E86452;"></span>
+                    <span class="legend-text">企业采购</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-icon-circle" style="background: #945FB9;"></span>
+                    <span class="legend-text">其他</span>
+                </div>
+            </div>
             <div id="chart-basic" style="width: 100%; height: 100%;"></div>
             <div class="hover-hint">悬停查看标注</div>
             <div class="annotation-layer">
@@ -168,10 +191,7 @@
         content: '{name} {percentage}',
         style: { fontSize: 11 },
     },
-    legend: {
-        position: 'right',
-        itemName: { style: { fontSize: 12 } },
-    },
+    legend: false,  // 使用自定义横向图例，与环形图保持一致
     interactions: [{ type: 'element-active' }],
 };</pre>
         </div>
@@ -291,6 +311,7 @@
     innerRadius: <span class="number">0</span>,  <span class="comment">// 环形图设为 0.6</span>
     color: [<span class="string">'#5B8FF9'</span>, <span class="string">'#5AD8A6'</span>, <span class="string">'#F6BD16'</span>, <span class="string">'#E86452'</span>, <span class="string">'#945FB9'</span>],
     label: { type: <span class="string">'outer'</span>, content: <span class="string">'{name} {percentage}'</span> },
+    legend: false,  <span class="comment">// 使用自定义横向图例</span>
 };
     </div>
 </div>
@@ -319,11 +340,7 @@ new Pie('chart-basic', {
     radius: radius,
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
     label: { type: 'outer', content: '{name} {percentage}', style: { fontSize: labelFontSize }, offset: labelOffset },
-    legend: { 
-        position: 'right', 
-        itemName: { style: { fontSize: mobile ? 9 : 11 } },
-        marker: { symbol: 'circle', style: { r: 4 } } // 统一使用圆形标记
-    },
+    legend: false, // 禁用内置图例，使用自定义横向图例，与环形图保持一致
     interactions: [{ type: 'element-active' }],
 }).render();
 
@@ -335,11 +352,7 @@ new Pie('chart-donut', {
     innerRadius: 0.6,
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
     label: { type: 'inner', offset: '-50%', content: '{percentage}', style: { fontSize: mobile ? 8 : 10, textAlign: 'center', fill: '#fff' } },
-    legend: { 
-        position: 'right', 
-        itemName: { style: { fontSize: mobile ? 9 : 11 } },
-        marker: { symbol: 'circle', style: { r: 4 } } // 统一使用圆形标记
-    },
+    legend: false, // 禁用内置图例，使用自定义横向图例，与环形图保持一致
     statistic: {
         title: { content: '总计', style: { fontSize: mobile ? 10 : 11 } },
         content: { content: '13,000', style: { fontSize: mobile ? 14 : 16 } },
@@ -353,11 +366,7 @@ new Rose('chart-rose', {
     seriesField: 'type',
     radius: mobile ? 0.88 : 0.9,
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
-    legend: { 
-        position: 'right', 
-        itemName: { style: { fontSize: mobile ? 9 : 11 } },
-        marker: { symbol: 'circle', style: { r: 4 } } // 统一使用圆形标记
-    },
+    legend: false, // 禁用内置图例，使用自定义横向图例，与环形图保持一致
 }).render();
 
 // 初始化响应式
