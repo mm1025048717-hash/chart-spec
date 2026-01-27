@@ -14,8 +14,8 @@
         .center-content {
             position: absolute;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            left: 48%; /* 稍微左移，从50%改为48% */
+            transform: translate(-50%, -50%); /* 保持居中对齐 */
             text-align: center;
             pointer-events: none;
             max-width: 40%; /* 限制最大宽度，确保不超出环形图内径 */
@@ -42,6 +42,7 @@
         /* 响应式优化 */
         @media (max-width: 768px) {
             .center-content {
+                left: 47%; /* 移动端也稍微左移 */
                 max-width: 32%; /* 移动端进一步缩小最大宽度，避免与标签重叠 */
                 padding: 0 4px;
             }
