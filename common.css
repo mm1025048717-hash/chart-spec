@@ -74,10 +74,10 @@
     /* 布局 - 统一尺寸 */
     --sidebar-width: 240px;
     --header-height: 48px;
-    --content-max-width: 1100px;
-    --chart-height-sm: 180px;
-    --chart-height-md: 240px;
-    --chart-height-lg: 300px;
+    --content-max-width: 1200px; /* 增大最大宽度，让图表更大 */
+    --chart-height-sm: 220px; /* 增大小型图表高度 */
+    --chart-height-md: 300px; /* 增大中型图表高度 */
+    --chart-height-lg: 380px; /* 增大大型图表高度 */
     --border-radius-sm: 6px;
     --border-radius-md: 8px;
     --border-radius-lg: 10px;
@@ -525,6 +525,8 @@ a:hover {
     color: inherit;
     display: block;
     box-sizing: border-box;
+    width: 100%; /* 确保卡片占满容器宽度 */
+    max-width: 100%; /* 确保不超出容器 */
 }
 
 .chart-card:hover {
@@ -717,14 +719,14 @@ a:hover {
 .spec-section {
     background: var(--bg-primary);
     border-radius: var(--border-radius-lg);
-    padding: 14px 16px;
-    margin-bottom: 14px;
+    padding: 16px 20px; /* 增大内边距 */
+    margin-bottom: 16px; /* 增大间距 */
     border: 1px solid var(--border-light);
     max-width: var(--content-max-width);
     margin-left: auto;
     margin-right: auto;
     /* 确保规范区块居中，左右边距平衡 */
-    width: calc(100% - 48px);
+    width: 100%;
     box-sizing: border-box;
 }
 
@@ -816,7 +818,7 @@ a:hover {
 /* ==================== Chart Container ==================== */
 /* 统一图表容器布局 - PC和移动端 */
 .chart-container {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     max-width: var(--content-max-width);
     margin-left: auto;
     margin-right: auto;
@@ -1427,10 +1429,10 @@ a:hover {
 .chart-body {
     position: relative;
     height: var(--chart-height-md);
-    padding: 12px;
+    padding: 16px; /* 增大内边距，让图表有更多空间 */
     /* 平衡左右padding，让图表内容居中显示，右侧为图例留出空间 */
-    padding-left: 12px;
-    padding-right: 140px; /* 右侧padding为图例留出空间（图例宽度约120px+间距） */
+    padding-left: 16px;
+    padding-right: 160px; /* 右侧padding为图例留出空间（图例宽度约140px+间距） */
     background: var(--bg-primary);
     overflow: hidden;
     width: 100%;
@@ -2002,16 +2004,16 @@ a:hover {
     
     /* 图表主体 - 移动端高度适配 */
     .chart-body { 
-        height: 260px;
-        padding: 8px 6px 12px; 
+        height: 300px; /* 移动端也增大高度 */
+        padding: 12px 8px; 
         /* 移动端统一左右padding，图表内容居中 */
-        padding-left: 6px;
-        padding-right: 6px;
+        padding-left: 8px;
+        padding-right: 8px;
         overflow: visible;
     }
-    .chart-body.lg { height: 300px; }
-    .chart-body.md { height: 260px; }
-    .chart-body.sm { height: 200px; }
+    .chart-body.lg { height: 360px; } /* 移动端大型图表 */
+    .chart-body.md { height: 300px; } /* 移动端中型图表 */
+    .chart-body.sm { height: 240px; } /* 移动端小型图表 */
     
     /* 图例优化 - 移动端简化（已在上面统一处理） */
     .legend-item { gap: 4px; }
