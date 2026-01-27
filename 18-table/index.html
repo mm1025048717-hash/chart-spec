@@ -1483,9 +1483,12 @@ function initDragFilter() {
         modal.style.transition = 'none';
         modal.style.cursor = 'grabbing';
         header.style.cursor = 'grabbing';
+        modal.style.userSelect = 'none';
+        document.body.style.userSelect = 'none';
         
-        document.addEventListener('mousemove', onDrag, { passive: false });
-        document.addEventListener('mouseup', stopDrag);
+        // 使用capture模式提高响应速度
+        document.addEventListener('mousemove', onDrag, { passive: false, capture: true });
+        document.addEventListener('mouseup', stopDrag, { capture: true });
         e.preventDefault();
         e.stopPropagation();
     }
@@ -1500,6 +1503,8 @@ function initDragFilter() {
         }
         
         const touch = e.touches[0];
+        if (!touch) return;
+        
         isDragging = true;
         dragStartX = touch.clientX;
         dragStartY = touch.clientY;
@@ -1511,72 +1516,97 @@ function initDragFilter() {
         modal.style.transition = 'none';
         modal.style.cursor = 'grabbing';
         header.style.cursor = 'grabbing';
+        modal.style.userSelect = 'none';
+        document.body.style.userSelect = 'none';
         
-        document.addEventListener('touchmove', onDragTouch, { passive: false });
-        document.addEventListener('touchend', stopDrag);
+        // 使用capture模式提高响应速度
+        document.addEventListener('touchmove', onDragTouch, { passive: false, capture: true });
+        document.addEventListener('touchend', stopDrag, { capture: true });
         e.preventDefault();
         e.stopPropagation();
     }
     
+    let rafId = null;
+    
     function onDrag(e) {
         if (!isDragging) return;
         
-        const deltaX = e.clientX - dragStartX;
-        const deltaY = e.clientY - dragStartY;
-        
-        // 减少阈值，提高灵敏度
-        if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
-        
-        const newX = panelStartX + deltaX;
-        const newY = panelStartY + deltaY;
-        
-        // 限制在视口内
-        const maxX = window.innerWidth - modal.offsetWidth;
-        const maxY = window.innerHeight - modal.offsetHeight;
-        
-        modal.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
-        modal.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
-        modal.style.right = 'auto';
-        
-        hasBeenDragged = true;
         e.preventDefault();
+        e.stopPropagation();
+        
+        // 使用requestAnimationFrame优化性能，提高响应速度
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+        }
+        
+        rafId = requestAnimationFrame(() => {
+            const deltaX = e.clientX - dragStartX;
+            const deltaY = e.clientY - dragStartY;
+            
+            const newX = panelStartX + deltaX;
+            const newY = panelStartY + deltaY;
+            
+            // 限制在视口内
+            const maxX = window.innerWidth - modal.offsetWidth;
+            const maxY = window.innerHeight - modal.offsetHeight;
+            
+            modal.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
+            modal.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
+            modal.style.right = 'auto';
+            
+            hasBeenDragged = true;
+        });
     }
     
     function onDragTouch(e) {
         if (!isDragging) return;
         
-        const touch = e.touches[0];
-        const deltaX = touch.clientX - dragStartX;
-        const deltaY = touch.clientY - dragStartY;
-        
-        // 减少阈值，提高灵敏度
-        if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
-        
-        const newX = panelStartX + deltaX;
-        const newY = panelStartY + deltaY;
-        
-        // 限制在视口内
-        const maxX = window.innerWidth - modal.offsetWidth;
-        const maxY = window.innerHeight - modal.offsetHeight;
-        
-        modal.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
-        modal.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
-        modal.style.right = 'auto';
-        
-        hasBeenDragged = true;
         e.preventDefault();
+        e.stopPropagation();
+        
+        const touch = e.touches[0];
+        if (!touch) return;
+        
+        // 使用requestAnimationFrame优化性能
+        if (rafId) {
+            cancelAnimationFrame(rafId);
+        }
+        
+        rafId = requestAnimationFrame(() => {
+            const deltaX = touch.clientX - dragStartX;
+            const deltaY = touch.clientY - dragStartY;
+            
+            const newX = panelStartX + deltaX;
+            const newY = panelStartY + deltaY;
+            
+            // 限制在视口内
+            const maxX = window.innerWidth - modal.offsetWidth;
+            const maxY = window.innerHeight - modal.offsetHeight;
+            
+            modal.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
+            modal.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
+            modal.style.right = 'auto';
+            
+            hasBeenDragged = true;
+        });
     }
     
     function stopDrag() {
         if (isDragging) {
             isDragging = false;
+            if (rafId) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
             modal.style.transition = '';
             modal.style.cursor = '';
             header.style.cursor = 'move';
-            document.removeEventListener('mousemove', onDrag);
-            document.removeEventListener('mouseup', stopDrag);
-            document.removeEventListener('touchmove', onDragTouch);
-            document.removeEventListener('touchend', stopDrag);
+            modal.style.userSelect = '';
+            document.body.style.userSelect = '';
+            document.removeEventListener('mousemove', onDrag, { capture: true });
+            document.removeEventListener('mouseup', stopDrag, { capture: true });
+            document.removeEventListener('touchmove', onDragTouch, { capture: true });
+            document.removeEventListener('touchend', stopDrag, { capture: true });
         }
     }
 }
