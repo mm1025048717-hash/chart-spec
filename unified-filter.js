@@ -36,7 +36,8 @@ function bindFilterEvents() {
         const btn = document.querySelector('.filter-unified-btn');
         
         if (modal && modal.classList.contains('show')) {
-            if (!modal.contains(e.target) && !btn && !btn.contains(e.target)) {
+            // 修复：正确处理 btn 可能为 null 的情况
+            if (!modal.contains(e.target) && (!btn || !btn.contains(e.target))) {
                 closeFilterPanel();
             }
         }

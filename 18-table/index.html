@@ -559,7 +559,7 @@
                         <span class="filter-count" id="filterCount">0</span>
                     </button>
                     <!-- 筛选下拉面板 -->
-                    <div class="filter-modal" id="filterModal" onclick="event.stopPropagation()">
+                    <div class="filter-modal" id="filterModal" onclick="(function(e){e.stopPropagation();})(event)">
                         <div class="filter-panel">
                             <div class="filter-panel-header" id="filterPanelHeader">
                                 <div class="filter-panel-title">
