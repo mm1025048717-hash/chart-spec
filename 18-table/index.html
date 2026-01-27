@@ -112,36 +112,39 @@
             z-index: 1000;
             backdrop-filter: blur(4px);
             -webkit-backdrop-filter: blur(4px);
+            overflow-y: auto;
         }
         .filter-modal.show {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
         }
         
         .filter-panel {
             background: white;
             border-radius: 12px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            max-width: 600px;
+            max-width: 480px;
             width: 100%;
-            max-height: 80vh;
+            max-height: calc(100vh - 32px);
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            margin: auto;
         }
         
         .filter-panel-header {
-            padding: 16px 20px;
+            padding: 12px 16px;
             border-bottom: 1px solid #E8E8E8;
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #FAFAFA;
+            flex-shrink: 0;
         }
         .filter-panel-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 600;
             color: #1D1D1F;
         }
@@ -160,25 +163,26 @@
         }
         
         .filter-panel-body {
-            padding: 20px;
+            padding: 16px;
             overflow-y: auto;
             flex: 1;
+            min-height: 0;
         }
         
         .filter-dimension {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
         .filter-dimension:last-child {
             margin-bottom: 0;
         }
         .filter-dimension-title {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             color: #1D1D1F;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .filter-dimension-title::before {
             content: '';
@@ -191,14 +195,14 @@
         .filter-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
         .filter-option {
-            padding: 8px 14px;
+            padding: 6px 12px;
             border: 1px solid #E8E8E8;
             border-radius: 6px;
             background: white;
-            font-size: 13px;
+            font-size: 12px;
             color: #1D1D1F;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -215,15 +219,15 @@
         
         .filter-range {
             display: flex;
-            gap: 12px;
+            gap: 8px;
             align-items: center;
         }
         .filter-range-input {
             flex: 1;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: 1px solid #E8E8E8;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
         }
         .filter-range-input:focus {
             outline: none;
@@ -232,17 +236,18 @@
         }
         
         .filter-panel-footer {
-            padding: 16px 20px;
+            padding: 12px 16px;
             border-top: 1px solid #E8E8E8;
             display: flex;
             justify-content: flex-end;
-            gap: 12px;
+            gap: 10px;
             background: #FAFAFA;
+            flex-shrink: 0;
         }
         .filter-btn {
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -294,6 +299,13 @@
             opacity: 1;
         }
         
+        /* PC端中等屏幕优化 */
+        @media (max-width: 1024px) {
+            .filter-panel {
+                max-width: 420px;
+            }
+        }
+        
         /* 移动端适配 */
         @media (max-width: 768px) {
             .filter-modal.show {
@@ -302,35 +314,43 @@
             }
             .filter-panel {
                 max-width: 100%;
-                max-height: 90vh;
+                max-height: 85vh;
                 border-radius: 16px 16px 0 0;
             }
             .filter-panel-header {
-                padding: 14px 16px;
+                padding: 12px 14px;
             }
             .filter-panel-title {
-                font-size: 15px;
+                font-size: 14px;
             }
             .filter-panel-body {
-                padding: 16px;
+                padding: 14px;
             }
             .filter-dimension {
-                margin-bottom: 20px;
+                margin-bottom: 14px;
             }
             .filter-options {
                 gap: 6px;
             }
             .filter-option {
-                padding: 6px 12px;
-                font-size: 12px;
+                padding: 5px 10px;
+                font-size: 11px;
             }
             .filter-panel-footer {
-                padding: 12px 16px;
+                padding: 10px 14px;
                 flex-direction: column;
             }
             .filter-btn {
                 width: 100%;
-                padding: 10px;
+                padding: 8px;
+                font-size: 12px;
+            }
+            .filter-range {
+                gap: 6px;
+            }
+            .filter-range-input {
+                padding: 5px 8px;
+                font-size: 11px;
             }
             .demo-table th, .demo-table td {
                 padding: 10px 12px;
