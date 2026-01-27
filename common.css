@@ -1744,12 +1744,12 @@ a:hover {
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 
-/* X轴字段标签 - 应该在X轴附近，与X轴对齐 */
+/* X轴字段标签 - 应该在X轴附近，右下角对齐 */
 .x-field-label {
     position: absolute;
     bottom: 6px;
-    left: 6px; /* 左侧，与X轴左端对齐 */
-    right: auto;
+    right: 12px; /* 右侧，与X轴右端对齐 */
+    left: auto;
     background: var(--gray-100);
     color: var(--text-secondary);
     font-size: 9px;
