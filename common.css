@@ -191,8 +191,9 @@ a:hover {
     margin: 0 auto;
     padding: 40px 24px;
     /* 确保内容居中，左右边距平衡，避免过于靠左 */
-    padding-left: max(24px, calc((100vw - var(--content-max-width)) / 2));
-    padding-right: max(24px, calc((100vw - var(--content-max-width)) / 2));
+    /* 使用更精确的居中计算，考虑侧边栏宽度 */
+    padding-left: max(24px, calc((100vw - var(--sidebar-width) - var(--content-max-width)) / 2));
+    padding-right: max(24px, calc((100vw - var(--sidebar-width) - var(--content-max-width)) / 2));
 }
 
 /* Sidebar Styling */
@@ -1727,13 +1728,13 @@ a:hover {
 /* Y轴单位标签 - 统一靠右，不遮挡图表和图例 */
 /* 当有图例时，Y轴标签应该在图例下方，避免重叠 */
 .axis-unit.y-left { 
-    top: 6px; 
+    top: 50px; /* 调整到图例下方，避免重叠 */
     right: 160px; /* 调整位置，避免与图例重叠（图例宽度140px + 20px边距） */
     left: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 .axis-unit.y-right { 
-    top: 6px; 
+    top: 50px; /* 调整到图例下方，避免重叠 */
     right: 160px; /* 调整位置，避免与图例重叠 */
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
