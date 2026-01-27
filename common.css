@@ -1607,15 +1607,16 @@ a:hover {
 
 /* ==================== Custom Legend ==================== */
 /* 统一图例位置：所有图表的图例统一在右侧对齐，不遮挡图表 */
+/* 图例面板靠右，但图例项内文字靠左对齐 */
 .custom-legend {
     position: absolute;
     top: 12px;
     right: 12px;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start; /* 图例项内内容左对齐 */
     gap: 8px;
-    z-index: 50;
+    z-index: 10; /* 降低z-index，避免遮挡图表内容 */
     font-size: 11px;
     color: var(--text-primary);
     background: rgba(255, 255, 255, 0.95);
@@ -1625,6 +1626,7 @@ a:hover {
     border: 1px solid var(--border-light);
     box-shadow: var(--shadow-sm);
     max-width: 140px;
+    pointer-events: auto; /* 确保图例可交互 */
 }
 
 /* 图例横向布局（适用于某些图表） */
@@ -1632,18 +1634,26 @@ a:hover {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-end; /* 横向布局时面板靠右 */
     max-width: none;
+}
+
+/* 横向布局时，图例项内文字仍左对齐 */
+.custom-legend.horizontal .legend-item {
+    justify-content: flex-start;
+    width: auto;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
+    justify-content: flex-start; /* 确保文字靠左对齐 */
     gap: 6px;
     cursor: pointer;
     transition: all var(--transition-fast);
     padding: 2px 0;
     white-space: nowrap;
+    width: 100%; /* 确保图例项不重叠 */
 }
 
 .legend-item:hover { 
@@ -1705,9 +1715,18 @@ a:hover {
     top: 6px; 
     right: 12px; /* 改为右侧，不遮挡图表 */
     left: auto;
+    z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
-.axis-unit.y-right { top: 6px; right: 6px; }
-.axis-unit.x-bottom { bottom: 6px; right: 6px; }
+.axis-unit.y-right { 
+    top: 6px; 
+    right: 6px; 
+    z-index: 5; /* 降低z-index，避免遮挡图表 */
+}
+.axis-unit.x-bottom { 
+    bottom: 6px; 
+    right: 6px; 
+    z-index: 5; /* 降低z-index，避免遮挡图表 */
+}
 
 /* X轴字段标签 - 右下角，不遮挡图表 */
 .x-field-label {
@@ -1719,7 +1738,7 @@ a:hover {
     font-size: 9px;
     padding: 2px 6px;
     border-radius: 3px;
-    z-index: 50;
+    z-index: 5; /* 降低z-index，避免遮挡图表 */
     pointer-events: none;
 }
 
@@ -1901,7 +1920,7 @@ a:hover {
         gap: 8px;
     }
     
-    /* 移动端图例优化 - 右对齐 */
+    /* 移动端图例优化 - 面板靠右，文字左对齐 */
     .custom-legend {
         position: relative;
         top: auto;
@@ -1911,14 +1930,19 @@ a:hover {
         max-width: 100%;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: flex-end;
-        align-items: flex-end;
+        justify-content: flex-end; /* 面板靠右 */
+        align-items: flex-start; /* 图例项内内容左对齐 */
         font-size: 10px;
+        z-index: 10; /* 移动端也降低z-index */
     }
     
     .custom-legend.horizontal {
         flex-direction: row;
         justify-content: flex-end;
+    }
+    
+    .custom-legend .legend-item {
+        justify-content: flex-start; /* 移动端图例项内文字左对齐 */
     }
     
     /* 移动端筛选面板 - 紧贴按钮 */
