@@ -296,7 +296,7 @@ const fontSize = mobile ? 10 : 10;
 const lineWidth = mobile ? 2 : 2;
 const pointSize = mobile ? 4 : 4;
 const borderRadius = mobile ? 4 : 4;
-const basePadding = mobile ? [25, 15, 45, 15] : [30, 15, 50, 15]; // 减少padding，让图表更大，减少留白
+const basePadding = mobile ? [20, 10, 40, 10] : [25, 10, 45, 10]; // 进一步减少padding，让图表更大，消除留白
 
 const rawData = [
     { type: '界面缺陷', value: 120 },
@@ -320,11 +320,12 @@ new DualAxes('chart-basic', {
     yField: ['value', 'percent'],
     padding: basePadding,
     appendPadding: [0, 0, 0, 0], // 不添加额外padding，让图表占满空间
+    autoFit: true, // 自动适应容器大小
     geometryOptions: [
         {
             geometry: 'column',
             color: '#5B8FF9',
-            columnWidthRatio: mobile ? 0.55 : 0.5,
+            columnWidthRatio: mobile ? 0.6 : 0.55, // 增大柱体宽度，让图表更饱满
             columnStyle: { radius: [borderRadius, borderRadius, 0, 0] },
         },
         {
