@@ -164,9 +164,19 @@
             flex-shrink: 0;
             cursor: move;
             user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            touch-action: none;
         }
         .filter-panel-header:active {
             cursor: grabbing;
+        }
+        .filter-panel-header * {
+            pointer-events: none;
+        }
+        .filter-panel-header .filter-panel-close {
+            pointer-events: auto;
         }
         .filter-panel-title {
             font-size: 12px;
@@ -185,6 +195,7 @@
             color: #86868B;
             cursor: grab;
             flex-shrink: 0;
+            pointer-events: auto;
         }
         .filter-panel-drag-handle:active {
             cursor: grabbing;
@@ -1035,13 +1046,13 @@ function toggleFilterPanel(event) {
             const isMobile = window.innerWidth <= 768;
             
             if (isMobile) {
-                // 移动端：左侧对齐，紧贴按钮
-                modal.style.top = (rect.bottom + 4) + 'px';
+                // 移动端：左侧对齐，紧贴按钮（0间距）
+                modal.style.top = rect.bottom + 'px';
                 modal.style.left = rect.left + 'px';
                 modal.style.right = 'auto';
             } else {
-                // PC端：右侧对齐，紧贴按钮
-                modal.style.top = (rect.bottom + 4) + 'px';
+                // PC端：右侧对齐，紧贴按钮（0间距）
+                modal.style.top = rect.bottom + 'px';
                 modal.style.right = (window.innerWidth - rect.right) + 'px';
                 modal.style.left = 'auto';
             }
@@ -1069,11 +1080,20 @@ function openFilterPanel(dimension = null, value = null) {
     const modal = document.getElementById('filterModal');
     const btn = document.querySelector('.filter-unified-btn');
     
-    // 计算按钮位置
+    // 计算按钮位置 - 紧贴按钮
     if (btn) {
         const rect = btn.getBoundingClientRect();
-        modal.style.top = (rect.bottom + 8) + 'px';
-        modal.style.right = (window.innerWidth - rect.right) + 'px';
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile) {
+            modal.style.top = rect.bottom + 'px';
+            modal.style.left = rect.left + 'px';
+            modal.style.right = 'auto';
+        } else {
+            modal.style.top = rect.bottom + 'px';
+            modal.style.right = (window.innerWidth - rect.right) + 'px';
+            modal.style.left = 'auto';
+        }
     }
     
     modal.classList.add('show', 'positioned');
@@ -1336,7 +1356,7 @@ window.addEventListener('resize', function() {
                 const btnRect = btn.getBoundingClientRect();
                 const isMobile = window.innerWidth <= 768;
                 
-                modal.style.top = (btnRect.bottom + 4) + 'px';
+                modal.style.top = btnRect.bottom + 'px';
                 if (isMobile) {
                     modal.style.left = btnRect.left + 'px';
                     modal.style.right = 'auto';
@@ -1371,15 +1391,22 @@ function initDragFilter() {
     
     // 移除旧的监听器（如果存在）
     header.removeEventListener('mousedown', startDrag);
+    header.removeEventListener('touchstart', startDragTouch);
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
+    document.removeEventListener('touchmove', onDragTouch);
+    document.removeEventListener('touchend', stopDrag);
     
-    // 添加新的监听器
-    header.addEventListener('mousedown', startDrag);
+    // 添加新的监听器 - 支持鼠标和触摸
+    header.addEventListener('mousedown', startDrag, { passive: false });
+    header.addEventListener('touchstart', startDragTouch, { passive: false });
     
     function startDrag(e) {
-        // 如果点击的是关闭按钮，不触发拖拽
-        if (e.target.closest('.filter-panel-close')) {
+        // 如果点击的是关闭按钮或筛选选项，不触发拖拽
+        if (e.target.closest('.filter-panel-close') || 
+            e.target.closest('.filter-dimension-header') ||
+            e.target.closest('.filter-option') ||
+            e.target.closest('.filter-range-input')) {
             return;
         }
         
@@ -1392,9 +1419,41 @@ function initDragFilter() {
         panelStartY = rect.top;
         
         modal.style.transition = 'none';
-        document.addEventListener('mousemove', onDrag);
+        modal.style.cursor = 'grabbing';
+        header.style.cursor = 'grabbing';
+        
+        document.addEventListener('mousemove', onDrag, { passive: false });
         document.addEventListener('mouseup', stopDrag);
         e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    function startDragTouch(e) {
+        // 如果点击的是关闭按钮或筛选选项，不触发拖拽
+        if (e.target.closest('.filter-panel-close') || 
+            e.target.closest('.filter-dimension-header') ||
+            e.target.closest('.filter-option') ||
+            e.target.closest('.filter-range-input')) {
+            return;
+        }
+        
+        const touch = e.touches[0];
+        isDragging = true;
+        dragStartX = touch.clientX;
+        dragStartY = touch.clientY;
+        
+        const rect = modal.getBoundingClientRect();
+        panelStartX = rect.left;
+        panelStartY = rect.top;
+        
+        modal.style.transition = 'none';
+        modal.style.cursor = 'grabbing';
+        header.style.cursor = 'grabbing';
+        
+        document.addEventListener('touchmove', onDragTouch, { passive: false });
+        document.addEventListener('touchend', stopDrag);
+        e.preventDefault();
+        e.stopPropagation();
     }
     
     function onDrag(e) {
@@ -1402,6 +1461,9 @@ function initDragFilter() {
         
         const deltaX = e.clientX - dragStartX;
         const deltaY = e.clientY - dragStartY;
+        
+        // 减少阈值，提高灵敏度
+        if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
         
         const newX = panelStartX + deltaX;
         const newY = panelStartY + deltaY;
@@ -1415,14 +1477,44 @@ function initDragFilter() {
         modal.style.right = 'auto';
         
         hasBeenDragged = true;
+        e.preventDefault();
+    }
+    
+    function onDragTouch(e) {
+        if (!isDragging) return;
+        
+        const touch = e.touches[0];
+        const deltaX = touch.clientX - dragStartX;
+        const deltaY = touch.clientY - dragStartY;
+        
+        // 减少阈值，提高灵敏度
+        if (Math.abs(deltaX) < 1 && Math.abs(deltaY) < 1) return;
+        
+        const newX = panelStartX + deltaX;
+        const newY = panelStartY + deltaY;
+        
+        // 限制在视口内
+        const maxX = window.innerWidth - modal.offsetWidth;
+        const maxY = window.innerHeight - modal.offsetHeight;
+        
+        modal.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
+        modal.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
+        modal.style.right = 'auto';
+        
+        hasBeenDragged = true;
+        e.preventDefault();
     }
     
     function stopDrag() {
         if (isDragging) {
             isDragging = false;
             modal.style.transition = '';
+            modal.style.cursor = '';
+            header.style.cursor = 'move';
             document.removeEventListener('mousemove', onDrag);
             document.removeEventListener('mouseup', stopDrag);
+            document.removeEventListener('touchmove', onDragTouch);
+            document.removeEventListener('touchend', stopDrag);
         }
     }
 }
