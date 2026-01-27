@@ -1763,12 +1763,12 @@ a:hover {
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 
-/* X轴字段标签 - 应该在X轴附近，右下角对齐 */
+/* X轴字段标签 - 应该在X轴标签的右侧，左上角位置 */
 .x-field-label {
     position: absolute;
-    bottom: 6px;
-    right: 12px; /* 右侧，与X轴右端对齐 */
-    left: auto;
+    bottom: 6px; /* X轴底部位置 */
+    left: 35px; /* X轴标签右侧，根据padding[3]=20px，X轴标签从约25px开始，标签在右侧约35px */
+    right: auto;
     background: var(--gray-100);
     color: var(--text-secondary);
     font-size: 9px;
@@ -2079,6 +2079,12 @@ a:hover {
     .axis-unit { font-size: 8px; }
     .axis-unit.y-left { left: 22px; top: 4px; } /* 移动端：根据padding[3]=20px，单位标签在Y轴标签右侧 */
     .axis-unit.y-right { left: 22px; top: 4px; } /* 移动端：Y轴在左侧时，单位标签也在左侧 */
+    
+    /* X轴字段标签 - 移动端位置 */
+    .x-field-label {
+        left: 30px; /* 移动端：X轴标签右侧 */
+        bottom: 4px;
+    }
     
     /* 标注面板 - 移动端优化 */
     .params-panel {
