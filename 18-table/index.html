@@ -823,9 +823,28 @@ if (typeof ChartSpec !== 'undefined') {
 }
 
 // 初始化表格数据
-document.addEventListener('DOMContentLoaded', function() {
-    renderTable(tableData);
-});
+function initTable() {
+    // 确保DOM已加载
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable(tableData);
+        });
+    } else {
+        // DOM已经加载完成，立即执行
+        renderTable(tableData);
+    }
+}
+
+// 立即尝试初始化
+initTable();
+
+// 如果表格还没有渲染，延迟再试一次
+setTimeout(function() {
+    const tbody = document.getElementById('tableBody');
+    if (tbody && tbody.children.length === 0) {
+        renderTable(tableData);
+    }
+}, 100);
 
 // 表格原始数据
 const tableData = [
@@ -850,33 +869,50 @@ let filterState = {
 
 // 渲染表格
 function renderTable(data = tableData) {
-    const tbody = document.getElementById('tableBody');
-    if (!tbody) return;
-    
-    tbody.innerHTML = '';
-    
-    data.forEach(row => {
-        const tr = document.createElement('tr');
-        const changeClass = row.change >= 0 ? 'trend-up' : 'trend-down';
-        const changeSymbol = row.change >= 0 ? '↑' : '↓';
-        const changeValue = Math.abs(row.change);
+    try {
+        const tbody = document.getElementById('tableBody');
+        if (!tbody) {
+            console.warn('表格tbody元素不存在');
+            return;
+        }
         
-        tr.innerHTML = `
-            <td onclick="openFilterPanel('region', '${row.region}')">${row.region}</td>
-            <td onclick="openFilterPanel('sales', '${row.sales}')">¥ ${row.sales.toLocaleString()}</td>
-            <td class="${changeClass}" onclick="openFilterPanel('change', '${row.change >= 0 ? 'positive' : 'negative'}')">${changeSymbol} ${changeValue}%</td>
-            <td onclick="openFilterPanel('completion', '${row.completion}')">${row.completion}%</td>
-            <td onclick="openFilterPanel('progress', '${row.progress}')">
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: ${row.progress}%;"></div>
-                </div>
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
-    
-    // 更新汇总
-    updateSummary(data);
+        tbody.innerHTML = '';
+        
+        if (!data || data.length === 0) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = '<td colspan="5" style="text-align: center; padding: 20px; color: #86868B;">暂无数据</td>';
+            tbody.appendChild(tr);
+            updateSummary([]);
+            return;
+        }
+        
+        data.forEach(row => {
+            const tr = document.createElement('tr');
+            const changeClass = row.change >= 0 ? 'trend-up' : 'trend-down';
+            const changeSymbol = row.change >= 0 ? '↑' : '↓';
+            const changeValue = Math.abs(row.change);
+            
+            tr.innerHTML = `
+                <td onclick="openFilterPanel('region', '${row.region}')">${row.region}</td>
+                <td onclick="openFilterPanel('sales', '${row.sales}')">¥ ${row.sales.toLocaleString()}</td>
+                <td class="${changeClass}" onclick="openFilterPanel('change', '${row.change >= 0 ? 'positive' : 'negative'}')">${changeSymbol} ${changeValue}%</td>
+                <td onclick="openFilterPanel('completion', '${row.completion}')">${row.completion}%</td>
+                <td onclick="openFilterPanel('progress', '${row.progress}')">
+                    <div class="progress-bar">
+                        <div class="progress-bar-fill" style="width: ${row.progress}%;"></div>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        
+        // 更新汇总
+        updateSummary(data);
+        
+        console.log('表格已渲染，共', data.length, '条数据');
+    } catch (error) {
+        console.error('渲染表格时出错:', error);
+    }
 }
 
 // 更新汇总信息
@@ -945,7 +981,12 @@ function toggleFilterPanel(event) {
         event.stopPropagation();
     }
     const modal = document.getElementById('filterModal');
-    const btn = event.target.closest('.filter-unified-btn') || document.querySelector('.filter-unified-btn');
+    if (!modal) {
+        console.error('筛选面板元素不存在');
+        return;
+    }
+    
+    const btn = event ? (event.target.closest('.filter-unified-btn') || document.querySelector('.filter-unified-btn')) : document.querySelector('.filter-unified-btn');
     
     if (modal.classList.contains('show')) {
         modal.classList.remove('show', 'positioned');
@@ -1040,7 +1081,9 @@ function openFilterPanel(dimension = null, value = null) {
 // 关闭筛选面板
 function closeFilterPanel() {
     const modal = document.getElementById('filterModal');
-    modal.classList.remove('show');
+    if (modal) {
+        modal.classList.remove('show', 'positioned');
+    }
 }
 
 // 切换筛选选项
@@ -1064,27 +1107,35 @@ function toggleFilterOption(element, dimension, value) {
 
 // 应用筛选
 function applyFilters() {
-    // 获取范围输入值
-    const salesMin = document.getElementById('salesMin').value;
-    const salesMax = document.getElementById('salesMax').value;
-    const completionMin = document.getElementById('completionMin').value;
-    const completionMax = document.getElementById('completionMax').value;
-    const progressMin = document.getElementById('progressMin').value;
-    const progressMax = document.getElementById('progressMax').value;
-    
-    filterState.sales.min = salesMin ? parseFloat(salesMin) : null;
-    filterState.sales.max = salesMax ? parseFloat(salesMax) : null;
-    filterState.completion.min = completionMin ? parseFloat(completionMin) : null;
-    filterState.completion.max = completionMax ? parseFloat(completionMax) : null;
-    filterState.progress.min = progressMin ? parseFloat(progressMin) : null;
-    filterState.progress.max = progressMax ? parseFloat(progressMax) : null;
-    
-    updateFilterUI();
-    closeFilterPanel();
-    
-    // 应用筛选并更新表格
-    const filteredData = filterData();
-    renderTable(filteredData);
+    try {
+        // 获取范围输入值
+        const salesMinEl = document.getElementById('salesMin');
+        const salesMaxEl = document.getElementById('salesMax');
+        const completionMinEl = document.getElementById('completionMin');
+        const completionMaxEl = document.getElementById('completionMax');
+        const progressMinEl = document.getElementById('progressMin');
+        const progressMaxEl = document.getElementById('progressMax');
+        
+        if (salesMinEl && salesMaxEl && completionMinEl && completionMaxEl && progressMinEl && progressMaxEl) {
+            filterState.sales.min = salesMinEl.value ? parseFloat(salesMinEl.value) : null;
+            filterState.sales.max = salesMaxEl.value ? parseFloat(salesMaxEl.value) : null;
+            filterState.completion.min = completionMinEl.value ? parseFloat(completionMinEl.value) : null;
+            filterState.completion.max = completionMaxEl.value ? parseFloat(completionMaxEl.value) : null;
+            filterState.progress.min = progressMinEl.value ? parseFloat(progressMinEl.value) : null;
+            filterState.progress.max = progressMaxEl.value ? parseFloat(progressMaxEl.value) : null;
+        }
+        
+        updateFilterUI();
+        closeFilterPanel();
+        
+        // 应用筛选并更新表格
+        const filteredData = filterData();
+        renderTable(filteredData);
+        
+        console.log('筛选已应用，筛选条件:', filterState, '筛选结果:', filteredData.length, '条');
+    } catch (error) {
+        console.error('应用筛选时出错:', error);
+    }
 }
 
 // 重置筛选
