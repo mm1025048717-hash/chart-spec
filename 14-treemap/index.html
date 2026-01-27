@@ -121,7 +121,8 @@
             </div>
         </div>
         <div class="chart-body lg" style="position: relative;">
-            <!-- 自定义图例 -->
+            <!-- 自定义图例 - 统一在右侧对齐，不遮挡图表 -->
+            <!-- 颜色顺序：研发部(蓝)、市场部(绿)、销售部(橙)、行政部(红)、财务部(紫) -->
             <div class="custom-legend">
                 <div class="legend-item">
                     <span class="legend-icon-square" style="background: #5B8FF9;"></span>
@@ -159,7 +160,7 @@
             <pre id="code-treemap-content">new Treemap('chart-basic', {
     data,
     colorField: 'name',
-    padding: [40, 24, 24, 24],
+    padding: [40, 160, 24, 24],  // 右侧padding增加到160px，为图例预留空间
     color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF3B30', '#5856D6', '#32ADE6', '#FF99C3'],
     label: {
         style: { fontSize: 12, fill: '#fff' },
@@ -297,7 +298,7 @@ const data = {
 new Treemap('chart-basic', {
     data,
     colorField: 'name',
-    padding: [40, 24, 24, 24],
+    padding: [40, 160, 24, 24],  // 右侧padding增加到160px，为图例预留空间
     color: ['#5B8FF9', '#5AD8A6', '#FF9845', '#FF3B30', '#5856D6', '#32ADE6', '#FF99C3'],
     label: {
         style: { fontSize: labelFontSize, fill: '#fff' },
