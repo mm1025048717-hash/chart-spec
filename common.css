@@ -1603,14 +1603,14 @@ a:hover {
 .chart-summary .summary-value.green { color: var(--chart-green); }
 
 /* ==================== Custom Legend ==================== */
-/* 统一图例位置：所有图表的图例统一在右侧 */
+/* 统一图例位置：所有图表的图例统一在左侧对齐 */
 .custom-legend {
     position: absolute;
     top: 12px;
-    right: 12px;
+    left: 12px;
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
     gap: 8px;
     z-index: 50;
     font-size: 11px;
@@ -1629,7 +1629,7 @@ a:hover {
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: flex-start;
     max-width: none;
 }
 
@@ -1659,28 +1659,19 @@ a:hover {
     font-weight: 400;
 }
 
-.legend-icon-square {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    flex-shrink: 0;
-}
-
-.legend-icon-line {
-    width: 16px;
-    height: 2px;
-    border-radius: 1px;
-    flex-shrink: 0;
-}
-
-.legend-icon-circle {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-}
-
+/* 统一图例标记为方形 - 所有图表统一使用方形标记 */
+.legend-icon-square,
+.legend-icon-circle,
 .legend-icon-line-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px; /* 统一使用方形，border-radius: 2px 为圆角方形 */
+    flex-shrink: 0;
+    display: inline-block;
+}
+
+/* 线条图例也使用方形标记 */
+.legend-icon-line {
     width: 16px;
     height: 2px;
     border-radius: 1px;
@@ -1688,16 +1679,9 @@ a:hover {
     position: relative;
 }
 
+/* 移除圆形标记的伪元素 */
 .legend-icon-line-dot::after {
-    content: '';
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: inherit;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: none;
 }
 
 /* ==================== Axis Labels ==================== */
@@ -1908,22 +1892,24 @@ a:hover {
         gap: 8px;
     }
     
-    /* 移动端图例优化 */
+    /* 移动端图例优化 - 左对齐 */
     .custom-legend {
         position: relative;
         top: auto;
-        right: auto;
+        left: auto;
         margin: 8px 0;
         padding: 6px 10px;
         max-width: 100%;
         flex-direction: row;
         flex-wrap: wrap;
-        justify-content: center;
+        justify-content: flex-start;
+        align-items: flex-start;
         font-size: 10px;
     }
     
     .custom-legend.horizontal {
         flex-direction: row;
+        justify-content: flex-start;
     }
     
     /* 图表主体 - 移动端高度适配 */
