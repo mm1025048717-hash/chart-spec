@@ -122,15 +122,15 @@
             transition: width 0.3s ease;
         }
         
-        /* 筛选下拉面板 - 极简折叠设计 */
+        /* 筛选下拉面板 - 超简洁设计 */
         .filter-modal {
             display: none;
             position: absolute;
-            top: calc(100% + 8px);
+            top: calc(100% + 6px);
             right: 0;
             z-index: 1000;
-            min-width: 280px;
-            max-width: 320px;
+            min-width: 240px;
+            max-width: 280px;
         }
         .filter-modal.show {
             display: block;
@@ -138,17 +138,17 @@
         
         .filter-panel {
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            border-radius: 6px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
             border: 1px solid #E8E8E8;
-            overflow: visible;
-            max-height: 85vh;
+            overflow: hidden;
+            max-height: 80vh;
             display: flex;
             flex-direction: column;
         }
         
         .filter-panel-header {
-            padding: 8px 10px;
+            padding: 6px 8px;
             border-bottom: 1px solid #F0F0F0;
             display: flex;
             justify-content: space-between;
@@ -156,21 +156,21 @@
             flex-shrink: 0;
         }
         .filter-panel-title {
-            font-size: 11px;
-            font-weight: 600;
+            font-size: 10px;
+            font-weight: 500;
             color: #86868B;
         }
         .filter-panel-close {
             background: none;
             border: none;
-            font-size: 14px;
+            font-size: 12px;
             color: #86868B;
             cursor: pointer;
-            padding: 2px;
+            padding: 0;
             line-height: 1;
             transition: color 0.2s ease;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -180,20 +180,18 @@
         }
         
         .filter-panel-body {
-            padding: 8px;
+            padding: 6px;
             overflow-y: auto;
             flex: 1;
             min-height: 0;
-            max-height: calc(85vh - 100px);
+            max-height: calc(80vh - 70px);
         }
         
         .filter-dimension {
-            margin-bottom: 8px;
-            border-bottom: 1px solid #F5F5F5;
+            margin-bottom: 4px;
         }
         .filter-dimension:last-child {
             margin-bottom: 0;
-            border-bottom: none;
         }
         .filter-dimension.collapsed .filter-dimension-content {
             display: none;
@@ -202,22 +200,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 6px 4px;
+            padding: 4px 2px;
             cursor: pointer;
             user-select: none;
         }
         .filter-dimension-header:hover {
             background: #FAFAFA;
-            border-radius: 4px;
+            border-radius: 3px;
         }
         .filter-dimension-title {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             color: #1D1D1F;
             margin: 0;
         }
         .filter-dimension-toggle {
-            font-size: 10px;
+            font-size: 9px;
             color: #86868B;
             transition: transform 0.2s ease;
         }
@@ -225,20 +223,20 @@
             transform: rotate(-90deg);
         }
         .filter-dimension-content {
-            padding: 6px 4px 8px;
+            padding: 4px 2px 6px;
         }
         
         .filter-options {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px;
+            gap: 3px;
         }
         .filter-option {
-            padding: 3px 8px;
+            padding: 2px 6px;
             border: 1px solid #E8E8E8;
-            border-radius: 4px;
+            border-radius: 3px;
             background: white;
-            font-size: 10px;
+            font-size: 9px;
             color: #1D1D1F;
             cursor: pointer;
             transition: all 0.15s ease;
@@ -255,15 +253,15 @@
         
         .filter-range {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             align-items: center;
         }
         .filter-range-input {
             flex: 1;
-            padding: 3px 6px;
+            padding: 2px 5px;
             border: 1px solid #E8E8E8;
-            border-radius: 4px;
-            font-size: 10px;
+            border-radius: 3px;
+            font-size: 9px;
         }
         .filter-range-input:focus {
             outline: none;
@@ -271,23 +269,23 @@
             box-shadow: 0 0 0 2px rgba(91, 143, 249, 0.08);
         }
         .filter-range span {
-            font-size: 10px;
+            font-size: 9px;
             color: #86868B;
             white-space: nowrap;
         }
         
         .filter-panel-footer {
-            padding: 6px 8px;
+            padding: 4px 6px;
             border-top: 1px solid #F0F0F0;
             display: flex;
             justify-content: flex-end;
-            gap: 6px;
+            gap: 4px;
             flex-shrink: 0;
         }
         .filter-btn {
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 9px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
@@ -311,40 +309,41 @@
             color: #409CFF;
         }
         
-        /* 已选筛选标签 - 白色风格 */
+        /* 已选筛选标签 - 极简白色风格 */
         .filter-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 4px;
+            margin-top: 8px;
         }
         .filter-tag {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
+            gap: 4px;
+            padding: 2px 6px;
             background: white;
             color: #1D1D1F;
             border: 1px solid #E8E8E8;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 500;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 400;
             transition: all 0.2s ease;
         }
         .filter-tag:hover {
-            border-color: #5B8FF9;
-            background: #F5F5F5;
+            border-color: #D1D1D1;
+            background: #FAFAFA;
         }
         .filter-tag-remove {
             cursor: pointer;
-            font-size: 12px;
+            font-size: 10px;
             line-height: 1;
-            opacity: 0.5;
+            opacity: 0.4;
             transition: opacity 0.2s ease;
             color: #86868B;
+            margin-left: 2px;
         }
         .filter-tag-remove:hover {
-            opacity: 1;
+            opacity: 0.8;
             color: #1D1D1F;
         }
         
@@ -488,11 +487,11 @@
                                 <button class="filter-panel-close" onclick="closeFilterPanel()">×</button>
                             </div>
                             <div class="filter-panel-body">
-                                <!-- 地区筛选 - 默认展开 -->
-                                <div class="filter-dimension">
+                                <!-- 所有筛选项默认折叠，按需展开 -->
+                                <div class="filter-dimension collapsed">
                                     <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
                                         <div class="filter-dimension-title">地区</div>
-                                        <span class="filter-dimension-toggle">▼</span>
+                                        <span class="filter-dimension-toggle">▶</span>
                                     </div>
                                     <div class="filter-dimension-content">
                                         <div class="filter-options" id="filterRegion">
@@ -504,11 +503,10 @@
                                     </div>
                                 </div>
                                 
-                                <!-- 环比筛选 - 默认展开 -->
-                                <div class="filter-dimension">
+                                <div class="filter-dimension collapsed">
                                     <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
                                         <div class="filter-dimension-title">环比</div>
-                                        <span class="filter-dimension-toggle">▼</span>
+                                        <span class="filter-dimension-toggle">▶</span>
                                     </div>
                                     <div class="filter-dimension-content">
                                         <div class="filter-options" id="filterChange">
@@ -518,7 +516,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- 销售额筛选 - 默认折叠 -->
                                 <div class="filter-dimension collapsed">
                                     <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
                                         <div class="filter-dimension-title">销售额</div>
@@ -533,7 +530,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- 完成率筛选 - 默认折叠 -->
                                 <div class="filter-dimension collapsed">
                                     <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
                                         <div class="filter-dimension-title">完成率</div>
@@ -548,7 +544,6 @@
                                     </div>
                                 </div>
                                 
-                                <!-- 进度筛选 - 默认折叠 -->
                                 <div class="filter-dimension collapsed">
                                     <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
                                         <div class="filter-dimension-title">进度</div>
@@ -884,9 +879,30 @@ function openFilterPanel(dimension = null, value = null) {
     const modal = document.getElementById('filterModal');
     modal.classList.add('show');
     
-    // 如果指定了维度和值，自动选中
+    // 如果指定了维度和值，自动展开并选中
     if (dimension && value) {
         setTimeout(() => {
+            // 找到对应的筛选项并展开
+            const dimensionHeaders = document.querySelectorAll('.filter-dimension-header');
+            dimensionHeaders.forEach(header => {
+                const title = header.querySelector('.filter-dimension-title');
+                const dimensionMap = {
+                    'region': '地区',
+                    'change': '环比',
+                    'sales': '销售额',
+                    'completion': '完成率',
+                    'progress': '进度'
+                };
+                if (title && title.textContent === dimensionMap[dimension]) {
+                    const dimensionEl = header.closest('.filter-dimension');
+                    if (dimensionEl && dimensionEl.classList.contains('collapsed')) {
+                        dimensionEl.classList.remove('collapsed');
+                        header.querySelector('.filter-dimension-toggle').textContent = '▼';
+                    }
+                }
+            });
+            
+            // 选中对应的选项
             if (dimension === 'region' || dimension === 'change') {
                 const options = document.querySelectorAll(`#filter${dimension.charAt(0).toUpperCase() + dimension.slice(1)} .filter-option`);
                 options.forEach(opt => {
