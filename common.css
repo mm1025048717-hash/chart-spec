@@ -1428,8 +1428,9 @@ a:hover {
     position: relative;
     height: var(--chart-height-md);
     padding: 12px;
-    /* 右侧padding减少，让图表向右扩展，右边缘对齐到"按地区"标签位置 */
-    padding-right: 80px; /* 减少右侧padding，让图表更大更靠右（图例在right: 12px，图表扩展到接近图例） */
+    /* 平衡左右padding，让图表内容居中显示，右侧为图例留出空间 */
+    padding-left: 12px;
+    padding-right: 140px; /* 右侧padding为图例留出空间（图例宽度约120px+间距） */
     background: var(--bg-primary);
     overflow: hidden;
     width: 100%;
@@ -1743,16 +1744,16 @@ a:hover {
     font-weight: 500;
 }
 
-/* Y轴单位标签 - 应该在Y轴右侧，紧贴Y轴标签 */
+/* Y轴单位标签 - 规范位置：Y轴顶部右侧，紧贴Y轴标签 */
 .axis-unit.y-left { 
     top: 6px; /* 图表顶部，与Y轴顶部对齐 */
-    left: 50px; /* Y轴右侧，紧贴Y轴标签（Y轴标签通常在40-50px位置） */
+    left: 28px; /* Y轴右侧，紧贴Y轴标签（根据padding[3]=20px，Y轴标签在20-25px位置，单位标签在其右侧） */
     right: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
 .axis-unit.y-right { 
     top: 6px; /* 图表顶部，与Y轴顶部对齐 */
-    left: 50px; /* Y轴右侧，紧贴Y轴标签 */
+    left: 28px; /* Y轴右侧，紧贴Y轴标签 */
     right: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
@@ -2003,7 +2004,8 @@ a:hover {
     .chart-body { 
         height: 260px;
         padding: 8px 6px 12px; 
-        /* 移动端图例在下方，不需要右侧padding */
+        /* 移动端统一左右padding，图表内容居中 */
+        padding-left: 6px;
         padding-right: 6px;
         overflow: visible;
     }
@@ -2075,8 +2077,8 @@ a:hover {
     
     /* 坐标轴单位 */
     .axis-unit { font-size: 8px; }
-    .axis-unit.y-left { left: 4px; top: 4px; }
-    .axis-unit.y-right { right: 4px; top: 4px; }
+    .axis-unit.y-left { left: 22px; top: 4px; } /* 移动端：根据padding[3]=20px，单位标签在Y轴标签右侧 */
+    .axis-unit.y-right { left: 22px; top: 4px; } /* 移动端：Y轴在左侧时，单位标签也在左侧 */
     
     /* 标注面板 - 移动端优化 */
     .params-panel {
