@@ -367,33 +367,59 @@
             color: #409CFF;
         }
         
-        /* 已选筛选 - 简洁单行文本显示 */
+        /* 已选筛选 - 简约设计，每个维度可单独清除 */
         .filter-tags {
             display: none; /* 默认隐藏标签 */
         }
         
-        /* 筛选摘要 - 简洁文本显示 */
+        /* 筛选摘要 - 简约设计 */
         .filter-summary {
             display: none;
             margin-top: 6px;
             font-size: 10px;
-            color: #86868B;
             line-height: 1.4;
         }
         .filter-summary.has-filters {
-            display: block;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
         }
-        .filter-summary-text {
+        .filter-summary-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 6px;
+            background: white;
+            border: 1px solid #E8E8E8;
+            border-radius: 4px;
             color: #1D1D1F;
         }
+        .filter-summary-label {
+            color: #86868B;
+            font-size: 10px;
+        }
+        .filter-summary-value {
+            color: #1D1D1F;
+            font-size: 10px;
+        }
         .filter-summary-clear {
-            color: #5B8FF9;
+            color: #86868B;
             cursor: pointer;
-            margin-left: 4px;
-            text-decoration: none;
+            font-size: 12px;
+            width: 14px;
+            height: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 2px;
+            transition: all 0.15s ease;
+            margin-left: 2px;
+            line-height: 1;
         }
         .filter-summary-clear:hover {
-            text-decoration: underline;
+            color: #1D1D1F;
+            background: #F5F5F5;
         }
         
         /* 移动端适配 - 保持下拉样式但调整位置 */
@@ -630,11 +656,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- 筛选摘要 - 简洁文本显示 -->
-                <div class="filter-summary" id="filterSummary">
-                    <span class="filter-summary-text" id="filterSummaryText"></span>
-                    <a href="javascript:void(0)" class="filter-summary-clear" onclick="resetFilters()">清除</a>
-                </div>
+                <!-- 筛选摘要 - 简约设计，每个维度可单独清除 -->
+                <div class="filter-summary" id="filterSummary"></div>
                 <div class="filter-tags" id="filterTags" style="display: none;"></div>
             </div>
         </div>
@@ -1198,55 +1221,81 @@ function applyFilters() {
     }
 }
 
-// 重置筛选
+// 重置筛选（仅重置筛选面板中的选择，不重置已应用的筛选）
 function resetFilters() {
-    filterState = {
-        region: [],
-        sales: { min: null, max: null },
-        change: [],
-        completion: { min: null, max: null },
-        progress: { min: null, max: null }
-    };
-    
     // 清除所有选中状态
     document.querySelectorAll('.filter-option').forEach(opt => {
         opt.classList.remove('selected');
     });
     
     // 清空范围输入
-    document.getElementById('salesMin').value = '';
-    document.getElementById('salesMax').value = '';
-    document.getElementById('completionMin').value = '';
-    document.getElementById('completionMax').value = '';
-    document.getElementById('progressMin').value = '';
-    document.getElementById('progressMax').value = '';
+    const salesMinEl = document.getElementById('salesMin');
+    const salesMaxEl = document.getElementById('salesMax');
+    const completionMinEl = document.getElementById('completionMin');
+    const completionMaxEl = document.getElementById('completionMax');
+    const progressMinEl = document.getElementById('progressMin');
+    const progressMaxEl = document.getElementById('progressMax');
+    
+    if (salesMinEl) salesMinEl.value = '';
+    if (salesMaxEl) salesMaxEl.value = '';
+    if (completionMinEl) completionMinEl.value = '';
+    if (completionMaxEl) completionMaxEl.value = '';
+    if (progressMinEl) progressMinEl.value = '';
+    if (progressMaxEl) progressMaxEl.value = '';
+    
+    // 注意：这里不重置filterState，只重置UI，让用户重新选择
+}
+
+// 清除单个维度
+function clearFilterDimension(dimension) {
+    if (dimension === 'region' || dimension === 'change') {
+        filterState[dimension] = [];
+        // 清除UI中的选中状态
+        const options = document.querySelectorAll(`#filter${dimension.charAt(0).toUpperCase() + dimension.slice(1)} .filter-option`);
+        options.forEach(opt => opt.classList.remove('selected'));
+    } else {
+        // 范围筛选
+        filterState[dimension] = { min: null, max: null };
+        const minInput = document.getElementById(`${dimension}Min`);
+        const maxInput = document.getElementById(`${dimension}Max`);
+        if (minInput) minInput.value = '';
+        if (maxInput) maxInput.value = '';
+    }
     
     updateFilterUI();
     
-    // 重置表格显示
-    renderTable(tableData);
+    // 应用筛选并更新表格
+    const filteredData = filterData();
+    renderTable(filteredData);
 }
 
-// 更新筛选UI（简洁文本摘要）
+// 更新筛选UI（简约设计，每个维度可单独清除）
 function updateFilterUI() {
     const filterSummary = document.getElementById('filterSummary');
-    const filterSummaryText = document.getElementById('filterSummaryText');
     const filterCount = document.getElementById('filterCount');
     let count = 0;
-    let summaryParts = [];
+    let summaryHTML = '';
     
     // 地区筛选
     if (filterState.region.length > 0) {
         count += filterState.region.length;
         const regions = filterState.region.join('、');
-        summaryParts.push(`地区: ${regions}`);
+        summaryHTML += `<div class="filter-summary-item">
+            <span class="filter-summary-label">地区:</span>
+            <span class="filter-summary-value">${regions}</span>
+            <span class="filter-summary-clear" onclick="clearFilterDimension('region')" title="清除地区筛选">×</span>
+        </div>`;
     }
     
     // 环比筛选
     if (filterState.change.length > 0) {
         count += filterState.change.length;
         const changes = filterState.change.map(v => v === 'positive' ? '上升' : '下降').join('、');
-        summaryParts.push(`环比: ${changes}`);
+        summaryHTML += `<div class="filter-summary-item">
+            <span class="filter-summary-label">环比:</span>
+            <span class="filter-summary-value">${changes}</span>
+            <span class="filter-summary-clear" onclick="clearFilterDimension('change')" title="清除环比筛选">×</span>
+        </div>`;
     }
     
     // 销售额范围
@@ -1255,7 +1304,11 @@ function updateFilterUI() {
         const min = filterState.sales.min !== null ? `¥${filterState.sales.min.toLocaleString()}` : '';
         const max = filterState.sales.max !== null ? `¥${filterState.sales.max.toLocaleString()}` : '';
         const range = min && max ? `${min}-${max}` : min || max;
-        summaryParts.push(`销售额: ${range}`);
+        summaryHTML += `<div class="filter-summary-item">
+            <span class="filter-summary-label">销售额:</span>
+            <span class="filter-summary-value">${range}</span>
+            <span class="filter-summary-clear" onclick="clearFilterDimension('sales')" title="清除销售额筛选">×</span>
+        </div>`;
     }
     
     // 完成率范围
@@ -1264,7 +1317,11 @@ function updateFilterUI() {
         const min = filterState.completion.min !== null ? `${filterState.completion.min}%` : '';
         const max = filterState.completion.max !== null ? `${filterState.completion.max}%` : '';
         const range = min && max ? `${min}-${max}` : min || max;
-        summaryParts.push(`完成率: ${range}`);
+        summaryHTML += `<div class="filter-summary-item">
+            <span class="filter-summary-label">完成率:</span>
+            <span class="filter-summary-value">${range}</span>
+            <span class="filter-summary-clear" onclick="clearFilterDimension('completion')" title="清除完成率筛选">×</span>
+        </div>`;
     }
     
     // 进度范围
@@ -1273,14 +1330,19 @@ function updateFilterUI() {
         const min = filterState.progress.min !== null ? `${filterState.progress.min}%` : '';
         const max = filterState.progress.max !== null ? `${filterState.progress.max}%` : '';
         const range = min && max ? `${min}-${max}` : min || max;
-        summaryParts.push(`进度: ${range}`);
+        summaryHTML += `<div class="filter-summary-item">
+            <span class="filter-summary-label">进度:</span>
+            <span class="filter-summary-value">${range}</span>
+            <span class="filter-summary-clear" onclick="clearFilterDimension('progress')" title="清除进度筛选">×</span>
+        </div>`;
     }
     
-    // 更新摘要文本
-    if (summaryParts.length > 0) {
-        filterSummaryText.textContent = summaryParts.join(' | ');
+    // 更新摘要
+    if (summaryHTML) {
+        filterSummary.innerHTML = summaryHTML;
         filterSummary.classList.add('has-filters');
     } else {
+        filterSummary.innerHTML = '';
         filterSummary.classList.remove('has-filters');
     }
     
