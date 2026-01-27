@@ -194,9 +194,19 @@
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
-        offset: '-50%',
-        content: '{percentage}',
-        style: { fill: '#fff', fontSize: 12, fontWeight: 600 },
+        offset: '-30%', // 调整偏移量，确保标签居中显示
+        content: ({ percent }) => {
+            const percentage = (percent * 100).toFixed(0);
+            return percentage + '%';
+        },
+        style: { 
+            fill: '#fff', 
+            fontSize: 12, 
+            fontWeight: 600,
+            textAlign: 'center',
+            textBaseline: 'middle',
+        },
+        autoRotate: false, // 禁用自动旋转，保持水平显示
     },
     statistic: {
         title: { content: '总销售额', style: { fontSize: '12px', color: '#86868B' } },
@@ -304,9 +314,19 @@ new G2Plot.Pie('chart-basic', {
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
-        offset: '-50%',
-        content: ({ percent }) => `${(percent * 100).toFixed(0)}%`,
-        style: { fill: '#fff', fontSize: labelFontSize, fontWeight: 600 },
+        offset: '-30%', // 调整偏移量，确保标签居中显示
+        content: ({ percent }) => {
+            const percentage = (percent * 100).toFixed(0);
+            return percentage + '%';
+        },
+        style: { 
+            fill: '#fff', 
+            fontSize: labelFontSize, 
+            fontWeight: 600,
+            textAlign: 'center',
+            textBaseline: 'middle',
+        },
+        autoRotate: false, // 禁用自动旋转，保持水平显示
     },
     statistic: false,
     legend: false,
