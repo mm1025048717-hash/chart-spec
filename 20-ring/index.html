@@ -18,21 +18,21 @@
             transform: translate(-50%, -50%);
             text-align: center;
             pointer-events: none;
-            max-width: 45%; /* 限制最大宽度，确保不超出环形图内径 */
+            max-width: 40%; /* 限制最大宽度，确保不超出环形图内径 */
             box-sizing: border-box;
-            padding: 0 8px; /* 添加内边距，防止文字贴边 */
+            padding: 0 6px; /* 添加内边距，防止文字贴边 */
         }
         .center-value {
-            font-size: 28px;
+            font-size: 24px; /* 减小字体，避免与标签重叠 */
             font-weight: 700;
             color: #1D1D1F;
             line-height: 1.2;
             white-space: nowrap; /* 防止数字换行 */
         }
         .center-label {
-            font-size: 12px;
+            font-size: 11px; /* 减小字体 */
             color: #86868B;
-            margin-top: 4px;
+            margin-top: 3px;
             line-height: 1.3;
             word-break: keep-all; /* 保持中文词不拆分 */
             white-space: normal; /* 允许标签文字换行 */
@@ -42,14 +42,14 @@
         /* 响应式优化 */
         @media (max-width: 768px) {
             .center-content {
-                max-width: 35%; /* 移动端进一步缩小最大宽度，避免与标签重叠 */
+                max-width: 32%; /* 移动端进一步缩小最大宽度，避免与标签重叠 */
                 padding: 0 4px;
             }
             .center-value {
-                font-size: 20px; /* 移动端减小字体，避免与标签重叠 */
+                font-size: 18px; /* 移动端减小字体，避免与标签重叠 */
             }
             .center-label {
-                font-size: 10px; /* 移动端减小字体 */
+                font-size: 9px; /* 移动端减小字体 */
                 margin-top: 2px;
             }
         }
@@ -214,11 +214,11 @@
     angleField: 'value',
     colorField: 'type',
     radius: 0.85,
-    innerRadius: 0.6,  // 内径比例，形成环形（移动端建议0.5）
+    innerRadius: 0.65,  // 内径比例，形成环形（移动端建议0.55），增大内径给标签和中心文字更多空间
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
-        offset: '-60%', // 响应式offset，确保标签在环形内部，不会超出边界
+        offset: '-50%', // 响应式offset，让标签位于环形中间位置，避免与中心文字重叠
         content: ({ percent }) => {
             const percentage = (percent * 100).toFixed(0);
             return percentage + '%';
@@ -315,8 +315,8 @@ label: false,</pre>
 // 响应式参数
 const mobile = ChartSpec.isMobile();
 const labelFontSize = mobile ? 9 : 11;
-const innerRadius = mobile ? 0.5 : 0.6; // 移动端增大内径，给标签更多空间
-const labelOffset = mobile ? '-50%' : '-60%'; // 移动端调整offset，防止标签超出
+const innerRadius = mobile ? 0.55 : 0.65; // 增大内径，给标签和中心文字更多空间，避免重叠
+const labelOffset = mobile ? '-45%' : '-50%'; // 调整offset，让标签位于环形中间位置，不靠近中心也不靠近边缘
 const statisticFontSize = mobile ? 16 : 20;
 const statisticTitleSize = mobile ? 10 : 11;
 
@@ -337,7 +337,7 @@ new G2Plot.Pie('chart-basic', {
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'inner',
-        offset: labelOffset, // 响应式offset，确保标签在环形内部，不会超出边界
+        offset: labelOffset, // 响应式offset，让标签位于环形中间位置，避免与中心文字重叠
         content: ({ percent }) => {
             const percentage = (percent * 100).toFixed(0);
             return percentage + '%';
