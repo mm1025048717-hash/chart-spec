@@ -409,7 +409,11 @@ new Column('chart-percent', {
         return { radius: 0 };
     },
     yAxis: { label: { formatter: (v) => (v * 100).toFixed(0) + '%', style: { fontSize: fontSize } } },
-    legend: { position: 'top-right', itemName: { style: { fontSize: legendFontSize } } },
+    legend: { 
+        position: 'top-right', 
+        itemName: { style: { fontSize: legendFontSize } },
+        marker: { symbol: 'square', style: { r: 4 } } // 统一使用方形标记
+    },
 }).render();
 
 const multiData = [
@@ -442,7 +446,11 @@ new Column('chart-multi', {
         // 底部和中间系列都没有圆角
         return { radius: 0 };
     },
-    legend: { position: 'top-right', itemName: { style: { fontSize: legendFontSize } } },
+    legend: { 
+        position: 'top-right', 
+        itemName: { style: { fontSize: legendFontSize } },
+        marker: { symbol: 'square', style: { r: 4 } } // 统一使用方形标记
+    },
 }).render();
 
 // 初始化响应式

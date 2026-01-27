@@ -398,7 +398,11 @@ new Area('chart-stacked', {
     smooth: true,
     color: ['#5B8FF9', '#5AD8A6'],
     areaStyle: { fillOpacity: 0.4 },
-    legend: { position: 'top-right', itemName: { style: { fontSize: mobile ? 9 : 11 } } },
+    legend: { 
+        position: 'top-right', 
+        itemName: { style: { fontSize: mobile ? 9 : 11 } },
+        marker: { symbol: 'square', style: { r: 4 } } // 统一使用方形标记
+    },
     xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
 }).render();
 

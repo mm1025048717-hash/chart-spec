@@ -50,13 +50,21 @@ function bindFilterEvents() {
         }
     });
     
-    // 窗口调整大小时重新定位
+    // 窗口调整大小时重新定位 - 紧贴按钮
     window.addEventListener('resize', function() {
         const modal = document.querySelector('.filter-modal');
         if (modal && modal.classList.contains('show') && !hasBeenDragged) {
             repositionFilterPanel();
         }
     });
+    
+    // 滚动时重新定位 - 紧贴按钮
+    window.addEventListener('scroll', function() {
+        const modal = document.querySelector('.filter-modal');
+        if (modal && modal.classList.contains('show') && !hasBeenDragged) {
+            repositionFilterPanel();
+        }
+    }, true);
 }
 
 // 切换筛选面板
@@ -94,7 +102,7 @@ function openFilterPanel() {
     initDragFilter();
 }
 
-// 重新定位筛选面板
+// 重新定位筛选面板 - 紧贴按钮，0px间隙
 function repositionFilterPanel() {
     const modal = document.querySelector('.filter-modal');
     const btn = document.querySelector('.filter-unified-btn');
@@ -104,15 +112,12 @@ function repositionFilterPanel() {
     const rect = btn.getBoundingClientRect();
     const isMobile = window.innerWidth <= 768;
     
-    if (isMobile) {
-        modal.style.top = rect.bottom + 'px';
-        modal.style.left = '12px';
-        modal.style.right = 'auto';
-    } else {
-        modal.style.top = rect.bottom + 'px';
-        modal.style.right = (window.innerWidth - rect.right) + 'px';
-        modal.style.left = 'auto';
-    }
+    // 紧贴按钮，0px间隙 - 统一使用left定位
+    modal.style.top = rect.bottom + 'px';
+    modal.style.left = rect.left + 'px';
+    modal.style.right = 'auto';
+    modal.style.marginTop = '0px';
+    modal.style.marginLeft = '0px';
     
     modal.classList.add('positioned');
 }

@@ -155,7 +155,10 @@
     yAxis: {
         label: { style: { fontSize: 11 } },
     },
-    legend: { position: 'bottom' },
+    legend: { 
+        position: 'bottom',
+        marker: { symbol: 'square', style: { r: 4 } } // 统一使用方形标记
+    },
 }).render();</pre>
         </div>
     </div>
@@ -272,7 +275,10 @@ new Heatmap('chart-basic', {
     yAxis: {
         label: { style: { fontSize: yFontSize, fill: '#86868B' } },
     },
-    legend: { position: 'bottom' },
+    legend: { 
+        position: 'bottom',
+        marker: { symbol: 'square', style: { r: 4 } } // 统一使用方形标记
+    },
 }).render();
 
 // 初始化响应式

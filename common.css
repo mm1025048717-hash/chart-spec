@@ -1082,12 +1082,13 @@ a:hover {
     color: white;
 }
 
-/* 筛选面板 - 使用fixed定位，不遮挡图表 */
+/* 筛选面板 - 使用fixed定位，紧贴按钮，不遮挡图表 */
 .filter-modal {
     position: fixed;
     z-index: 10000;
     display: none;
     pointer-events: none;
+    margin-top: 0; /* 确保紧贴按钮，0px间隙 */
 }
 
 .filter-modal.show {
@@ -1393,11 +1394,13 @@ a:hover {
     }
 }
 
+/* 统一所有标记为方形 */
 .chart-meta-item .dot {
     width: 8px;
     height: 8px;
-    border-radius: 50%;
+    border-radius: 2px; /* 改为方形，统一设计 */
     background: var(--chart-blue);
+    display: inline-block;
 }
 
 /* Chart Body - 统一高度和布局 */
@@ -1912,6 +1915,12 @@ a:hover {
         justify-content: flex-start;
     }
     
+    /* 移动端筛选面板 - 紧贴按钮 */
+    .filter-modal.positioned {
+        left: 12px !important;
+        right: auto !important;
+    }
+    
     /* 图表主体 - 移动端高度适配 */
     .chart-body { 
         height: 260px;
@@ -1924,9 +1933,10 @@ a:hover {
     
     /* 图例优化 - 移动端简化（已在上面统一处理） */
     .legend-item { gap: 4px; }
-    .legend-icon-square, .legend-icon-line-dot, .legend-icon-circle { 
-        width: 10px; 
-        height: 10px; 
+    .legend-icon-square, .legend-icon-line-dot, .legend-icon-circle {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px; /* 移动端也统一为方形 */
     }
     .legend-text { font-size: 10px; }
     
