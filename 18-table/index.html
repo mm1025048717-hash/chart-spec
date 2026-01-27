@@ -122,15 +122,15 @@
             transition: width 0.3s ease;
         }
         
-        /* 筛选下拉面板 - 极简设计 */
+        /* 筛选下拉面板 - 极简折叠设计 */
         .filter-modal {
             display: none;
             position: absolute;
             top: calc(100% + 8px);
             right: 0;
             z-index: 1000;
-            min-width: 320px;
-            max-width: 360px;
+            min-width: 280px;
+            max-width: 320px;
         }
         .filter-modal.show {
             display: block;
@@ -141,14 +141,14 @@
             border-radius: 8px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
             border: 1px solid #E8E8E8;
-            overflow: hidden;
-            max-height: 70vh;
+            overflow: visible;
+            max-height: 85vh;
             display: flex;
             flex-direction: column;
         }
         
         .filter-panel-header {
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-bottom: 1px solid #F0F0F0;
             display: flex;
             justify-content: space-between;
@@ -156,21 +156,21 @@
             flex-shrink: 0;
         }
         .filter-panel-title {
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            color: #1D1D1F;
+            color: #86868B;
         }
         .filter-panel-close {
             background: none;
             border: none;
-            font-size: 16px;
+            font-size: 14px;
             color: #86868B;
             cursor: pointer;
             padding: 2px;
             line-height: 1;
             transition: color 0.2s ease;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -180,28 +180,52 @@
         }
         
         .filter-panel-body {
-            padding: 12px;
+            padding: 8px;
             overflow-y: auto;
             flex: 1;
             min-height: 0;
+            max-height: calc(85vh - 100px);
         }
         
         .filter-dimension {
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #F5F5F5;
         }
         .filter-dimension:last-child {
             margin-bottom: 0;
+            border-bottom: none;
+        }
+        .filter-dimension.collapsed .filter-dimension-content {
+            display: none;
+        }
+        .filter-dimension-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 4px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .filter-dimension-header:hover {
+            background: #FAFAFA;
+            border-radius: 4px;
         }
         .filter-dimension-title {
             font-size: 11px;
-            font-weight: 600;
-            color: #86868B;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 500;
+            color: #1D1D1F;
+            margin: 0;
         }
-        .filter-dimension-title::before {
-            display: none;
+        .filter-dimension-toggle {
+            font-size: 10px;
+            color: #86868B;
+            transition: transform 0.2s ease;
+        }
+        .filter-dimension.collapsed .filter-dimension-toggle {
+            transform: rotate(-90deg);
+        }
+        .filter-dimension-content {
+            padding: 6px 4px 8px;
         }
         
         .filter-options {
@@ -210,11 +234,11 @@
             gap: 4px;
         }
         .filter-option {
-            padding: 4px 10px;
+            padding: 3px 8px;
             border: 1px solid #E8E8E8;
             border-radius: 4px;
             background: white;
-            font-size: 11px;
+            font-size: 10px;
             color: #1D1D1F;
             cursor: pointer;
             transition: all 0.15s ease;
@@ -231,15 +255,15 @@
         
         .filter-range {
             display: flex;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
         }
         .filter-range-input {
             flex: 1;
-            padding: 4px 8px;
+            padding: 3px 6px;
             border: 1px solid #E8E8E8;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 10px;
         }
         .filter-range-input:focus {
             outline: none;
@@ -247,22 +271,23 @@
             box-shadow: 0 0 0 2px rgba(91, 143, 249, 0.08);
         }
         .filter-range span {
-            font-size: 11px;
+            font-size: 10px;
             color: #86868B;
+            white-space: nowrap;
         }
         
         .filter-panel-footer {
-            padding: 8px 12px;
+            padding: 6px 8px;
             border-top: 1px solid #F0F0F0;
             display: flex;
             justify-content: flex-end;
-            gap: 8px;
+            gap: 6px;
             flex-shrink: 0;
         }
         .filter-btn {
-            padding: 4px 12px;
+            padding: 3px 10px;
             border-radius: 4px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.15s ease;
@@ -328,33 +353,51 @@
             .filter-modal {
                 right: auto;
                 left: 0;
-                min-width: 280px;
-                max-width: calc(100vw - 32px);
+                min-width: 260px;
+                max-width: calc(100vw - 24px);
             }
             .filter-panel {
-                max-height: 60vh;
+                max-height: 75vh;
+            }
+            .filter-panel-header {
+                padding: 6px 8px;
             }
             .filter-panel-body {
-                padding: 10px;
+                padding: 6px;
+                max-height: calc(75vh - 80px);
             }
             .filter-dimension {
-                margin-bottom: 10px;
+                margin-bottom: 6px;
+            }
+            .filter-dimension-header {
+                padding: 5px 3px;
+            }
+            .filter-dimension-content {
+                padding: 4px 3px 6px;
             }
             .filter-options {
-                gap: 4px;
+                gap: 3px;
             }
             .filter-option {
-                padding: 4px 8px;
+                padding: 3px 6px;
                 font-size: 10px;
             }
             .filter-range {
-                gap: 4px;
+                gap: 3px;
             }
             .filter-range-input {
-                padding: 4px 6px;
+                padding: 3px 5px;
                 font-size: 10px;
             }
             .filter-range span {
+                font-size: 9px;
+            }
+            .filter-panel-footer {
+                padding: 5px 6px;
+                gap: 5px;
+            }
+            .filter-btn {
+                padding: 3px 8px;
                 font-size: 10px;
             }
             .demo-table th, .demo-table td {
@@ -445,53 +488,78 @@
                                 <button class="filter-panel-close" onclick="closeFilterPanel()">×</button>
                             </div>
                             <div class="filter-panel-body">
-                                <!-- 地区筛选 -->
+                                <!-- 地区筛选 - 默认展开 -->
                                 <div class="filter-dimension">
-                                    <div class="filter-dimension-title">地区</div>
-                                    <div class="filter-options" id="filterRegion">
-                                        <div class="filter-option" data-value="华东区" onclick="toggleFilterOption(this, 'region', '华东区')">华东区</div>
-                                        <div class="filter-option" data-value="华北区" onclick="toggleFilterOption(this, 'region', '华北区')">华北区</div>
-                                        <div class="filter-option" data-value="华南区" onclick="toggleFilterOption(this, 'region', '华南区')">华南区</div>
-                                        <div class="filter-option" data-value="华中区" onclick="toggleFilterOption(this, 'region', '华中区')">华中区</div>
+                                    <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
+                                        <div class="filter-dimension-title">地区</div>
+                                        <span class="filter-dimension-toggle">▼</span>
+                                    </div>
+                                    <div class="filter-dimension-content">
+                                        <div class="filter-options" id="filterRegion">
+                                            <div class="filter-option" data-value="华东区" onclick="toggleFilterOption(this, 'region', '华东区')">华东区</div>
+                                            <div class="filter-option" data-value="华北区" onclick="toggleFilterOption(this, 'region', '华北区')">华北区</div>
+                                            <div class="filter-option" data-value="华南区" onclick="toggleFilterOption(this, 'region', '华南区')">华南区</div>
+                                            <div class="filter-option" data-value="华中区" onclick="toggleFilterOption(this, 'region', '华中区')">华中区</div>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <!-- 销售额筛选 -->
+                                <!-- 环比筛选 - 默认展开 -->
                                 <div class="filter-dimension">
-                                    <div class="filter-dimension-title">销售额</div>
-                                    <div class="filter-range">
-                                        <input type="number" class="filter-range-input" id="salesMin" placeholder="最小值" min="0">
-                                        <span>至</span>
-                                        <input type="number" class="filter-range-input" id="salesMax" placeholder="最大值" min="0">
+                                    <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
+                                        <div class="filter-dimension-title">环比</div>
+                                        <span class="filter-dimension-toggle">▼</span>
+                                    </div>
+                                    <div class="filter-dimension-content">
+                                        <div class="filter-options" id="filterChange">
+                                            <div class="filter-option" data-value="positive" onclick="toggleFilterOption(this, 'change', 'positive')">上升</div>
+                                            <div class="filter-option" data-value="negative" onclick="toggleFilterOption(this, 'change', 'negative')">下降</div>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <!-- 环比筛选 -->
-                                <div class="filter-dimension">
-                                    <div class="filter-dimension-title">环比</div>
-                                    <div class="filter-options" id="filterChange">
-                                        <div class="filter-option" data-value="positive" onclick="toggleFilterOption(this, 'change', 'positive')">上升</div>
-                                        <div class="filter-option" data-value="negative" onclick="toggleFilterOption(this, 'change', 'negative')">下降</div>
+                                <!-- 销售额筛选 - 默认折叠 -->
+                                <div class="filter-dimension collapsed">
+                                    <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
+                                        <div class="filter-dimension-title">销售额</div>
+                                        <span class="filter-dimension-toggle">▶</span>
+                                    </div>
+                                    <div class="filter-dimension-content">
+                                        <div class="filter-range">
+                                            <input type="number" class="filter-range-input" id="salesMin" placeholder="最小值" min="0">
+                                            <span>至</span>
+                                            <input type="number" class="filter-range-input" id="salesMax" placeholder="最大值" min="0">
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <!-- 完成率筛选 -->
-                                <div class="filter-dimension">
-                                    <div class="filter-dimension-title">完成率</div>
-                                    <div class="filter-range">
-                                        <input type="number" class="filter-range-input" id="completionMin" placeholder="最小值" min="0" max="100">
-                                        <span>至</span>
-                                        <input type="number" class="filter-range-input" id="completionMax" placeholder="最大值" min="0" max="100">
+                                <!-- 完成率筛选 - 默认折叠 -->
+                                <div class="filter-dimension collapsed">
+                                    <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
+                                        <div class="filter-dimension-title">完成率</div>
+                                        <span class="filter-dimension-toggle">▶</span>
+                                    </div>
+                                    <div class="filter-dimension-content">
+                                        <div class="filter-range">
+                                            <input type="number" class="filter-range-input" id="completionMin" placeholder="最小值" min="0" max="100">
+                                            <span>至</span>
+                                            <input type="number" class="filter-range-input" id="completionMax" placeholder="最大值" min="0" max="100">
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <!-- 进度筛选 -->
-                                <div class="filter-dimension">
-                                    <div class="filter-dimension-title">进度</div>
-                                    <div class="filter-range">
-                                        <input type="number" class="filter-range-input" id="progressMin" placeholder="最小值" min="0" max="100">
-                                        <span>至</span>
-                                        <input type="number" class="filter-range-input" id="progressMax" placeholder="最大值" min="0" max="100">
+                                <!-- 进度筛选 - 默认折叠 -->
+                                <div class="filter-dimension collapsed">
+                                    <div class="filter-dimension-header" onclick="toggleFilterDimension(this)">
+                                        <div class="filter-dimension-title">进度</div>
+                                        <span class="filter-dimension-toggle">▶</span>
+                                    </div>
+                                    <div class="filter-dimension-content">
+                                        <div class="filter-range">
+                                            <input type="number" class="filter-range-input" id="progressMin" placeholder="最小值" min="0" max="100">
+                                            <span>至</span>
+                                            <input type="number" class="filter-range-input" id="progressMax" placeholder="最大值" min="0" max="100">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -797,6 +865,18 @@ function toggleFilterPanel(event) {
     }
     const modal = document.getElementById('filterModal');
     modal.classList.toggle('show');
+}
+
+// 切换筛选维度折叠/展开
+function toggleFilterDimension(header) {
+    const dimension = header.closest('.filter-dimension');
+    dimension.classList.toggle('collapsed');
+    const toggle = header.querySelector('.filter-dimension-toggle');
+    if (dimension.classList.contains('collapsed')) {
+        toggle.textContent = '▶';
+    } else {
+        toggle.textContent = '▼';
+    }
 }
 
 // 打开筛选面板（用于表格单元格点击）
