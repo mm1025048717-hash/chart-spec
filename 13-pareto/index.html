@@ -296,7 +296,7 @@ const fontSize = mobile ? 10 : 10;
 const lineWidth = mobile ? 2 : 2;
 const pointSize = mobile ? 4 : 4;
 const borderRadius = mobile ? 4 : 4;
-const basePadding = mobile ? [30, 20, 50, 20] : [40, 20, 60, 20]; // 双Y轴需要左右padding，但横向图例不需要太多右侧空间，减少左右padding让图表居中
+const basePadding = mobile ? [25, 15, 45, 15] : [30, 15, 50, 15]; // 减少padding，让图表更大，减少留白
 
 const rawData = [
     { type: '界面缺陷', value: 120 },
@@ -319,6 +319,7 @@ new DualAxes('chart-basic', {
     xField: 'type',
     yField: ['value', 'percent'],
     padding: basePadding,
+    appendPadding: [0, 0, 0, 0], // 不添加额外padding，让图表占满空间
     geometryOptions: [
         {
             geometry: 'column',
