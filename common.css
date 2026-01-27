@@ -1770,7 +1770,7 @@ a:hover {
 .x-field-label {
     position: absolute;
     bottom: 6px; /* X轴底部位置 */
-    right: 12px; /* X轴右下角位置 */
+    right: 8px; /* X轴右下角位置，更靠右 */
     left: auto;
     background: var(--gray-100);
     color: var(--text-secondary);
@@ -2086,7 +2086,7 @@ a:hover {
     
     /* X轴字段标签 - 移动端位置 */
     .x-field-label {
-        right: 8px; /* 移动端：X轴右下角 */
+        right: 6px; /* 移动端：X轴右下角，更靠右 */
         left: auto;
         bottom: 4px;
     }
