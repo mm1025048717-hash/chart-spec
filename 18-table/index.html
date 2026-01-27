@@ -357,10 +357,12 @@
         /* 移动端适配 - 保持下拉样式但调整位置 */
         @media (max-width: 768px) {
             .filter-modal {
-                right: auto;
-                left: 0;
-                min-width: 260px;
+                min-width: 300px;
                 max-width: calc(100vw - 24px);
+            }
+            .filter-modal.positioned {
+                left: 12px !important;
+                right: auto !important;
             }
             .filter-panel {
                 max-height: 75vh;
