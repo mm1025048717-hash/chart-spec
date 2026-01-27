@@ -1408,6 +1408,8 @@ a:hover {
     position: relative;
     height: var(--chart-height-md);
     padding: 12px;
+    /* 右侧额外padding，为图例留出空间，避免遮挡图表数据 */
+    padding-right: 160px; /* 为图例预留空间（140px max-width + 20px margin） */
     background: var(--bg-primary);
     overflow: hidden;
     width: 100%;
