@@ -190,9 +190,9 @@ a:hover {
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 40px 24px;
-    /* 确保内容居中，左右边距平衡 */
-    padding-left: max(24px, calc((100% - var(--content-max-width)) / 2 + 24px));
-    padding-right: max(24px, calc((100% - var(--content-max-width)) / 2 + 24px));
+    /* 确保内容居中，左右边距平衡，避免过于靠左 */
+    padding-left: max(24px, calc((100vw - var(--content-max-width)) / 2));
+    padding-right: max(24px, calc((100vw - var(--content-max-width)) / 2));
 }
 
 /* Sidebar Styling */
@@ -713,6 +713,8 @@ a:hover {
     max-width: var(--content-max-width);
     margin-left: auto;
     margin-right: auto;
+    /* 确保规范区块居中，左右边距平衡 */
+    width: 100%;
 }
 
 .spec-title {
