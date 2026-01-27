@@ -282,7 +282,7 @@
                     </button>
                 </div>
             </div>
-            <div class="chart-body sm">
+            <div class="chart-body sm" style="overflow: visible; padding: 20px;">
                 <div id="chart-rose" style="width: 100%; height: 100%;"></div>
             </div>
             <div class="chart-code-panel" id="code-rose">
@@ -291,8 +291,15 @@
     data,
     xField: 'type',
     yField: 'value',
-    radius: 0.9,
+    radius: 0.75, // 减小半径，为外部标签留出空间
+    appendPadding: 30, // 增加外部padding，确保标签完全显示
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
+    label: {
+        type: 'outer',
+        content: '{name}',
+        style: { fontSize: 11 },
+        autoRotate: false, // 保持水平显示
+    },
 }).render();</pre>
             </div>
         </div>
@@ -364,8 +371,18 @@ new Rose('chart-rose', {
     xField: 'type',
     yField: 'value',
     seriesField: 'type',
-    radius: mobile ? 0.88 : 0.9,
+    radius: mobile ? 0.7 : 0.75, // 减小半径，为外部标签留出空间
+    appendPadding: mobile ? 20 : 30, // 增加外部padding，确保标签完全显示
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#E86452', '#945FB9'],
+    label: {
+        type: 'outer',
+        content: '{name}',
+        style: { 
+            fontSize: mobile ? 10 : 11,
+            fill: '#1D1D1F',
+        },
+        autoRotate: false, // 禁用自动旋转，保持水平显示
+    },
     legend: false, // 禁用内置图例，使用自定义横向图例，与环形图保持一致
 }).render();
 
