@@ -258,7 +258,7 @@
                     </button>
                 </div>
             </div>
-            <div class="chart-body sm" style="position: relative; overflow: visible;">
+            <div class="chart-body sm" style="position: relative; overflow: visible; padding: 20px;">
                 <div id="chart-outer" style="width: 100%; height: 100%;"></div>
             </div>
             <div class="chart-code-panel" id="code-outer">
@@ -363,14 +363,25 @@ new G2Plot.Pie('chart-outer', {
     data,
     angleField: 'value',
     colorField: 'type',
-    radius: mobile ? 0.6 : 0.65, // 移动端进一步减小外半径，为外部标签留出更多空间
+    radius: mobile ? 0.55 : 0.6, // 进一步减小外半径，为外部标签留出更多空间
     innerRadius: mobile ? innerRadius - 0.08 : innerRadius - 0.05,  // 移动端增大内径，给中心文字更多空间
+    appendPadding: mobile ? 20 : 30, // 增加外部padding，为外部标签留出空间，避免文字超出
     color: ['#5B8FF9', '#5AD8A6', '#F6BD16', '#945FB9'],
     label: {
         type: 'spider',
-        labelHeight: mobile ? 16 : 20, // 移动端减小标签高度，让标签更紧凑
+        labelHeight: mobile ? 24 : 28, // 增加标签高度，让标签之间有更多间距，避免重叠
         content: '{name}\n{percentage}',
-        style: { fontSize: labelFontSize, fill: '#86868B' },
+        style: { 
+            fontSize: labelFontSize, 
+            fill: '#86868B',
+            textAlign: 'left', // 左对齐，避免文字位置混乱
+        },
+        labelLine: {
+            style: {
+                lineWidth: 1,
+                stroke: '#D9D9D9',
+            },
+        },
     },
     statistic: {
         title: {
