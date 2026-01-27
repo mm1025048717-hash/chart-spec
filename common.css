@@ -1679,11 +1679,14 @@ a:hover {
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end; /* 横向布局时面板靠右 */
-    max-width: none;
+    max-width: calc(100% - 16px); /* 限制最大宽度，避免超出容器 */
     top: 4px; /* 进一步上移，避免遮挡图表顶部 */
-    right: 4px; /* 进一步右移，避免遮挡图表右侧 */
+    right: 8px; /* 增加右边距，避免被截断 */
+    left: auto;
     z-index: 0; /* 降低z-index，确保不遮挡图表 */
     pointer-events: none; /* 禁用交互，避免遮挡图表交互 */
+    padding: 6px 10px; /* 减少内边距，让图例更紧凑 */
+    font-size: 10px; /* 稍微减小字体，让图例更紧凑 */
 }
 
 /* 横向布局时，图例项内文字仍左对齐 */
