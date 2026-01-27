@@ -162,11 +162,36 @@
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
+            cursor: move;
+            user-select: none;
+        }
+        .filter-panel-header:active {
+            cursor: grabbing;
         }
         .filter-panel-title {
             font-size: 12px;
             font-weight: 500;
             color: #1D1D1F;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-panel-drag-handle {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #86868B;
+            cursor: grab;
+            flex-shrink: 0;
+        }
+        .filter-panel-drag-handle:active {
+            cursor: grabbing;
+        }
+        .filter-panel-drag-handle svg {
+            width: 100%;
+            height: 100%;
         }
         .filter-panel-close {
             background: none;
@@ -182,6 +207,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
         .filter-panel-close:hover {
             color: #1D1D1F;
@@ -498,8 +524,20 @@
                     <!-- 筛选下拉面板 -->
                     <div class="filter-modal" id="filterModal" onclick="event.stopPropagation()">
                         <div class="filter-panel">
-                            <div class="filter-panel-header">
-                                <div class="filter-panel-title">筛选</div>
+                            <div class="filter-panel-header" id="filterPanelHeader">
+                                <div class="filter-panel-title">
+                                    <div class="filter-panel-drag-handle">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="9" cy="5" r="1"></circle>
+                                            <circle cx="9" cy="12" r="1"></circle>
+                                            <circle cx="9" cy="19" r="1"></circle>
+                                            <circle cx="15" cy="5" r="1"></circle>
+                                            <circle cx="15" cy="12" r="1"></circle>
+                                            <circle cx="15" cy="19" r="1"></circle>
+                                        </svg>
+                                    </div>
+                                    筛选
+                                </div>
                                 <button class="filter-panel-close" onclick="closeFilterPanel()">×</button>
                             </div>
                             <div class="filter-panel-body">
@@ -991,24 +1029,26 @@ function toggleFilterPanel(event) {
     if (modal.classList.contains('show')) {
         modal.classList.remove('show', 'positioned');
     } else {
-        // 计算按钮位置
+        // 计算按钮位置 - 紧贴按钮
         if (btn) {
             const rect = btn.getBoundingClientRect();
             const isMobile = window.innerWidth <= 768;
             
             if (isMobile) {
-                // 移动端：左侧对齐
-                modal.style.top = (rect.bottom + 8) + 'px';
-                modal.style.left = '12px';
+                // 移动端：左侧对齐，紧贴按钮
+                modal.style.top = (rect.bottom + 4) + 'px';
+                modal.style.left = rect.left + 'px';
                 modal.style.right = 'auto';
             } else {
-                // PC端：右侧对齐
-                modal.style.top = (rect.bottom + 8) + 'px';
+                // PC端：右侧对齐，紧贴按钮
+                modal.style.top = (rect.bottom + 4) + 'px';
                 modal.style.right = (window.innerWidth - rect.right) + 'px';
                 modal.style.left = 'auto';
             }
         }
         modal.classList.add('show', 'positioned');
+        hasBeenDragged = false; // 重置拖拽状态
+        initDragFilter();
     }
 }
 
@@ -1272,42 +1312,38 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// 窗口滚动或调整大小时重新计算位置
-window.addEventListener('scroll', function() {
-    const modal = document.getElementById('filterModal');
-    if (modal && modal.classList.contains('show')) {
-        const btn = document.querySelector('.filter-unified-btn');
-        if (btn) {
-            const rect = btn.getBoundingClientRect();
-            const isMobile = window.innerWidth <= 768;
-            
-            modal.style.top = (rect.bottom + 8) + 'px';
-            if (isMobile) {
-                modal.style.left = '12px';
-                modal.style.right = 'auto';
-            } else {
-                modal.style.right = (window.innerWidth - rect.right) + 'px';
-                modal.style.left = 'auto';
-            }
-        }
-    }
-}, true);
+// 记录是否被拖拽过
+let hasBeenDragged = false;
 
+// 窗口调整大小时，如果面板被拖拽过，保持在视口内；否则重新定位
 window.addEventListener('resize', function() {
     const modal = document.getElementById('filterModal');
     if (modal && modal.classList.contains('show')) {
-        const btn = document.querySelector('.filter-unified-btn');
-        if (btn) {
-            const rect = btn.getBoundingClientRect();
-            const isMobile = window.innerWidth <= 768;
+        if (hasBeenDragged) {
+            // 如果被拖拽过，确保仍在视口内
+            const rect = modal.getBoundingClientRect();
+            const maxX = window.innerWidth - modal.offsetWidth;
+            const maxY = window.innerHeight - modal.offsetHeight;
             
-            modal.style.top = (rect.bottom + 8) + 'px';
-            if (isMobile) {
-                modal.style.left = '12px';
-                modal.style.right = 'auto';
-            } else {
-                modal.style.right = (window.innerWidth - rect.right) + 'px';
-                modal.style.left = 'auto';
+            if (rect.left < 0) modal.style.left = '0px';
+            if (rect.top < 0) modal.style.top = '0px';
+            if (rect.left > maxX) modal.style.left = maxX + 'px';
+            if (rect.top > maxY) modal.style.top = maxY + 'px';
+        } else {
+            // 如果没有被拖拽，重新定位到按钮下方
+            const btn = document.querySelector('.filter-unified-btn');
+            if (btn) {
+                const btnRect = btn.getBoundingClientRect();
+                const isMobile = window.innerWidth <= 768;
+                
+                modal.style.top = (btnRect.bottom + 4) + 'px';
+                if (isMobile) {
+                    modal.style.left = btnRect.left + 'px';
+                    modal.style.right = 'auto';
+                } else {
+                    modal.style.right = (window.innerWidth - btnRect.right) + 'px';
+                    modal.style.left = 'auto';
+                }
             }
         }
     }
@@ -1319,6 +1355,77 @@ document.addEventListener('keydown', function(e) {
         closeFilterPanel();
     }
 });
+
+// 拖拽筛选面板
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+let panelStartX = 0;
+let panelStartY = 0;
+
+function initDragFilter() {
+    const header = document.getElementById('filterPanelHeader');
+    const modal = document.getElementById('filterModal');
+    
+    if (!header || !modal) return;
+    
+    // 移除旧的监听器（如果存在）
+    header.removeEventListener('mousedown', startDrag);
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('mouseup', stopDrag);
+    
+    // 添加新的监听器
+    header.addEventListener('mousedown', startDrag);
+    
+    function startDrag(e) {
+        // 如果点击的是关闭按钮，不触发拖拽
+        if (e.target.closest('.filter-panel-close')) {
+            return;
+        }
+        
+        isDragging = true;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        
+        const rect = modal.getBoundingClientRect();
+        panelStartX = rect.left;
+        panelStartY = rect.top;
+        
+        modal.style.transition = 'none';
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', stopDrag);
+        e.preventDefault();
+    }
+    
+    function onDrag(e) {
+        if (!isDragging) return;
+        
+        const deltaX = e.clientX - dragStartX;
+        const deltaY = e.clientY - dragStartY;
+        
+        const newX = panelStartX + deltaX;
+        const newY = panelStartY + deltaY;
+        
+        // 限制在视口内
+        const maxX = window.innerWidth - modal.offsetWidth;
+        const maxY = window.innerHeight - modal.offsetHeight;
+        
+        modal.style.left = Math.max(0, Math.min(newX, maxX)) + 'px';
+        modal.style.top = Math.max(0, Math.min(newY, maxY)) + 'px';
+        modal.style.right = 'auto';
+        
+        hasBeenDragged = true;
+    }
+    
+    function stopDrag() {
+        if (isDragging) {
+            isDragging = false;
+            modal.style.transition = '';
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', stopDrag);
+        }
+    }
+}
 
 // 切换代码面板
 function toggleCode(id, btn) {
