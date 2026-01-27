@@ -1449,6 +1449,7 @@ a:hover {
 .chart-body.sm { height: var(--chart-height-sm); }
 .chart-body.md { height: var(--chart-height-md); }
 .chart-body.lg { height: var(--chart-height-lg); }
+.chart-body.xl { height: 450px; } /* 超大型图表，用于桑基图等复杂图表 */
 
 @media (max-width: 768px) {
     .chart-body {
@@ -2011,6 +2012,7 @@ a:hover {
         padding-right: 8px;
         overflow: visible;
     }
+    .chart-body.xl { height: 400px; } /* 移动端超大型图表 */
     .chart-body.lg { height: 360px; } /* 移动端大型图表 */
     .chart-body.md { height: 300px; } /* 移动端中型图表 */
     .chart-body.sm { height: 240px; } /* 移动端小型图表 */
