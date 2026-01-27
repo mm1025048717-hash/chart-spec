@@ -15,15 +15,15 @@
         .chart-type-badge .icon { font-size: 20px; }
         .chart-type-badge .text { font-size: 14px; color: #595959; font-weight: 500; }
         
-        /* 统一筛选按钮 */
+        /* 统一筛选按钮 - 白色风格 */
         .filter-unified-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
             padding: 6px 14px;
-            background: #5B8FF9;
-            color: white;
-            border: none;
+            background: white;
+            color: #1D1D1F;
+            border: 1px solid #E8E8E8;
             border-radius: 6px;
             font-size: 12px;
             font-weight: 500;
@@ -32,16 +32,30 @@
             position: relative;
         }
         .filter-unified-btn:hover {
-            background: #409CFF;
+            background: #F5F5F5;
+            border-color: #D1D1D1;
         }
         .filter-unified-btn.active {
-            background: #0051D4;
+            background: #F5F5F5;
+            border-color: #5B8FF9;
+            color: #5B8FF9;
+        }
+        .filter-unified-btn svg {
+            stroke: #1D1D1F;
+        }
+        .filter-unified-btn.active svg {
+            stroke: #5B8FF9;
         }
         .filter-unified-btn .filter-count {
-            background: rgba(255, 255, 255, 0.3);
+            background: #F0F0F0;
+            color: #86868B;
             padding: 2px 6px;
             border-radius: 10px;
             font-size: 10px;
+        }
+        .filter-unified-btn.active .filter-count {
+            background: #E6F2FF;
+            color: #5B8FF9;
         }
         
         /* 筛选按钮容器 - 用于定位下拉面板 */
@@ -74,14 +88,16 @@
             background: #F0F0F0;
         }
         .demo-table th.filterable::after {
-            content: '🔽';
+            content: '▼';
             margin-left: 6px;
-            font-size: 10px;
-            opacity: 0.5;
-            transition: opacity 0.2s ease;
+            font-size: 9px;
+            color: #86868B;
+            opacity: 0.4;
+            transition: all 0.2s ease;
         }
         .demo-table th.filterable:hover::after {
-            opacity: 1;
+            opacity: 0.7;
+            color: #1D1D1F;
         }
         .demo-table td {
             cursor: pointer;
@@ -103,6 +119,7 @@
             height: 100%;
             background: #5B8FF9;
             border-radius: 3px;
+            transition: width 0.3s ease;
         }
         
         /* 筛选下拉面板 - 极简设计 */
@@ -183,6 +200,9 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+        .filter-dimension-title::before {
+            display: none;
+        }
         
         .filter-options {
             display: flex;
@@ -201,11 +221,11 @@
         }
         .filter-option:hover {
             border-color: #5B8FF9;
-            background: #F0F7FF;
+            background: #E6F2FF;
         }
         .filter-option.selected {
-            background: #5B8FF9;
-            color: white;
+            background: #E6F2FF;
+            color: #5B8FF9;
             border-color: #5B8FF9;
         }
         
@@ -224,7 +244,7 @@
         .filter-range-input:focus {
             outline: none;
             border-color: #5B8FF9;
-            box-shadow: 0 0 0 2px rgba(91, 143, 249, 0.1);
+            box-shadow: 0 0 0 2px rgba(91, 143, 249, 0.08);
         }
         .filter-range span {
             font-size: 11px;
@@ -256,14 +276,17 @@
             color: #1D1D1F;
         }
         .filter-btn-apply {
-            background: #5B8FF9;
-            color: white;
+            background: white;
+            color: #5B8FF9;
+            border: 1px solid #5B8FF9;
         }
         .filter-btn-apply:hover {
-            background: #409CFF;
+            background: #E6F2FF;
+            border-color: #409CFF;
+            color: #409CFF;
         }
         
-        /* 已选筛选标签 */
+        /* 已选筛选标签 - 白色风格 */
         .filter-tags {
             display: flex;
             flex-wrap: wrap;
@@ -275,21 +298,29 @@
             align-items: center;
             gap: 6px;
             padding: 4px 10px;
-            background: #F0F7FF;
-            color: #5B8FF9;
+            background: white;
+            color: #1D1D1F;
+            border: 1px solid #E8E8E8;
             border-radius: 12px;
             font-size: 11px;
             font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .filter-tag:hover {
+            border-color: #5B8FF9;
+            background: #F5F5F5;
         }
         .filter-tag-remove {
             cursor: pointer;
             font-size: 12px;
             line-height: 1;
-            opacity: 0.7;
+            opacity: 0.5;
             transition: opacity 0.2s ease;
+            color: #86868B;
         }
         .filter-tag-remove:hover {
             opacity: 1;
+            color: #1D1D1F;
         }
         
         /* 移动端适配 - 保持下拉样式但调整位置 */
