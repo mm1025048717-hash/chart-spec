@@ -190,6 +190,9 @@ a:hover {
     max-width: var(--content-max-width);
     margin: 0 auto;
     padding: 40px 24px;
+    /* 确保内容居中，左右边距平衡 */
+    padding-left: max(24px, calc((100% - var(--content-max-width)) / 2 + 24px));
+    padding-right: max(24px, calc((100% - var(--content-max-width)) / 2 + 24px));
 }
 
 /* Sidebar Styling */
@@ -805,6 +808,9 @@ a:hover {
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    /* 确保图表容器居中，左右边距平衡 */
+    padding-left: 0;
+    padding-right: 0;
 }
 
 @media (max-width: 768px) {
