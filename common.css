@@ -1679,9 +1679,9 @@ a:hover {
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end; /* 横向布局时面板靠右 */
-    max-width: calc(100% - 16px); /* 限制最大宽度，避免超出容器 */
+    max-width: calc(100% - 40px); /* 限制最大宽度，为右侧单位标签留出空间，避免超出容器 */
     top: 4px; /* 进一步上移，避免遮挡图表顶部 */
-    right: 8px; /* 增加右边距，避免被截断 */
+    right: 32px; /* 增加右边距，为右Y轴单位标签留出空间，避免被截断 */
     left: auto;
     z-index: 0; /* 降低z-index，确保不遮挡图表 */
     pointer-events: none; /* 禁用交互，避免遮挡图表交互 */
@@ -1770,7 +1770,7 @@ a:hover {
 }
 .axis-unit.y-right { 
     top: 6px; /* 图表顶部，与Y轴顶部对齐 */
-    right: 8px; /* 右Y轴右侧，紧贴Y轴标签，位置更合适 */
+    right: 30px; /* 右Y轴右侧，留出足够空间避免被切断，不遮挡图表标签 */
     left: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }
@@ -2096,7 +2096,7 @@ a:hover {
     /* 坐标轴单位 */
     .axis-unit { font-size: 8px; }
     .axis-unit.y-left { left: 22px; top: 4px; } /* 移动端：根据padding[3]=20px，单位标签在Y轴标签右侧 */
-    .axis-unit.y-right { right: 22px; top: 4px; left: auto; } /* 移动端：右Y轴单位标签在右上角 */
+    .axis-unit.y-right { right: 28px; top: 4px; left: auto; } /* 移动端：右Y轴单位标签在右上角，留出空间避免被切断 */
     
     /* X轴字段标签 - 移动端位置 */
     .x-field-label {
