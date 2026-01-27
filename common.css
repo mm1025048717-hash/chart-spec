@@ -1417,8 +1417,8 @@ a:hover {
     position: relative;
     height: var(--chart-height-md);
     padding: 12px;
-    /* 右侧额外padding，为图例留出空间，避免遮挡图表数据 */
-    padding-right: 160px; /* 为图例预留空间（140px max-width + 20px margin） */
+    /* 右侧padding减少，让图表向右扩展，右边缘对齐到"按地区"标签位置 */
+    padding-right: 80px; /* 减少右侧padding，让图表更大更靠右（图例在right: 12px，图表扩展到接近图例） */
     background: var(--bg-primary);
     overflow: hidden;
     width: 100%;
