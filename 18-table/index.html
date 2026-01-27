@@ -309,42 +309,33 @@
             color: #409CFF;
         }
         
-        /* 已选筛选标签 - 极简白色风格 */
+        /* 已选筛选 - 简洁单行文本显示 */
         .filter-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 8px;
+            display: none; /* 默认隐藏标签 */
         }
-        .filter-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 2px 6px;
-            background: white;
-            color: #1D1D1F;
-            border: 1px solid #E8E8E8;
-            border-radius: 4px;
-            font-size: 9px;
-            font-weight: 400;
-            transition: all 0.2s ease;
-        }
-        .filter-tag:hover {
-            border-color: #D1D1D1;
-            background: #FAFAFA;
-        }
-        .filter-tag-remove {
-            cursor: pointer;
+        
+        /* 筛选摘要 - 简洁文本显示 */
+        .filter-summary {
+            display: none;
+            margin-top: 6px;
             font-size: 10px;
-            line-height: 1;
-            opacity: 0.4;
-            transition: opacity 0.2s ease;
             color: #86868B;
-            margin-left: 2px;
+            line-height: 1.4;
         }
-        .filter-tag-remove:hover {
-            opacity: 0.8;
+        .filter-summary.has-filters {
+            display: block;
+        }
+        .filter-summary-text {
             color: #1D1D1F;
+        }
+        .filter-summary-clear {
+            color: #5B8FF9;
+            cursor: pointer;
+            margin-left: 4px;
+            text-decoration: none;
+        }
+        .filter-summary-clear:hover {
+            text-decoration: underline;
         }
         
         /* 移动端适配 - 保持下拉样式但调整位置 */
@@ -565,7 +556,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="filter-tags" id="filterTags"></div>
+                <!-- 筛选摘要 - 简洁文本显示 -->
+                <div class="filter-summary" id="filterSummary">
+                    <span class="filter-summary-text" id="filterSummaryText"></span>
+                    <a href="javascript:void(0)" class="filter-summary-clear" onclick="resetFilters()">清除</a>
+                </div>
+                <div class="filter-tags" id="filterTags" style="display: none;"></div>
             </div>
         </div>
         <div style="padding: 0;">
@@ -990,42 +986,35 @@ function resetFilters() {
     updateFilterUI();
 }
 
-// 更新筛选UI（标签和计数）
+// 更新筛选UI（简洁文本摘要）
 function updateFilterUI() {
-    const filterTags = document.getElementById('filterTags');
+    const filterSummary = document.getElementById('filterSummary');
+    const filterSummaryText = document.getElementById('filterSummaryText');
     const filterCount = document.getElementById('filterCount');
     let count = 0;
-    let tagsHTML = '';
+    let summaryParts = [];
     
     // 地区筛选
-    filterState.region.forEach(value => {
-        count++;
-        tagsHTML += `<div class="filter-tag">
-            <span>地区: ${value}</span>
-            <span class="filter-tag-remove" onclick="removeFilter('region', '${value}')">×</span>
-        </div>`;
-    });
+    if (filterState.region.length > 0) {
+        count += filterState.region.length;
+        const regions = filterState.region.join('、');
+        summaryParts.push(`地区: ${regions}`);
+    }
     
     // 环比筛选
-    filterState.change.forEach(value => {
-        count++;
-        const label = value === 'positive' ? '上升' : '下降';
-        tagsHTML += `<div class="filter-tag">
-            <span>环比: ${label}</span>
-            <span class="filter-tag-remove" onclick="removeFilter('change', '${value}')">×</span>
-        </div>`;
-    });
+    if (filterState.change.length > 0) {
+        count += filterState.change.length;
+        const changes = filterState.change.map(v => v === 'positive' ? '上升' : '下降').join('、');
+        summaryParts.push(`环比: ${changes}`);
+    }
     
     // 销售额范围
     if (filterState.sales.min !== null || filterState.sales.max !== null) {
         count++;
         const min = filterState.sales.min !== null ? `¥${filterState.sales.min.toLocaleString()}` : '';
         const max = filterState.sales.max !== null ? `¥${filterState.sales.max.toLocaleString()}` : '';
-        const range = min && max ? `${min} - ${max}` : min || max;
-        tagsHTML += `<div class="filter-tag">
-            <span>销售额: ${range}</span>
-            <span class="filter-tag-remove" onclick="removeFilter('sales', null)">×</span>
-        </div>`;
+        const range = min && max ? `${min}-${max}` : min || max;
+        summaryParts.push(`销售额: ${range}`);
     }
     
     // 完成率范围
@@ -1033,11 +1022,8 @@ function updateFilterUI() {
         count++;
         const min = filterState.completion.min !== null ? `${filterState.completion.min}%` : '';
         const max = filterState.completion.max !== null ? `${filterState.completion.max}%` : '';
-        const range = min && max ? `${min} - ${max}` : min || max;
-        tagsHTML += `<div class="filter-tag">
-            <span>完成率: ${range}</span>
-            <span class="filter-tag-remove" onclick="removeFilter('completion', null)">×</span>
-        </div>`;
+        const range = min && max ? `${min}-${max}` : min || max;
+        summaryParts.push(`完成率: ${range}`);
     }
     
     // 进度范围
@@ -1045,14 +1031,18 @@ function updateFilterUI() {
         count++;
         const min = filterState.progress.min !== null ? `${filterState.progress.min}%` : '';
         const max = filterState.progress.max !== null ? `${filterState.progress.max}%` : '';
-        const range = min && max ? `${min} - ${max}` : min || max;
-        tagsHTML += `<div class="filter-tag">
-            <span>进度: ${range}</span>
-            <span class="filter-tag-remove" onclick="removeFilter('progress', null)">×</span>
-        </div>`;
+        const range = min && max ? `${min}-${max}` : min || max;
+        summaryParts.push(`进度: ${range}`);
     }
     
-    filterTags.innerHTML = tagsHTML;
+    // 更新摘要文本
+    if (summaryParts.length > 0) {
+        filterSummaryText.textContent = summaryParts.join(' | ');
+        filterSummary.classList.add('has-filters');
+    } else {
+        filterSummary.classList.remove('has-filters');
+    }
+    
     filterCount.textContent = count;
     
     // 更新按钮状态
