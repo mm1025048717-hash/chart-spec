@@ -69,12 +69,14 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 13px;
+            background: white;
         }
         .demo-table th, .demo-table td {
             padding: 12px 16px;
             text-align: left;
             border-bottom: 1px solid #E8E8E8;
             position: relative;
+            background: white;
         }
         .demo-table th {
             background: #FAFAFA;
@@ -83,6 +85,9 @@
             cursor: pointer;
             user-select: none;
             transition: background 0.2s ease;
+        }
+        .demo-table tbody tr {
+            background: white;
         }
         .demo-table th:hover {
             background: #F0F0F0;
@@ -585,7 +590,7 @@
             </div>
         </div>
         <div style="padding: 0;">
-            <table class="demo-table">
+            <table class="demo-table" id="dataTable">
                 <thead>
                     <tr>
                         <th class="filterable" data-dimension="region" onclick="openFilterPanel('region')">地区</th>
@@ -595,57 +600,14 @@
                         <th class="filterable" data-dimension="progress" onclick="openFilterPanel('progress')">进度</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td onclick="openFilterPanel('region', '华东区')">华东区</td>
-                        <td onclick="openFilterPanel('sales', '3650000')">¥ 3,650,000</td>
-                        <td class="trend-up" onclick="openFilterPanel('change', 'positive')">↑ 12.5%</td>
-                        <td onclick="openFilterPanel('completion', '92')">92%</td>
-                        <td onclick="openFilterPanel('progress', '92')">
-                            <div class="progress-bar">
-                                <div class="progress-bar-fill" style="width: 92%;"></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td onclick="openFilterPanel('region', '华北区')">华北区</td>
-                        <td onclick="openFilterPanel('sales', '2808000')">¥ 2,808,000</td>
-                        <td class="trend-up" onclick="openFilterPanel('change', 'positive')">↑ 8.2%</td>
-                        <td onclick="openFilterPanel('completion', '85')">85%</td>
-                        <td onclick="openFilterPanel('progress', '85')">
-                            <div class="progress-bar">
-                                <div class="progress-bar-fill" style="width: 85%;"></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td onclick="openFilterPanel('region', '华南区')">华南区</td>
-                        <td onclick="openFilterPanel('sales', '2408000')">¥ 2,408,000</td>
-                        <td class="trend-down" onclick="openFilterPanel('change', 'negative')">↓ 3.1%</td>
-                        <td onclick="openFilterPanel('completion', '78')">78%</td>
-                        <td onclick="openFilterPanel('progress', '78')">
-                            <div class="progress-bar">
-                                <div class="progress-bar-fill" style="width: 78%;"></div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td onclick="openFilterPanel('region', '华中区')">华中区</td>
-                        <td onclick="openFilterPanel('sales', '2236000')">¥ 2,236,000</td>
-                        <td class="trend-up" onclick="openFilterPanel('change', 'positive')">↑ 5.8%</td>
-                        <td onclick="openFilterPanel('completion', '81')">81%</td>
-                        <td onclick="openFilterPanel('progress', '81')">
-                            <div class="progress-bar">
-                                <div class="progress-bar-fill" style="width: 81%;"></div>
-                            </div>
-                        </td>
-                    </tr>
+                <tbody id="tableBody">
+                    <!-- 数据将通过JavaScript动态生成 -->
                 </tbody>
             </table>
         </div>
         <!-- 汇总栏 -->
-        <div class="chart-summary">
-            总计：<span class="summary-item"><span class="summary-label">总销售额</span><span class="summary-value blue">¥ 11,102,000</span></span>，<span class="summary-item"><span class="summary-label">平均完成率</span><span class="summary-value green">84%</span></span>
+        <div class="chart-summary" id="tableSummary">
+            总计：<span class="summary-item"><span class="summary-label">总销售额</span><span class="summary-value blue" id="totalSales">¥ 0</span></span>，<span class="summary-item"><span class="summary-label">平均完成率</span><span class="summary-value green" id="avgCompletion">0%</span></span>
         </div>
         <!-- 代码面板 -->
         <div class="chart-code-panel" id="code-table">
@@ -860,6 +822,23 @@ if (typeof ChartSpec !== 'undefined') {
     ChartSpec.init();
 }
 
+// 初始化表格数据
+document.addEventListener('DOMContentLoaded', function() {
+    renderTable(tableData);
+});
+
+// 表格原始数据
+const tableData = [
+    { region: '华东区', sales: 3650000, change: 12.5, completion: 92, progress: 92 },
+    { region: '华北区', sales: 2808000, change: 8.2, completion: 85, progress: 85 },
+    { region: '华南区', sales: 2408000, change: -3.1, completion: 78, progress: 78 },
+    { region: '华中区', sales: 2236000, change: 5.8, completion: 81, progress: 81 },
+    { region: '西南区', sales: 1980000, change: 15.3, completion: 88, progress: 88 },
+    { region: '西北区', sales: 1650000, change: -2.5, completion: 75, progress: 75 },
+    { region: '东北区', sales: 1420000, change: 6.7, completion: 82, progress: 82 },
+    { region: '港澳台', sales: 980000, change: 10.2, completion: 90, progress: 90 }
+];
+
 // 筛选状态
 let filterState = {
     region: [],
@@ -868,6 +847,97 @@ let filterState = {
     completion: { min: null, max: null },
     progress: { min: null, max: null }
 };
+
+// 渲染表格
+function renderTable(data = tableData) {
+    const tbody = document.getElementById('tableBody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        const changeClass = row.change >= 0 ? 'trend-up' : 'trend-down';
+        const changeSymbol = row.change >= 0 ? '↑' : '↓';
+        const changeValue = Math.abs(row.change);
+        
+        tr.innerHTML = `
+            <td onclick="openFilterPanel('region', '${row.region}')">${row.region}</td>
+            <td onclick="openFilterPanel('sales', '${row.sales}')">¥ ${row.sales.toLocaleString()}</td>
+            <td class="${changeClass}" onclick="openFilterPanel('change', '${row.change >= 0 ? 'positive' : 'negative'}')">${changeSymbol} ${changeValue}%</td>
+            <td onclick="openFilterPanel('completion', '${row.completion}')">${row.completion}%</td>
+            <td onclick="openFilterPanel('progress', '${row.progress}')">
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: ${row.progress}%;"></div>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    
+    // 更新汇总
+    updateSummary(data);
+}
+
+// 更新汇总信息
+function updateSummary(data) {
+    if (data.length === 0) {
+        document.getElementById('totalSales').textContent = '¥ 0';
+        document.getElementById('avgCompletion').textContent = '0%';
+        return;
+    }
+    
+    const totalSales = data.reduce((sum, row) => sum + row.sales, 0);
+    const avgCompletion = data.reduce((sum, row) => sum + row.completion, 0) / data.length;
+    
+    document.getElementById('totalSales').textContent = `¥ ${totalSales.toLocaleString()}`;
+    document.getElementById('avgCompletion').textContent = `${Math.round(avgCompletion)}%`;
+}
+
+// 筛选数据
+function filterData() {
+    let filtered = [...tableData];
+    
+    // 地区筛选
+    if (filterState.region.length > 0) {
+        filtered = filtered.filter(row => filterState.region.includes(row.region));
+    }
+    
+    // 环比筛选
+    if (filterState.change.length > 0) {
+        filtered = filtered.filter(row => {
+            if (filterState.change.includes('positive') && row.change >= 0) return true;
+            if (filterState.change.includes('negative') && row.change < 0) return true;
+            return false;
+        });
+    }
+    
+    // 销售额范围筛选
+    if (filterState.sales.min !== null) {
+        filtered = filtered.filter(row => row.sales >= filterState.sales.min);
+    }
+    if (filterState.sales.max !== null) {
+        filtered = filtered.filter(row => row.sales <= filterState.sales.max);
+    }
+    
+    // 完成率范围筛选
+    if (filterState.completion.min !== null) {
+        filtered = filtered.filter(row => row.completion >= filterState.completion.min);
+    }
+    if (filterState.completion.max !== null) {
+        filtered = filtered.filter(row => row.completion <= filterState.completion.max);
+    }
+    
+    // 进度范围筛选
+    if (filterState.progress.min !== null) {
+        filtered = filtered.filter(row => row.progress >= filterState.progress.min);
+    }
+    if (filterState.progress.max !== null) {
+        filtered = filtered.filter(row => row.progress <= filterState.progress.max);
+    }
+    
+    return filtered;
+}
 
 // 切换筛选面板（下拉式）
 function toggleFilterPanel(event) {
@@ -986,6 +1056,10 @@ function toggleFilterOption(element, dimension, value) {
     }
     
     updateFilterUI();
+    
+    // 实时应用筛选（可选，如果希望实时筛选可以取消注释）
+    // const filteredData = filterData();
+    // renderTable(filteredData);
 }
 
 // 应用筛选
@@ -1008,8 +1082,9 @@ function applyFilters() {
     updateFilterUI();
     closeFilterPanel();
     
-    // 这里可以添加实际的筛选逻辑
-    console.log('应用筛选:', filterState);
+    // 应用筛选并更新表格
+    const filteredData = filterData();
+    renderTable(filteredData);
 }
 
 // 重置筛选
@@ -1036,6 +1111,9 @@ function resetFilters() {
     document.getElementById('progressMax').value = '';
     
     updateFilterUI();
+    
+    // 重置表格显示
+    renderTable(tableData);
 }
 
 // 更新筛选UI（简洁文本摘要）
