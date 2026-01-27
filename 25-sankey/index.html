@@ -122,7 +122,7 @@
                 <div class="filter-summary" id="filterSummary"></div>
             </div>
         </div>
-        <div class="chart-body xl" style="position: relative; padding-right: 160px; padding-left: 20px;">
+        <div class="chart-body xl" style="position: relative; padding-right: 160px; padding-left: 10px;">
             <!-- 图例统一在右侧对齐，不遮挡图表 -->
             <!-- 显示主要节点类型的颜色对应关系 -->
             <div class="custom-legend">
@@ -310,7 +310,7 @@ new G2Plot.Sankey('chart-basic', {
     sourceField: 'source',
     targetField: 'target',
     weightField: 'value',
-    padding: mobile ? [20, 140, 20, 20] : [30, 160, 30, 20], // 减少左右padding，让图表更大并居中，右侧为图例留空间
+    padding: mobile ? [20, 140, 20, 10] : [30, 160, 30, 10], // 减少左侧padding，让图表向右移动，右侧为图例留空间
     nodeStyle: {
         opacity: 1,
         fillOpacity: 1,
