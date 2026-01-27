@@ -1763,7 +1763,7 @@ a:hover {
 }
 .axis-unit.y-right { 
     top: 6px; /* 图表顶部，与Y轴顶部对齐 */
-    right: 28px; /* 右Y轴左侧，紧贴Y轴标签（双轴图右侧Y轴） */
+    right: 12px; /* 右Y轴右侧，紧贴Y轴标签（双轴图右侧Y轴） */
     left: auto;
     z-index: 5; /* 降低z-index，避免遮挡图表 */
 }

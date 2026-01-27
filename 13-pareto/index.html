@@ -126,10 +126,11 @@
             <!-- 右Y轴单位标签 - 右上角 -->
             <div class="axis-unit y-right">%</div>
             <!-- 图例统一在右侧对齐，不遮挡图表 -->
+            <!-- 注意：Y轴单位标签已显示"缺陷数"和"%"，图例只显示数据系列名称 -->
             <div class="custom-legend horizontal">
                 <div class="legend-item">
                     <span class="legend-icon-circle" style="background: #5B8FF9;"></span>
-                    <span class="legend-text">缺陷数</span>
+                    <span class="legend-text">柱状图</span>
                 </div>
                 <div class="legend-item">
                     <span class="legend-icon-line-dot" style="background: #5AD8A6;"></span>
@@ -341,7 +342,7 @@ new DualAxes('chart-basic', {
             title: null, // 移除title，使用自定义axis-unit标签
             label: { 
                 style: { fontSize: fontSize },
-                formatter: (v) => (v * 100).toFixed(0) + '%',
+                formatter: (v) => (v * 100).toFixed(0), // 移除'%'，因为右上角已有单位标签"%"
             },
         },
     },
