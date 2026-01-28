@@ -146,6 +146,8 @@
                     <div class="params-divider"></div>
                     <div class="params-row"><span class="label">颜色</span><span class="value">#5B8FF9</span></div>
                     <div class="params-row"><span class="label">高度比例</span><span class="value highlight">0.5</span></div>
+                    <div class="params-row"><span class="label">最大厚度</span><span class="value">48px</span></div>
+                    <div class="params-row"><span class="label">最小厚度</span><span class="value">8px</span></div>
                     <div class="params-row"><span class="label">圆角</span><span class="value">[0,4,4,0]</span></div>
                 </div>
                 <!-- 坐标轴说明 - 左下 -->
@@ -169,6 +171,8 @@
     padding: [20, 60, 30, 100],
     color: '#5B8FF9',
     barWidthRatio: 0.5,
+    maxBarWidth: 48,
+    minBarWidth: 8,
     barStyle: { radius: [0, 4, 4, 0] },
     xAxis: {
         label: { style: { fontSize: 11, fill: '#86868B' } },
@@ -233,6 +237,16 @@
                 <td><code>0.5</code></td>
                 <td>条形高度占比</td>
             </tr>
+            <tr>
+                <td><code>maxBarWidth</code></td>
+                <td><code>48</code></td>
+                <td>最大厚度（像素）</td>
+            </tr>
+            <tr>
+                <td><code>minBarWidth</code></td>
+                <td><code>8</code></td>
+                <td>最小厚度（像素）</td>
+            </tr>
             <tr class="highlight">
                 <td><code>barStyle.radius</code></td>
                 <td><code>[0, 4, 4, 0]</code></td>
@@ -285,6 +299,8 @@
     padding: [<span class="number">30</span>, <span class="number">20</span>, <span class="number">40</span>, <span class="number">150</span>],
     color: <span class="string">'#5B8FF9'</span>,
     barWidthRatio: <span class="number">0.5</span>,
+    maxBarWidth: <span class="number">48</span>,  <span class="comment">// 最大厚度</span>
+    minBarWidth: <span class="number">8</span>,   <span class="comment">// 最小厚度</span>
     barStyle: {
         radius: [<span class="number">0</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">0</span>],  <span class="comment">// 右侧圆角</span>
     },
@@ -333,6 +349,8 @@ new Bar('chart-basic', {
     padding: basePadding,
     color: '#5B8FF9',
     barWidthRatio: barWidthRatio,
+    maxBarWidth: 48,
+    minBarWidth: 8,
     barStyle: { radius: [0, borderRadius, borderRadius, 0] },
     label: {
         position: 'right',

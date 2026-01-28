@@ -67,10 +67,14 @@ yAxis: {
 | yField | string | 分类字段（垂直方向） |
 | color | `#5B8FF9` | 主题蓝 |
 | barWidthRatio | `0.5` | 条形高度占比 |
+| maxBarWidth | `48` | 最大厚度（像素） |
+| minBarWidth | `8` | 最小厚度（像素） |
 | radius | `[0, 4, 4, 0]` | 右侧圆角（与柱状图不同） |
 
 ```javascript
 barWidthRatio: 0.5,
+maxBarWidth: 48,
+minBarWidth: 8,
 barStyle: {
     radius: [0, 4, 4, 0],
 },
@@ -137,6 +141,8 @@ const config = {
     padding: [30, 50, 40, 200],
     color: '#5B8FF9',
     barWidthRatio: 0.5,
+    maxBarWidth: 48,
+    minBarWidth: 8,
     barStyle: { radius: [0, 4, 4, 0] },
     label: {
         position: 'right',
