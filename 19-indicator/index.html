@@ -114,12 +114,12 @@
         .trend-down { color: #CF1322; }
         .indicator-card .trend-flat { color: #8C8C8C; }
 
-        /* 红绿黄语义：全部浅色（浅底、无竖线），用于主图、带趋势、三态、数据格式、组合等多场景 */
+        /* 红绿黄语义：与基础卡统一 8px 圆角、同一阴影公式，仅背景/边框色区分（用于带趋势、三态、数据格式、组合等场景） */
         .indicator-card.semantic-good {
             background: linear-gradient(135deg, #FAFFFA 0%, #F6FFED 100%);
             border: 1px solid #D9F7BE;
-            border-radius: 10px;
-            box-shadow: 0 1px 4px rgba(56,158,13,0.06);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .indicator-card.semantic-good .label { color: #595959; }
         .indicator-card.semantic-good .value { color: #262626; }
@@ -127,8 +127,8 @@
         .indicator-card.semantic-warning {
             background: linear-gradient(135deg, #FFFEF5 0%, #FFFBE6 100%);
             border: 1px solid #FFE58F;
-            border-radius: 10px;
-            box-shadow: 0 1px 4px rgba(212,136,6,0.06);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .indicator-card.semantic-warning .label { color: #595959; }
         .indicator-card.semantic-warning .value { color: #262626; }
@@ -136,8 +136,8 @@
         .indicator-card.semantic-alert {
             background: linear-gradient(135deg, #FFF8F8 0%, #FFF1F0 100%);
             border: 1px solid #FFCCC7;
-            border-radius: 10px;
-            box-shadow: 0 1px 4px rgba(207,19,34,0.06);
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
         .indicator-card.semantic-alert .label { color: #595959; }
         .indicator-card.semantic-alert .value { color: #262626; }
@@ -156,38 +156,19 @@
         }
         @media (max-width: 768px) { .variant-row { grid-template-columns: 1fr; } }
 
-        /* 紧凑样式：现代渐变图标 + 精致阴影与排版 */
+        /* 紧凑样式：无图标，纯文字 */
         .indicator-compact {
             background: #fff;
             border-radius: 12px;
             padding: 24px;
             display: flex;
             align-items: center;
-            gap: 20px;
             border: 1px solid rgba(0,0,0,0.06);
             box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: box-shadow 0.2s ease;
         }
         .indicator-compact:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.06);
-        }
-        .indicator-compact .icon-box {
-            width: 56px; height: 56px;
-            border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 26px;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .indicator-compact .icon-box.icon-blue {
-            background: linear-gradient(135deg, #1677FF 0%, #4096FF 50%, #69B1FF 100%);
-        }
-        .indicator-compact .icon-box.icon-green {
-            background: linear-gradient(135deg, #389E0D 0%, #52C41A 50%, #73D13D 100%);
-        }
-        .indicator-compact .icon-box.icon-amber {
-            background: linear-gradient(135deg, #D46B08 0%, #FA8C16 50%, #FFA940 100%);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
         }
         .indicator-compact .content { flex: 1; min-width: 0; }
         .indicator-compact .label {
@@ -224,7 +205,7 @@
         .indicator-with-sub {
             background: #fff;
             border-radius: 8px;
-            padding: 20px;
+            padding: 26px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             border: 1px solid #F0F0F0;
             max-width: 500px;
@@ -322,12 +303,13 @@
         .scenario-badge.combo { background: #E6F7FF; color: #1890FF; }
         .scenario-description { font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
         .scenario-example {
-            background: #FAFAFA;
-            padding: 12px 16px;
+            background: #FAFBFC;
+            padding: 16px 20px;
             margin-top: 12px;
-            border-radius: 4px;
+            border-radius: 8px;
+            border: 1px solid #F0F0F0;
         }
-        .scenario-example-title { font-size: 15px; margin-bottom: 6px; }
+        .scenario-example-title { font-size: 15px; margin-bottom: 8px; font-weight: 600; color: #262626; }
         .scenario-example-content { font-size: 14px; color: #8C8C8C; line-height: 1.6; }
 
         /* 统一操作按钮（归因、添加到看板、修改查询、重试等） */
@@ -437,12 +419,12 @@
         }
         .scenario-example {
             background: #FAFBFC;
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 16px 20px;
             border: 1px solid #F0F0F0;
         }
         .scenario-example-title {
-            font-size: 15px; font-weight: 600; color: #262626; margin-bottom: 10px;
+            font-size: 15px; font-weight: 600; color: #262626; margin-bottom: 8px;
             letter-spacing: 0.02em;
         }
         .scenario-example-content {
@@ -613,22 +595,22 @@
             </div>
     </div>
     <div class="indicator-grid" id="qa-card-main">
-        <div class="indicator-card semantic-good">
+        <div class="indicator-card">
             <div class="label">总销售额</div>
             <div class="value"><span class="value-num">8,846</span><span class="suffix">万元</span></div>
             <div class="trend trend-up">↑ 12.5% 较上月</div>
         </div>
-        <div class="indicator-card semantic-good">
+        <div class="indicator-card">
             <div class="label">订单数</div>
             <div class="value"><span class="value-num">12,580</span><span class="suffix">单</span></div>
             <div class="trend trend-up">↑ 8.2% 较上月</div>
         </div>
-        <div class="indicator-card semantic-warning">
+        <div class="indicator-card">
             <div class="label">客单价</div>
             <div class="value"><span class="value-num">703</span><span class="suffix">元</span></div>
             <div class="trend trend-down">↓ 3.1% 较上月</div>
         </div>
-        <div class="indicator-card semantic-alert">
+        <div class="indicator-card">
             <div class="label">退货率</div>
             <div class="value"><span class="value-num">2.3</span><span class="suffix">%</span></div>
             <div class="trend trend-up">↑ 0.5% 较上月</div>
@@ -667,21 +649,18 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="spec-title">紧凑样式</div>
     <div class="variant-row">
         <div class="indicator-compact">
-            <div class="icon-box icon-blue">💰</div>
             <div class="content">
                 <div class="label">总收入</div>
                 <div class="value"><span class="value-prefix">¥</span><span class="value-num">12.8</span><span class="value-unit">万</span></div>
             </div>
         </div>
         <div class="indicator-compact">
-            <div class="icon-box icon-green">👥</div>
             <div class="content">
                 <div class="label">新增用户</div>
                 <div class="value"><span class="value-num">2,340</span></div>
             </div>
         </div>
         <div class="indicator-compact">
-            <div class="icon-box icon-amber">📦</div>
             <div class="content">
                 <div class="label">订单数</div>
                 <div class="value"><span class="value-num">1,580</span></div>
