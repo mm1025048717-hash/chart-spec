@@ -114,11 +114,10 @@
         .trend-down { color: #CF1322; }
         .indicator-card .trend-flat { color: #8C8C8C; }
 
-        /* 红绿黄语义：轻量样式（浅底+左侧色条），用于主图、带趋势、数据格式、组合等多场景 */
+        /* 红绿黄语义：轻量样式（浅底、无竖线），用于主图、带趋势、数据格式、组合等多场景 */
         .indicator-card.semantic-good {
             background: linear-gradient(135deg, #F6FFED 0%, #F0FFF0 100%);
             border: 1px solid #D9F7BE;
-            border-left: 4px solid #389E0D;
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(56,158,13,0.1);
         }
@@ -126,7 +125,6 @@
         .indicator-card.semantic-warning {
             background: linear-gradient(135deg, #FFFBE6 0%, #FFFDE7 100%);
             border: 1px solid #FFE58F;
-            border-left: 4px solid #D48806;
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(212,136,6,0.1);
         }
@@ -134,7 +132,6 @@
         .indicator-card.semantic-alert {
             background: linear-gradient(135deg, #FFF1F0 0%, #FFF2F0 100%);
             border: 1px solid #FFCCC7;
-            border-left: 4px solid #CF1322;
             border-radius: 10px;
             box-shadow: 0 2px 6px rgba(207,19,34,0.1);
         }
@@ -276,10 +273,9 @@
         .scenario-description { font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
         .scenario-example {
             background: #FAFAFA;
-            border-left: 3px solid #1890FF;
             padding: 12px 16px;
             margin-top: 12px;
-            border-radius: 0 4px 4px 0;
+            border-radius: 4px;
         }
         .scenario-example-title { font-size: 13px; margin-bottom: 6px; }
         .scenario-example-content { font-size: 13px; color: #8C8C8C; line-height: 1.6; }
