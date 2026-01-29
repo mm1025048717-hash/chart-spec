@@ -244,6 +244,33 @@
             font-size: 13px;
             line-height: 1.6;
         }
+        .indicator-with-sub .sub-indicators.grid4 { grid-template-columns: repeat(4, 1fr); }
+        @media (max-width: 600px) { .indicator-with-sub .sub-indicators.grid4 { grid-template-columns: repeat(2, 1fr); } }
+        .indicator-card.alert-style {
+            background: linear-gradient(135deg, #FFF1F0 0%, #FFCCC7 100%);
+            border-top-color: #E86452;
+        }
+        .indicator-card.alert-style .value, .indicator-card.alert-style .trend { color: #CF1322; }
+        .indicator-card.excellent-style {
+            background: linear-gradient(135deg, #E6F7F0 0%, #B7EBD4 100%);
+            border-top-color: #52C41A;
+        }
+        .indicator-card.excellent-style .value { color: #08979C; }
+        .indicator-card.excellent-style .trend { color: #52C41A; }
+        .indicator-card.empty-style {
+            background: #FAFAFA;
+            border: 1px dashed #D9D9D9;
+        }
+        .indicator-card.empty-style .value { font-size: 16px; color: #8C8C8C; font-weight: 500; }
+        .indicator-card .trend-flat { color: #6B7280; }
+        .scenario-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 16px; }
+        @media (max-width: 900px) { .scenario-row { grid-template-columns: 1fr; } }
+        .scenario-block { margin-bottom: 24px; }
+        .scenario-block .spec-title { margin-bottom: 8px; }
+        .kpi-group-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px; }
+        @media (max-width: 768px) { .kpi-group-row { grid-template-columns: repeat(2, 1fr); } }
+        .kpi-group-row .indicator-card { padding: 16px; }
+        .kpi-group-row .indicator-card .value { font-size: 22px; }
     </style>
 </head>
 <body>
@@ -456,6 +483,203 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- 参考 kpi-card-scenarios (1).tsx：基础KPI、带趋势、带子指标(年度Q1-Q4) -->
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge">基础场景</span> 基础KPI卡片</div>
+    <div class="scenario-description">最简单的KPI展示，只显示指标名称和数值</div>
+    <div class="scenario-example">
+        <div class="scenario-example-title">适用场景：</div>
+        <div class="scenario-example-content">适用于简单的数值展示场景，如"本月销售额是多少"</div>
+    </div>
+    <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">销售额</div><div class="value">¥1,250<span class="suffix">万</span>元</div></div></div>
+</div>
+
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge">基础场景</span> 带趋势的KPI卡片</div>
+    <div class="scenario-description">显示数值的同时展示同比增长或环比增长趋势</div>
+    <div class="scenario-example">
+        <div class="scenario-example-title">适用场景：</div>
+        <div class="scenario-example-content">适用于需要展示变化趋势的场景，如"近3个月销售额如何"</div>
+    </div>
+    <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">近3个月销售额</div><div class="value">¥2,500<span class="suffix">万</span>元</div><div class="trend trend-up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div><button class="btn-view-code" style="margin-top:10px;font-size:12px;">归因</button></div>
+</div>
+
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge">基础场景</span> 带子指标的KPI卡片（年度季度分解）</div>
+    <div class="scenario-description">主指标下方展示多个子指标，如季度分解</div>
+    <div class="scenario-example">
+        <div class="scenario-example-title">适用场景：</div>
+        <div class="scenario-example-content">适用于需要展示详细分解的场景，如"今年销售额是多少，各季度如何"</div>
+    </div>
+    <div style="margin-top: 16px;">
+        <div class="indicator-with-sub">
+            <div class="main-label">2024年销售额</div>
+            <div class="main-value">¥3,856<span class="main-suffix">万</span>元</div>
+            <div class="trend trend-up">↑ 19.8% 较2023年增长</div>
+            <div class="sub-indicators grid4">
+                <div class="sub-item"><div class="sub-label">Q1</div><div class="sub-value">850万</div></div>
+                <div class="sub-item"><div class="sub-label">Q2</div><div class="sub-value">920万</div></div>
+                <div class="sub-item"><div class="sub-label">Q3</div><div class="sub-value">980万</div></div>
+                <div class="sub-item"><div class="sub-label">Q4</div><div class="sub-value">1106万</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 数据展示：单日、短期 -->
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge" style="background:#E6F7F0;color:#389E6F;">数据展示</span> 单日数据 / 短期数据</div>
+    <div class="scenario-row">
+        <div class="scenario-block">
+            <div class="scenario-description">查询单日数据时，不展示季度分解和同比</div>
+            <div class="scenario-example"><div class="scenario-example-content">如"2024年12月1日销售额"</div></div>
+            <div class="indicator-card blue"><div class="label">2024年12月1日销售额</div><div class="value">¥13<span class="suffix">万</span>元</div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">查询短期数据（少于7天）时，不展示季度分解</div>
+            <div class="scenario-example"><div class="scenario-example-content">如"最近3天销售额"</div></div>
+            <div class="indicator-card blue"><div class="label">最近3天销售额</div><div class="value">¥38.5<span class="suffix">万</span>元</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- 空状态：无数据、连接失败、权限不足 -->
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge" style="background:#FFF7E6;color:#D48806;">空状态</span> 无数据 / 连接失败 / 权限不足</div>
+    <div class="scenario-row">
+        <div class="scenario-block">
+            <div class="scenario-description">查询结果为空时，显示友好的空状态提示</div>
+            <div class="indicator-card empty-style"><div class="label">2030年销售额</div><div class="value">暂无数据</div><div style="margin-top:12px;"><button class="filter-btn filter-btn-reset" style="font-size:12px;">修改查询条件</button></div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">数据源连接失败时，显示错误提示和重试选项</div>
+            <div class="indicator-card empty-style"><div class="label">销售额</div><div class="value">数据源连接失败</div><div style="margin-top:12px;"><button class="filter-btn filter-btn-reset" style="font-size:12px;">重试</button> <button class="filter-btn filter-btn-apply" style="font-size:12px;">检查连接</button></div></div>
+        </div>
+        <div class="scenario-block" style="grid-column: span 2;">
+            <div class="scenario-description">用户没有权限查看数据时，显示权限提示</div>
+            <div class="indicator-card empty-style" style="max-width:400px;"><div class="label">销售额</div><div class="value">暂无数据访问权限</div><div style="margin-top:12px;"><button class="filter-btn filter-btn-reset" style="font-size:12px;">联系管理员</button></div></div>
+        </div>
+    </div>
+</div>
+
+<!-- 交互：归因、添加到看板 -->
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge" style="background:#F9F0FF;color:#722ED1;">交互场景</span> 带归因分析入口 / 添加到看板</div>
+    <div class="scenario-row">
+        <div class="scenario-block">
+            <div class="scenario-description">显示"归因"按钮，点击后可进行归因分析</div>
+            <div class="indicator-card yellow"><div class="label">12月份销售额</div><div class="value">¥880<span class="suffix">万</span>元</div><div class="trend trend-down">↓5.2% 环比下降</div></div><button class="btn-view-code" style="margin-top:10px;font-size:12px;">归因</button>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">显示"添加"按钮，可将KPI卡片添加到数据看板</div>
+            <div class="indicator-card blue"><div class="label">销售额</div><div class="value">¥1,250<span class="suffix">万</span>元</div></div><button class="btn-view-code" style="margin-top:10px;font-size:12px;">添加到看板</button>
+        </div>
+    </div>
+</div>
+
+<!-- 预警与优秀表现 -->
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge" style="background:#FFF1F0;color:#E86452;">预警</span> 数值过低 / <span class="scenario-badge" style="background:#E6F7F0;color:#52C41A;">优秀表现</span> 数值优秀</div>
+    <div class="scenario-row">
+        <div class="scenario-block">
+            <div class="scenario-description">当数值低于预警阈值时，显示红色渐变背景</div>
+            <div class="indicator-card alert-style"><div class="label">本月销售额</div><div class="value">¥500<span class="suffix">万</span>元</div><div class="trend trend-down">↓15.2% 环比 &nbsp; ↓8.5% 同比</div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">当数值超过优秀阈值时，显示绿色渐变背景</div>
+            <div class="indicator-card excellent-style"><div class="label">本月销售额</div><div class="value">¥1,500<span class="suffix">万</span>元</div><div class="trend trend-up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- 特殊：带目标值；数据格式：百分比、大数值；趋势：下降、持平 -->
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge" style="background:#FFF7E6;color:#FA8C16;">特殊场景</span> 带目标值的KPI卡片</div>
+    <div class="scenario-description">显示当前值和目标值，展示完成进度</div>
+    <div class="scenario-example"><div class="scenario-example-content">适用于需要展示目标完成情况的场景，如"本月销售额目标完成情况"</div></div>
+    <div style="margin-top: 16px;">
+        <div class="indicator-with-sub">
+            <div class="main-label">本月销售额目标</div>
+            <div class="main-value">¥1,200<span class="main-suffix">万</span>元</div>
+            <div class="trend trend-up">↑85% 完成度</div>
+            <div class="sub-indicators grid4">
+                <div class="sub-item"><div class="sub-label">目标</div><div class="sub-value">1400万</div></div>
+                <div class="sub-item"><div class="sub-label">完成</div><div class="sub-value">1200万</div></div>
+                <div class="sub-item"><div class="sub-label">进度</div><div class="sub-value">85%</div></div>
+                <div class="sub-item"><div class="sub-label">剩余</div><div class="sub-value">200万</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="spec-section variant-section">
+    <div class="spec-title">数据格式：百分比类型 / 大数值；趋势：下降 / 持平</div>
+    <div class="scenario-row">
+        <div class="scenario-block">
+            <div class="scenario-description">百分比类型，如转化率、增长率</div>
+            <div class="indicator-card green"><div class="label">转化率</div><div class="value">3.2<span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比 &nbsp; ↑1.2% 同比</div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">大数值，自动格式化（万、亿）</div>
+            <div class="indicator-card blue"><div class="label">累计销售额</div><div class="value">¥38.56<span class="suffix">亿</span>元</div><div class="trend trend-up">↑2.5% 环比 &nbsp; ↑19.8% 同比</div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">下降趋势，使用红色箭头和文字</div>
+            <div class="indicator-card red"><div class="label">11月销售额</div><div class="value">¥820<span class="suffix">万</span>元</div><div class="trend trend-down">↓8.5% 环比 &nbsp; ↓5.2% 同比</div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">持平或小幅波动</div>
+            <div class="indicator-card blue"><div class="label">本月销售额</div><div class="value">¥1,000<span class="suffix">万</span>元</div><div class="trend trend-flat">→ 0.2% 环比 &nbsp; → 0.5% 同比</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- 行业场景：电商GMV、财务营收、营销ROI、HR考勤 -->
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge">行业场景</span> 电商GMV / 财务营收 / 营销ROI / HR考勤</div>
+    <div class="scenario-row">
+        <div class="scenario-block">
+            <div class="scenario-description">电商GMV（成交总额）</div>
+            <div class="indicator-with-sub">
+                <div class="main-label">GMV成交总额</div>
+                <div class="main-value">¥1.25<span class="main-suffix">亿</span></div>
+                <div class="trend trend-up">↑28.5% 环比</div>
+                <div class="sub-indicators grid4">
+                    <div class="sub-item"><div class="sub-label">订单数</div><div class="sub-value">12.5万</div></div>
+                    <div class="sub-item"><div class="sub-label">客单价</div><div class="sub-value">¥100</div></div>
+                    <div class="sub-item"><div class="sub-label">转化率</div><div class="sub-value">3.2%</div></div>
+                    <div class="sub-item"><div class="sub-label">复购率</div><div class="sub-value">45%</div></div>
+                </div>
+            </div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">财务营业收入</div>
+            <div class="indicator-card blue"><div class="label">营业收入</div><div class="value">¥5,000<span class="suffix">万</span>元</div><div class="trend trend-up">↑15.8% 环比 &nbsp; ↑22.3% 同比</div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">营销ROI（投资回报率）</div>
+            <div class="indicator-card green"><div class="label">营销ROI</div><div class="value">3.5<span class="suffix">倍</span></div><div class="trend trend-up">↑0.8 环比 &nbsp; ↑1.2 同比</div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">HR考勤与绩效</div>
+            <div class="indicator-card green"><div class="label">出勤率</div><div class="value">96.5<span class="suffix">%</span></div><div class="trend trend-up">↑1.2% 环比 &nbsp; ↑2.5% 同比</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- 组合场景：KPI卡片组 -->
+<div class="spec-section variant-section">
+    <div class="spec-title"><span class="scenario-badge">组合场景</span> KPI卡片组</div>
+    <div class="scenario-description">多个KPI卡片并排展示，适用于多指标对比</div>
+    <div class="scenario-example"><div class="scenario-example-content">适用于多指标同时查看的场景</div></div>
+    <div class="kpi-group-row">
+        <div class="indicator-card blue"><div class="label">销售额</div><div class="value">¥1,250万</div><div class="trend trend-up">↑15.2% 环比</div></div>
+        <div class="indicator-card green"><div class="label">订单量</div><div class="value">1.25万<span class="suffix">单</span></div><div class="trend trend-up">↑8.5% 环比</div></div>
+        <div class="indicator-card yellow"><div class="label">利润</div><div class="value">¥250万</div><div class="trend trend-down">↓2.1% 环比</div></div>
+        <div class="indicator-card green"><div class="label">转化率</div><div class="value">3.2<span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比</div></div>
     </div>
 </div>
 
