@@ -2418,7 +2418,7 @@ a:hover {
     background: var(--gray-400);
 }
 
-/* ==================== 问答演示（所有图表复用） ==================== */
+/* ==================== 问答演示（所有图表复用）- ChatBI风格 ==================== */
 .btn-qa-demo {
     display: inline-flex; align-items: center; gap: 4px;
     padding: 6px 12px; font-size: 12px; border-radius: 4px;
@@ -2433,15 +2433,62 @@ a:hover {
 .qa-demo-overlay.show { display: block; }
 .qa-demo-modal {
     position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    background: #fff; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.15);
-    padding: 20px; max-width: 420px; width: 90%; z-index: 9999; display: none;
+    background: #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    padding: 0; max-width: 480px; width: 90%; z-index: 9999; display: none;
+    overflow: hidden;
 }
 .qa-demo-modal.show { display: block; }
-.qa-demo-modal .qa-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #262626; }
-.qa-demo-modal .qa-question { font-size: 13px; color: #1890FF; margin-bottom: 8px; padding: 8px 10px; background: #E6F7FF; border-radius: 4px; }
-.qa-demo-modal .qa-answer { font-size: 13px; color: #262626; line-height: 1.6; padding: 8px 10px; background: #FAFAFA; border-radius: 4px; }
-.qa-demo-modal .qa-close { margin-top: 14px; padding: 6px 16px; font-size: 12px; border: 1px solid #D9D9D9; background: #fff; border-radius: 4px; cursor: pointer; font-family: inherit; }
-.qa-demo-modal .qa-close:hover { border-color: #1890FF; color: #1890FF; }
+.qa-demo-modal .qa-header {
+    padding: 16px 20px; background: #F5F5F5; border-bottom: 1px solid #E8E8E8;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.qa-demo-modal .qa-title {
+    font-size: 14px; font-weight: 600; color: #262626;
+    display: flex; align-items: center; gap: 8px;
+}
+.qa-demo-modal .qa-title::before {
+    content: '💬'; font-size: 16px;
+}
+.qa-demo-modal .qa-close-btn {
+    width: 24px; height: 24px; border: none; background: transparent;
+    cursor: pointer; font-size: 18px; color: #8C8C8C; padding: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 4px;
+}
+.qa-demo-modal .qa-close-btn:hover { background: #E8E8E8; color: #262626; }
+.qa-demo-modal .qa-body {
+    padding: 20px; max-height: 60vh; overflow-y: auto;
+}
+.qa-demo-modal .qa-message {
+    margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px;
+}
+.qa-demo-modal .qa-message:last-child { margin-bottom: 0; }
+.qa-demo-modal .qa-question {
+    align-self: flex-end; max-width: 85%;
+    font-size: 14px; color: #fff; line-height: 1.5;
+    padding: 10px 14px; background: #1890FF;
+    border-radius: 12px 12px 0 12px; word-wrap: break-word;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(24,144,255,0.2);
+}
+.qa-demo-modal .qa-question::before {
+    content: '问：'; font-weight: 500; margin-right: 4px; opacity: 0.9;
+}
+.qa-demo-modal .qa-answer {
+    align-self: flex-start; max-width: 85%;
+    font-size: 14px; color: #262626; line-height: 1.6;
+    padding: 12px 14px; background: #F5F5F5;
+    border-radius: 0 12px 12px 12px; word-wrap: break-word;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.qa-demo-modal .qa-answer::before {
+    content: '答：'; font-weight: 500; color: #1890FF; margin-right: 4px;
+}
+.qa-demo-modal .qa-answer .qa-highlight {
+    color: #1890FF; font-weight: 500; background: rgba(24,144,255,0.1);
+    padding: 0 2px; border-radius: 2px;
+}
 /* 零部件旁的小问答入口 */
 .qa-demo-trigger {
     display: inline-flex; align-items: center; justify-content: center;
