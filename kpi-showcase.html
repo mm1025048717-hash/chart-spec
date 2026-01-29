@@ -100,14 +100,13 @@
         .scenario-badge.special { background: #FFF7E6; color: #FA8C16; }
         .scenario-badge.industry { background: #E6F7FF; color: #1890FF; }
         .scenario-badge.format { background: #F0F5FF; color: #2F54EB; }
-        .scenario-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: #262626; }
+        .scenario-card-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; color: #262626; line-height: 1.4; }
         .scenario-desc { color: #8C8C8C; font-size: 13px; line-height: 1.5; margin-bottom: 12px; }
         .scenario-example-box {
             background: #FAFAFA;
-            border-left: 3px solid #1890FF;
             padding: 12px 14px;
             margin-bottom: 16px;
-            border-radius: 0 4px 4px 0;
+            border-radius: 4px;
         }
         .scenario-example-title { font-weight: 600; color: #262626; margin-bottom: 6px; font-size: 13px; }
         .scenario-example-content { color: #8C8C8C; font-size: 13px; line-height: 1.5; }
@@ -131,9 +130,6 @@
             padding: 20px;
             max-width: 100%;
             border: 1px solid #F0F0F0;
-            border-top-width: 3px;
-            border-top-style: solid;
-            border-top-color: #E8E8E8;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             font-family: inherit;
         }
@@ -215,7 +211,6 @@
         .kpi-card.empty-style {
             background: #FAFAFA;
             border: 1px dashed #D9D9D9;
-            border-top: 3px solid #FAAD14;
         }
         .kpi-card.empty-style .kpi-value { font-size: 15px; color: #8C8C8C; font-weight: 400; }
         .kpi-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
@@ -338,7 +333,7 @@
             card.dataset.index = index;
             card.innerHTML = `
                 <span class="scenario-badge ${s.badge}">${s.badgeText}</span>
-                <div class="scenario-title">${s.title}</div>
+                <h3 class="scenario-card-title">${s.title}</h3>
                 <div class="scenario-desc">${s.desc}</div>
                 <div class="scenario-example-box">
                     <div class="scenario-example-title">适用场景：</div>

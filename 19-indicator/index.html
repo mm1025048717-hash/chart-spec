@@ -39,15 +39,13 @@
             .indicator-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; margin: 12px 0; }
         }
 
-        /* 卡片统一：圆角8px、内边距20px、阴影 0 1px 2px、顶部色带3px（业务规则） */
+        /* 卡片统一：圆角8px、内边距20px、阴影 0 1px 2px，无顶部横杠 */
         .indicator-card {
             background: #fff;
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             border: 1px solid #F0F0F0;
-            border-top-width: 3px;
-            border-top-style: solid;
             position: relative;
             overflow: hidden;
         }
@@ -105,10 +103,6 @@
         .trend-down { color: #FF4D4F; }
         .indicator-card .trend-flat { color: #8C8C8C; }
 
-        .indicator-card.blue { border-top-color: #5B8FF9; }
-        .indicator-card.green { border-top-color: #52C41A; }
-        .indicator-card.yellow { border-top-color: #FAAD14; }
-        .indicator-card.red { border-top-color: #FF4D4F; }
 
         .variant-section { margin-top: 32px; }
         .variant-row {
@@ -146,7 +140,6 @@
             padding: 20px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             border: 1px solid #F0F0F0;
-            border-top: 3px solid #5B8FF9;
             max-width: 500px;
         }
         .indicator-with-sub .main-label {
@@ -246,19 +239,16 @@
         .kpi-action-btn.primary:hover { background: #40A9FF; border-color: #40A9FF; }
 
         .indicator-card.alert-style {
-            border-top-color: #FF4D4F;
             background: #FFF1F0;
         }
         .indicator-card.alert-style .value,
         .indicator-card.alert-style .trend { color: #CF1322; }
         .indicator-card.excellent-style {
-            border-top-color: #52C41A;
             background: #F6FFED;
         }
         .indicator-card.excellent-style .value { color: #389E0D; }
         .indicator-card.excellent-style .trend { color: #52C41A; }
         .indicator-card.warning-style {
-            border-top-color: #FAAD14;
             background: #FFFBE6;
         }
         .indicator-card.warning-style .value,
@@ -266,7 +256,6 @@
         .indicator-card.empty-style {
             background: #FAFAFA;
             border: 1px dashed #D9D9D9;
-            border-top: 3px solid #FAAD14;
         }
         .indicator-card.empty-style .value { font-size: 14px; color: #8C8C8C; font-weight: 400; }
         .indicator-card.empty-style .label { color: #8C8C8C; }
