@@ -2530,7 +2530,17 @@ a:hover {
     box-sizing: border-box;
 }
 .qa-demo-modal .qa-answer-card .kpi-card,
-.qa-demo-modal .qa-answer-card .kpi-group {
+.qa-demo-modal .qa-answer-card .kpi-group,
+.qa-demo-modal .qa-answer-card .indicator-card {
+    max-width: 100%; box-sizing: border-box;
+}
+.qa-demo-modal .qa-answer-card .indicator-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+}
+.qa-demo-modal .qa-answer-card .indicator-with-sub {
     max-width: 100%; box-sizing: border-box;
 }
 .qa-demo-modal .qa-answer-card .qa-demo-card-clone {

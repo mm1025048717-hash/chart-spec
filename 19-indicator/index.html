@@ -429,7 +429,7 @@
             </div>
             <div class="header-right">
                 <span class="chart-tag blue">指标卡</span>
-                <button type="button" class="btn-qa-demo" onclick="showQaDemo('2024年12月核心经营指标怎么样？', '总销售额 8,846万元 ↑12.5% 较上月；订单数 12,580单 ↑8.2%；客单价 703元 ↓3.1%；退货率 2.3% ↑0.5%。')">问答演示</button>
+                <button type="button" class="btn-qa-demo" onclick="showQaDemo('2024年12月核心经营指标怎么样？', '总销售额 8,846万元 ↑12.5% 较上月；订单数 12,580单 ↑8.2%；客单价 703元 ↓3.1%；退货率 2.3% ↑0.5%。见下方指标卡。', [], { cardSelector: '#qa-card-main' })">问答演示</button>
                 <button class="btn-view-code" onclick="toggleCode('code-indicator', this)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
                     Code
@@ -508,7 +508,7 @@
                 <div class="filter-summary" id="filterSummary"></div>
             </div>
     </div>
-    <div class="indicator-grid">
+    <div class="indicator-grid" id="qa-card-main">
         <div class="indicator-card blue">
             <div class="label">总销售额</div>
             <div class="value"><span class="value-num">8,846</span><span class="suffix">万元</span></div>
@@ -625,8 +625,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-title">适用场景：</div>
         <div class="scenario-example-content">适用于简单的数值展示场景，如"本月销售额是多少"</div>
     </div>
-    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额是多少？', '销售额 ¥1,250万元。')">问答演示</button></div>
-    <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万元</span></div></div></div>
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额是多少？', '销售额 ¥1,250万元。见下方指标卡。', [], { cardSelector: '#qa-card-basic1' })">问答演示</button></div>
+    <div id="qa-card-basic1" style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万元</span></div></div></div>
 </div>
 
 <div class="spec-section variant-section">
@@ -636,8 +636,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-title">适用场景：</div>
         <div class="scenario-example-content">适用于需要展示变化趋势的场景，如"近3个月销售额如何"</div>
     </div>
-    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('近3个月销售额如何？', '近3个月销售额 ¥2,500万元，环比↑15.2%，同比↑19.8%。可点击「归因」进行归因分析。')">问答演示</button></div>
-    <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">近3个月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">2,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div><button type="button" class="kpi-action-btn">归因</button></div>
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('近3个月销售额如何？', '近3个月销售额 ¥2,500万元，环比↑15.2%，同比↑19.8%。可点击「归因」进行归因分析。见下方指标卡。', [], { cardSelector: '#qa-card-trend' })">问答演示</button></div>
+    <div id="qa-card-trend" style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">近3个月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">2,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div><button type="button" class="kpi-action-btn">归因</button></div>
 </div>
 
 <div class="spec-section variant-section">
@@ -647,8 +647,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-title">适用场景：</div>
         <div class="scenario-example-content">适用于需要展示详细分解的场景，如"今年销售额是多少，各季度如何"</div>
     </div>
-    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('今年销售额是多少，各季度如何？', '2024年销售额 ¥3,856万元，较2023年增长19.8%。Q1 850万、Q2 920万、Q3 980万、Q4 1106万。')">问答演示</button></div>
-    <div style="margin-top: 16px;">
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('今年销售额是多少，各季度如何？', '2024年销售额 ¥3,856万元，较2023年增长19.8%。Q1 850万、Q2 920万、Q3 980万、Q4 1106万。见下方指标卡。', [], { cardSelector: '#qa-card-sub' })">问答演示</button></div>
+    <div id="qa-card-sub" style="margin-top: 16px;">
         <div class="indicator-with-sub">
             <div class="main-label">2024年销售额</div>
             <div class="main-value"><span class="value-prefix">¥</span><span class="value-num">3,856</span><span class="main-suffix">万元</span></div>
@@ -670,14 +670,14 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-block">
             <div class="scenario-description">查询单日数据时，不展示季度分解和同比</div>
             <div class="scenario-example"><div class="scenario-example-content">如"2024年12月1日销售额"</div></div>
-            <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('2024年12月1日销售额是多少？', '2024年12月1日销售额 ¥13万元。数据时间范围较短（单日），暂不展示季度分解。')">问答演示</button></div>
-            <div class="indicator-card blue"><div class="label">2024年12月1日销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">13</span><span class="suffix">万元</span></div></div>
+            <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('2024年12月1日销售额是多少？', '2024年12月1日销售额 ¥13万元。数据时间范围较短（单日），暂不展示季度分解。见下方指标卡。', [], { cardSelector: '#qa-card-day1' })">问答演示</button></div>
+            <div id="qa-card-day1" class="indicator-card blue"><div class="label">2024年12月1日销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">13</span><span class="suffix">万元</span></div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">查询短期数据（少于7天）时，不展示季度分解</div>
             <div class="scenario-example"><div class="scenario-example-content">如"最近3天销售额"</div></div>
-            <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('最近3天销售额是多少？', '最近3天销售额 ¥38.5万元。数据时间范围较短，暂不展示季度分解。')">问答演示</button></div>
-            <div class="indicator-card blue"><div class="label">最近3天销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">38.5</span><span class="suffix">万元</span></div></div>
+            <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('最近3天销售额是多少？', '最近3天销售额 ¥38.5万元。数据时间范围较短，暂不展示季度分解。见下方指标卡。', [], { cardSelector: '#qa-card-day3' })">问答演示</button></div>
+            <div id="qa-card-day3" class="indicator-card blue"><div class="label">最近3天销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">38.5</span><span class="suffix">万元</span></div></div>
         </div>
     </div>
 </div>
@@ -685,8 +685,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <!-- 空状态：无数据、连接失败、权限不足 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge empty">空状态</span> 无数据 / 连接失败 / 权限不足</div>
-    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('查询2030年销售额会怎样？', '2030年销售额暂无数据。建议：调整查询时间范围、检查数据源连接、联系管理员。可点击「修改查询条件」或「刷新数据」。')">问答演示</button></div>
-    <div class="scenario-row">
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('查询2030年销售额会怎样？', '2030年销售额暂无数据。建议：调整查询时间范围、检查数据源连接、联系管理员。可点击「修改查询条件」或「刷新数据」。见下方指标卡。', [], { cardSelector: '#qa-card-empty-wrap' })">问答演示</button></div>
+    <div id="qa-card-empty-wrap" class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">查询结果为空时，显示友好的空状态提示</div>
             <div class="indicator-card empty-style">
@@ -726,13 +726,13 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <!-- 交互：归因、添加到看板 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge interact">交互场景</span> 带归因分析入口 / 添加到看板</div>
-    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('12月份销售额环比怎么样？', '12月销售额 ¥880万元，环比下降5.2%。可点击「归因」进行归因分析。')">问答演示</button></div>
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('12月份销售额环比怎么样？', '12月销售额 ¥880万元，环比下降5.2%。可点击「归因」进行归因分析。见下方指标卡。', [], { cardSelector: '#qa-card-attribution' })">问答演示</button></div>
     <div class="scenario-row">
-        <div class="scenario-block">
+        <div id="qa-card-attribution" class="scenario-block">
             <div class="scenario-description">显示"归因"按钮，点击后可进行归因分析</div>
             <div class="indicator-card yellow"><div class="label">12月份销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">880</span><span class="suffix">万元</span></div><div class="trend trend-down">↓5.2% 环比下降</div></div><button type="button" class="kpi-action-btn">归因</button>
         </div>
-        <div class="scenario-block">
+        <div id="qa-card-add" class="scenario-block">
             <div class="scenario-description">显示"添加"按钮，可将KPI卡片添加到数据看板</div>
             <div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万元</span></div></div><button type="button" class="kpi-action-btn">添加到看板</button>
         </div>
@@ -742,8 +742,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <!-- 良好 / 警告 / 异常 三态 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge excellent">良好</span> 数值优秀 / <span class="scenario-badge warning">警告</span> 接近警戒 / <span class="scenario-badge alert">异常</span> 数值过低</div>
-    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额和客单价表现如何？', '良好：本月销售额 ¥1,500万，环比↑25.8%、同比↑32.5%。警告：客单价 ¥703元，环比↓3.1%。异常：若销售额仅¥500万且环比↓15.2%，则显示红色异常卡片。')">问答演示</button></div>
-    <div class="scenario-row cols3">
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额和客单价表现如何？', '良好：本月销售额 ¥1,500万，环比↑25.8%、同比↑32.5%。警告：客单价 ¥703元，环比↓3.1%。异常：若销售额仅¥500万且环比↓15.2%，则显示红色异常卡片。见下方指标卡。', [], { cardSelector: '#qa-card-three-state' })">问答演示</button></div>
+    <div id="qa-card-three-state" class="scenario-row cols3">
         <div class="scenario-block">
             <div class="scenario-description">良好（绿色）：正向指标增长≥5%或超过目标；负向指标下降≥5%或低于警戒线</div>
             <div class="indicator-card excellent-style"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>
@@ -784,8 +784,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="spec-title"><span class="scenario-badge special">特殊场景</span> 带目标值的KPI卡片</div>
     <div class="scenario-description">显示当前值和目标值，展示完成进度</div>
     <div class="scenario-example"><div class="scenario-example-content">适用于需要展示目标完成情况的场景，如"本月销售额目标完成情况"</div></div>
-    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额目标完成情况？', '本月销售额目标 ¥1,200万元，完成度85%。目标1400万、已完成1200万、进度85%、剩余200万。')">问答演示</button></div>
-    <div style="margin-top: 16px;">
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额目标完成情况？', '本月销售额目标 ¥1,200万元，完成度85%。目标1400万、已完成1200万、进度85%、剩余200万。见下方指标卡。', [], { cardSelector: '#qa-card-target' })">问答演示</button></div>
+    <div id="qa-card-target" style="margin-top: 16px;">
         <div class="indicator-with-sub">
             <div class="main-label">本月销售额目标</div>
             <div class="main-value"><span class="value-prefix">¥</span><span class="value-num">1,200</span><span class="main-suffix">万元</span></div>
@@ -802,8 +802,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 <div class="spec-section variant-section">
     <div class="spec-title">数据格式：百分比类型 / 大数值；趋势：下降 / 持平</div>
-    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('转化率、累计销售额、11月销售额怎么样？', '转化率 3.2%，环比↑0.5%。累计销售额 ¥38.56亿，环比↑2.5%。11月销售额 ¥820万，环比↓8.5%、同比↓5.2%。')">问答演示</button></div>
-    <div class="scenario-row">
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('转化率、累计销售额、11月销售额怎么样？', '转化率 3.2%，环比↑0.5%。累计销售额 ¥38.56亿，环比↑2.5%。11月销售额 ¥820万，环比↓8.5%、同比↓5.2%。见下方指标卡。', [], { cardSelector: '#qa-card-format' })">问答演示</button></div>
+    <div id="qa-card-format" class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">百分比类型，如转化率、增长率</div>
             <div class="indicator-card green"><div class="label">转化率</div><div class="value"><span class="value-num">3.2</span><span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比 &nbsp; ↑1.2% 同比</div></div>
@@ -826,8 +826,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <!-- 行业场景：电商GMV、财务营收、营销ROI、HR考勤 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge industry">行业场景</span> 电商GMV / 财务营收 / 营销ROI / HR考勤</div>
-    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('GMV、营业收入、营销ROI、出勤率是多少？', 'GMV成交总额 ¥1.25亿，环比↑28.5%。营业收入 ¥5,000万，环比↑15.8%。营销ROI 3.5倍，环比↑0.8。出勤率 96.5%，环比↑1.2%。')">问答演示</button></div>
-    <div class="scenario-row">
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('GMV、营业收入、营销ROI、出勤率是多少？', 'GMV成交总额 ¥1.25亿，环比↑28.5%。营业收入 ¥5,000万，环比↑15.8%。营销ROI 3.5倍，环比↑0.8。出勤率 96.5%，环比↑1.2%。见下方指标卡。', [], { cardSelector: '#qa-card-industry' })">问答演示</button></div>
+    <div id="qa-card-industry" class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">电商GMV（成交总额）</div>
             <div class="indicator-with-sub">
@@ -862,8 +862,8 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="spec-title"><span class="scenario-badge combo">组合场景</span> KPI卡片组</div>
     <div class="scenario-description">多个KPI卡片并排展示，适用于多指标对比</div>
     <div class="scenario-example"><div class="scenario-example-content">适用于多指标同时查看的场景</div></div>
-    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('帮我看看销售额和订单量', '销售额 ¥1,250万 ↑15.2% 环比；订单量 1.25万单 ↑8.5%；利润 ¥250万 ↓2.1%；转化率 3.2% ↑0.5%。')">问答演示</button></div>
-    <div class="kpi-group-row">
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('帮我看看销售额和订单量', '销售额 ¥1,250万 ↑15.2% 环比；订单量 1.25万单 ↑8.5%；利润 ¥250万 ↓2.1%；转化率 3.2% ↑0.5%。见下方指标卡组。', [], { cardSelector: '#qa-card-combo' })">问答演示</button></div>
+    <div id="qa-card-combo" class="kpi-group-row">
         <div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万</span></div><div class="trend trend-up">↑15.2% 环比</div></div>
         <div class="indicator-card green"><div class="label">订单量</div><div class="value"><span class="value-num">1.25万</span><span class="suffix">单</span></div><div class="trend trend-up">↑8.5% 环比</div></div>
         <div class="indicator-card yellow"><div class="label">利润</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">250</span><span class="suffix">万</span></div><div class="trend trend-down">↓2.1% 环比</div></div>
