@@ -13,7 +13,6 @@
             color: #1D1D1F;
             line-height: 1.6;
         }
-        
         .header {
             background: #fff;
             border-bottom: 1px solid #E5E6EB;
@@ -25,19 +24,9 @@
             top: 0;
             z-index: 100;
         }
-        .header-title {
-            font-size: 20px;
-            font-weight: 600;
-        }
-        .header-subtitle {
-            font-size: 13px;
-            color: #86868B;
-            margin-top: 4px;
-        }
-        .header-actions {
-            display: flex;
-            gap: 12px;
-        }
+        .header-title { font-size: 20px; font-weight: 600; }
+        .header-subtitle { font-size: 13px; color: #86868B; margin-top: 4px; }
+        .header-actions { display: flex; gap: 12px; }
         .btn {
             padding: 8px 16px;
             border-radius: 8px;
@@ -47,21 +36,10 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-primary {
-            background: #5B8FF9;
-            color: #fff;
-        }
-        .btn-primary:hover {
-            background: #4A7FE8;
-        }
-        .btn-secondary {
-            background: #F5F5F7;
-            color: #1D1D1F;
-        }
-        .btn-secondary:hover {
-            background: #E8E8ED;
-        }
-        
+        .btn-primary { background: #5B8FF9; color: #fff; }
+        .btn-primary:hover { background: #4A7FE8; }
+        .btn-secondary { background: #F5F5F7; color: #1D1D1F; }
+        .btn-secondary:hover { background: #E8E8ED; }
         .nav-tabs {
             background: #fff;
             border-bottom: 1px solid #E5E6EB;
@@ -83,77 +61,51 @@
             white-space: nowrap;
             transition: all 0.2s;
         }
-        .nav-tab:hover {
-            color: #1D1D1F;
+        .nav-tab:hover { color: #1D1D1F; }
+        .nav-tab.active { color: #5B8FF9; border-bottom-color: #5B8FF9; font-weight: 500; }
+        .content { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
         }
-        .nav-tab.active {
-            color: #5B8FF9;
-            border-bottom-color: #5B8FF9;
-            font-weight: 500;
-        }
-        
-        .content {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 32px 24px;
-        }
-        
+        @media (max-width: 900px) { .scenario-grid { grid-template-columns: 1fr; } }
         .scenario-card {
             background: #fff;
             border-radius: 12px;
             padding: 24px;
-            margin-bottom: 24px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-        .scenario-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
         }
         .scenario-badge {
             display: inline-block;
-            background: linear-gradient(135deg, #E8F3FF 0%, #D6E8FF 100%);
-            color: #5B8FF9;
             padding: 4px 12px;
             border-radius: 12px;
             font-size: 12px;
             font-weight: 500;
             margin-bottom: 8px;
         }
-        .scenario-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-        .scenario-desc {
-            color: #6B7280;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 16px;
-        }
+        .scenario-badge.basic { background: linear-gradient(135deg, #E8F3FF 0%, #D6E8FF 100%); color: #5B8FF9; }
+        .scenario-badge.data { background: #E6F7F0; color: #389E6F; }
+        .scenario-badge.empty { background: #FFF7E6; color: #D48806; }
+        .scenario-badge.interact { background: #F9F0FF; color: #722ED1; }
+        .scenario-badge.combo { background: #E8F3FF; color: #5B8FF9; }
+        .scenario-badge.alert { background: #FFF1F0; color: #E86452; }
+        .scenario-badge.excellent { background: #E6F7F0; color: #52C41A; }
+        .scenario-badge.special { background: #FFF7E6; color: #FA8C16; }
+        .scenario-badge.industry { background: #E8F3FF; color: #5B8FF9; }
+        .scenario-badge.format { background: #F0F5FF; color: #2F54EB; }
+        .scenario-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .scenario-desc { color: #6B7280; font-size: 13px; line-height: 1.5; margin-bottom: 12px; }
         .scenario-example-box {
             background: #F9FAFB;
             border-left: 3px solid #5B8FF9;
-            padding: 12px 16px;
-            margin-bottom: 20px;
+            padding: 10px 14px;
+            margin-bottom: 16px;
             border-radius: 4px;
         }
-        .scenario-example-title {
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-        .scenario-example-content {
-            color: #6B7280;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-        .scenario-actions {
-            display: flex;
-            gap: 8px;
-        }
+        .scenario-example-title { font-weight: 600; color: #111827; margin-bottom: 6px; font-size: 12px; }
+        .scenario-example-content { color: #6B7280; font-size: 12px; line-height: 1.5; }
+        .scenario-actions { display: flex; gap: 8px; margin-bottom: 16px; }
         .scenario-btn {
             padding: 6px 12px;
             border-radius: 6px;
@@ -163,97 +115,68 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .scenario-btn.active {
-            background: #5B8FF9;
-            color: #fff;
-            border-color: #5B8FF9;
-        }
-        .scenario-btn:hover {
-            border-color: #5B8FF9;
-        }
-        
-        .indicator-with-sub {
-            background: #fff;
+        .scenario-btn.active { background: #5B8FF9; color: #fff; border-color: #5B8FF9; }
+        .scenario-btn:hover { border-color: #5B8FF9; }
+        /* KPI 卡片通用 */
+        .kpi-card {
             border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            padding: 20px;
+            max-width: 100%;
             border: 1px solid rgba(0,0,0,0.06);
-            max-width: 500px;
-            margin-top: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        .indicator-with-sub .main-label {
-            font-size: 13px;
-            color: #6B7280;
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-        .indicator-with-sub .main-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: #111827;
-            line-height: 1.1;
-            margin-bottom: 8px;
-        }
-        .indicator-with-sub .main-suffix {
-            font-size: 16px;
-            color: #9CA3AF;
-            margin-left: 6px;
-            font-weight: 500;
-        }
-        .indicator-with-sub .trend {
-            margin-top: 8px;
-            font-size: 13px;
-            color: #10B981;
-            font-weight: 500;
-        }
-        .indicator-with-sub .sub-indicators {
-            margin-top: 20px;
-            padding-top: 20px;
+        .kpi-card .kpi-label { font-size: 13px; color: #6B7280; margin-bottom: 8px; font-weight: 500; }
+        .kpi-card .kpi-value { font-size: 28px; font-weight: 700; color: #111827; line-height: 1.1; letter-spacing: -0.02em; }
+        .kpi-card .kpi-unit { font-size: 14px; color: #9CA3AF; margin-left: 4px; font-weight: 500; }
+        .kpi-card .kpi-trend { margin-top: 8px; font-size: 13px; font-weight: 500; }
+        .kpi-card .kpi-trend.up { color: #10B981; }
+        .kpi-card .kpi-trend.down { color: #EF4444; }
+        .kpi-card .kpi-trend.flat { color: #6B7280; }
+        .kpi-card .kpi-sub {
+            margin-top: 16px;
+            padding-top: 16px;
             border-top: 1px solid #E5E7EB;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            gap: 12px;
         }
-        .indicator-with-sub .sub-item {
-            display: flex;
-            flex-direction: column;
+        .kpi-card .kpi-sub.grid2 { grid-template-columns: repeat(2, 1fr); }
+        .kpi-card .kpi-sub.grid4 { grid-template-columns: repeat(4, 1fr); }
+        .kpi-card .sub-item { display: flex; flex-direction: column; }
+        .kpi-card .sub-label { font-size: 12px; color: #9CA3AF; margin-bottom: 4px; }
+        .kpi-card .sub-value { font-size: 16px; font-weight: 600; color: #111827; }
+        /* 预警样式 - 红色渐变 */
+        .kpi-card.alert-style {
+            background: linear-gradient(135deg, #FFF1F0 0%, #FFCCC7 100%);
+            border-color: #FFA39E;
         }
-        .indicator-with-sub .sub-label {
-            font-size: 12px;
-            color: #9CA3AF;
-            margin-bottom: 4px;
+        .kpi-card.alert-style .kpi-value,
+        .kpi-card.alert-style .kpi-trend { color: #CF1322; }
+        /* 优秀表现 - 绿色渐变 */
+        .kpi-card.excellent-style {
+            background: linear-gradient(135deg, #E6F7F0 0%, #B7EBD4 100%);
+            border-color: #87E8DE;
         }
-        .indicator-with-sub .sub-value {
-            font-size: 18px;
-            font-weight: 600;
-            color: #111827;
+        .kpi-card.excellent-style .kpi-value { color: #08979C; }
+        .kpi-card.excellent-style .kpi-trend { color: #52C41A; }
+        /* 空状态 */
+        .kpi-card.empty-style {
+            background: #FAFAFA;
+            border: 1px dashed #D9D9D9;
         }
-        
-        .usage-section {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            margin-top: 32px;
-        }
-        .usage-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-        .usage-item {
-            margin-bottom: 16px;
-        }
-        .usage-item-title {
-            font-weight: 600;
-            color: #111827;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .usage-item-content {
-            color: #6B7280;
-            font-size: 13px;
-            line-height: 1.6;
-        }
+        .kpi-card.empty-style .kpi-value { font-size: 16px; color: #8C8C8C; font-weight: 500; }
+        .kpi-card.empty-style .empty-actions { margin-top: 12px; display: flex; gap: 8px; }
+        .kpi-card.empty-style .empty-actions button { padding: 6px 12px; font-size: 12px; border-radius: 6px; border: 1px solid #D9D9D9; background: #fff; cursor: pointer; color: #595959; }
+        /* 组合 - 多卡片 */
+        .kpi-group { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+        @media (max-width: 700px) { .kpi-group { grid-template-columns: repeat(2, 1fr); } }
+        .kpi-group .kpi-card { padding: 16px; }
+        .kpi-group .kpi-card .kpi-value { font-size: 22px; }
+        .usage-section { background: #fff; border-radius: 12px; padding: 24px; margin-top: 32px; }
+        .usage-title { font-size: 16px; font-weight: 600; margin-bottom: 16px; }
+        .usage-item { margin-bottom: 16px; }
+        .usage-item-title { font-weight: 600; color: #111827; margin-bottom: 8px; font-size: 14px; }
+        .usage-item-content { color: #6B7280; font-size: 13px; line-height: 1.6; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -264,65 +187,24 @@
         </div>
         <div class="header-actions">
             <button class="btn btn-secondary">导出所有代码</button>
-            <button class="btn btn-primary">返回 SmartQA</button>
+            <a href="data-agent.html" class="btn btn-primary">返回 SmartQA</a>
         </div>
     </div>
-    
     <div class="nav-tabs">
-        <button class="nav-tab">全部场景 (23)</button>
-        <button class="nav-tab">基础场景 (6)</button>
-        <button class="nav-tab">数据展示 (2)</button>
-        <button class="nav-tab">空状态 (3)</button>
-        <button class="nav-tab">交互场景 (2)</button>
-        <button class="nav-tab">组合场景 (1)</button>
-        <button class="nav-tab">预警场景 (1)</button>
-        <button class="nav-tab">优秀表现 (1)</button>
-        <button class="nav-tab active">特殊场景 (1)</button>
-        <button class="nav-tab">行业场景 (4)</button>
-        <button class="nav-tab">数据格式 (2)</button>
+        <button class="nav-tab active" data-category="all">全部场景 (23)</button>
+        <button class="nav-tab" data-category="basic">基础场景 (6)</button>
+        <button class="nav-tab" data-category="data">数据展示 (2)</button>
+        <button class="nav-tab" data-category="empty">空状态 (3)</button>
+        <button class="nav-tab" data-category="interact">交互场景 (2)</button>
+        <button class="nav-tab" data-category="combo">组合场景 (1)</button>
+        <button class="nav-tab" data-category="alert">预警场景 (1)</button>
+        <button class="nav-tab" data-category="excellent">优秀表现 (1)</button>
+        <button class="nav-tab" data-category="special">特殊场景 (1)</button>
+        <button class="nav-tab" data-category="industry">行业场景 (4)</button>
+        <button class="nav-tab" data-category="format">数据格式 (2)</button>
     </div>
-    
     <div class="content">
-        <div class="scenario-card">
-            <div class="scenario-header">
-                <div>
-                    <span class="scenario-badge">特殊场景</span>
-                    <div class="scenario-title">带子指标的KPI卡片</div>
-                    <div class="scenario-desc">显示当前值和目标值，展示完成进度</div>
-                </div>
-            </div>
-            
-            <div class="scenario-example-box">
-                <div class="scenario-example-title">适用场景：</div>
-                <div class="scenario-example-content">
-                    适用于需要展示详细分解的场景，如"今年销售额是多少，各季度如何"。<br>
-                    例如：你问达成率，子指标就是销售额和销售目标。
-                </div>
-            </div>
-            
-            <div class="scenario-actions">
-                <button class="scenario-btn active">预览</button>
-                <button class="scenario-btn">代码</button>
-                <button class="scenario-btn">查看问答效果</button>
-            </div>
-            
-            <div class="indicator-with-sub">
-                <div class="main-label">达成率</div>
-                <div class="main-value">85.6<span class="main-suffix">%</span></div>
-                <div class="trend">↑ 较目标超出 5.6%</div>
-                <div class="sub-indicators">
-                    <div class="sub-item">
-                        <div class="sub-label">销售额</div>
-                        <div class="sub-value">8,560<span style="font-size: 14px; color: #9CA3AF; margin-left: 4px;">万元</span></div>
-                    </div>
-                    <div class="sub-item">
-                        <div class="sub-label">销售目标</div>
-                        <div class="sub-value">10,000<span style="font-size: 14px; color: #9CA3AF; margin-left: 4px;">万元</span></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
+        <div class="scenario-grid" id="scenarioGrid"></div>
         <div class="usage-section">
             <div class="usage-title">使用说明</div>
             <div class="usage-item">
@@ -331,27 +213,78 @@
             </div>
             <div class="usage-item">
                 <div class="usage-item-title">2. 组件类型</div>
-                <div class="usage-item-content">根据业务需求选择合适的KPI卡片类型，包括基础指标卡、带趋势指标卡、带子指标卡片等。</div>
+                <div class="usage-item-content">根据业务需求选择合适的KPI卡片类型，包括基础指标卡、带趋势指标卡、带子指标卡片、空状态、预警与优秀表现等。</div>
             </div>
         </div>
     </div>
-    
     <script>
-        // Tab切换功能
+        const scenarios = [
+            { id: 'basic-1', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '基础KPI卡片', desc: '最简单的KPI展示，只显示指标名称和数值', apply: '适用于简单的数值展示场景，如"本月销售额是多少"', render: () => `<div class="kpi-card"><div class="kpi-label">销售额</div><div class="kpi-value">¥1250<span class="kpi-unit">万</span>元</div></div>` },
+            { id: 'basic-2', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '带趋势的KPI卡片', desc: '显示数值的同时展示同比增长或环比增长趋势', apply: '适用于需要展示变化趋势的场景，如"近3个月销售额如何"', render: () => `<div class="kpi-card"><div class="kpi-label">近3个月销售额</div><div class="kpi-value">¥2500<span class="kpi-unit">万</span>元</div><div class="kpi-trend up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div><button class="scenario-btn" style="margin-top:10px">归因</button></div>` },
+            { id: 'basic-3', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '带子指标的KPI卡片', desc: '主指标下方展示多个子指标，如季度分解', apply: '适用于需要展示详细分解的场景，如"今年销售额是多少，各季度如何"。例如：你问达成率，子指标就是销售额和销售目标。', render: () => `<div class="kpi-card"><div class="kpi-label">2024年销售额</div><div class="kpi-value">¥3856<span class="kpi-unit">万</span>元</div><div class="kpi-trend up">↑ 19.8% 较2023年增长</div><div class="kpi-sub grid4"><div class="sub-item"><span class="sub-label">Q1</span><span class="sub-value">850万</span></div><div class="sub-item"><span class="sub-label">Q2</span><span class="sub-value">920万</span></div><div class="sub-item"><span class="sub-label">Q3</span><span class="sub-value">980万</span></div><div class="sub-item"><span class="sub-label">Q4</span><span class="sub-value">1106万</span></div></div></div>` },
+            { id: 'basic-4', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '环比同比展示', desc: '同时展示环比和同比数据，放在数值下方', apply: '适用于需要同时查看环比与同比的场景', render: () => `<div class="kpi-card"><div class="kpi-label">近3个月销售额</div><div class="kpi-value">¥2500<span class="kpi-unit">万</span>元</div><div class="kpi-trend up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div>` },
+            { id: 'basic-5', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '下降趋势KPI卡片', desc: '展示下降趋势，使用红色箭头和文字', apply: '适用于指标下降时的展示', render: () => `<div class="kpi-card"><div class="kpi-label">11月销售额</div><div class="kpi-value">¥820<span class="kpi-unit">万</span>元</div><div class="kpi-trend down">↓8.5% 环比 &nbsp; ↓5.2% 同比</div><button class="scenario-btn" style="margin-top:10px">归因</button></div>` },
+            { id: 'basic-6', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '持平趋势KPI卡片', desc: '展示持平或小幅波动的趋势', apply: '适用于指标基本持平的场景', render: () => `<div class="kpi-card"><div class="kpi-label">本月销售额</div><div class="kpi-value">¥1000<span class="kpi-unit">万</span>元</div><div class="kpi-trend flat">→ 0.2% 环比 &nbsp; → 0.5% 同比</div></div>` },
+            { id: 'data-1', category: 'data', badge: 'data', badgeText: '数据展示', title: '单日数据场景', desc: '查询单日数据时，不展示季度分解和同比', apply: '适用于查询单日数据的场景，如"查询2024年12月1日的销售额"', render: () => `<div class="kpi-card"><div class="kpi-label">2024年12月1日销售额</div><div class="kpi-value">¥13<span class="kpi-unit">万</span>元</div></div>` },
+            { id: 'data-2', category: 'data', badge: 'data', badgeText: '数据展示', title: '短期数据场景', desc: '查询短期数据（少于7天）时，不展示季度分解', apply: '适用于最近几天数据的展示', render: () => `<div class="kpi-card"><div class="kpi-label">最近3天销售额</div><div class="kpi-value">¥38.5<span class="kpi-unit">万</span>元</div></div>` },
+            { id: 'empty-1', category: 'empty', badge: 'empty', badgeText: '空状态', title: '无数据场景', desc: '查询结果为空时，显示友好的空状态提示', apply: '适用于无数据时的展示', render: () => `<div class="kpi-card empty-style"><div class="kpi-label">2030年销售额</div><div class="kpi-value">暂无数据</div><div class="empty-actions"><button>修改查询条件</button></div></div>` },
+            { id: 'empty-2', category: 'empty', badge: 'empty', badgeText: '空状态', title: '连接失败场景', desc: '数据源连接失败时，显示错误提示和重试选项', apply: '适用于数据源异常时的展示', render: () => `<div class="kpi-card empty-style"><div class="kpi-label">销售额</div><div class="kpi-value">数据源连接失败</div><div class="empty-actions"><button>重试</button><button>检查连接</button></div></div>` },
+            { id: 'empty-3', category: 'empty', badge: 'empty', badgeText: '空状态', title: '权限不足场景', desc: '用户没有权限查看数据时，显示权限提示', apply: '适用于无权限时的展示', render: () => `<div class="kpi-card empty-style"><div class="kpi-label">销售额</div><div class="kpi-value">暂无数据访问权限</div><div class="empty-actions"><button>联系管理员</button></div></div>` },
+            { id: 'interact-1', category: 'interact', badge: 'interact', badgeText: '交互场景', title: '带归因分析入口', desc: '显示"归因"按钮，点击后可进行归因分析', apply: '适用于需要分析变化原因的场景', render: () => `<div class="kpi-card"><div class="kpi-label">12月份销售额</div><div class="kpi-value">¥880<span class="kpi-unit">万</span>元</div><div class="kpi-trend down">↓5.2% 环比下降</div><button class="scenario-btn" style="margin-top:10px">归因</button></div>` },
+            { id: 'interact-2', category: 'interact', badge: 'interact', badgeText: '交互场景', title: '带添加到看板按钮', desc: '显示"添加"按钮，可将KPI卡片添加到数据看板', apply: '适用于需要收藏到看板的场景', render: () => `<div class="kpi-card"><div class="kpi-label">销售额</div><div class="kpi-value">¥1250<span class="kpi-unit">万</span>元</div><button class="scenario-btn" style="margin-top:10px">添加到看板</button></div>` },
+            { id: 'combo-1', category: 'combo', badge: 'combo', badgeText: '组合场景', title: 'KPI卡片组', desc: '多个KPI卡片并排展示，适用于多指标对比', apply: '适用于多指标同时查看的场景', render: () => `<div class="kpi-group"><div class="kpi-card"><div class="kpi-label">销售额</div><div class="kpi-value">¥1250万</div><div class="kpi-trend up">↑15.2% 环比</div></div><div class="kpi-card"><div class="kpi-label">订单量</div><div class="kpi-value">1.25万<span class="kpi-unit">单</span></div><div class="kpi-trend up">↑8.5% 环比</div></div><div class="kpi-card"><div class="kpi-label">利润</div><div class="kpi-value">¥250万</div><div class="kpi-trend down">↓2.1% 环比</div></div><div class="kpi-card"><div class="kpi-label">转化率</div><div class="kpi-value">3.2<span class="kpi-unit">%</span></div><div class="kpi-trend up">↑0.5% 环比</div></div></div>` },
+            { id: 'alert-1', category: 'alert', badge: 'alert', badgeText: '预警场景', title: '数值过低预警', desc: '当数值低于预警阈值时，显示红色渐变背景和白色文字', apply: '适用于低于目标时的预警展示', render: () => `<div class="kpi-card alert-style"><div class="kpi-label">本月销售额</div><div class="kpi-value">¥500万</div><div class="kpi-trend down">↓15.2% 环比 &nbsp; ↓8.5% 同比</div></div>` },
+            { id: 'excellent-1', category: 'excellent', badge: 'excellent', badgeText: '优秀表现', title: '数值优秀', desc: '当数值超过优秀阈值时，显示柔和绿色渐变背景', apply: '适用于超出目标时的突出展示', render: () => `<div class="kpi-card excellent-style"><div class="kpi-label">本月销售额</div><div class="kpi-value">¥1500万</div><div class="kpi-trend up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>` },
+            { id: 'special-1', category: 'special', badge: 'special', badgeText: '特殊场景', title: '带目标值的KPI卡片', desc: '显示当前值和目标值，展示完成进度', apply: '适用于需要展示目标完成情况的场景，如"本月销售额目标完成情况"', render: () => `<div class="kpi-card"><div class="kpi-label">本月销售额目标</div><div class="kpi-value">¥1200<span class="kpi-unit">万</span>元</div><div class="kpi-trend up">↑85% 完成度</div><div class="kpi-sub grid4"><div class="sub-item"><span class="sub-label">目标</span><span class="sub-value">1400万</span></div><div class="sub-item"><span class="sub-label">完成</span><span class="sub-value">1200万</span></div><div class="sub-item"><span class="sub-label">进度</span><span class="sub-value">85%</span></div><div class="sub-item"><span class="sub-label">剩余</span><span class="sub-value">200万</span></div></div></div>` },
+            { id: 'industry-1', category: 'industry', badge: 'industry', badgeText: '行业场景', title: '电商GMV场景', desc: '电商行业常用的GMV（成交总额）指标', apply: '适用于电商成交额展示', render: () => `<div class="kpi-card"><div class="kpi-label">GMV成交总额</div><div class="kpi-value">¥1.25<span class="kpi-unit">亿</span></div><div class="kpi-trend up">↑28.5% 环比</div><div class="kpi-sub grid4"><div class="sub-item"><span class="sub-label">订单数</span><span class="sub-value">12.5万</span></div><div class="sub-item"><span class="sub-label">客单价</span><span class="sub-value">¥100</span></div><div class="sub-item"><span class="sub-label">转化率</span><span class="sub-value">3.2%</span></div><div class="sub-item"><span class="sub-label">复购率</span><span class="sub-value">45%</span></div></div></div>` },
+            { id: 'industry-2', category: 'industry', badge: 'industry', badgeText: '行业场景', title: '财务营收场景', desc: '财务部门常用的营收和利润指标', apply: '适用于营业收入展示', render: () => `<div class="kpi-card"><div class="kpi-label">营业收入</div><div class="kpi-value">¥5000<span class="kpi-unit">万</span>元</div><div class="kpi-trend up">↑15.8% 环比 &nbsp; ↑22.3% 同比</div><button class="scenario-btn" style="margin-top:10px">归因</button></div>` },
+            { id: 'industry-3', category: 'industry', badge: 'industry', badgeText: '行业场景', title: '营销ROI场景', desc: '营销部门常用的ROI（投资回报率）指标', apply: '适用于营销ROI展示', render: () => `<div class="kpi-card"><div class="kpi-label">营销ROI</div><div class="kpi-value">3.5<span class="kpi-unit">倍</span></div><div class="kpi-trend up">↑0.8 环比 &nbsp; ↑1.2 同比</div></div>` },
+            { id: 'industry-4', category: 'industry', badge: 'industry', badgeText: '行业场景', title: 'HR考勤场景', desc: '人力资源部门常用的考勤和绩效指标', apply: '适用于出勤率等HR指标', render: () => `<div class="kpi-card"><div class="kpi-label">出勤率</div><div class="kpi-value">96.5<span class="kpi-unit">%</span></div><div class="kpi-trend up">↑1.2% 环比 &nbsp; ↑2.5% 同比</div></div>` },
+            { id: 'format-1', category: 'format', badge: 'format', badgeText: '数据格式', title: '百分比类型KPI卡片', desc: '展示百分比类型的指标，如转化率、增长率等', apply: '适用于转化率、增长率等百分比指标', render: () => `<div class="kpi-card"><div class="kpi-label">转化率</div><div class="kpi-value">3.2<span class="kpi-unit">%</span></div><div class="kpi-trend up">↑0.5% 环比 &nbsp; ↑1.2% 同比</div></div>` },
+            { id: 'format-2', category: 'format', badge: 'format', badgeText: '数据格式', title: '大数值KPI卡片', desc: '展示大数值，自动格式化（万、亿）', apply: '适用于累计额等大数值展示', render: () => `<div class="kpi-card"><div class="kpi-label">累计销售额</div><div class="kpi-value">¥38.56<span class="kpi-unit">亿</span>元</div><div class="kpi-trend up">↑2.5% 环比 &nbsp; ↑19.8% 同比</div></div>` },
+        ];
+        function renderScenario(s) {
+            const card = document.createElement('div');
+            card.className = 'scenario-card';
+            card.dataset.category = s.category;
+            card.innerHTML = `
+                <span class="scenario-badge ${s.badge}">${s.badgeText}</span>
+                <div class="scenario-title">${s.title}</div>
+                <div class="scenario-desc">${s.desc}</div>
+                <div class="scenario-example-box">
+                    <div class="scenario-example-title">适用场景：</div>
+                    <div class="scenario-example-content">${s.apply}</div>
+                </div>
+                <div class="scenario-actions">
+                    <button class="scenario-btn active">预览</button>
+                    <button class="scenario-btn">代码</button>
+                    <button class="scenario-btn">查看问答效果</button>
+                </div>
+                <div class="kpi-preview">${s.render()}</div>
+            `;
+            return card;
+        }
+        function filterScenarios(category) {
+            const grid = document.getElementById('scenarioGrid');
+            grid.innerHTML = '';
+            const list = category === 'all' ? scenarios : scenarios.filter(s => s.category === category);
+            list.forEach(s => grid.appendChild(renderScenario(s)));
+            document.querySelectorAll('.scenario-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    if (!this.closest('.scenario-actions')) return;
+                    this.closest('.scenario-actions').querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        }
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
+                filterScenarios(this.dataset.category);
             });
         });
-        
-        // 按钮切换功能
-        document.querySelectorAll('.scenario-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        filterScenarios('all');
     </script>
 </body>
 </html>
