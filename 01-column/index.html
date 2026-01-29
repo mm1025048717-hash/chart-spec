@@ -54,11 +54,9 @@
         <div class="chart-card-header">
             <div class="header-left">
                 <span class="chart-title">2024年Q4 各地区销售额对比</span>
-                <button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('这个图表的标题代表什么？', '本图表展示的是 2024年第四季度 各地区的销售额对比，横轴为地区维度，纵轴为销售额（万元）。')">问答</button>
             </div>
             <div class="header-right">
                 <span class="chart-tag blue">Basic Column</span>
-                <button type="button" class="btn-qa-demo" onclick="showQaDemo('2024年Q4各地区销售额对比怎么样？', '华东区 3,650万、华北区 2,880万、华南区 3,200万、华中区 2,950万、西北区 2,570万、西南区 3,000万；合计 18,250万元，最高华东区。')">问答演示</button>
                 <button class="btn-view-code" onclick="toggleCode('code-basic', this)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <polyline points="16 18 22 12 16 6"></polyline>
@@ -72,7 +70,6 @@
             <div class="chart-meta-left">
                 <div class="chart-meta-info">
                     <span class="chart-meta-item"><span class="dot"></span>数据源: ERP系统, 销售指标表</span>
-                    <button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('数据从哪里来？', '数据来自 ERP 系统的销售指标表，数据周期为 2024年12月。')">问答</button>
                     <span class="chart-meta-item"><span class="dot" style="background:#5AD8A6"></span>数据周期: 2024年12月</span>
                 </div>
             </div>
@@ -85,7 +82,6 @@
                         筛选
                         <span class="filter-count" id="filterCount">0</span>
                     </button>
-                    <button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('可以按什么条件筛选？', '可按地区（华东/华北/华南/华中）和日期（2024.12/2024.11/2024.10/2024年Q4）筛选，点击「筛选」展开面板选择后应用。')">问答</button>
                     <!-- 统一筛选面板 -->
                     <div class="filter-modal" id="filterModal" onclick="(function(e){e.stopPropagation();})(event)">
                         <div class="filter-panel">
@@ -147,13 +143,12 @@
             </div>
         </div>
         <div class="chart-body md">
-            <div class="axis-unit y-left">万元<button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('Y轴单位是什么？', 'Y轴单位为万元，表示各地区的销售额以万元计。')">问答</button></div>
-            <div class="x-field-label">按地区<button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('横轴是按什么分的？', '横轴按地区维度展示，当前为华东、华北、华南、华中、西北、东北等地区。')">问答</button></div>
+            <div class="axis-unit y-left">万元</div>
+            <div class="x-field-label">按地区</div>
             <div class="custom-legend horizontal">
                 <div class="legend-item">
                     <div class="legend-icon-circle" style="background: #5B8FF9;"></div>
                     <span class="legend-text">销售额</span>
-                    <button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('图例代表什么？', '图例「销售额」表示柱体颜色对应的是销售额指标，本图仅有一个系列故图例单一。')">问答</button>
                 </div>
             </div>
             <div id="chart-basic" style="width: 100%; height: 100%;"></div>
@@ -193,7 +188,6 @@
                 <span class="summary-label">最高：</span>
                 <span class="summary-value green">华东 3,650 万元</span>
             </span>
-            <button type="button" class="qa-demo-trigger" title="问答案例" onclick="showQaDemo('这张图的合计和最高是多少？', '合计 18,250 万元，平均 3,042 万元，最高为华东区 3,650 万元。')">问答</button>
         </div>
         <!-- 代码展示区 -->
         <div class="chart-code-panel" id="code-basic">

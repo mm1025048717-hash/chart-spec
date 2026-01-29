@@ -41,11 +41,9 @@
         <div class="chart-card-header">
             <div class="header-left">
                 <span class="chart-title">网站访问量按时间段分布</span>
-                <button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('这个热力图展示什么？', '展示网站访问量按日期与小时段的分布，颜色越深表示访问量越高，便于发现高峰时段。')">问答</button>
             </div>
             <div class="header-right">
                 <span class="chart-tag red">Heatmap</span>
-                <button type="button" class="btn-qa-demo" onclick="showQaDemo('网站访问量在什么时候最高？', '近7天数据中，峰值时段为周二 14:00；整体共 168 个数据点，可按维度（小时/周/设备）和日期筛选查看。')">问答演示</button>
                 <button class="btn-view-code" onclick="toggleCode('code-heatmap', this)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
                     Code
@@ -56,7 +54,6 @@
             <div class="chart-meta-left">
                 <div class="chart-meta-info">
                     <span class="chart-meta-item"><span class="dot"></span>数据源: 访问日志, 热力统计表</span>
-                    <button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('热力图数据从哪里来？', '数据来自访问日志与热力统计表，数据周期为近7天。')">问答</button>
                     <span class="chart-meta-item"><span class="dot" style="background:#FF3B30"></span>数据周期: 近7天</span>
                 </div>
             </div>
@@ -70,7 +67,6 @@
                         筛选
                         <span class="filter-count" id="filterCount">0</span>
                     </button>
-                    <button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('可以按什么筛选？', '可按维度（小时/周/设备）和日期（2024.12/2024.Q4）筛选热力图数据。')">问答</button>
                     <div class="filter-modal" id="filterModal" onclick="(function(e){e.stopPropagation();})(event)">
                         <div class="filter-panel">
                             <div class="filter-panel-header" id="filterPanelHeader">
@@ -128,17 +124,16 @@
         </div>
         <div class="chart-body md" style="position: relative; padding-right: 20px;">
             <!-- 轴单位标签 -->
-            <div class="axis-unit y-left">日期<button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('Y轴是什么？', 'Y轴为日期维度，表示热力图按日期（如近7天）分布。')">问答</button></div>
+            <div class="axis-unit y-left">日期</div>
             
             <!-- X轴字段标签 -->
-            <div class="x-field-label">小时<button type="button" class="qa-demo-trigger" title="问答案例" onclick="event.stopPropagation(); showQaDemo('X轴是什么？', 'X轴为小时（0–23点），表示一天内各时段的访问量分布。')">问答</button></div>
+            <div class="x-field-label">小时</div>
             
             <div id="chart-basic" style="width: 100%; height: 100%;"></div>
         </div>
         <!-- 汇总栏 -->
         <div class="chart-summary">
             总计：<span class="summary-item"><span class="summary-label">数据点</span><span class="summary-value blue">168个</span></span>，<span class="summary-item"><span class="summary-label">峰值时段</span><span class="summary-value red">周二 14:00</span></span>
-            <button type="button" class="qa-demo-trigger" title="问答案例" onclick="showQaDemo('热力图有多少数据、峰值在哪？', '共 168 个数据点；峰值时段为周二 14:00，表示该时段访问量最高。')">问答</button>
         </div>
         <!-- 代码面板 -->
         <div class="chart-code-panel" id="code-heatmap">
