@@ -9,19 +9,18 @@
     <script src="../unified-filter.js"></script>
     <script src="../qa-demo.js"></script>
     <style>
-        /* 指标卡设计规范：全页字体与格式统一 */
+        /* 指标卡设计规范：统一字体与业务规则 */
         .spec-section,
         .variant-section,
         .scenario-block {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
             -webkit-font-smoothing: antialiased;
         }
-        /* 统一字号：标签 14px、主值 32px、单位/前缀 15px、趋势 13px；正文/说明 14px、小标题 15px */
         .scenario-description,
         .scenario-example-content,
         .indicator-card .label,
-        .indicator-with-sub .main-label { color: #8C8C8C; font-size: 14px; line-height: 1.6; }
-        .scenario-example-title { color: #262626; font-weight: 600; font-size: 15px; }
+        .indicator-with-sub .main-label { color: #8C8C8C; }
+        .scenario-example-title { color: #262626; font-weight: 600; }
 
         .chart-type-badge {
             display: inline-flex; align-items: center; gap: 8px;
@@ -30,9 +29,6 @@
         }
         .chart-type-badge .icon { font-size: 20px; }
         .chart-type-badge .text { font-size: 14px; color: var(--blue); font-weight: 500; }
-        /* 本页图表标题与正文统一：标题 14px/600 */
-        .chart-container .chart-title { font-size: 14px; font-weight: 600; color: #262626; }
-        .section-subtitle { font-size: 14px; font-weight: 600; color: #262626; margin-bottom: 12px; line-height: 1.6; }
 
         .indicator-grid {
             display: grid;
@@ -73,7 +69,7 @@
             margin-bottom: 12px;
             font-weight: 400;
         }
-        /* 数值行统一：数字 32px/600，前缀与单位 15px/400，同字体同基线对齐 */
+        /* 数值行统一：数字 32px/600，前缀与单位 15px/400、baseline 对齐（万元/单/元/% 均用 .suffix） */
         .indicator-card .value {
             display: flex;
             align-items: baseline;
@@ -118,12 +114,12 @@
         .trend-down { color: #CF1322; }
         .indicator-card .trend-flat { color: #8C8C8C; }
 
-        /* 红绿黄语义：与基础卡统一 8px 圆角、同一阴影公式，仅背景/边框色区分（用于带趋势、三态、数据格式、组合等场景） */
+        /* 红绿黄语义：全部浅色（浅底、无竖线），用于主图、带趋势、三态、数据格式、组合等多场景 */
         .indicator-card.semantic-good {
             background: linear-gradient(135deg, #FAFFFA 0%, #F6FFED 100%);
             border: 1px solid #D9F7BE;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(56,158,13,0.06);
         }
         .indicator-card.semantic-good .label { color: #595959; }
         .indicator-card.semantic-good .value { color: #262626; }
@@ -131,8 +127,8 @@
         .indicator-card.semantic-warning {
             background: linear-gradient(135deg, #FFFEF5 0%, #FFFBE6 100%);
             border: 1px solid #FFE58F;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(212,136,6,0.06);
         }
         .indicator-card.semantic-warning .label { color: #595959; }
         .indicator-card.semantic-warning .value { color: #262626; }
@@ -140,8 +136,8 @@
         .indicator-card.semantic-alert {
             background: linear-gradient(135deg, #FFF8F8 0%, #FFF1F0 100%);
             border: 1px solid #FFCCC7;
-            border-radius: 8px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(207,19,34,0.06);
         }
         .indicator-card.semantic-alert .label { color: #595959; }
         .indicator-card.semantic-alert .value { color: #262626; }
@@ -155,91 +151,66 @@
         .variant-row {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
+            gap: 16px;
             margin: 16px 0;
         }
         @media (max-width: 768px) { .variant-row { grid-template-columns: 1fr; } }
 
-        /* 紧凑样式：无图标，纯文字 */
         .indicator-compact {
             background: #fff;
-            border-radius: 12px;
-            padding: 24px;
+            border-radius: 8px;
+            padding: 20px;
             display: flex;
             align-items: center;
-            border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
-            transition: box-shadow 0.2s ease;
+            gap: 16px;
+            border: 1px solid #F0F0F0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .indicator-compact:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        .indicator-compact .icon-box {
+            width: 48px; height: 48px;
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
         }
         .indicator-compact .content { flex: 1; min-width: 0; }
-        .indicator-compact .label {
-            font-size: 14px;
-            font-weight: 400;
-            color: #8C8C8C;
-            margin-bottom: 8px;
-            line-height: 1.6;
-        }
-        .indicator-compact .value {
-            display: flex;
-            align-items: baseline;
-            flex-wrap: wrap;
-            font-size: 32px;
-            font-weight: 600;
-            color: #262626;
-            line-height: 1;
-        }
-        .indicator-compact .value .value-prefix {
-            font-size: 15px;
-            font-weight: 400;
-            color: #8C8C8C;
-            margin-right: 4px;
-        }
-        .indicator-compact .value .value-num { font-size: 32px; font-weight: 600; color: inherit; }
-        .indicator-compact .value .value-unit {
-            font-size: 15px;
-            font-weight: 400;
-            color: #8C8C8C;
-            margin-left: 2px;
-        }
+        .indicator-compact .label { font-size: 13px; color: #8C8C8C; margin-bottom: 6px; font-weight: 400; }
+        .indicator-compact .value { font-size: 24px; font-weight: 600; color: #262626; }
 
         .indicator-with-sub {
             background: #fff;
             border-radius: 8px;
-            padding: 26px;
+            padding: 20px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             border: 1px solid #F0F0F0;
             max-width: 500px;
         }
         .indicator-with-sub .main-label {
-            font-size: 14px;
+            font-size: 13px;
             color: #8C8C8C;
             margin-bottom: 12px;
             font-weight: 400;
-            line-height: 1.6;
         }
         .indicator-with-sub .main-value {
             display: flex;
             align-items: baseline;
             flex-wrap: wrap;
             font-family: inherit;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 600;
             color: #262626;
             line-height: 1;
             margin-bottom: 8px;
         }
         .indicator-with-sub .main-value .value-num {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 600;
             color: inherit;
             line-height: 1;
         }
         .indicator-with-sub .main-value .value-prefix,
         .indicator-with-sub .main-suffix {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 400;
             color: #8C8C8C;
             margin-left: 2px;
@@ -247,7 +218,7 @@
             vertical-align: baseline;
         }
         .indicator-with-sub .main-value .value-prefix { margin-left: 0; margin-right: 2px; }
-        .indicator-with-sub .trend { font-size: 13px; font-weight: 400; margin-top: 10px; }
+        .indicator-with-sub .trend { font-size: 12px; margin-top: 8px; }
         .indicator-with-sub .sub-indicators {
             margin-top: 16px;
             padding-top: 16px;
@@ -256,7 +227,7 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
         }
-        .indicator-with-sub .sub-label { font-size: 13px; color: #8C8C8C; margin-bottom: 4px; font-weight: 400; line-height: 1.6; }
+        .indicator-with-sub .sub-label { font-size: 12px; color: #8C8C8C; margin-bottom: 4px; font-weight: 400; }
         .indicator-with-sub .sub-value {
             display: flex;
             align-items: baseline;
@@ -273,7 +244,7 @@
             line-height: 1;
         }
         .indicator-with-sub .sub-value .suffix {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 400;
             color: #8C8C8C;
             margin-left: 2px;
@@ -307,13 +278,12 @@
         .scenario-badge.combo { background: #E6F7FF; color: #1890FF; }
         .scenario-description { font-size: 14px; line-height: 1.6; margin-bottom: 12px; }
         .scenario-example {
-            background: #FAFBFC;
-            padding: 16px 20px;
+            background: #FAFAFA;
+            padding: 12px 16px;
             margin-top: 12px;
-            border-radius: 8px;
-            border: 1px solid #F0F0F0;
+            border-radius: 4px;
         }
-        .scenario-example-title { font-size: 15px; margin-bottom: 8px; font-weight: 600; color: #262626; }
+        .scenario-example-title { font-size: 15px; margin-bottom: 6px; }
         .scenario-example-content { font-size: 14px; color: #8C8C8C; line-height: 1.6; }
 
         /* 统一操作按钮（归因、添加到看板、修改查询、重试等） */
@@ -415,50 +385,31 @@
 
         .scenario-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 16px; }
         .scenario-row.cols3 { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .scenario-row.cols4 { grid-template-columns: repeat(4, 1fr); gap: 16px; }
-        /* 三态区块与彩色案例：卡片与说明区更美观 */
+        /* 三态区块：卡片与说明区更美观 */
         .spec-section .scenario-row.cols3 .scenario-block { margin-bottom: 0; }
-        .spec-section .scenario-row.cols4 .scenario-block { margin-bottom: 0; }
-        .spec-section .scenario-row.cols3 .scenario-description,
-        .spec-section .scenario-row.cols4 .scenario-description {
-            font-size: 14px; color: #595959; line-height: 1.6; margin-bottom: 10px;
+        .spec-section .scenario-row.cols3 .scenario-description {
+            font-size: 12px; color: #595959; line-height: 1.5; margin-bottom: 10px;
             padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
         }
         .scenario-example {
             background: #FAFBFC;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 16px 20px;
             border: 1px solid #F0F0F0;
         }
         .scenario-example-title {
-            font-size: 15px; font-weight: 600; color: #262626; margin-bottom: 8px;
+            font-size: 15px; font-weight: 600; color: #262626; margin-bottom: 10px;
             letter-spacing: 0.02em;
         }
         .scenario-example-content {
-            font-size: 14px; color: #8C8C8C; line-height: 1.6;
+            font-size: 14px; color: #595959; line-height: 1.75;
         }
         .scenario-example-content strong { color: #262626; font-weight: 600; }
         @media (max-width: 900px) { 
             .scenario-row { grid-template-columns: 1fr; } 
             .scenario-row.cols3 { grid-template-columns: 1fr; }
-            .scenario-row.cols4 { grid-template-columns: repeat(2, 1fr); }
             .scenario-block[style*="grid-column: span 2"] { grid-column: span 1 !important; }
         }
-        @media (max-width: 600px) { .scenario-row.cols4 { grid-template-columns: 1fr; } }
-        /* 彩色案例：状态判定说明统一格式 */
-        .status-rules { margin-top: 16px; }
-        .status-rule { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; font-size: 14px; line-height: 1.6; color: #595959; }
-        .status-rule .status-icon { font-weight: 700; flex-shrink: 0; }
-        .status-rule .status-icon.good { color: #389E0D; }
-        .status-rule .status-icon.warning { color: #D48806; }
-        .status-rule .status-icon.alert { color: #CF1322; }
-        .status-rule .status-name { font-weight: 600; color: #262626; }
-        .status-rule .status-desc { flex: 1; }
-        .status-rule .status-desc .example { color: #8C8C8C; margin-top: 4px; font-size: 14px; line-height: 1.6; }
-        /* 状态判定规则块：与全页统一 15px 小标题、14px 正文、line-height 1.6 */
-        .status-rules-block .block-title { font-size: 15px; font-weight: 600; color: #262626; margin-bottom: 12px; line-height: 1.6; }
-        .status-rules-block ul { margin: 0; padding-left: 20px; color: #595959; line-height: 1.6; font-size: 14px; }
-        .status-rules-block .rule-head { font-weight: 600; margin-bottom: 6px; font-size: 14px; }
         .scenario-block { margin-bottom: 24px; min-width: 0; }
         .scenario-block .spec-title { margin-bottom: 8px; }
         /* 确保 scenario-row 中的指标卡高度与主图一致 */
@@ -475,13 +426,8 @@
 
         .kpi-group-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 16px; }
         @media (max-width: 768px) { .kpi-group-row { grid-template-columns: repeat(2, 1fr); } }
-        .kpi-group-row .indicator-card { padding: 26px; }
-        .kpi-group-row .indicator-card .label { font-size: 14px; }
-        .kpi-group-row .indicator-card .value,
-        .kpi-group-row .indicator-card .value .value-num { font-size: 32px; font-weight: 600; }
-        .kpi-group-row .indicator-card .value .value-prefix,
-        .kpi-group-row .indicator-card .value .suffix { font-size: 15px; font-weight: 400; }
-        .kpi-group-row .indicator-card .trend { font-size: 13px; font-weight: 400; }
+        .kpi-group-row .indicator-card { padding: 16px; }
+        .kpi-group-row .indicator-card .value { font-size: 22px; }
 
         /* 问答演示按钮与弹窗 */
         .btn-qa-demo {
@@ -623,22 +569,22 @@
             </div>
     </div>
     <div class="indicator-grid" id="qa-card-main">
-        <div class="indicator-card">
+        <div class="indicator-card semantic-good">
             <div class="label">总销售额</div>
             <div class="value"><span class="value-num">8,846</span><span class="suffix">万元</span></div>
             <div class="trend trend-up">↑ 12.5% 较上月</div>
         </div>
-        <div class="indicator-card">
+        <div class="indicator-card semantic-good">
             <div class="label">订单数</div>
             <div class="value"><span class="value-num">12,580</span><span class="suffix">单</span></div>
             <div class="trend trend-up">↑ 8.2% 较上月</div>
         </div>
-        <div class="indicator-card">
+        <div class="indicator-card semantic-warning">
             <div class="label">客单价</div>
             <div class="value"><span class="value-num">703</span><span class="suffix">元</span></div>
             <div class="trend trend-down">↓ 3.1% 较上月</div>
         </div>
-        <div class="indicator-card">
+        <div class="indicator-card semantic-alert">
             <div class="label">退货率</div>
             <div class="value"><span class="value-num">2.3</span><span class="suffix">%</span></div>
             <div class="trend trend-up">↑ 0.5% 较上月</div>
@@ -677,21 +623,24 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="spec-title">紧凑样式</div>
     <div class="variant-row">
         <div class="indicator-compact">
+            <div class="icon-box" style="background: #E8F3FF;">💰</div>
             <div class="content">
                 <div class="label">总收入</div>
-                <div class="value"><span class="value-prefix">¥</span><span class="value-num">12.8</span><span class="value-unit">万</span></div>
+                <div class="value">¥ 12.8万</div>
             </div>
         </div>
         <div class="indicator-compact">
+            <div class="icon-box" style="background: #E6F7F0;">👥</div>
             <div class="content">
                 <div class="label">新增用户</div>
-                <div class="value"><span class="value-num">2,340</span></div>
+                <div class="value">2,340</div>
             </div>
         </div>
         <div class="indicator-compact">
+            <div class="icon-box" style="background: #FFF7E6;">📦</div>
             <div class="content">
                 <div class="label">订单数</div>
-                <div class="value"><span class="value-num">1,580</span></div>
+                <div class="value">1,580</div>
             </div>
         </div>
     </div>
@@ -855,12 +804,11 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     </div>
 </div>
 
-<!-- 良好 / 警告 / 异常 三态 + 彩色案例 -->
+<!-- 良好 / 警告 / 异常 三态 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge excellent">良好</span> 数值优秀 / <span class="scenario-badge warning">警告</span> 接近警戒 / <span class="scenario-badge alert">异常</span> 数值过低</div>
     <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额和客单价表现如何？', '良好：本月销售额 ¥1,500万，环比↑25.8%、同比↑32.5%。警告：客单价 ¥703元，环比↓3.1%。异常：若销售额仅¥500万且环比↓15.2%，则显示红色异常卡片。见下方指标卡。', [], { cardSelector: '#qa-card-three-state' })">问答演示</button></div>
-    <div class="section-subtitle">彩色案例（格式统一：指标名 + 数值 + 环比/同比）</div>
-    <div id="qa-card-three-state" class="scenario-row cols4">
+    <div id="qa-card-three-state" class="scenario-row cols3">
         <div class="scenario-block">
             <div class="scenario-description">良好（绿色）：正向指标增长≥5%或超过目标；负向指标下降≥5%或低于警戒线</div>
             <div class="indicator-card semantic-good"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>
@@ -873,37 +821,13 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
             <div class="scenario-description">异常（红色）：正向指标下降≥5%或低于目标20%；负向指标上升≥5%或超过警戒线</div>
             <div class="indicator-card semantic-alert"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">500</span><span class="suffix">万元</span></div><div class="trend trend-down">↓15.2% 环比 &nbsp; ↓8.5% 同比</div></div>
         </div>
-        <div class="scenario-block">
-            <div class="scenario-description">持平（白色）：与上月/目标基本一致，无显著变化</div>
-            <div class="indicator-card"><div class="label">毛利率</div><div class="value"><span class="value-num">42.6</span><span class="suffix">%</span></div><div class="trend trend-flat">— 与上月持平</div></div>
-        </div>
     </div>
-    <div class="scenario-example status-rules" style="margin-top: 16px;">
+    <div class="scenario-example" style="margin-top: 16px;">
         <div class="scenario-example-title">如何决定良好、警告、异常状态</div>
-        <div class="status-rules-list">
-            <div class="status-rule">
-                <span class="status-icon good">✓</span>
-                <div class="status-desc">
-                    <span class="status-name">良好（绿色）</span> 正向：增长≥5%或超过目标；负向：下降≥5%或低于警戒线。
-                    <div class="example">示例：订单数增长 8.2%、转化率提升 10%。</div>
-                </div>
-            </div>
-            <div class="status-rule">
-                <span class="status-icon warning">▲</span>
-                <div class="status-desc">
-                    <span class="status-name">警告（黄色）</span> 正向：下降 2%–5%；负向：上升 2%–5%；接近警戒线未达异常。
-                    <div class="example">示例：客单价下降 3.1%、活跃度下降 4%。</div>
-                </div>
-            </div>
-            <div class="status-rule">
-                <span class="status-icon alert">✗</span>
-                <div class="status-desc">
-                    <span class="status-name">异常（红色）</span> 正向：下降≥5%或低于目标20%；负向：上升≥5%或超过警戒线。
-                    <div class="example">示例：退货率超过阈值、错误率超过 5%。</div>
-                </div>
-            </div>
-        </div>
-        <div class="scenario-example-content" style="margin-top: 12px;">
+        <div class="scenario-example-content">
+            <strong>✓ 良好（绿色）</strong> 正向：增长≥5%或超过目标；负向：下降≥5%或低于警戒线。示例：订单数增长 8.2%、转化率提升 10%。<br>
+            <strong>⚠ 警告（黄色）</strong> 正向：下降 2%–5%；负向：上升 2%–5%；接近警戒线未达异常。示例：客单价下降 3.1%、活跃度下降 4%。<br>
+            <strong>✗ 异常（红色）</strong> 正向：下降≥5%或低于目标20%；负向：上升≥5%或超过警戒线。示例：退货率超过阈值、错误率超过 5%。<br>
             <strong>判定建议：</strong> 根据业务设定阈值，结合趋势与绝对值综合判断；考虑季节性；建议在配置中预设阈值并支持业务灵活调整。
         </div>
     </div>
@@ -1119,36 +1043,40 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <div class="spec-section">
     <div class="spec-title">状态判定规则</div>
     <div class="code-block status-rules-block" style="background: #F7F8FA; border: 1px solid #E8E8E8;">
-        <div class="block-title">如何决定良好、警告、异常状态：</div>
+        <div style="margin-bottom: 12px; font-weight: 600; color: #262626; font-size: 15px;">如何决定良好、警告、异常状态：</div>
+        
         <div style="margin-bottom: 16px;">
-            <div class="rule-head" style="color: #5AD8A6;">✓ 良好（绿色）判定标准：</div>
-            <ul>
+            <div style="font-weight: 600; color: #5AD8A6; margin-bottom: 6px; font-size: 14px;">✓ 良好（绿色）判定标准：</div>
+            <ul style="margin: 0; padding-left: 20px; color: #595959; line-height: 1.8; font-size: 14px;">
                 <li>正向指标：增长幅度 ≥ 5% 或超过目标值</li>
                 <li>负向指标：下降幅度 ≥ 5% 或低于警戒线</li>
                 <li>示例：订单数增长 8.2%（良好）、转化率提升 10%（良好）</li>
             </ul>
         </div>
+        
         <div style="margin-bottom: 16px;">
-            <div class="rule-head" style="color: #F6BD16;">▲ 警告（黄色）判定标准：</div>
-            <ul>
+            <div style="font-weight: 600; color: #F6BD16; margin-bottom: 6px; font-size: 14px;">⚠ 警告（黄色）判定标准：</div>
+            <ul style="margin: 0; padding-left: 20px; color: #595959; line-height: 1.8; font-size: 14px;">
                 <li>正向指标：下降幅度在 2%-5% 之间</li>
                 <li>负向指标：上升幅度在 2%-5% 之间</li>
                 <li>接近警戒线但未达到异常水平</li>
                 <li>示例：客单价下降 3.1%（警告）、活跃度下降 4%（警告）</li>
             </ul>
         </div>
+        
         <div style="margin-bottom: 16px;">
-            <div class="rule-head" style="color: #E86452;">✗ 异常（红色）判定标准：</div>
-            <ul>
+            <div style="font-weight: 600; color: #E86452; margin-bottom: 6px; font-size: 14px;">✗ 异常（红色）判定标准：</div>
+            <ul style="margin: 0; padding-left: 20px; color: #595959; line-height: 1.8; font-size: 14px;">
                 <li>正向指标：下降幅度 ≥ 5% 或低于目标值 20%</li>
                 <li>负向指标：上升幅度 ≥ 5% 或超过警戒线</li>
                 <li>严重偏离正常范围，需要立即处理</li>
                 <li>示例：退货率上升 0.5%但超过阈值（异常）、错误率超过 5%（异常）</li>
             </ul>
         </div>
+        
         <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #E8E8E8;">
-            <div class="rule-head" style="color: #262626;">💡 判定建议：</div>
-            <ul>
+            <div style="font-weight: 600; color: #262626; margin-bottom: 6px; font-size: 14px;">💡 判定建议：</div>
+            <ul style="margin: 0; padding-left: 20px; color: #595959; line-height: 1.8; font-size: 14px;">
                 <li>根据业务特点设定阈值，不同指标可能有不同的判定标准</li>
                 <li>结合趋势方向和绝对值综合判断，避免仅看百分比</li>
                 <li>考虑季节性因素和业务周期，动态调整判定标准</li>
