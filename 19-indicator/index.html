@@ -411,9 +411,12 @@
 
         .scenario-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 16px; }
         .scenario-row.cols3 { grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        /* 三态区块：卡片与说明区更美观 */
+        .scenario-row.cols4 { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+        /* 三态区块与彩色案例：卡片与说明区更美观 */
         .spec-section .scenario-row.cols3 .scenario-block { margin-bottom: 0; }
-        .spec-section .scenario-row.cols3 .scenario-description {
+        .spec-section .scenario-row.cols4 .scenario-block { margin-bottom: 0; }
+        .spec-section .scenario-row.cols3 .scenario-description,
+        .spec-section .scenario-row.cols4 .scenario-description {
             font-size: 12px; color: #595959; line-height: 1.5; margin-bottom: 10px;
             padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
         }
@@ -434,8 +437,20 @@
         @media (max-width: 900px) { 
             .scenario-row { grid-template-columns: 1fr; } 
             .scenario-row.cols3 { grid-template-columns: 1fr; }
+            .scenario-row.cols4 { grid-template-columns: repeat(2, 1fr); }
             .scenario-block[style*="grid-column: span 2"] { grid-column: span 1 !important; }
         }
+        @media (max-width: 600px) { .scenario-row.cols4 { grid-template-columns: 1fr; } }
+        /* 彩色案例：状态判定说明统一格式 */
+        .status-rules { margin-top: 16px; }
+        .status-rule { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; font-size: 14px; line-height: 1.6; color: #595959; }
+        .status-rule .status-icon { font-weight: 700; flex-shrink: 0; }
+        .status-rule .status-icon.good { color: #389E0D; }
+        .status-rule .status-icon.warning { color: #D48806; }
+        .status-rule .status-icon.alert { color: #CF1322; }
+        .status-rule .status-name { font-weight: 600; color: #262626; }
+        .status-rule .status-desc { flex: 1; }
+        .status-rule .status-desc .example { color: #8C8C8C; margin-top: 4px; }
         .scenario-block { margin-bottom: 24px; min-width: 0; }
         .scenario-block .spec-title { margin-bottom: 8px; }
         /* 确保 scenario-row 中的指标卡高度与主图一致 */
@@ -827,11 +842,12 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     </div>
 </div>
 
-<!-- 良好 / 警告 / 异常 三态 -->
+<!-- 良好 / 警告 / 异常 三态 + 彩色案例 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge excellent">良好</span> 数值优秀 / <span class="scenario-badge warning">警告</span> 接近警戒 / <span class="scenario-badge alert">异常</span> 数值过低</div>
     <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额和客单价表现如何？', '良好：本月销售额 ¥1,500万，环比↑25.8%、同比↑32.5%。警告：客单价 ¥703元，环比↓3.1%。异常：若销售额仅¥500万且环比↓15.2%，则显示红色异常卡片。见下方指标卡。', [], { cardSelector: '#qa-card-three-state' })">问答演示</button></div>
-    <div id="qa-card-three-state" class="scenario-row cols3">
+    <div style="font-size: 14px; font-weight: 600; color: #262626; margin-bottom: 12px;">彩色案例（格式统一：指标名 + 数值 + 环比/同比）</div>
+    <div id="qa-card-three-state" class="scenario-row cols4">
         <div class="scenario-block">
             <div class="scenario-description">良好（绿色）：正向指标增长≥5%或超过目标；负向指标下降≥5%或低于警戒线</div>
             <div class="indicator-card semantic-good"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>
@@ -844,13 +860,37 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
             <div class="scenario-description">异常（红色）：正向指标下降≥5%或低于目标20%；负向指标上升≥5%或超过警戒线</div>
             <div class="indicator-card semantic-alert"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">500</span><span class="suffix">万元</span></div><div class="trend trend-down">↓15.2% 环比 &nbsp; ↓8.5% 同比</div></div>
         </div>
+        <div class="scenario-block">
+            <div class="scenario-description">持平（白色）：与上月/目标基本一致，无显著变化</div>
+            <div class="indicator-card"><div class="label">毛利率</div><div class="value"><span class="value-num">42.6</span><span class="suffix">%</span></div><div class="trend trend-flat">— 与上月持平</div></div>
+        </div>
     </div>
-    <div class="scenario-example" style="margin-top: 16px;">
+    <div class="scenario-example status-rules" style="margin-top: 16px;">
         <div class="scenario-example-title">如何决定良好、警告、异常状态</div>
-        <div class="scenario-example-content">
-            <strong>✓ 良好（绿色）</strong> 正向：增长≥5%或超过目标；负向：下降≥5%或低于警戒线。示例：订单数增长 8.2%、转化率提升 10%。<br>
-            <strong>⚠ 警告（黄色）</strong> 正向：下降 2%–5%；负向：上升 2%–5%；接近警戒线未达异常。示例：客单价下降 3.1%、活跃度下降 4%。<br>
-            <strong>✗ 异常（红色）</strong> 正向：下降≥5%或低于目标20%；负向：上升≥5%或超过警戒线。示例：退货率超过阈值、错误率超过 5%。<br>
+        <div class="status-rules-list">
+            <div class="status-rule">
+                <span class="status-icon good">✓</span>
+                <div class="status-desc">
+                    <span class="status-name">良好（绿色）</span> 正向：增长≥5%或超过目标；负向：下降≥5%或低于警戒线。
+                    <div class="example">示例：订单数增长 8.2%、转化率提升 10%。</div>
+                </div>
+            </div>
+            <div class="status-rule">
+                <span class="status-icon warning">▲</span>
+                <div class="status-desc">
+                    <span class="status-name">警告（黄色）</span> 正向：下降 2%–5%；负向：上升 2%–5%；接近警戒线未达异常。
+                    <div class="example">示例：客单价下降 3.1%、活跃度下降 4%。</div>
+                </div>
+            </div>
+            <div class="status-rule">
+                <span class="status-icon alert">✗</span>
+                <div class="status-desc">
+                    <span class="status-name">异常（红色）</span> 正向：下降≥5%或低于目标20%；负向：上升≥5%或超过警戒线。
+                    <div class="example">示例：退货率超过阈值、错误率超过 5%。</div>
+                </div>
+            </div>
+        </div>
+        <div class="scenario-example-content" style="margin-top: 12px;">
             <strong>判定建议：</strong> 根据业务设定阈值，结合趋势与绝对值综合判断；考虑季节性；建议在配置中预设阈值并支持业务灵活调整。
         </div>
     </div>
