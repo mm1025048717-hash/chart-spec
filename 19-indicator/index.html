@@ -34,9 +34,11 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 10px;
             margin: 12px 0;
+            padding: 0 14px;
+            box-sizing: border-box;
         }
         @media (max-width: 768px) {
-            .indicator-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; }
+            .indicator-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; padding: 0 10px; }
         }
 
         /* 卡片统一：圆角6px、内边距12px（更小更紧凑）、阴影 0 1px 2px，无顶部横杠 */
