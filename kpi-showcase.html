@@ -132,18 +132,11 @@
             border: 1px solid #F0F0F0;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             font-family: inherit;
-            min-height: 130px;
-            height: 130px;
+            min-height: 120px;
+            height: auto;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-        }
-        @media (max-width: 768px) {
-            .kpi-card {
-                padding: 16px;
-                min-height: 120px;
-                height: 120px;
-            }
         }
         .kpi-card .kpi-label { font-size: 13px; color: #8C8C8C; margin-bottom: 10px; font-weight: 400; }
         .kpi-card .kpi-value {
@@ -170,6 +163,7 @@
             border-top: 1px solid #F0F0F0;
             display: grid;
             gap: 12px;
+            flex-shrink: 0;
         }
         .kpi-card .kpi-sub.grid2 { grid-template-columns: repeat(2, 1fr); }
         .kpi-card .kpi-sub.grid4 { grid-template-columns: repeat(4, 1fr); }
