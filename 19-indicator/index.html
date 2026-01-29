@@ -110,9 +110,36 @@
             .indicator-card .value .value-prefix,
             .indicator-card .value .suffix { font-size: 13px; }
         }
-        .trend-up { color: #52C41A; }
-        .trend-down { color: #FF4D4F; }
+        .trend-up { color: #389E0D; }
+        .trend-down { color: #CF1322; }
         .indicator-card .trend-flat { color: #8C8C8C; }
+
+        /* 红绿黄语义：轻量样式（浅底+左侧色条），用于主图、带趋势、数据格式、组合等多场景 */
+        .indicator-card.semantic-good {
+            background: linear-gradient(135deg, #F6FFED 0%, #F0FFF0 100%);
+            border: 1px solid #D9F7BE;
+            border-left: 4px solid #389E0D;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(56,158,13,0.1);
+        }
+        .indicator-card.semantic-good .trend.trend-up { color: #389E0D; font-weight: 500; }
+        .indicator-card.semantic-warning {
+            background: linear-gradient(135deg, #FFFBE6 0%, #FFFDE7 100%);
+            border: 1px solid #FFE58F;
+            border-left: 4px solid #D48806;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(212,136,6,0.1);
+        }
+        .indicator-card.semantic-warning .trend.trend-down { color: #D48806; font-weight: 500; }
+        .indicator-card.semantic-alert {
+            background: linear-gradient(135deg, #FFF1F0 0%, #FFF2F0 100%);
+            border: 1px solid #FFCCC7;
+            border-left: 4px solid #CF1322;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(207,19,34,0.1);
+        }
+        .indicator-card.semantic-alert .trend.trend-down,
+        .indicator-card.semantic-alert .trend.trend-up { color: #CF1322; font-weight: 500; }
 
         /* 普通指标卡：白色背景+深色文字（参考大小） */
         /* .blue, .green, .yellow, .red 类名仅用于语义标记，样式由默认样式统一处理 */
@@ -236,9 +263,13 @@
         .scenario-badge.data { background: #F6FFED; color: #52C41A; }
         .scenario-badge.empty { background: #FFFBE6; color: #FAAD14; }
         .scenario-badge.interact { background: #F9F0FF; color: #722ED1; }
-        .scenario-badge.alert { background: #FFF1F0; color: #FF4D4F; }
-        .scenario-badge.excellent { background: #F6FFED; color: #52C41A; }
-        .scenario-badge.warning { background: #FFFBE6; color: #D48806; }
+        .scenario-badge.alert { background: #FFF1F0; color: #CF1322; border: 1px solid #FFA39E; }
+        .scenario-badge.excellent { background: #F6FFED; color: #389E0D; border: 1px solid #B7EB8F; }
+        .scenario-badge.warning { background: #FFFBE6; color: #D48806; border: 1px solid #FFE58F; }
+        /* 三态标题中的徽章更醒目 */
+        .spec-title .scenario-badge.excellent { padding: 5px 14px; border-radius: 6px; font-weight: 600; }
+        .spec-title .scenario-badge.warning { padding: 5px 14px; border-radius: 6px; font-weight: 600; }
+        .spec-title .scenario-badge.alert { padding: 5px 14px; border-radius: 6px; font-weight: 600; }
         .scenario-badge.special { background: #FFF7E6; color: #FA8C16; }
         .scenario-badge.industry { background: #E6F7FF; color: #1890FF; }
         .scenario-badge.combo { background: #E6F7FF; color: #1890FF; }
@@ -289,10 +320,12 @@
         }
         .kpi-action-btn.primary:hover { background: #40A9FF; border-color: #40A9FF; }
 
+        /* 三态全色块：顶配审美，柔和深色 + 圆角与光感 */
         .indicator-card.alert-style {
-            background: #FF4D4F;
+            background: linear-gradient(160deg, #D32029 0%, #A8071A 50%, #8C0414 100%);
             border: none;
-            box-shadow: 0 2px 8px rgba(255,77,79,0.25);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(207,19,34,0.28), inset 0 1px 0 rgba(255,255,255,0.12);
         }
         .indicator-card.alert-style .label,
         .indicator-card.alert-style .value,
@@ -302,10 +335,12 @@
         .indicator-card.alert-style .trend,
         .indicator-card.alert-style .trend.trend-up,
         .indicator-card.alert-style .trend.trend-down { color: #fff !important; }
+        .indicator-card.alert-style .label { opacity: 0.95; }
         .indicator-card.excellent-style {
-            background: #52C41A;
+            background: linear-gradient(160deg, #52C41A 0%, #389E0D 50%, #237804 100%);
             border: none;
-            box-shadow: 0 2px 8px rgba(82,196,26,0.25);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(56,158,13,0.28), inset 0 1px 0 rgba(255,255,255,0.15);
         }
         .indicator-card.excellent-style .label,
         .indicator-card.excellent-style .value,
@@ -315,10 +350,12 @@
         .indicator-card.excellent-style .trend,
         .indicator-card.excellent-style .trend.trend-up,
         .indicator-card.excellent-style .trend.trend-down { color: #fff !important; }
+        .indicator-card.excellent-style .label { opacity: 0.95; }
         .indicator-card.warning-style {
-            background: #FAAD14;
+            background: linear-gradient(160deg, #FAAD14 0%, #D48806 50%, #AD6800 100%);
             border: none;
-            box-shadow: 0 2px 8px rgba(250,173,20,0.25);
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(212,136,6,0.28), inset 0 1px 0 rgba(255,255,255,0.15);
         }
         .indicator-card.warning-style .label,
         .indicator-card.warning-style .value,
@@ -328,6 +365,7 @@
         .indicator-card.warning-style .trend,
         .indicator-card.warning-style .trend.trend-up,
         .indicator-card.warning-style .trend.trend-down { color: #fff !important; }
+        .indicator-card.warning-style .label { opacity: 0.95; }
         .indicator-card.empty-style {
             background: #FAFAFA;
             border: 1px dashed #D9D9D9;
@@ -344,7 +382,27 @@
         }
 
         .scenario-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 16px; }
-        .scenario-row.cols3 { grid-template-columns: repeat(3, 1fr); }
+        .scenario-row.cols3 { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        /* 三态区块：卡片与说明区更美观 */
+        .spec-section .scenario-row.cols3 .scenario-block { margin-bottom: 0; }
+        .spec-section .scenario-row.cols3 .scenario-description {
+            font-size: 12px; color: #595959; line-height: 1.5; margin-bottom: 10px;
+            padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+        .scenario-example {
+            background: #FAFBFC;
+            border-radius: 10px;
+            padding: 16px 20px;
+            border: 1px solid #F0F0F0;
+        }
+        .scenario-example-title {
+            font-size: 14px; font-weight: 600; color: #262626; margin-bottom: 10px;
+            letter-spacing: 0.02em;
+        }
+        .scenario-example-content {
+            font-size: 13px; color: #595959; line-height: 1.75;
+        }
+        .scenario-example-content strong { color: #262626; font-weight: 600; }
         @media (max-width: 900px) { 
             .scenario-row { grid-template-columns: 1fr; } 
             .scenario-row.cols3 { grid-template-columns: 1fr; }
@@ -509,22 +567,22 @@
             </div>
     </div>
     <div class="indicator-grid" id="qa-card-main">
-        <div class="indicator-card blue">
+        <div class="indicator-card semantic-good">
             <div class="label">总销售额</div>
             <div class="value"><span class="value-num">8,846</span><span class="suffix">万元</span></div>
             <div class="trend trend-up">↑ 12.5% 较上月</div>
         </div>
-        <div class="indicator-card green">
+        <div class="indicator-card semantic-good">
             <div class="label">订单数</div>
             <div class="value"><span class="value-num">12,580</span><span class="suffix">单</span></div>
             <div class="trend trend-up">↑ 8.2% 较上月</div>
         </div>
-        <div class="indicator-card yellow">
+        <div class="indicator-card semantic-warning">
             <div class="label">客单价</div>
             <div class="value"><span class="value-num">703</span><span class="suffix">元</span></div>
             <div class="trend trend-down">↓ 3.1% 较上月</div>
         </div>
-        <div class="indicator-card red">
+        <div class="indicator-card semantic-alert">
             <div class="label">退货率</div>
             <div class="value"><span class="value-num">2.3</span><span class="suffix">%</span></div>
             <div class="trend trend-up">↑ 0.5% 较上月</div>
@@ -637,7 +695,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-content">适用于需要展示变化趋势的场景，如"近3个月销售额如何"</div>
     </div>
     <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('近3个月销售额如何？', '近3个月销售额 ¥2,500万元，环比↑15.2%，同比↑19.8%。可点击「归因」进行归因分析。见下方指标卡。', [], { cardSelector: '#qa-card-trend' })">问答演示</button></div>
-    <div id="qa-card-trend" style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">近3个月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">2,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div><button type="button" class="kpi-action-btn">归因</button></div>
+    <div id="qa-card-trend" style="margin-top: 16px;"><div class="indicator-card semantic-good"><div class="label">近3个月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">2,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div><button type="button" class="kpi-action-btn">归因</button></div>
 </div>
 
 <div class="spec-section variant-section">
@@ -730,7 +788,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="scenario-row">
         <div id="qa-card-attribution" class="scenario-block">
             <div class="scenario-description">显示"归因"按钮，点击后可进行归因分析</div>
-            <div class="indicator-card yellow"><div class="label">12月份销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">880</span><span class="suffix">万元</span></div><div class="trend trend-down">↓5.2% 环比下降</div></div><button type="button" class="kpi-action-btn">归因</button>
+            <div class="indicator-card semantic-warning"><div class="label">12月份销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">880</span><span class="suffix">万元</span></div><div class="trend trend-down">↓5.2% 环比下降</div></div><button type="button" class="kpi-action-btn">归因</button>
         </div>
         <div id="qa-card-add" class="scenario-block">
             <div class="scenario-description">显示"添加"按钮，可将KPI卡片添加到数据看板</div>
@@ -806,19 +864,19 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div id="qa-card-format" class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">百分比类型，如转化率、增长率</div>
-            <div class="indicator-card green"><div class="label">转化率</div><div class="value"><span class="value-num">3.2</span><span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比 &nbsp; ↑1.2% 同比</div></div>
+            <div class="indicator-card semantic-good"><div class="label">转化率</div><div class="value"><span class="value-num">3.2</span><span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比 &nbsp; ↑1.2% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">大数值，自动格式化（万、亿）</div>
-            <div class="indicator-card blue"><div class="label">累计销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">38.56</span><span class="suffix">亿元</span></div><div class="trend trend-up">↑2.5% 环比 &nbsp; ↑19.8% 同比</div></div>
+            <div class="indicator-card semantic-good"><div class="label">累计销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">38.56</span><span class="suffix">亿元</span></div><div class="trend trend-up">↑2.5% 环比 &nbsp; ↑19.8% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">下降趋势，使用红色箭头和文字</div>
-            <div class="indicator-card red"><div class="label">11月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">820</span><span class="suffix">万元</span></div><div class="trend trend-down">↓8.5% 环比 &nbsp; ↓5.2% 同比</div></div>
+            <div class="indicator-card semantic-alert"><div class="label">11月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">820</span><span class="suffix">万元</span></div><div class="trend trend-down">↓8.5% 环比 &nbsp; ↓5.2% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">持平或小幅波动</div>
-            <div class="indicator-card blue"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,000</span><span class="suffix">万元</span></div><div class="trend trend-flat">→ 0.2% 环比 &nbsp; → 0.5% 同比</div></div>
+            <div class="indicator-card"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,000</span><span class="suffix">万元</span></div><div class="trend trend-flat">→ 0.2% 环比 &nbsp; → 0.5% 同比</div></div>
         </div>
     </div>
 </div>
@@ -844,15 +902,15 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         </div>
         <div class="scenario-block">
             <div class="scenario-description">财务营业收入</div>
-            <div class="indicator-card blue"><div class="label">营业收入</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">5,000</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.8% 环比 &nbsp; ↑22.3% 同比</div></div>
+            <div class="indicator-card semantic-good"><div class="label">营业收入</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">5,000</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.8% 环比 &nbsp; ↑22.3% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">营销ROI（投资回报率）</div>
-            <div class="indicator-card green"><div class="label">营销ROI</div><div class="value"><span class="value-num">3.5</span><span class="suffix">倍</span></div><div class="trend trend-up">↑0.8 环比 &nbsp; ↑1.2 同比</div></div>
+            <div class="indicator-card semantic-good"><div class="label">营销ROI</div><div class="value"><span class="value-num">3.5</span><span class="suffix">倍</span></div><div class="trend trend-up">↑0.8 环比 &nbsp; ↑1.2 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">HR考勤与绩效</div>
-            <div class="indicator-card green"><div class="label">出勤率</div><div class="value"><span class="value-num">96.5</span><span class="suffix">%</span></div><div class="trend trend-up">↑1.2% 环比 &nbsp; ↑2.5% 同比</div></div>
+            <div class="indicator-card semantic-good"><div class="label">出勤率</div><div class="value"><span class="value-num">96.5</span><span class="suffix">%</span></div><div class="trend trend-up">↑1.2% 环比 &nbsp; ↑2.5% 同比</div></div>
         </div>
     </div>
 </div>
@@ -864,10 +922,10 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="scenario-example"><div class="scenario-example-content">适用于多指标同时查看的场景</div></div>
     <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('帮我看看销售额和订单量', '销售额 ¥1,250万 ↑15.2% 环比；订单量 1.25万单 ↑8.5%；利润 ¥250万 ↓2.1%；转化率 3.2% ↑0.5%。见下方指标卡组。', [], { cardSelector: '#qa-card-combo' })">问答演示</button></div>
     <div id="qa-card-combo" class="kpi-group-row">
-        <div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万</span></div><div class="trend trend-up">↑15.2% 环比</div></div>
-        <div class="indicator-card green"><div class="label">订单量</div><div class="value"><span class="value-num">1.25万</span><span class="suffix">单</span></div><div class="trend trend-up">↑8.5% 环比</div></div>
-        <div class="indicator-card yellow"><div class="label">利润</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">250</span><span class="suffix">万</span></div><div class="trend trend-down">↓2.1% 环比</div></div>
-        <div class="indicator-card green"><div class="label">转化率</div><div class="value"><span class="value-num">3.2</span><span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比</div></div>
+        <div class="indicator-card semantic-good"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万</span></div><div class="trend trend-up">↑15.2% 环比</div></div>
+        <div class="indicator-card semantic-good"><div class="label">订单量</div><div class="value"><span class="value-num">1.25万</span><span class="suffix">单</span></div><div class="trend trend-up">↑8.5% 环比</div></div>
+        <div class="indicator-card semantic-warning"><div class="label">利润</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">250</span><span class="suffix">万</span></div><div class="trend trend-down">↓2.1% 环比</div></div>
+        <div class="indicator-card semantic-good"><div class="label">转化率</div><div class="value"><span class="value-num">3.2</span><span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比</div></div>
     </div>
 </div>
 
