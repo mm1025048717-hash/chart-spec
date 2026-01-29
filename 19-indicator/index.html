@@ -270,6 +270,19 @@
             cursor: pointer;
             font-family: inherit;
             margin-top: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        /* 空状态卡片内的按钮容器 */
+        .indicator-card.empty-style {
+            display: flex;
+            flex-direction: column;
+        }
+        .indicator-card.empty-style .kpi-action-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
         }
         .kpi-action-btn:hover { border-color: #1890FF; color: #1890FF; }
         .kpi-action-btn.primary {
@@ -324,11 +337,23 @@
         }
         .indicator-card.empty-style .value { font-size: 14px; color: #8C8C8C; font-weight: 400; }
         .indicator-card.empty-style .label { color: #8C8C8C; }
+        .indicator-card.empty-style .kpi-action-btn {
+            margin-top: 12px;
+            margin-right: 8px;
+            margin-bottom: 0;
+        }
+        .indicator-card.empty-style .kpi-action-btn:last-child {
+            margin-right: 0;
+        }
 
         .scenario-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 16px; }
         .scenario-row.cols3 { grid-template-columns: repeat(3, 1fr); }
-        @media (max-width: 900px) { .scenario-row { grid-template-columns: 1fr; } .scenario-row.cols3 { grid-template-columns: 1fr; } }
-        .scenario-block { margin-bottom: 24px; }
+        @media (max-width: 900px) { 
+            .scenario-row { grid-template-columns: 1fr; } 
+            .scenario-row.cols3 { grid-template-columns: 1fr; }
+            .scenario-block[style*="grid-column: span 2"] { grid-column: span 1 !important; }
+        }
+        .scenario-block { margin-bottom: 24px; min-width: 0; }
         .scenario-block .spec-title { margin-bottom: 8px; }
         /* 确保 scenario-row 中的指标卡高度一致（参考大小） */
         .scenario-row .indicator-card {
@@ -667,15 +692,36 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">查询结果为空时，显示友好的空状态提示</div>
-            <div class="indicator-card empty-style"><div class="label">2030年销售额</div><div class="value">暂无数据</div><button type="button" class="kpi-action-btn primary">修改查询条件</button></div>
+            <div class="indicator-card empty-style">
+                <div class="label">2030年销售额</div>
+                <div class="value">暂无数据</div>
+                <div class="kpi-action-container">
+                    <button type="button" class="kpi-action-btn primary">修改查询条件</button>
+                </div>
+            </div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">数据源连接失败时，显示错误提示和重试选项</div>
-            <div class="indicator-card empty-style"><div class="label">销售额</div><div class="value">数据源连接失败</div><button type="button" class="kpi-action-btn">重试</button> <button type="button" class="kpi-action-btn primary">检查连接</button></div>
+            <div class="indicator-card empty-style">
+                <div class="label">销售额</div>
+                <div class="value">数据源连接失败</div>
+                <div class="kpi-action-container">
+                    <button type="button" class="kpi-action-btn">重试</button>
+                    <button type="button" class="kpi-action-btn primary">检查连接</button>
+                </div>
+            </div>
         </div>
+    </div>
+    <div class="scenario-row" style="margin-top: 0;">
         <div class="scenario-block" style="grid-column: span 2;">
             <div class="scenario-description">用户没有权限查看数据时，显示权限提示</div>
-            <div class="indicator-card empty-style" style="max-width:400px;"><div class="label">销售额</div><div class="value">暂无数据访问权限</div><button type="button" class="kpi-action-btn primary">联系管理员</button></div>
+            <div class="indicator-card empty-style" style="max-width: 500px;">
+                <div class="label">销售额</div>
+                <div class="value">暂无数据访问权限</div>
+                <div class="kpi-action-container">
+                    <button type="button" class="kpi-action-btn primary">联系管理员</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
