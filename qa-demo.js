@@ -1,5 +1,5 @@
 /**
- * 问答演示 - 真正交互式 ChatBI，回答可展示对应卡片/图表
+ * 问答演示 - 真正交互式 ChatBI，回答中展示对应卡片/图表
  * showQaDemo(question, answer [, morePairs [, options]])
  * options: { cardSelector: 'CSS选择器', cardHtml: 'HTML字符串' }
  */
@@ -66,7 +66,6 @@
         } else {
             var inner = document.createElement('div');
             inner.className = 'qa-answer-inner';
-            inner.innerHTML = '<div class="qa-answer-text">' + highlightKeywords(text) + '</div>';
             if (cardContent) {
                 var cardWrap = document.createElement('div');
                 cardWrap.className = 'qa-answer-card';
@@ -76,6 +75,9 @@
                     cardWrap.appendChild(cardContent);
                 }
                 inner.appendChild(cardWrap);
+                inner.innerHTML += '<div class="qa-answer-text">' + highlightKeywords(text) + '</div>';
+            } else {
+                inner.innerHTML = '<div class="qa-answer-text">' + highlightKeywords(text) + '</div>';
             }
             el.appendChild(inner);
         }
@@ -100,7 +102,7 @@
             if (q && (t.indexOf(q) !== -1 || q.indexOf(t) !== -1))
                 return presetPairs[i].a;
         }
-        if (currentFirstAnswer && (t.indexOf('转化') !== -1 || t.indexOf('销售额') !== -1 || t.indexOf('累计') !== -1 || t.indexOf('环比') !== -1 || t.indexOf('同比') !== -1))
+        if (currentFirstAnswer && (t.indexOf('转化') !== -1 || t.indexOf('销售额') !== -1 || t.indexOf('累计') !== -1 || t.indexOf('环比') !== -1 || t.indexOf('同比') !== -1 || t.indexOf('季度') !== -1))
             return currentFirstAnswer;
         return null;
     }
@@ -114,7 +116,7 @@
         appendMessage('question', text);
         var answer = findAnswer(text);
         if (!answer) {
-            answer = '当前为演示模式。您可以尝试问与本页相关的问题，例如：本页指标汇总、某指标趋势、环比同比等。';
+            answer = '当前为演示模式。您可以尝试问与本页相关的问题，例如：本页指标汇总、某指标趋势、环比同比、各季度如何等。';
         }
         appendMessage('answer', answer, currentCardContent);
     }
@@ -132,6 +134,11 @@
         } else if (opts.cardHtml) {
             currentCardContent = opts.cardHtml;
         }
+        var m = document.getElementById('qaDemoModal');
+        if (m) {
+            if (currentCardContent) m.classList.add('qa-modal-has-card');
+            else m.classList.remove('qa-modal-has-card');
+        }
 
         var list = document.getElementById('qaChatList');
         var input = document.getElementById('qaInput');
@@ -148,7 +155,6 @@
         }
 
         var o = document.getElementById('qaDemoOverlay');
-        var m = document.getElementById('qaDemoModal');
         if (o) o.classList.add('show');
         if (m) m.classList.add('show');
         if (input) setTimeout(function() { input.focus(); }, 100);
