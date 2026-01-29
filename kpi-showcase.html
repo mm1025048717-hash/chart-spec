@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KPI卡片设计展示</title>
     <link rel="stylesheet" href="common.css">
+    <script src="qa-demo.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -373,7 +374,7 @@
                 <div class="scenario-actions">
                     <button class="scenario-btn active" data-mode="preview">预览</button>
                     <button class="scenario-btn" data-mode="code">代码</button>
-                    <button class="scenario-btn" data-mode="qa">查看问答效果</button>
+                    <button class="scenario-btn" data-mode="qa">问答演示</button>
                 </div>
                 <div class="kpi-preview">${s.render()}</div>
                 <div class="scenario-code-wrap">
@@ -387,9 +388,18 @@
             const copyBtn = card.querySelector('.btn-copy-code');
             card.querySelectorAll('.scenario-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
+                    const mode = this.dataset.mode;
+                    if (mode === 'qa') {
+                        showQaDemo(
+                            s.qaQuestion || (s.apply && s.apply.split('，')[0]) || ('本场景：' + s.title),
+                            s.qaAnswer || '见下方卡片展示。',
+                            [],
+                            { cardHtml: s.render() }
+                        );
+                        return;
+                    }
                     card.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    const mode = this.dataset.mode;
                     if (mode === 'preview') {
                         previewEl.classList.remove('hide');
                         codeWrap.classList.remove('show');
@@ -397,9 +407,6 @@
                         previewEl.classList.add('hide');
                         codePre.textContent = s.render();
                         codeWrap.classList.add('show');
-                    } else {
-                        previewEl.classList.remove('hide');
-                        codeWrap.classList.remove('show');
                     }
                 });
             });
