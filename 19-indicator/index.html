@@ -63,19 +63,31 @@
             margin-bottom: 12px;
             font-weight: 400;
         }
+        /* 数值行统一：数字 28px/600，前缀与单位 14px/400，同字体同基线 */
         .indicator-card .value {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            font-family: inherit;
             font-size: 28px;
             font-weight: 600;
             color: #262626;
             line-height: 1.2;
             margin-bottom: 4px;
         }
-        .indicator-card .suffix {
-            font-size: 14px;
-            color: #8C8C8C;
-            margin-left: 4px;
-            font-weight: 400;
+        .indicator-card .value .value-num {
+            font-size: 28px;
+            font-weight: 600;
+            color: inherit;
         }
+        .indicator-card .value .value-prefix,
+        .indicator-card .value .suffix {
+            font-size: 14px;
+            font-weight: 400;
+            color: #8C8C8C;
+            margin-left: 2px;
+        }
+        .indicator-card .value .value-prefix { margin-left: 0; margin-right: 2px; }
         .indicator-card .trend {
             margin-top: 8px;
             font-size: 12px;
@@ -83,9 +95,11 @@
         }
         @media (max-width: 768px) {
             .indicator-card .value { font-size: 22px; }
+            .indicator-card .value .value-num { font-size: 22px; }
             .indicator-card .label { font-size: 12px; }
             .indicator-card .trend { font-size: 11px; }
-            .indicator-card .suffix { font-size: 13px; }
+            .indicator-card .value .value-prefix,
+            .indicator-card .value .suffix { font-size: 13px; }
         }
         .trend-up { color: #52C41A; }
         .trend-down { color: #FF4D4F; }
@@ -142,18 +156,29 @@
             font-weight: 400;
         }
         .indicator-with-sub .main-value {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            font-family: inherit;
             font-size: 28px;
             font-weight: 600;
             color: #262626;
             line-height: 1.2;
             margin-bottom: 8px;
         }
+        .indicator-with-sub .main-value .value-num {
+            font-size: 28px;
+            font-weight: 600;
+            color: inherit;
+        }
+        .indicator-with-sub .main-value .value-prefix,
         .indicator-with-sub .main-suffix {
             font-size: 14px;
-            color: #8C8C8C;
-            margin-left: 4px;
             font-weight: 400;
+            color: #8C8C8C;
+            margin-left: 2px;
         }
+        .indicator-with-sub .main-value .value-prefix { margin-left: 0; margin-right: 2px; }
         .indicator-with-sub .trend { font-size: 12px; margin-top: 8px; }
         .indicator-with-sub .sub-indicators {
             margin-top: 16px;
@@ -358,22 +383,22 @@
     <div class="indicator-grid">
         <div class="indicator-card blue">
             <div class="label">总销售额</div>
-            <div class="value">8,846<span class="suffix">万元</span></div>
+            <div class="value"><span class="value-num">8,846</span><span class="suffix">万元</span></div>
             <div class="trend trend-up">↑ 12.5% 较上月</div>
         </div>
         <div class="indicator-card green">
             <div class="label">订单数</div>
-            <div class="value">12,580<span class="suffix">单</span></div>
+            <div class="value"><span class="value-num">12,580</span><span class="suffix">单</span></div>
             <div class="trend trend-up">↑ 8.2% 较上月</div>
         </div>
         <div class="indicator-card yellow">
             <div class="label">客单价</div>
-            <div class="value">703<span class="suffix">元</span></div>
+            <div class="value"><span class="value-num">703</span><span class="suffix">元</span></div>
             <div class="trend trend-down">↓ 3.1% 较上月</div>
         </div>
         <div class="indicator-card red">
             <div class="label">退货率</div>
-            <div class="value">2.3<span class="suffix">%</span></div>
+            <div class="value"><span class="value-num">2.3</span><span class="suffix">%</span></div>
             <div class="trend trend-up">↑ 0.5% 较上月</div>
         </div>
     </div>
@@ -447,7 +472,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div style="margin-top: 24px;">
         <div class="indicator-with-sub">
             <div class="main-label">达成率</div>
-            <div class="main-value">85.6<span class="main-suffix">%</span></div>
+            <div class="main-value"><span class="value-num">85.6</span><span class="main-suffix">%</span></div>
             <div class="trend trend-up">↑ 较目标超出 5.6%</div>
             <div class="sub-indicators">
                 <div class="sub-item">
@@ -471,7 +496,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-title">适用场景：</div>
         <div class="scenario-example-content">适用于简单的数值展示场景，如"本月销售额是多少"</div>
     </div>
-    <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">销售额</div><div class="value">¥1,250<span class="suffix">万</span>元</div></div></div>
+    <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万元</span></div></div></div>
 </div>
 
 <div class="spec-section variant-section">
@@ -481,7 +506,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-title">适用场景：</div>
         <div class="scenario-example-content">适用于需要展示变化趋势的场景，如"近3个月销售额如何"</div>
     </div>
-    <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">近3个月销售额</div><div class="value">¥2,500<span class="suffix">万</span>元</div><div class="trend trend-up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div><button type="button" class="kpi-action-btn">归因</button></div>
+    <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">近3个月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">2,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div><button type="button" class="kpi-action-btn">归因</button></div>
 </div>
 
 <div class="spec-section variant-section">
@@ -494,7 +519,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div style="margin-top: 16px;">
         <div class="indicator-with-sub">
             <div class="main-label">2024年销售额</div>
-            <div class="main-value">¥3,856<span class="main-suffix">万</span>元</div>
+            <div class="main-value"><span class="value-prefix">¥</span><span class="value-num">3,856</span><span class="main-suffix">万元</span></div>
             <div class="trend trend-up">↑ 19.8% 较2023年增长</div>
             <div class="sub-indicators grid4">
                 <div class="sub-item"><div class="sub-label">Q1</div><div class="sub-value">850万</div></div>
@@ -513,12 +538,12 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-block">
             <div class="scenario-description">查询单日数据时，不展示季度分解和同比</div>
             <div class="scenario-example"><div class="scenario-example-content">如"2024年12月1日销售额"</div></div>
-            <div class="indicator-card blue"><div class="label">2024年12月1日销售额</div><div class="value">¥13<span class="suffix">万</span>元</div></div>
+            <div class="indicator-card blue"><div class="label">2024年12月1日销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">13</span><span class="suffix">万元</span></div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">查询短期数据（少于7天）时，不展示季度分解</div>
             <div class="scenario-example"><div class="scenario-example-content">如"最近3天销售额"</div></div>
-            <div class="indicator-card blue"><div class="label">最近3天销售额</div><div class="value">¥38.5<span class="suffix">万</span>元</div></div>
+            <div class="indicator-card blue"><div class="label">最近3天销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">38.5</span><span class="suffix">万元</span></div></div>
         </div>
     </div>
 </div>
@@ -548,7 +573,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">显示"归因"按钮，点击后可进行归因分析</div>
-            <div class="indicator-card yellow"><div class="label">12月份销售额</div><div class="value">¥880<span class="suffix">万</span>元</div><div class="trend trend-down">↓5.2% 环比下降</div></div><button type="button" class="kpi-action-btn">归因</button>
+            <div class="indicator-card yellow"><div class="label">12月份销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">880</span><span class="suffix">万元</span></div><div class="trend trend-down">↓5.2% 环比下降</div></div><button type="button" class="kpi-action-btn">归因</button>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">显示"添加"按钮，可将KPI卡片添加到数据看板</div>
@@ -563,11 +588,11 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">当数值低于预警阈值时，显示红色渐变背景</div>
-            <div class="indicator-card alert-style"><div class="label">本月销售额</div><div class="value">¥500<span class="suffix">万</span>元</div><div class="trend trend-down">↓15.2% 环比 &nbsp; ↓8.5% 同比</div></div>
+            <div class="indicator-card alert-style"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">500</span><span class="suffix">万元</span></div><div class="trend trend-down">↓15.2% 环比 &nbsp; ↓8.5% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">当数值超过优秀阈值时，显示绿色渐变背景</div>
-            <div class="indicator-card excellent-style"><div class="label">本月销售额</div><div class="value">¥1,500<span class="suffix">万</span>元</div><div class="trend trend-up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>
+            <div class="indicator-card excellent-style"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>
         </div>
     </div>
 </div>
@@ -580,7 +605,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div style="margin-top: 16px;">
         <div class="indicator-with-sub">
             <div class="main-label">本月销售额目标</div>
-            <div class="main-value">¥1,200<span class="main-suffix">万</span>元</div>
+            <div class="main-value"><span class="value-prefix">¥</span><span class="value-num">1,200</span><span class="main-suffix">万元</span></div>
             <div class="trend trend-up">↑85% 完成度</div>
             <div class="sub-indicators grid4">
                 <div class="sub-item"><div class="sub-label">目标</div><div class="sub-value">1400万</div></div>
@@ -597,19 +622,19 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">百分比类型，如转化率、增长率</div>
-            <div class="indicator-card green"><div class="label">转化率</div><div class="value">3.2<span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比 &nbsp; ↑1.2% 同比</div></div>
+            <div class="indicator-card green"><div class="label">转化率</div><div class="value"><span class="value-num">3.2</span><span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比 &nbsp; ↑1.2% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">大数值，自动格式化（万、亿）</div>
-            <div class="indicator-card blue"><div class="label">累计销售额</div><div class="value">¥38.56<span class="suffix">亿</span>元</div><div class="trend trend-up">↑2.5% 环比 &nbsp; ↑19.8% 同比</div></div>
+            <div class="indicator-card blue"><div class="label">累计销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">38.56</span><span class="suffix">亿元</span></div><div class="trend trend-up">↑2.5% 环比 &nbsp; ↑19.8% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">下降趋势，使用红色箭头和文字</div>
-            <div class="indicator-card red"><div class="label">11月销售额</div><div class="value">¥820<span class="suffix">万</span>元</div><div class="trend trend-down">↓8.5% 环比 &nbsp; ↓5.2% 同比</div></div>
+            <div class="indicator-card red"><div class="label">11月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">820</span><span class="suffix">万元</span></div><div class="trend trend-down">↓8.5% 环比 &nbsp; ↓5.2% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">持平或小幅波动</div>
-            <div class="indicator-card blue"><div class="label">本月销售额</div><div class="value">¥1,000<span class="suffix">万</span>元</div><div class="trend trend-flat">→ 0.2% 环比 &nbsp; → 0.5% 同比</div></div>
+            <div class="indicator-card blue"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,000</span><span class="suffix">万元</span></div><div class="trend trend-flat">→ 0.2% 环比 &nbsp; → 0.5% 同比</div></div>
         </div>
     </div>
 </div>
@@ -622,7 +647,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
             <div class="scenario-description">电商GMV（成交总额）</div>
             <div class="indicator-with-sub">
                 <div class="main-label">GMV成交总额</div>
-                <div class="main-value">¥1.25<span class="main-suffix">亿</span></div>
+                <div class="main-value"><span class="value-prefix">¥</span><span class="value-num">1.25</span><span class="main-suffix">亿</span></div>
                 <div class="trend trend-up">↑28.5% 环比</div>
                 <div class="sub-indicators grid4">
                     <div class="sub-item"><div class="sub-label">订单数</div><div class="sub-value">12.5万</div></div>
@@ -634,15 +659,15 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         </div>
         <div class="scenario-block">
             <div class="scenario-description">财务营业收入</div>
-            <div class="indicator-card blue"><div class="label">营业收入</div><div class="value">¥5,000<span class="suffix">万</span>元</div><div class="trend trend-up">↑15.8% 环比 &nbsp; ↑22.3% 同比</div></div>
+            <div class="indicator-card blue"><div class="label">营业收入</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">5,000</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.8% 环比 &nbsp; ↑22.3% 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">营销ROI（投资回报率）</div>
-            <div class="indicator-card green"><div class="label">营销ROI</div><div class="value">3.5<span class="suffix">倍</span></div><div class="trend trend-up">↑0.8 环比 &nbsp; ↑1.2 同比</div></div>
+            <div class="indicator-card green"><div class="label">营销ROI</div><div class="value"><span class="value-num">3.5</span><span class="suffix">倍</span></div><div class="trend trend-up">↑0.8 环比 &nbsp; ↑1.2 同比</div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">HR考勤与绩效</div>
-            <div class="indicator-card green"><div class="label">出勤率</div><div class="value">96.5<span class="suffix">%</span></div><div class="trend trend-up">↑1.2% 环比 &nbsp; ↑2.5% 同比</div></div>
+            <div class="indicator-card green"><div class="label">出勤率</div><div class="value"><span class="value-num">96.5</span><span class="suffix">%</span></div><div class="trend trend-up">↑1.2% 环比 &nbsp; ↑2.5% 同比</div></div>
         </div>
     </div>
 </div>
@@ -653,10 +678,10 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="scenario-description">多个KPI卡片并排展示，适用于多指标对比</div>
     <div class="scenario-example"><div class="scenario-example-content">适用于多指标同时查看的场景</div></div>
     <div class="kpi-group-row">
-        <div class="indicator-card blue"><div class="label">销售额</div><div class="value">¥1,250万</div><div class="trend trend-up">↑15.2% 环比</div></div>
-        <div class="indicator-card green"><div class="label">订单量</div><div class="value">1.25万<span class="suffix">单</span></div><div class="trend trend-up">↑8.5% 环比</div></div>
-        <div class="indicator-card yellow"><div class="label">利润</div><div class="value">¥250万</div><div class="trend trend-down">↓2.1% 环比</div></div>
-        <div class="indicator-card green"><div class="label">转化率</div><div class="value">3.2<span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比</div></div>
+        <div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万</span></div><div class="trend trend-up">↑15.2% 环比</div></div>
+        <div class="indicator-card green"><div class="label">订单量</div><div class="value"><span class="value-num">1.25万</span><span class="suffix">单</span></div><div class="trend trend-up">↑8.5% 环比</div></div>
+        <div class="indicator-card yellow"><div class="label">利润</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">250</span><span class="suffix">万</span></div><div class="trend trend-down">↓2.1% 环比</div></div>
+        <div class="indicator-card green"><div class="label">转化率</div><div class="value"><span class="value-num">3.2</span><span class="suffix">%</span></div><div class="trend trend-up">↑0.5% 环比</div></div>
     </div>
 </div>
 
