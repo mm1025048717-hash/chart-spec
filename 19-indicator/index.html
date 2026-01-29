@@ -32,18 +32,18 @@
         .indicator-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin: 16px 0;
+            gap: 10px;
+            margin: 12px 0;
         }
         @media (max-width: 768px) {
-            .indicator-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0; }
+            .indicator-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; }
         }
 
-        /* 卡片统一：圆角8px、内边距14px（更紧凑）、阴影 0 1px 2px，无顶部横杠 */
+        /* 卡片统一：圆角6px、内边距12px（更小更紧凑）、阴影 0 1px 2px，无顶部横杠 */
         .indicator-card {
             background: #fff;
-            border-radius: 8px;
-            padding: 14px 16px;
+            border-radius: 6px;
+            padding: 12px;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
             border: 1px solid #F0F0F0;
             position: relative;
@@ -53,51 +53,51 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         @media (max-width: 768px) {
-            .indicator-card { padding: 12px; border-radius: 8px; }
+            .indicator-card { padding: 10px; border-radius: 6px; }
         }
         .indicator-card .label {
-            font-size: 12px;
+            font-size: 11px;
             color: #8C8C8C;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-weight: 400;
         }
-        /* 数值行统一：数字 24px/600（更紧凑），前缀与单位 13px/400，同字体同基线 */
+        /* 数值行统一：数字 20px/600（更小），前缀与单位 12px/400，同字体同基线 */
         .indicator-card .value {
             display: flex;
             align-items: baseline;
             flex-wrap: wrap;
             font-family: inherit;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             color: #262626;
             line-height: 1.2;
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         .indicator-card .value .value-num {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             color: inherit;
         }
         .indicator-card .value .value-prefix,
         .indicator-card .value .suffix {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 400;
             color: #8C8C8C;
             margin-left: 2px;
         }
         .indicator-card .value .value-prefix { margin-left: 0; margin-right: 2px; }
         .indicator-card .trend {
-            margin-top: 6px;
-            font-size: 11px;
+            margin-top: 4px;
+            font-size: 10px;
             font-weight: 400;
         }
         @media (max-width: 768px) {
-            .indicator-card .value { font-size: 20px; }
-            .indicator-card .value .value-num { font-size: 20px; }
-            .indicator-card .label { font-size: 11px; }
-            .indicator-card .trend { font-size: 10px; }
+            .indicator-card .value { font-size: 18px; }
+            .indicator-card .value .value-num { font-size: 18px; }
+            .indicator-card .label { font-size: 10px; }
+            .indicator-card .trend { font-size: 9px; }
             .indicator-card .value .value-prefix,
-            .indicator-card .value .suffix { font-size: 12px; }
+            .indicator-card .value .suffix { font-size: 11px; }
         }
         .trend-up { color: #52C41A; }
         .trend-down { color: #FF4D4F; }
