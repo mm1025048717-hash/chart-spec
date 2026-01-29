@@ -141,11 +141,12 @@
             font-size: 28px;
             font-weight: 600;
             color: #262626;
-            line-height: 1.2;
+            line-height: 1;
         }
-        .kpi-card .kpi-value .value-num { font-size: 28px; font-weight: 600; color: inherit; }
+        .kpi-card .kpi-value .value-num { font-size: 28px; font-weight: 600; color: inherit; line-height: 1; }
         .kpi-card .kpi-value .value-prefix,
-        .kpi-card .kpi-value .kpi-unit { font-size: 14px; font-weight: 400; color: #8C8C8C; margin-left: 2px; }
+        .kpi-card .kpi-value .kpi-unit,
+        .kpi-card .kpi-value .suffix { font-size: 14px; font-weight: 400; color: #8C8C8C; margin-left: 2px; line-height: 1; vertical-align: baseline; }
         .kpi-card .kpi-value .value-prefix { margin-left: 0; margin-right: 2px; }
         .kpi-card .kpi-trend { margin-top: 10px; font-size: 12px; font-weight: 400; }
         .kpi-card .kpi-trend.up { color: #52C41A; }
@@ -183,6 +184,7 @@
         .kpi-card.alert-style .kpi-value .value-num,
         .kpi-card.alert-style .kpi-value .value-prefix,
         .kpi-card.alert-style .kpi-value .kpi-unit,
+        .kpi-card.alert-style .kpi-value .suffix,
         .kpi-card.alert-style .kpi-trend { color: #fff !important; }
         .kpi-card.excellent-style {
             background: #52C41A;
@@ -195,6 +197,7 @@
         .kpi-card.excellent-style .kpi-value .value-num,
         .kpi-card.excellent-style .kpi-value .value-prefix,
         .kpi-card.excellent-style .kpi-value .kpi-unit,
+        .kpi-card.excellent-style .kpi-value .suffix,
         .kpi-card.excellent-style .kpi-trend { color: #fff !important; }
         .kpi-card.warning-style {
             background: #FAAD14;
@@ -207,6 +210,7 @@
         .kpi-card.warning-style .kpi-value .value-num,
         .kpi-card.warning-style .kpi-value .value-prefix,
         .kpi-card.warning-style .kpi-value .kpi-unit,
+        .kpi-card.warning-style .kpi-value .suffix,
         .kpi-card.warning-style .kpi-trend { color: #fff !important; }
         .kpi-card.empty-style {
             background: #FAFAFA;
@@ -236,6 +240,15 @@
         }
         .scenario-code-wrap .btn-copy-code:hover { border-color: #1890FF; color: #1890FF; }
         .kpi-preview.hide { display: none; }
+        .qa-demo-overlay { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 9998; display: none; }
+        .qa-demo-overlay.show { display: block; }
+        .qa-demo-modal { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); background: #fff; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.15); padding: 20px; max-width: 420px; width: 90%; z-index: 9999; display: none; }
+        .qa-demo-modal.show { display: block; }
+        .qa-demo-modal .qa-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #262626; }
+        .qa-demo-modal .qa-question { font-size: 13px; color: #1890FF; margin-bottom: 8px; padding: 8px 10px; background: #E6F7FF; border-radius: 4px; }
+        .qa-demo-modal .qa-answer { font-size: 13px; color: #262626; line-height: 1.6; padding: 8px 10px; background: #FAFAFA; border-radius: 4px; }
+        .qa-demo-modal .qa-close { margin-top: 14px; padding: 6px 16px; font-size: 12px; border: 1px solid #D9D9D9; background: #fff; border-radius: 4px; cursor: pointer; font-family: inherit; }
+        .qa-demo-modal .qa-close:hover { border-color: #1890FF; color: #1890FF; }
     </style>
 </head>
 <body>
@@ -302,7 +315,7 @@
     </div>
     <script>
         const scenarios = [
-            { id: 'basic-1', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '基础KPI卡片', desc: '最简单的KPI展示，只显示指标名称和数值', apply: '适用于简单的数值展示场景，如"本月销售额是多少"', render: () => `<div class="kpi-card"><div class="kpi-label">销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">1250</span><span class="kpi-unit">万元</span></div></div>` },
+            { id: 'basic-1', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '基础KPI卡片', desc: '最简单的KPI展示，只显示指标名称和数值', apply: '适用于简单的数值展示场景，如"本月销售额是多少"', qaQuestion: '本月销售额是多少？', qaAnswer: '销售额 ¥1,250万元。', render: () => `<div class="kpi-card"><div class="kpi-label">销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">1250</span><span class="kpi-unit">万元</span></div></div>` },
             { id: 'basic-2', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '带趋势的KPI卡片', desc: '显示数值的同时展示同比增长或环比增长趋势', apply: '适用于需要展示变化趋势的场景，如"近3个月销售额如何"', render: () => `<div class="kpi-card"><div class="kpi-label">近3个月销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">2500</span><span class="kpi-unit">万元</span></div><div class="kpi-trend up">↑ 15.2% 环比 &nbsp; ↑ 19.8% 同比</div><div class="kpi-action"><button class="btn-outline">归因</button></div></div>` },
             { id: 'basic-3', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '带子指标的KPI卡片', desc: '主指标下方展示多个子指标，如季度分解', apply: '适用于需要展示详细分解的场景，如"今年销售额是多少，各季度如何"。例如：你问达成率，子指标就是销售额和销售目标。', render: () => `<div class="kpi-card"><div class="kpi-label">2024年销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">3856</span><span class="kpi-unit">万元</span></div><div class="kpi-trend up">↑ 19.8% 较2023年增长</div><div class="kpi-sub grid4"><div class="sub-item"><span class="sub-label">Q1</span><span class="sub-value">850万</span></div><div class="sub-item"><span class="sub-label">Q2</span><span class="sub-value">920万</span></div><div class="sub-item"><span class="sub-label">Q3</span><span class="sub-value">980万</span></div><div class="sub-item"><span class="sub-label">Q4</span><span class="sub-value">1106万</span></div></div></div>` },
             { id: 'data-1', category: 'data', badge: 'data', badgeText: '数据展示', title: '单日数据场景', desc: '查询单日数据时，不展示季度分解和同比', apply: '适用于查询单日数据的场景，如"查询2024年12月1日的销售额"', render: () => `<div class="kpi-card"><div class="kpi-label">2024年12月1日销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">13</span><span class="kpi-unit">万元</span></div><div class="kpi-hint">数据时间范围较短（0天），暂不展示季度分解。</div></div>` },

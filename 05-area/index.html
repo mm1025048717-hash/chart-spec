@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../common.css">
     <script src="../responsive-spec.js"></script>
     <script src="../unified-filter.js"></script>
+    <script src="../qa-demo.js"></script>
     <style>
         /* 使用 common.css 中的统一样式 */
     </style>
@@ -46,6 +47,7 @@
             </div>
             <div class="header-right">
                 <span class="chart-tag green">Basic Area</span>
+                <button type="button" class="btn-qa-demo" onclick="showQaDemo('累计或趋势面积怎么解读？', '面积图强调趋势与累计量，可问「某时段总量」「增长最快的是哪段」等。')">问答演示</button>
                 <button class="btn-view-code" onclick="toggleCode('code-area', this)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
                     Code

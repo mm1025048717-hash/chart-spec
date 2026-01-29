@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../common.css">
     <script src="../responsive-spec.js"></script>
     <script src="../unified-filter.js"></script>
+    <script src="../qa-demo.js"></script>
 </head>
 <body>
 
@@ -42,6 +43,7 @@
             </div>
             <div class="header-right">
                 <span class="chart-tag blue">Pareto</span>
+                <button type="button" class="btn-qa-demo" onclick="showQaDemo('帕累托分析结论是什么？', '帕累托图展示缺陷类型与累计占比，可问「前几类占80%」「哪类问题最多」「重点改进哪几项」等。')">问答演示</button>
                 <button class="btn-view-code" onclick="toggleCode('code-pareto', this)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
                     Code

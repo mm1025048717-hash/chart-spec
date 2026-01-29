@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../common.css">
     <script src="../responsive-spec.js"></script>
     <script src="../unified-filter.js"></script>
+    <script src="../qa-demo.js"></script>
     <style>
         /* 指标卡设计规范：统一字体与业务规则 */
         .spec-section,
@@ -63,7 +64,7 @@
             margin-bottom: 6px;
             font-weight: 400;
         }
-        /* 数值行统一：数字 20px/600（更小），前缀与单位 12px/400，同字体同基线 */
+        /* 数值行统一：数字 20px/600，前缀与单位 12px/400，同字体同基线对齐 */
         .indicator-card .value {
             display: flex;
             align-items: baseline;
@@ -72,13 +73,14 @@
             font-size: 20px;
             font-weight: 600;
             color: #262626;
-            line-height: 1.2;
+            line-height: 1;
             margin-bottom: 3px;
         }
         .indicator-card .value .value-num {
             font-size: 20px;
             font-weight: 600;
             color: inherit;
+            line-height: 1;
         }
         .indicator-card .value .value-prefix,
         .indicator-card .value .suffix {
@@ -86,6 +88,8 @@
             font-weight: 400;
             color: #8C8C8C;
             margin-left: 2px;
+            line-height: 1;
+            vertical-align: baseline;
         }
         .indicator-card .value .value-prefix { margin-left: 0; margin-right: 2px; }
         .indicator-card .trend {
@@ -163,13 +167,14 @@
             font-size: 28px;
             font-weight: 600;
             color: #262626;
-            line-height: 1.2;
+            line-height: 1;
             margin-bottom: 8px;
         }
         .indicator-with-sub .main-value .value-num {
             font-size: 28px;
             font-weight: 600;
             color: inherit;
+            line-height: 1;
         }
         .indicator-with-sub .main-value .value-prefix,
         .indicator-with-sub .main-suffix {
@@ -177,6 +182,8 @@
             font-weight: 400;
             color: #8C8C8C;
             margin-left: 2px;
+            line-height: 1;
+            vertical-align: baseline;
         }
         .indicator-with-sub .main-value .value-prefix { margin-left: 0; margin-right: 2px; }
         .indicator-with-sub .trend { font-size: 12px; margin-top: 8px; }
@@ -189,7 +196,29 @@
             gap: 16px;
         }
         .indicator-with-sub .sub-label { font-size: 12px; color: #8C8C8C; margin-bottom: 4px; font-weight: 400; }
-        .indicator-with-sub .sub-value { font-size: 16px; font-weight: 600; color: #262626; }
+        .indicator-with-sub .sub-value {
+            display: flex;
+            align-items: baseline;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            color: #262626;
+            line-height: 1;
+        }
+        .indicator-with-sub .sub-value .value-num {
+            font-size: 16px;
+            font-weight: 600;
+            color: inherit;
+            line-height: 1;
+        }
+        .indicator-with-sub .sub-value .suffix {
+            font-size: 12px;
+            font-weight: 400;
+            color: #8C8C8C;
+            margin-left: 2px;
+            line-height: 1;
+            vertical-align: baseline;
+        }
         .indicator-with-sub .sub-indicators.grid4 { grid-template-columns: repeat(4, 1fr); }
         @media (max-width: 600px) { .indicator-with-sub .sub-indicators.grid4 { grid-template-columns: repeat(2, 1fr); } }
 
@@ -301,6 +330,31 @@
         @media (max-width: 768px) { .kpi-group-row { grid-template-columns: repeat(2, 1fr); } }
         .kpi-group-row .indicator-card { padding: 16px; }
         .kpi-group-row .indicator-card .value { font-size: 22px; }
+
+        /* 问答演示按钮与弹窗 */
+        .btn-qa-demo {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 6px 12px; font-size: 12px; border-radius: 4px;
+            border: 1px solid #D9D9D9; background: #fff; color: #262626;
+            cursor: pointer; font-family: inherit; margin-left: 8px;
+        }
+        .btn-qa-demo:hover { border-color: #1890FF; color: #1890FF; }
+        .qa-demo-overlay {
+            position: fixed; left: 0; top: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4); z-index: 9998; display: none;
+        }
+        .qa-demo-overlay.show { display: block; }
+        .qa-demo-modal {
+            position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%);
+            background: #fff; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+            padding: 20px; max-width: 420px; width: 90%; z-index: 9999; display: none;
+        }
+        .qa-demo-modal.show { display: block; }
+        .qa-demo-modal .qa-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #262626; }
+        .qa-demo-modal .qa-question { font-size: 13px; color: #1890FF; margin-bottom: 8px; padding: 8px 10px; background: #E6F7FF; border-radius: 4px; }
+        .qa-demo-modal .qa-answer { font-size: 13px; color: #262626; line-height: 1.6; padding: 8px 10px; background: #FAFAFA; border-radius: 4px; }
+        .qa-demo-modal .qa-close { margin-top: 14px; padding: 6px 16px; font-size: 12px; border: 1px solid #D9D9D9; background: #fff; border-radius: 4px; cursor: pointer; font-family: inherit; }
+        .qa-demo-modal .qa-close:hover { border-color: #1890FF; color: #1890FF; }
     </style>
 </head>
 <body>
@@ -337,6 +391,7 @@
             </div>
             <div class="header-right">
                 <span class="chart-tag blue">指标卡</span>
+                <button type="button" class="btn-qa-demo" onclick="showQaDemo('2024年12月核心经营指标怎么样？', '总销售额 8,846万元 ↑12.5% 较上月；订单数 12,580单 ↑8.2%；客单价 703元 ↓3.1%；退货率 2.3% ↑0.5%。')">问答演示</button>
                 <button class="btn-view-code" onclick="toggleCode('code-indicator', this)">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
                     Code
@@ -513,11 +568,11 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
             <div class="sub-indicators">
                 <div class="sub-item">
                     <div class="sub-label">销售额</div>
-                    <div class="sub-value">8,560<span style="font-size: 14px; color: #9CA3AF; margin-left: 4px;">万元</span></div>
+                    <div class="sub-value"><span class="value-num">8,560</span><span class="suffix">万元</span></div>
                 </div>
                 <div class="sub-item">
                     <div class="sub-label">销售目标</div>
-                    <div class="sub-value">10,000<span style="font-size: 14px; color: #9CA3AF; margin-left: 4px;">万元</span></div>
+                    <div class="sub-value"><span class="value-num">10,000</span><span class="suffix">万元</span></div>
                 </div>
             </div>
         </div>
@@ -532,6 +587,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-title">适用场景：</div>
         <div class="scenario-example-content">适用于简单的数值展示场景，如"本月销售额是多少"</div>
     </div>
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额是多少？', '销售额 ¥1,250万元。')">问答演示</button></div>
     <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万元</span></div></div></div>
 </div>
 
@@ -542,6 +598,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-title">适用场景：</div>
         <div class="scenario-example-content">适用于需要展示变化趋势的场景，如"近3个月销售额如何"</div>
     </div>
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('近3个月销售额如何？', '近3个月销售额 ¥2,500万元，环比↑15.2%，同比↑19.8%。可点击「归因」进行归因分析。')">问答演示</button></div>
     <div style="margin-top: 16px;"><div class="indicator-card blue"><div class="label">近3个月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">2,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑15.2% 环比 &nbsp; ↑19.8% 同比</div></div><button type="button" class="kpi-action-btn">归因</button></div>
 </div>
 
@@ -552,6 +609,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-example-title">适用场景：</div>
         <div class="scenario-example-content">适用于需要展示详细分解的场景，如"今年销售额是多少，各季度如何"</div>
     </div>
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('今年销售额是多少，各季度如何？', '2024年销售额 ¥3,856万元，较2023年增长19.8%。Q1 850万、Q2 920万、Q3 980万、Q4 1106万。')">问答演示</button></div>
     <div style="margin-top: 16px;">
         <div class="indicator-with-sub">
             <div class="main-label">2024年销售额</div>
@@ -574,11 +632,13 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         <div class="scenario-block">
             <div class="scenario-description">查询单日数据时，不展示季度分解和同比</div>
             <div class="scenario-example"><div class="scenario-example-content">如"2024年12月1日销售额"</div></div>
+            <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('2024年12月1日销售额是多少？', '2024年12月1日销售额 ¥13万元。数据时间范围较短（单日），暂不展示季度分解。')">问答演示</button></div>
             <div class="indicator-card blue"><div class="label">2024年12月1日销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">13</span><span class="suffix">万元</span></div></div>
         </div>
         <div class="scenario-block">
             <div class="scenario-description">查询短期数据（少于7天）时，不展示季度分解</div>
             <div class="scenario-example"><div class="scenario-example-content">如"最近3天销售额"</div></div>
+            <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('最近3天销售额是多少？', '最近3天销售额 ¥38.5万元。数据时间范围较短，暂不展示季度分解。')">问答演示</button></div>
             <div class="indicator-card blue"><div class="label">最近3天销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">38.5</span><span class="suffix">万元</span></div></div>
         </div>
     </div>
@@ -587,6 +647,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <!-- 空状态：无数据、连接失败、权限不足 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge empty">空状态</span> 无数据 / 连接失败 / 权限不足</div>
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('查询2030年销售额会怎样？', '2030年销售额暂无数据。建议：调整查询时间范围、检查数据源连接、联系管理员。可点击「修改查询条件」或「刷新数据」。')">问答演示</button></div>
     <div class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">查询结果为空时，显示友好的空状态提示</div>
@@ -606,6 +667,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <!-- 交互：归因、添加到看板 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge interact">交互场景</span> 带归因分析入口 / 添加到看板</div>
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('12月份销售额环比怎么样？', '12月销售额 ¥880万元，环比下降5.2%。可点击「归因」进行归因分析。')">问答演示</button></div>
     <div class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">显示"归因"按钮，点击后可进行归因分析</div>
@@ -613,7 +675,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
         </div>
         <div class="scenario-block">
             <div class="scenario-description">显示"添加"按钮，可将KPI卡片添加到数据看板</div>
-            <div class="indicator-card blue"><div class="label">销售额</div><div class="value">¥1,250<span class="suffix">万</span>元</div></div><button type="button" class="kpi-action-btn">添加到看板</button>
+            <div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万元</span></div></div><button type="button" class="kpi-action-btn">添加到看板</button>
         </div>
     </div>
 </div>
@@ -621,6 +683,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <!-- 良好 / 警告 / 异常 三态 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge excellent">良好</span> 数值优秀 / <span class="scenario-badge warning">警告</span> 接近警戒 / <span class="scenario-badge alert">异常</span> 数值过低</div>
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额和客单价表现如何？', '良好：本月销售额 ¥1,500万，环比↑25.8%、同比↑32.5%。警告：客单价 ¥703元，环比↓3.1%。异常：若销售额仅¥500万且环比↓15.2%，则显示红色异常卡片。')">问答演示</button></div>
     <div class="scenario-row cols3">
         <div class="scenario-block">
             <div class="scenario-description">良好（绿色）：正向指标增长≥5%或超过目标；负向指标下降≥5%或低于警戒线</div>
@@ -662,6 +725,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="spec-title"><span class="scenario-badge special">特殊场景</span> 带目标值的KPI卡片</div>
     <div class="scenario-description">显示当前值和目标值，展示完成进度</div>
     <div class="scenario-example"><div class="scenario-example-content">适用于需要展示目标完成情况的场景，如"本月销售额目标完成情况"</div></div>
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('本月销售额目标完成情况？', '本月销售额目标 ¥1,200万元，完成度85%。目标1400万、已完成1200万、进度85%、剩余200万。')">问答演示</button></div>
     <div style="margin-top: 16px;">
         <div class="indicator-with-sub">
             <div class="main-label">本月销售额目标</div>
@@ -679,6 +743,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 <div class="spec-section variant-section">
     <div class="spec-title">数据格式：百分比类型 / 大数值；趋势：下降 / 持平</div>
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('转化率、累计销售额、11月销售额怎么样？', '转化率 3.2%，环比↑0.5%。累计销售额 ¥38.56亿，环比↑2.5%。11月销售额 ¥820万，环比↓8.5%、同比↓5.2%。')">问答演示</button></div>
     <div class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">百分比类型，如转化率、增长率</div>
@@ -702,6 +767,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 <!-- 行业场景：电商GMV、财务营收、营销ROI、HR考勤 -->
 <div class="spec-section variant-section">
     <div class="spec-title"><span class="scenario-badge industry">行业场景</span> 电商GMV / 财务营收 / 营销ROI / HR考勤</div>
+    <div style="margin-bottom: 12px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('GMV、营业收入、营销ROI、出勤率是多少？', 'GMV成交总额 ¥1.25亿，环比↑28.5%。营业收入 ¥5,000万，环比↑15.8%。营销ROI 3.5倍，环比↑0.8。出勤率 96.5%，环比↑1.2%。')">问答演示</button></div>
     <div class="scenario-row">
         <div class="scenario-block">
             <div class="scenario-description">电商GMV（成交总额）</div>
@@ -737,6 +803,7 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     <div class="spec-title"><span class="scenario-badge combo">组合场景</span> KPI卡片组</div>
     <div class="scenario-description">多个KPI卡片并排展示，适用于多指标对比</div>
     <div class="scenario-example"><div class="scenario-example-content">适用于多指标同时查看的场景</div></div>
+    <div style="margin-top: 8px;"><button type="button" class="btn-qa-demo" onclick="showQaDemo('帮我看看销售额和订单量', '销售额 ¥1,250万 ↑15.2% 环比；订单量 1.25万单 ↑8.5%；利润 ¥250万 ↓2.1%；转化率 3.2% ↑0.5%。')">问答演示</button></div>
     <div class="kpi-group-row">
         <div class="indicator-card blue"><div class="label">销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,250</span><span class="suffix">万</span></div><div class="trend trend-up">↑15.2% 环比</div></div>
         <div class="indicator-card green"><div class="label">订单量</div><div class="value"><span class="value-num">1.25万</span><span class="suffix">单</span></div><div class="trend trend-up">↑8.5% 环比</div></div>

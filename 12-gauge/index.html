@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../common.css">
     <script src="../responsive-spec.js"></script>
     <script src="../unified-filter.js"></script>
+    <script src="../qa-demo.js"></script>
     <style>
         /* 使用 common.css 中的统一样式 */
         .variant-grid { grid-template-columns: repeat(3, 1fr); }
@@ -121,6 +122,7 @@
                 </div>
                 <div class="header-right">
                     <span class="chart-tag purple">Basic</span>
+                    <button type="button" class="btn-qa-demo" onclick="showQaDemo('当前指标完成度多少？', '仪表盘展示单指标与目标的关系，可问「当前值是多少」「完成百分比」「是否达标」等。')">问答演示</button>
                     <button class="btn-view-code" onclick="toggleCode('code-gauge-basic', this)">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
                         Code
