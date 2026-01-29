@@ -103,6 +103,59 @@
         .trend-down { color: #FF4D4F; }
         .indicator-card .trend-flat { color: #8C8C8C; }
 
+        /* 普通指标卡：纯色背景+白色文字（统一所有展示） */
+        .indicator-card.blue {
+            background: #5B8FF9;
+            border: none;
+            box-shadow: 0 2px 8px rgba(91,143,249,0.25);
+        }
+        .indicator-card.blue .label,
+        .indicator-card.blue .value,
+        .indicator-card.blue .value .value-num,
+        .indicator-card.blue .value .value-prefix,
+        .indicator-card.blue .value .suffix,
+        .indicator-card.blue .trend,
+        .indicator-card.blue .trend.trend-up,
+        .indicator-card.blue .trend.trend-down { color: #fff !important; }
+        .indicator-card.green {
+            background: #52C41A;
+            border: none;
+            box-shadow: 0 2px 8px rgba(82,196,26,0.25);
+        }
+        .indicator-card.green .label,
+        .indicator-card.green .value,
+        .indicator-card.green .value .value-num,
+        .indicator-card.green .value .value-prefix,
+        .indicator-card.green .value .suffix,
+        .indicator-card.green .trend,
+        .indicator-card.green .trend.trend-up,
+        .indicator-card.green .trend.trend-down { color: #fff !important; }
+        .indicator-card.yellow {
+            background: #FAAD14;
+            border: none;
+            box-shadow: 0 2px 8px rgba(250,173,20,0.25);
+        }
+        .indicator-card.yellow .label,
+        .indicator-card.yellow .value,
+        .indicator-card.yellow .value .value-num,
+        .indicator-card.yellow .value .value-prefix,
+        .indicator-card.yellow .value .suffix,
+        .indicator-card.yellow .trend,
+        .indicator-card.yellow .trend.trend-up,
+        .indicator-card.yellow .trend.trend-down { color: #fff !important; }
+        .indicator-card.red {
+            background: #FF4D4F;
+            border: none;
+            box-shadow: 0 2px 8px rgba(255,77,79,0.25);
+        }
+        .indicator-card.red .label,
+        .indicator-card.red .value,
+        .indicator-card.red .value .value-num,
+        .indicator-card.red .value .value-prefix,
+        .indicator-card.red .value .suffix,
+        .indicator-card.red .trend,
+        .indicator-card.red .trend.trend-up,
+        .indicator-card.red .trend.trend-down { color: #fff !important; }
 
         .variant-section { margin-top: 32px; }
         .variant-row {
@@ -248,7 +301,9 @@
         .indicator-card.alert-style .value .value-num,
         .indicator-card.alert-style .value .value-prefix,
         .indicator-card.alert-style .value .suffix,
-        .indicator-card.alert-style .trend { color: #fff !important; }
+        .indicator-card.alert-style .trend,
+        .indicator-card.alert-style .trend.trend-up,
+        .indicator-card.alert-style .trend.trend-down { color: #fff !important; }
         .indicator-card.excellent-style {
             background: #52C41A;
             border: none;
@@ -259,7 +314,9 @@
         .indicator-card.excellent-style .value .value-num,
         .indicator-card.excellent-style .value .value-prefix,
         .indicator-card.excellent-style .value .suffix,
-        .indicator-card.excellent-style .trend { color: #fff !important; }
+        .indicator-card.excellent-style .trend,
+        .indicator-card.excellent-style .trend.trend-up,
+        .indicator-card.excellent-style .trend.trend-down { color: #fff !important; }
         .indicator-card.warning-style {
             background: #FAAD14;
             border: none;
@@ -270,7 +327,9 @@
         .indicator-card.warning-style .value .value-num,
         .indicator-card.warning-style .value .value-prefix,
         .indicator-card.warning-style .value .suffix,
-        .indicator-card.warning-style .trend { color: #fff !important; }
+        .indicator-card.warning-style .trend,
+        .indicator-card.warning-style .trend.trend-up,
+        .indicator-card.warning-style .trend.trend-down { color: #fff !important; }
         .indicator-card.empty-style {
             background: #FAFAFA;
             border: 1px dashed #D9D9D9;
