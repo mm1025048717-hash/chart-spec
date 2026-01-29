@@ -907,6 +907,13 @@
     </footer>
 
     <script>
+        // 处理 URL 参数路由
+        const urlParams = new URLSearchParams(window.location.search);
+        const page = urlParams.get('page');
+        if (page === 'kpi-showcase') {
+            window.location.href = '/kpi-showcase.html';
+        }
+        
         // 检测是否为触摸设备
         const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
         

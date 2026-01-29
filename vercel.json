@@ -17,6 +17,10 @@
     {
       "source": "/data-agent",
       "destination": "/data-agent.html"
+    },
+    {
+      "source": "/kpi-showcase",
+      "destination": "/kpi-showcase.html"
     }
   ],
   "redirects": [

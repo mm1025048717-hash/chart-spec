@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KPI卡片设计展示</title>
+    <link rel="stylesheet" href="common.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", sans-serif;
+            background: #F7F8FA;
+            color: #1D1D1F;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #fff;
+            border-bottom: 1px solid #E5E6EB;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .header-subtitle {
+            font-size: 13px;
+            color: #86868B;
+            margin-top: 4px;
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-primary {
+            background: #5B8FF9;
+            color: #fff;
+        }
+        .btn-primary:hover {
+            background: #4A7FE8;
+        }
+        .btn-secondary {
+            background: #F5F5F7;
+            color: #1D1D1F;
+        }
+        .btn-secondary:hover {
+            background: #E8E8ED;
+        }
+        
+        .nav-tabs {
+            background: #fff;
+            border-bottom: 1px solid #E5E6EB;
+            padding: 0 24px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        .nav-tabs::-webkit-scrollbar { display: none; }
+        .nav-tab {
+            padding: 12px 16px;
+            font-size: 13px;
+            color: #86868B;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .nav-tab:hover {
+            color: #1D1D1F;
+        }
+        .nav-tab.active {
+            color: #5B8FF9;
+            border-bottom-color: #5B8FF9;
+            font-weight: 500;
+        }
+        
+        .content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        
+        .scenario-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+        .scenario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        .scenario-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #E8F3FF 0%, #D6E8FF 100%);
+            color: #5B8FF9;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .scenario-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .scenario-desc {
+            color: #6B7280;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        .scenario-example-box {
+            background: #F9FAFB;
+            border-left: 3px solid #5B8FF9;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .scenario-example-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+        .scenario-example-content {
+            color: #6B7280;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .scenario-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .scenario-btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            border: 1px solid #E5E6EB;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .scenario-btn.active {
+            background: #5B8FF9;
+            color: #fff;
+            border-color: #5B8FF9;
+        }
+        .scenario-btn:hover {
+            border-color: #5B8FF9;
+        }
+        
+        .indicator-with-sub {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            border: 1px solid rgba(0,0,0,0.06);
+            max-width: 500px;
+            margin-top: 20px;
+        }
+        .indicator-with-sub .main-label {
+            font-size: 13px;
+            color: #6B7280;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        .indicator-with-sub .main-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        .indicator-with-sub .main-suffix {
+            font-size: 16px;
+            color: #9CA3AF;
+            margin-left: 6px;
+            font-weight: 500;
+        }
+        .indicator-with-sub .trend {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #10B981;
+            font-weight: 500;
+        }
+        .indicator-with-sub .sub-indicators {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #E5E7EB;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        .indicator-with-sub .sub-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .indicator-with-sub .sub-label {
+            font-size: 12px;
+            color: #9CA3AF;
+            margin-bottom: 4px;
+        }
+        .indicator-with-sub .sub-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .usage-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 32px;
+        }
+        .usage-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .usage-item {
+            margin-bottom: 16px;
+        }
+        .usage-item-title {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .usage-item-content {
+            color: #6B7280;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div>
+            <div class="header-title">KPI卡片设计展示</div>
+            <div class="header-subtitle">展示各种KPI卡片在不同场景下的呈现方式，并提供完整代码示例</div>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary">导出所有代码</button>
+            <button class="btn btn-primary">返回 SmartQA</button>
+        </div>
+    </div>
+    
+    <div class="nav-tabs">
+        <button class="nav-tab">全部场景 (23)</button>
+        <button class="nav-tab">基础场景 (6)</button>
+        <button class="nav-tab">数据展示 (2)</button>
+        <button class="nav-tab">空状态 (3)</button>
+        <button class="nav-tab">交互场景 (2)</button>
+        <button class="nav-tab">组合场景 (1)</button>
+        <button class="nav-tab">预警场景 (1)</button>
+        <button class="nav-tab">优秀表现 (1)</button>
+        <button class="nav-tab active">特殊场景 (1)</button>
+        <button class="nav-tab">行业场景 (4)</button>
+        <button class="nav-tab">数据格式 (2)</button>
+    </div>
+    
+    <div class="content">
+        <div class="scenario-card">
+            <div class="scenario-header">
+                <div>
+                    <span class="scenario-badge">特殊场景</span>
+                    <div class="scenario-title">带子指标的KPI卡片</div>
+                    <div class="scenario-desc">显示当前值和目标值，展示完成进度</div>
+                </div>
+            </div>
+            
+            <div class="scenario-example-box">
+                <div class="scenario-example-title">适用场景：</div>
+                <div class="scenario-example-content">
+                    适用于需要展示详细分解的场景，如"今年销售额是多少，各季度如何"。<br>
+                    例如：你问达成率，子指标就是销售额和销售目标。
+                </div>
+            </div>
+            
+            <div class="scenario-actions">
+                <button class="scenario-btn active">预览</button>
+                <button class="scenario-btn">代码</button>
+                <button class="scenario-btn">查看问答效果</button>
+            </div>
+            
+            <div class="indicator-with-sub">
+                <div class="main-label">达成率</div>
+                <div class="main-value">85.6<span class="main-suffix">%</span></div>
+                <div class="trend">↑ 较目标超出 5.6%</div>
+                <div class="sub-indicators">
+                    <div class="sub-item">
+                        <div class="sub-label">销售额</div>
+                        <div class="sub-value">8,560<span style="font-size: 14px; color: #9CA3AF; margin-left: 4px;">万元</span></div>
+                    </div>
+                    <div class="sub-item">
+                        <div class="sub-label">销售目标</div>
+                        <div class="sub-value">10,000<span style="font-size: 14px; color: #9CA3AF; margin-left: 4px;">万元</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="usage-section">
+            <div class="usage-title">使用说明</div>
+            <div class="usage-item">
+                <div class="usage-item-title">1. 基础使用</div>
+                <div class="usage-item-content">所有KPI卡片组件都从 src/components/KPICard.tsx 导入。根据不同的场景选择合适的组件和配置。</div>
+            </div>
+            <div class="usage-item">
+                <div class="usage-item-title">2. 组件类型</div>
+                <div class="usage-item-content">根据业务需求选择合适的KPI卡片类型，包括基础指标卡、带趋势指标卡、带子指标卡片等。</div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab切换功能
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 按钮切换功能
+        document.querySelectorAll('.scenario-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.scenario-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
