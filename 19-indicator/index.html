@@ -207,6 +207,7 @@
         .scenario-badge.interact { background: #F9F0FF; color: #722ED1; }
         .scenario-badge.alert { background: #FFF1F0; color: #FF4D4F; }
         .scenario-badge.excellent { background: #F6FFED; color: #52C41A; }
+        .scenario-badge.warning { background: #FFFBE6; color: #D48806; }
         .scenario-badge.special { background: #FFF7E6; color: #FA8C16; }
         .scenario-badge.industry { background: #E6F7FF; color: #1890FF; }
         .scenario-badge.combo { background: #E6F7FF; color: #1890FF; }
@@ -256,6 +257,12 @@
         }
         .indicator-card.excellent-style .value { color: #389E0D; }
         .indicator-card.excellent-style .trend { color: #52C41A; }
+        .indicator-card.warning-style {
+            border-top-color: #FAAD14;
+            background: #FFFBE6;
+        }
+        .indicator-card.warning-style .value,
+        .indicator-card.warning-style .trend { color: #D48806; }
         .indicator-card.empty-style {
             background: #FAFAFA;
             border: 1px dashed #D9D9D9;
@@ -265,7 +272,8 @@
         .indicator-card.empty-style .label { color: #8C8C8C; }
 
         .scenario-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 16px; }
-        @media (max-width: 900px) { .scenario-row { grid-template-columns: 1fr; } }
+        .scenario-row.cols3 { grid-template-columns: repeat(3, 1fr); }
+        @media (max-width: 900px) { .scenario-row { grid-template-columns: 1fr; } .scenario-row.cols3 { grid-template-columns: 1fr; } }
         .scenario-block { margin-bottom: 24px; }
         .scenario-block .spec-title { margin-bottom: 8px; }
 
@@ -582,17 +590,30 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
     </div>
 </div>
 
-<!-- 预警与优秀表现 -->
+<!-- 良好 / 警告 / 异常 三态 -->
 <div class="spec-section variant-section">
-    <div class="spec-title"><span class="scenario-badge alert">预警</span> 数值过低 / <span class="scenario-badge excellent">优秀表现</span> 数值优秀</div>
-    <div class="scenario-row">
+    <div class="spec-title"><span class="scenario-badge excellent">良好</span> 数值优秀 / <span class="scenario-badge warning">警告</span> 接近警戒 / <span class="scenario-badge alert">异常</span> 数值过低</div>
+    <div class="scenario-row cols3">
         <div class="scenario-block">
-            <div class="scenario-description">当数值低于预警阈值时，显示红色渐变背景</div>
-            <div class="indicator-card alert-style"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">500</span><span class="suffix">万元</span></div><div class="trend trend-down">↓15.2% 环比 &nbsp; ↓8.5% 同比</div></div>
+            <div class="scenario-description">良好（绿色）：正向指标增长≥5%或超过目标；负向指标下降≥5%或低于警戒线</div>
+            <div class="indicator-card excellent-style"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>
         </div>
         <div class="scenario-block">
-            <div class="scenario-description">当数值超过优秀阈值时，显示绿色渐变背景</div>
-            <div class="indicator-card excellent-style"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">1,500</span><span class="suffix">万元</span></div><div class="trend trend-up">↑25.8% 环比 &nbsp; ↑32.5% 同比</div></div>
+            <div class="scenario-description">警告（黄色）：正向指标下降 2%–5%；负向指标上升 2%–5%；接近警戒线未达异常</div>
+            <div class="indicator-card warning-style"><div class="label">客单价</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">703</span><span class="suffix">元</span></div><div class="trend trend-down">↓3.1% 环比 &nbsp; ↓2.0% 同比</div></div>
+        </div>
+        <div class="scenario-block">
+            <div class="scenario-description">异常（红色）：正向指标下降≥5%或低于目标20%；负向指标上升≥5%或超过警戒线</div>
+            <div class="indicator-card alert-style"><div class="label">本月销售额</div><div class="value"><span class="value-prefix">¥</span><span class="value-num">500</span><span class="suffix">万元</span></div><div class="trend trend-down">↓15.2% 环比 &nbsp; ↓8.5% 同比</div></div>
+        </div>
+    </div>
+    <div class="scenario-example" style="margin-top: 16px;">
+        <div class="scenario-example-title">如何决定良好、警告、异常状态</div>
+        <div class="scenario-example-content">
+            <strong>✓ 良好（绿色）</strong> 正向：增长≥5%或超过目标；负向：下降≥5%或低于警戒线。示例：订单数增长 8.2%、转化率提升 10%。<br>
+            <strong>⚠ 警告（黄色）</strong> 正向：下降 2%–5%；负向：上升 2%–5%；接近警戒线未达异常。示例：客单价下降 3.1%、活跃度下降 4%。<br>
+            <strong>✗ 异常（红色）</strong> 正向：下降≥5%或低于目标20%；负向：上升≥5%或超过警戒线。示例：退货率超过阈值、错误率超过 5%。<br>
+            <strong>判定建议：</strong> 根据业务设定阈值，结合趋势与绝对值综合判断；考虑季节性；建议在配置中预设阈值并支持业务灵活调整。
         </div>
     </div>
 </div>

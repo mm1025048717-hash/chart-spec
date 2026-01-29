@@ -96,6 +96,7 @@
         .scenario-badge.combo { background: #E6F7FF; color: #1890FF; }
         .scenario-badge.alert { background: #FFF1F0; color: #FF4D4F; }
         .scenario-badge.excellent { background: #F6FFED; color: #52C41A; }
+        .scenario-badge.warning { background: #FFFBE6; color: #D48806; }
         .scenario-badge.special { background: #FFF7E6; color: #FA8C16; }
         .scenario-badge.industry { background: #E6F7FF; color: #1890FF; }
         .scenario-badge.format { background: #F0F5FF; color: #2F54EB; }
@@ -199,6 +200,18 @@
         .kpi-card.excellent-style .kpi-value .value-prefix,
         .kpi-card.excellent-style .kpi-value .kpi-unit,
         .kpi-card.excellent-style .kpi-trend { color: #fff !important; }
+        .kpi-card.warning-style {
+            background: linear-gradient(180deg, #D48806 0%, #FAAD14 50%, #FFC53D 100%);
+            border: none;
+            border-top: none;
+            box-shadow: 0 2px 8px rgba(212,136,6,0.25);
+        }
+        .kpi-card.warning-style .kpi-label,
+        .kpi-card.warning-style .kpi-value,
+        .kpi-card.warning-style .kpi-value .value-num,
+        .kpi-card.warning-style .kpi-value .value-prefix,
+        .kpi-card.warning-style .kpi-value .kpi-unit,
+        .kpi-card.warning-style .kpi-trend { color: #fff !important; }
         .kpi-card.empty-style {
             background: #FAFAFA;
             border: 1px dashed #D9D9D9;
@@ -242,13 +255,14 @@
         </div>
     </div>
     <div class="nav-tabs">
-        <button class="nav-tab active" data-category="all">全部场景 (23)</button>
+        <button class="nav-tab active" data-category="all">全部场景 (24)</button>
         <button class="nav-tab" data-category="basic">基础场景 (6)</button>
         <button class="nav-tab" data-category="data">数据展示 (2)</button>
         <button class="nav-tab" data-category="empty">空状态 (3)</button>
         <button class="nav-tab" data-category="interact">交互场景 (2)</button>
         <button class="nav-tab" data-category="combo">组合场景 (1)</button>
         <button class="nav-tab" data-category="alert">预警场景 (1)</button>
+        <button class="nav-tab" data-category="warning">警告场景 (1)</button>
         <button class="nav-tab" data-category="excellent">优秀表现 (1)</button>
         <button class="nav-tab" data-category="special">特殊场景 (1)</button>
         <button class="nav-tab" data-category="industry">行业场景 (4)</button>
@@ -274,6 +288,15 @@
                 <div class="usage-item-title">4. 同步到产品</div>
                 <div class="usage-item-content">点击「代码」标签查看完整代码示例，点击复制按钮复制代码，或点击「导出所有代码」按钮导出所有场景的代码文件。</div>
             </div>
+            <div class="usage-item">
+                <div class="usage-item-title">5. 良好 / 警告 / 异常 判定标准</div>
+                <div class="usage-item-content">
+                    <p style="margin-bottom: 8px;"><strong>✓ 良好（绿色）</strong> 正向指标：增长幅度 ≥ 5% 或超过目标值。负向指标：下降幅度 ≥ 5% 或低于警戒线。示例：订单数增长 8.2%、转化率提升 10%。</p>
+                    <p style="margin-bottom: 8px;"><strong>⚠ 警告（黄色）</strong> 正向指标：下降幅度在 2%–5% 之间。负向指标：上升幅度在 2%–5% 之间；接近警戒线但未达异常。示例：客单价下降 3.1%、活跃度下降 4%。</p>
+                    <p style="margin-bottom: 8px;"><strong>✗ 异常（红色）</strong> 正向指标：下降幅度 ≥ 5% 或低于目标值 20%。负向指标：上升幅度 ≥ 5% 或超过警戒线；严重偏离需立即处理。示例：退货率超过阈值、错误率超过 5%。</p>
+                    <p style="margin-top: 12px; color: #595959;"><strong>判定建议：</strong> 根据业务设定阈值，结合趋势与绝对值综合判断；考虑季节性，建议在配置中预设阈值并支持业务灵活调整。</p>
+                </div>
+            </div>
         </div>
     </div>
     <script>
@@ -288,8 +311,9 @@
             { id: 'empty-3', category: 'empty', badge: 'empty', badgeText: '空状态', title: '权限不足场景', desc: '用户没有权限查看数据时，显示权限提示', apply: '适用于权限不足的场景，如"如果没有权限查看数据会显示什么？"', render: () => `<div class="kpi-card empty-style"><div class="kpi-label">销售额</div><div class="kpi-value">暂无数据访问权限</div><div class="empty-suggest-title">建议：</div><ul class="empty-suggest"><li>联系管理员申请数据访问权限</li><li>检查当前账号权限设置</li><li>查看权限说明文档</li></ul><div class="kpi-action"><button class="btn-primary-sm">联系管理员</button><button class="btn-outline">查看权限说明</button></div></div>` },
             { id: 'interact-1', category: 'interact', badge: 'interact', badgeText: '交互场景', title: '带归因分析入口', desc: '显示"归因"按钮，点击后可进行归因分析', apply: '适用于需要归因分析的场景，如"12月份的销售额环比？"', render: () => `<div class="kpi-card"><div class="kpi-label">12月份销售额</div><div class="kpi-action" style="margin-top:0;margin-bottom:10px"><button class="btn-outline">归因</button></div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">880</span><span class="kpi-unit">万元</span></div><div class="kpi-trend down">↓ -5.2% 环比下降</div></div>` },
             { id: 'interact-2', category: 'interact', badge: 'interact', badgeText: '交互场景', title: '带添加到看板按钮', desc: '显示"添加"按钮，可将KPI卡片添加到数据看板', apply: '适用于需要添加到看板的场景，用户可以将KPI卡片固定到数据看板', render: () => `<div class="kpi-card"><div class="kpi-label">销售额</div><div class="kpi-action" style="margin-top:0;margin-bottom:10px"><button class="btn-outline">添加</button></div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">1250</span><span class="kpi-unit">万元</span></div></div>` },
-            { id: 'alert-1', category: 'alert', badge: 'alert', badgeText: '预警场景', title: '预警场景 - 数值过低', desc: '当数值低于预警阈值时，显示红色渐变背景和白色文字', apply: '适用于需要预警的场景，当数值低于设定阈值时自动显示预警样式', render: () => `<div class="kpi-card alert-style"><div class="kpi-label">本月销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">500</span><span class="kpi-unit">万元</span></div><div class="kpi-trend down">↓ 15.2% 环比 &nbsp; ↓ 8.5% 同比</div></div>` },
-            { id: 'excellent-1', category: 'excellent', badge: 'excellent', badgeText: '优秀表现', title: '优秀表现 - 数值优秀', desc: '当数值超过优秀阈值时，显示苹果风格的柔和绿色渐变背景，突出优秀表现', apply: '适用于需要突出优秀表现的场景，当数值超过设定阈值时自动显示优秀样式', render: () => `<div class="kpi-card excellent-style"><div class="kpi-label">本月销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">1500</span><span class="kpi-unit">万元</span></div><div class="kpi-trend up">↑ 25.8% 环比 &nbsp; ↑ 32.5% 同比</div></div>` },
+            { id: 'alert-1', category: 'alert', badge: 'alert', badgeText: '预警场景', title: '异常 - 数值过低/偏离严重', desc: '当数值达到异常阈值时，显示红色渐变背景和白色文字', apply: '正向指标下降≥5%或低于目标20%；负向指标上升≥5%或超过警戒线', render: () => `<div class="kpi-card alert-style"><div class="kpi-label">本月销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">500</span><span class="kpi-unit">万元</span></div><div class="kpi-trend down">↓ 15.2% 环比 &nbsp; ↓ 8.5% 同比</div></div>` },
+            { id: 'warning-1', category: 'warning', badge: 'warning', badgeText: '警告场景', title: '警告 - 数值接近警戒', desc: '当数值在警告区间时，显示黄色渐变背景和白色文字', apply: '正向指标下降 2%-5%；负向指标上升 2%-5%；接近警戒线但未达异常', render: () => `<div class="kpi-card warning-style"><div class="kpi-label">客单价</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">703</span><span class="kpi-unit">元</span></div><div class="kpi-trend down">↓ 3.1% 环比 &nbsp; ↓ 2.0% 同比</div></div>` },
+            { id: 'excellent-1', category: 'excellent', badge: 'excellent', badgeText: '优秀表现', title: '良好 - 数值优秀', desc: '当数值超过优秀阈值时，显示绿色渐变背景，突出良好表现', apply: '正向指标增长≥5%或超过目标；负向指标下降≥5%或低于警戒线', render: () => `<div class="kpi-card excellent-style"><div class="kpi-label">本月销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">1500</span><span class="kpi-unit">万元</span></div><div class="kpi-trend up">↑ 25.8% 环比 &nbsp; ↑ 32.5% 同比</div></div>` },
             { id: 'basic-4', category: 'basic', badge: 'basic', badgeText: '基础场景', title: '环比同比展示', desc: '同时展示环比和同比数据，放在数值下方', apply: '适用于需要同时展示环比和同比的场景，数据会自动显示在数值下方', render: () => `<div class="kpi-card"><div class="kpi-label">近3个月销售额</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">2500</span><span class="kpi-unit">万元</span></div><div class="kpi-trend up">↑ 15.2% 环比 &nbsp; ↑ 19.8% 同比</div></div>` },
             { id: 'special-1', category: 'special', badge: 'special', badgeText: '特殊场景', title: '带目标值的KPI卡片', desc: '显示当前值和目标值，展示完成进度', apply: '适用于需要展示目标完成情况的场景，如"本月销售额目标完成情况"', render: () => `<div class="kpi-card"><div class="kpi-label">本月销售额目标</div><div class="kpi-value"><span class="value-prefix">¥</span><span class="value-num">1200</span><span class="kpi-unit">万元</span></div><div class="kpi-trend up">↑ 85% 完成度</div><div class="kpi-sub grid4"><div class="sub-item"><span class="sub-label">目标</span><span class="sub-value">1400万</span></div><div class="sub-item"><span class="sub-label">完成</span><span class="sub-value">1200万</span></div><div class="sub-item"><span class="sub-label">进度</span><span class="sub-value">85%</span></div><div class="sub-item"><span class="sub-label">剩余</span><span class="sub-value">200万</span></div></div></div>` },
             { id: 'format-1', category: 'format', badge: 'format', badgeText: '数据格式', title: '百分比类型KPI卡片', desc: '展示百分比类型的指标，如转化率、增长率等', apply: '适用于百分比类型的指标，如"转化率是多少"、"增长率如何"', render: () => `<div class="kpi-card"><div class="kpi-label">转化率</div><div class="kpi-value"><span class="value-num">3.2</span><span class="kpi-unit">%</span></div><div class="kpi-trend up">↑ 0.5% 环比 &nbsp; ↑ 1.2% 同比</div></div>` },
