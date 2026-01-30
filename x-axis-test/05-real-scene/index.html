@@ -229,7 +229,7 @@
         </div>
         <div class="flow-row">
             <div class="flow-box">
-                <div class="flow-box-condition">maxWidth ≥ 50 || count ≥ 15</div>
+                <div class="flow-box-condition">90° 仅当 maxWidth ≥ 50</div>
                 <div class="flow-box-result">场景4/6: 90°+截断6</div>
             </div>
             <span class="flow-arrow">→</span>
@@ -280,7 +280,6 @@
         <span class="keyword">const</span> {
             maxTruncate = <span class="number">8</span>,        <span class="comment">// 45°截断长度</span>
             minTruncate = <span class="number">6</span>,        <span class="comment">// 90°截断长度</span>
-            manyItemThreshold = <span class="number">15</span>,  <span class="comment">// 多数据项阈值</span>
         } = options;
 
         <span class="keyword">const</span> maxWidth = Math.max(...data.map(d => 
@@ -296,12 +295,12 @@
         } <span class="keyword">else if</span> (maxWidth <= <span class="number">8</span> && count <= <span class="number">12</span>) {
             rotate = -Math.PI / <span class="number">4</span>;  <span class="comment">// 45°不截断</span>
             truncateAt = <span class="keyword">null</span>;
-        } <span class="keyword">else if</span> (maxWidth >= <span class="number">50</span> || count >= manyItemThreshold) {
-            rotate = -Math.PI / <span class="number">2</span>;  <span class="comment">// 90°</span>
+        } <span class="keyword">else if</span> (maxWidth >= <span class="number">50</span>) {
+            rotate = -Math.PI / <span class="number">2</span>;  <span class="comment">// 仅超长文字用 90°</span>
             truncateAt = minTruncate;
         } <span class="keyword">else</span> {
-            rotate = -Math.PI / <span class="number">4</span>;  <span class="comment">// 45°+截断</span>
-            truncateAt = maxTruncate;
+            rotate = -Math.PI / <span class="number">4</span>;  <span class="comment">// 多数据项统一 45°+截断</span>
+            truncateAt = count >= <span class="number">15</span> ? minTruncate : maxTruncate;
         }
 
         <span class="keyword">return</span> {
@@ -486,7 +485,6 @@ const SmartXAxis = {
         const {
             maxTruncate = 8,
             minTruncate = 6,
-            manyItemThreshold = 15,
         } = options;
 
         const maxWidth = Math.max(...data.map(d => getVisualWidth(String(d[xField] || ''))));
@@ -502,14 +500,14 @@ const SmartXAxis = {
             rotate = -Math.PI / 4;
             truncateAt = null;
             scenario = '场景2: 45°';
-        } else if (maxWidth >= 50 || count >= manyItemThreshold) {
+        } else if (maxWidth >= 50) {
             rotate = -Math.PI / 2;
             truncateAt = minTruncate;
-            scenario = '场景4/6: 90°';
+            scenario = '场景4: 90°';
         } else {
             rotate = -Math.PI / 4;
-            truncateAt = maxTruncate;
-            scenario = '场景3: 45°+截断';
+            truncateAt = count >= 15 ? minTruncate : maxTruncate;
+            scenario = count >= 15 ? '场景6: 45°+截断' : '场景3: 45°+截断';
         }
 
         // 输出配置信息（用于页面显示）
@@ -595,7 +593,7 @@ new Column('chart-main', {
     },
 }).render();
 
-console.log('SmartXAxis 配置结果:', config);
+console.log('SmartXAxis 配置结果:', SmartXAxis._lastConfig);
 </script>
 
 

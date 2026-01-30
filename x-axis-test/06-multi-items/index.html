@@ -177,12 +177,12 @@
         <span class="icon">6</span>
         <span class="text">场景六：多数据项场景</span>
     </div>
-    <h1>多数据项 (≥15项) - 90°垂直+截断</h1>
-    <p class="subtitle">适用于数据项较多的情况，即使文字不长也需要使用90度垂直显示以节省空间</p>
+    <h1>多数据项 (≥15项) - 45° 倾斜 + 截断</h1>
+    <p class="subtitle">数据项多时统一使用 45° 倾斜 + 截断，可读性更好、无需歪头</p>
     <div class="tech-stack">
         <span class="tech-tag">Ant Design Chart</span>
         <span class="tech-tag">G2Plot</span>
-        <span class="tech-tag">count ≥ 15 → rotate: -90°</span>
+        <span class="tech-tag">≥15 → 45° + 截断</span>
     </div>
 </div>
 
@@ -204,20 +204,18 @@
         <div class="count-box active">
             <div class="count-number">≥15</div>
             <div class="count-label">大量数据</div>
-            <div class="count-config">rotate: -90° ✓</div>
+            <div class="count-config">45° + 截断 ✓</div>
         </div>
     </div>
 
     <div class="warning-box">
-        <div class="warning-box-title">⚠️ 为什么15项是阈值？</div>
+        <div class="warning-box-title">⚠️ 为什么多数据项用 45°？</div>
         <div class="warning-box-content">
-            <p>当数据项达到15项以上时：</p>
+            <p>当数据项 ≥15 时统一使用 45° 倾斜 + 截断：</p>
             <ul style="margin: 8px 0 0 20px;">
-                <li>45°倾斜的标签会开始相互重叠</li>
-                <li>横向空间不足以容纳所有标签</li>
-                <li>90°垂直可以最大化利用横向空间</li>
+                <li>可读性好、无需歪头</li>
+                <li>配合 6 字符截断，20 项以内可正常容纳</li>
             </ul>
-            <p style="margin-top: 8px;"><b>即使文字很短（如"Q1"），数据项多时也应使用90°。</b></p>
         </div>
     </div>
 </div>
@@ -265,26 +263,21 @@
         </thead>
         <tbody>
             <tr class="highlight">
-                <td><b>数据项数量</b></td>
-                <td><code>≥ 15</code></td>
-                <td>不管文字长度，达到15项即触发</td>
-            </tr>
-            <tr>
-                <td><b>或 最大字符数</b></td>
-                <td><code>≥ 50</code></td>
-                <td>超长文字也触发90°（见场景4）</td>
+                <td><b>数据项 ≥15</b></td>
+                <td><code>45° + 截断</code></td>
+                <td>统一 45° 倾斜，可读性更好</td>
             </tr>
             <tr class="highlight">
                 <td><b>截断字符数</b></td>
                 <td><code>6</code></td>
-                <td>与场景4相同，90°时截断到6字符</td>
+                <td>截断到6字符</td>
             </tr>
         </tbody>
     </table>
 
     <div style="margin-top: 16px;">
         <span class="key-point">数量优先判断</span>
-        <span class="key-point">90度垂直显示</span>
+        <span class="key-point">45° 倾斜</span>
         <span class="key-point">截断到6字符</span>
         <span class="key-point">更窄柱体</span>
     </div>
@@ -294,13 +287,13 @@
 <div class="spec-section">
     <div class="spec-title">核心配置代码</div>
     <div class="code-block">
-<span class="comment">// 多数据项场景配置</span>
+<span class="comment">// 多数据项 (≥15)：统一 45° + 截断</span>
 <span class="keyword">const</span> xAxisConfig = {
     label: {
         autoRotate: <span class="keyword">false</span>,
-        rotate: -Math.PI / <span class="number">2</span>,          <span class="comment">// -90度</span>
+        rotate: -Math.PI / <span class="number">4</span>,   <span class="comment">// 45°</span>
         formatter: (text) => {
-            <span class="keyword">const</span> maxLength = <span class="number">6</span>;         <span class="comment">// 截断到6字符</span>
+            <span class="keyword">const</span> maxLength = <span class="number">6</span>;
             <span class="keyword">if</span> (text.length > maxLength) {
                 <span class="keyword">return</span> text.substring(<span class="number">0</span>, maxLength) + <span class="string">'...'</span>;
             }
@@ -316,16 +309,11 @@
 
 <span class="comment">// 柱体宽度配置 - 数据多时使用更窄的柱体</span>
 <span class="keyword">const</span> columnConfig = {
-    columnWidthRatio: <span class="number">0.6</span>,  <span class="comment">// 比少数据时(0.5)更窄</span>
+    columnWidthRatio: <span class="number">0.6</span>,
     columnStyle: {
-        radius: [<span class="number">3</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>],   <span class="comment">// 更小的圆角</span>
+        radius: [<span class="number">3</span>, <span class="number">3</span>, <span class="number">0</span>, <span class="number">0</span>],
     },
 };
-
-<span class="comment">// 判断函数</span>
-<span class="keyword">function</span> <span class="function">shouldUse90DegreeByCount</span>(data) {
-    <span class="keyword">return</span> data.length >= <span class="number">15</span>;
-}
     </div>
 </div>
 
@@ -334,14 +322,14 @@
     <div class="chart-card">
         <div class="chart-card-header">
             <span class="chart-title">月度销量排行 (20项数据)</span>
-            <span class="chart-tag purple">count ≥ 15 → 90°</span>
+            <span class="chart-tag purple">45° + 截断</span>
         </div>
         <div class="chart-body lg">
             <div class="axis-unit y-left">万元</div>
             <div id="chart-main" style="width: 100%; height: 100%;"></div>
         </div>
         <div class="chart-summary">
-            数据项：<strong>20项</strong> | 触发条件：<strong>≥15</strong> | 旋转角度：<strong>90°</strong> | 柱宽比例：<strong>0.6</strong>
+            数据项：<strong>20项</strong> | 旋转：<strong>45°</strong> | 柱宽比例：<strong>0.6</strong>
         </div>
     </div>
 </div>
@@ -361,9 +349,9 @@
         <tbody>
             <tr class="highlight">
                 <td><code>rotate</code></td>
-                <td><code>-Math.PI/2</code></td>
+                <td><code>-Math.PI/4</code></td>
                 <td>number</td>
-                <td>90度垂直</td>
+                <td>45° 倾斜（多数据项统一）</td>
             </tr>
             <tr class="highlight">
                 <td><code>truncateAt</code></td>
@@ -395,7 +383,7 @@
 
 <!-- 与场景4的区别 -->
 <div class="spec-section">
-    <div class="spec-title">场景4 vs 场景6：同样90°的两种触发条件</div>
+    <div class="spec-title">场景4 vs 场景6：旋转与触发条件</div>
     <table class="spec-table">
         <thead>
             <tr>
@@ -417,8 +405,8 @@
             </tr>
             <tr>
                 <td>rotate</td>
-                <td>-Math.PI/2</td>
-                <td>-Math.PI/2</td>
+                <td>-Math.PI/2 (90°)</td>
+                <td>-Math.PI/4 (45°)，多数据项统一 45°</td>
             </tr>
             <tr>
                 <td>truncateAt</td>
@@ -439,7 +427,7 @@
     </table>
 
     <p style="font-size: 13px; color: var(--text-sub); margin-top: 12px;">
-        场景6因为数据项多，需要更窄的柱体和更小的圆角来优化视觉效果。
+        场景6 优先 45° 可读性更好；数据项多时用更窄柱体和更小圆角优化视觉效果。
     </p>
 </div>
 
@@ -458,22 +446,17 @@
             <tr>
                 <td>数据项 = 14</td>
                 <td>使用45°</td>
-                <td>未达到15阈值</td>
+                <td>未达到15，按中等数据</td>
             </tr>
             <tr class="highlight">
-                <td>数据项 = 15</td>
-                <td>使用90°</td>
-                <td>刚好达到阈值</td>
-            </tr>
-            <tr>
-                <td>数据项 = 30+</td>
-                <td>使用90°</td>
-                <td>同样配置</td>
+                <td>数据项 ≥15</td>
+                <td>使用45°</td>
+                <td>统一 45° + 截断</td>
             </tr>
             <tr>
                 <td>短文字 + 多数据</td>
-                <td>使用90°</td>
-                <td>数量优先于文字长度</td>
+                <td>使用45°</td>
+                <td>数量多时 45° + 截断</td>
             </tr>
             <tr>
                 <td>超长文字 + 少数据</td>
@@ -520,25 +503,22 @@ function truncate(text, maxLength = 6) {
     return str;
 }
 
-// 输出判断信息
+// 多数据项 (≥15)：统一 45° + 截断，不使用 90°
 console.log('数据项数量:', data.length);
-console.log('触发条件:', data.length >= 15 ? '使用90度' : '使用45度');
 
 new Column('chart-main', {
     data,
     xField: 'product',
     yField: 'value',
     color: '#5B8FF9',
-    // 多数据项时使用更窄的柱体
     columnWidthRatio: 0.6,
     columnStyle: {
-        radius: [3, 3, 0, 0],  // 更小的圆角
+        radius: [3, 3, 0, 0],
     },
-    // 90度垂直 + 截断6字符
     xAxis: {
         label: {
             autoRotate: false,
-            rotate: -Math.PI / 2,
+            rotate: -Math.PI / 4,
             formatter: (text) => truncate(text, 6),
             style: {
                 fontSize: 11,
