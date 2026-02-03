@@ -1754,7 +1754,7 @@ a:hover {
 .axis-unit {
     position: absolute;
     background: var(--gray-100);
-    color: var(--text-secondary);
+    color: var(--text-primary);
     font-size: 9px;
     padding: 2px 6px;
     border-radius: 3px;
@@ -1790,7 +1790,7 @@ a:hover {
     right: 50px; /* 增加右边距，避免遮挡图表内容，为滚动条留出空间 */
     left: auto;
     background: var(--gray-100);
-    color: var(--text-secondary);
+    color: var(--text-primary);
     font-size: 9px;
     padding: 2px 6px;
     border-radius: 3px;

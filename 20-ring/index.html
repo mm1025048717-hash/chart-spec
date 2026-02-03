@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -33,7 +33,7 @@
         }
         .center-label {
             font-size: 12px; /* 稍微增大字体，提高可读性 */
-            color: #86868B;
+            color: #1D1D1F;
             margin-top: 4px; /* 增加上边距，让标签与数字有更好的间距 */
             line-height: 1.4; /* 增加行高 */
             word-break: keep-all; /* 保持中文词不拆分 */
@@ -272,12 +272,12 @@ label: {
     type: 'spider',
     labelHeight: 20,  // 减小标签高度，让标签更紧凑
     content: '{name}\n{percentage}',
-    style: { fontSize: 11, fill: '#86868B' },
+    style: { fontSize: 11, fill: '#1D1D1F' },
 },
 statistic: {
     title: {
         content: 'Total',
-        style: { fontSize: 11, color: '#86868B' },
+        style: { fontSize: 11, color: '#1D1D1F' },
     },
     content: {
         content: '3846',
@@ -377,7 +377,7 @@ new G2Plot.Pie('chart-outer', {
         content: '{name}\n{percentage}',
         style: { 
             fontSize: labelFontSize, 
-            fill: '#86868B',
+            fill: '#1D1D1F',
             textAlign: 'left', // 左对齐，避免文字位置混乱
         },
         labelLine: {
@@ -392,7 +392,7 @@ new G2Plot.Pie('chart-outer', {
             content: 'Total',
             style: {
                 fontSize: statisticTitleSize,
-                color: '#86868B',
+                color: '#1D1D1F',
                 lineHeight: 1.4, // 增加行高，让标题与数字有更好的间距
                 whiteSpace: 'nowrap',
                 marginBottom: 4, // 添加下边距

@@ -1133,7 +1133,7 @@ function getChartConfig(type) {
                     </div>
                     <div class="chart-card">
                         <div class="chart-header">
-                            <div class="chart-subtitle" style="color:#86868B;font-size:11px;">渠道 → 行为 → 结果</div>
+                            <div class="chart-subtitle" style="color:#1D1D1F;font-size:11px;">渠道 → 行为 → 结果</div>
                         </div>
                         <div class="chart-body">
                             <div id="${chartId}" class="chart-box" style="height:260px;"></div>
@@ -1232,7 +1232,7 @@ function renderChart(id, type) {
     const circleRadius = 0.8;      // 圆形图表半径 (移动端)
     const basePadding = [20, 15, 35, 40]; // 统一基础padding
     
-    const axisStyle = { label: { style: { fontSize, fill: '#86868B' } } };
+    const axisStyle = { label: { style: { fontSize, fill: '#1D1D1F' } } };
     const gridStyle = { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } };
 
     try {
@@ -1419,7 +1419,7 @@ function renderChart(id, type) {
                     padding: [15, 15, 15, 15],
                     color: ['#5AD8A6', '#E8E8ED'],
                     statistic: {
-                        title: { content: '总计', style: { fontSize: '11px', color: '#86868B' } },
+                        title: { content: '总计', style: { fontSize: '11px', color: '#1D1D1F' } },
                         content: { content: '75%', style: { fontSize: '20px', fontWeight: 600, color: '#5AD8A6' } }  // 移动端 16-20px
                     },
                     legend: false
@@ -1568,7 +1568,7 @@ async function renderMapChart(id) {
     if (!el) return;
     
     // 显示加载状态
-    el.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#86868B;font-size:11px;">加载地图中...</div>';
+    el.innerHTML = '<div style="height:100%;display:flex;align-items:center;justify-content:center;color:#1D1D1F;font-size:11px;">加载地图中...</div>';
     
     try {
         // 尝试加载本地 GeoJSON
@@ -1650,7 +1650,7 @@ async function renderMapChart(id) {
         
     } catch (error) {
         console.error('地图加载失败:', error);
-        el.innerHTML = `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#86868B;font-size:11px;background:#F5F5F7;border-radius:8px;gap:8px;">
+        el.innerHTML = `<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#1D1D1F;font-size:11px;background:#F5F5F7;border-radius:8px;gap:8px;">
             <span>🗺️ 地图加载失败</span>
             <button onclick="renderMapChart('${id}')" style="padding:4px 12px;background:#5B8FF9;color:#fff;border:none;border-radius:4px;font-size:10px;cursor:pointer;">重试</button>
         </div>`;

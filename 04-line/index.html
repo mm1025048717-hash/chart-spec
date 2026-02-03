@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -149,7 +149,7 @@
                 <div class="params-panel bottom-right">
                     <div class="params-panel-title">坐标轴配置</div>
                     <div class="params-row"><span class="label">标签字号</span><span class="value">11px</span></div>
-                    <div class="params-row"><span class="label">标签颜色</span><span class="value">#86868B</span></div>
+                    <div class="params-row"><span class="label">标签颜色</span><span class="value">#1D1D1F</span></div>
                     <div class="params-row"><span class="label">网格线</span><span class="value">[4,4]虚线</span></div>
                 </div>
             </div>
@@ -187,12 +187,12 @@
         style: { fill: '#5B8FF9' } 
     },
     xAxis: {
-        label: { style: { fontSize: 11, fill: '#86868B' } },
+        label: { style: { fontSize: 11, fill: '#1D1D1F' } },
         line: { style: { stroke: '#E8E8ED' } },
     },
     yAxis: {
         label: { 
-            style: { fontSize: 11, fill: '#86868B' }, 
+            style: { fontSize: 11, fill: '#1D1D1F' }, 
             formatter: (v) => v.toLocaleString() 
         },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
@@ -228,7 +228,7 @@
         </thead>
         <tbody>
             <tr><td>label.fontSize</td><td><code>11px</code></td><td><code>11px</code></td></tr>
-            <tr><td>label.fill</td><td><code>#86868B</code></td><td><code>#86868B</code></td></tr>
+            <tr><td>label.fill</td><td><code>#1D1D1F</code></td><td><code>#1D1D1F</code></td></tr>
             <tr><td>grid.line</td><td><code>null</code></td><td><code>#E8E8ED [4,4]</code></td></tr>
         </tbody>
     </table>
@@ -348,14 +348,14 @@ new Line('chart-basic', {
         label: {
             autoRotate: false,
             rotate: 0,
-            style: { fontSize: fontSize, fill: '#86868B', textAlign: 'center' },
+            style: { fontSize: fontSize, fill: '#1D1D1F', textAlign: 'center' },
         },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
         label: { 
-            style: { fontSize: fontSize, fill: '#86868B' }, 
+            style: { fontSize: fontSize, fill: '#1D1D1F' }, 
             formatter: (v) => v >= 10000 ? (v / 10000).toFixed(1) + '万' : v.toLocaleString(),
         },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
@@ -392,7 +392,7 @@ new Line('chart-smooth', {
     color: '#5AD8A6',
     lineStyle: { lineWidth: lineWidth },
     point: { size: pointSize - 1, shape: 'circle', style: { fill: '#5AD8A6' } },
-    xAxis: { label: { style: { fontSize: fontSize, fill: '#86868B' } } },
+    xAxis: { label: { style: { fontSize: fontSize, fill: '#1D1D1F' } } },
     yAxis: { grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } } },
 }).render();
 
@@ -436,13 +436,13 @@ new Line('chart-multi', {
         label: {
             autoRotate: false,
             rotate: 0,
-            style: { fontSize: fontSize, fill: '#86868B', textAlign: 'center' },
+            style: { fontSize: fontSize, fill: '#1D1D1F', textAlign: 'center' },
         },
         line: { style: { stroke: '#E8E8ED' } },
         tickLine: null,
     },
     yAxis: {
-        label: { style: { fontSize: fontSize, fill: '#86868B' } },
+        label: { style: { fontSize: fontSize, fill: '#1D1D1F' } },
         grid: { line: { style: { stroke: '#E8E8ED', lineDash: [4, 4] } } },
         line: null,
         tickLine: null,

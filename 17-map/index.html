@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -39,7 +39,7 @@
             left: 50%;
             transform: translate(-50%, -50%);
             text-align: center;
-            color: #86868B;
+            color: #1D1D1F;
             z-index: 10;
         }
 
@@ -98,7 +98,7 @@
             gap: 6px;
         }
 
-        .map-summary .label { color: #86868B; }
+        .map-summary .label { color: #1D1D1F; }
         .map-summary .value { font-weight: 600; color: #5B8FF9; }
 
         @media (max-width: 768px) {
@@ -549,7 +549,7 @@ chart.setOption(option);</pre>
                     formatter: function(params) {
                         const name = params.name.replace(/省|市|自治区|特别行政区|壮族|回族|维吾尔/g, '');
                         return `<div style="font-weight:600;margin-bottom:4px;">${name}</div>
-                                <div style="color:#86868B;">销售额：<span style="color:#5B8FF9;font-weight:600;">${params.value ? params.value.toLocaleString() : 0} 万元</span></div>`;
+                                <div style="color:#1D1D1F;">销售额：<span style="color:#5B8FF9;font-weight:600;">${params.value ? params.value.toLocaleString() : 0} 万元</span></div>`;
                     }
                 },
                 visualMap: {
@@ -559,7 +559,7 @@ chart.setOption(option);</pre>
                     bottom: 20,
                     text: ['高', '低'],
                     textStyle: {
-                        color: '#86868B',
+                        color: '#1D1D1F',
                         fontSize: 11
                     },
                     inRange: {
@@ -624,12 +624,12 @@ chart.setOption(option);</pre>
             const errorMsg = error.message || '网络错误或数据源不可用';
             loading.innerHTML = `
                 <div style="color: #FF3B30; font-size: 18px; margin-bottom: 12px; font-weight: 600;">⚠️ 地图加载失败</div>
-                <div style="font-size: 14px; color: #86868B; margin-bottom: 8px; font-weight: 500;">GeoJSON 加载失败</div>
-                <div style="font-size: 13px; color: #86868B; margin-bottom: 20px; padding: 0 20px;">${errorMsg}</div>
+                <div style="font-size: 14px; color: #1D1D1F; margin-bottom: 8px; font-weight: 500;">GeoJSON 加载失败</div>
+                <div style="font-size: 13px; color: #1D1D1F; margin-bottom: 20px; padding: 0 20px;">${errorMsg}</div>
                 <div style="margin-top: 16px;">
                     <button onclick="renderMap()" style="padding: 12px 24px; background: #5B8FF9; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; box-shadow: 0 2px 8px rgba(91, 143, 249, 0.3);" onmouseover="this.style.background='#0051D4'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(91, 143, 249, 0.4)'" onmouseout="this.style.background='#5B8FF9'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(91, 143, 249, 0.3)'">🔄 重试加载</button>
                 </div>
-                <div style="margin-top: 24px; padding: 16px; background: #F5F5F7; border-radius: 12px; font-size: 12px; color: #86868B; text-align: left; max-width: 450px; margin-left: auto; margin-right: auto; line-height: 1.6;">
+                <div style="margin-top: 24px; padding: 16px; background: #F5F5F7; border-radius: 12px; font-size: 12px; color: #1D1D1F; text-align: left; max-width: 450px; margin-left: auto; margin-right: auto; line-height: 1.6;">
                     <div style="font-weight: 600; margin-bottom: 8px; color: #1D1D1F; font-size: 13px;">💡 故障排除建议：</div>
                     <ul style="margin: 0; padding-left: 20px; list-style: disc;">
                         <li style="margin-bottom: 6px;">检查网络连接是否正常</li>
